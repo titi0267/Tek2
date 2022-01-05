@@ -73,3 +73,7 @@ myDrop y (x:xs)
     | y >= myLength (x:xs) = []
 myDrop 0 (x:xs) = x:xs
 myDrop y (x:xs) = myDrop (y-1) xs
+
+myAppend :: [ a ] -> [ a ] -> [ a ]
+myAppend [] x = x
+myAppend (x:xs) y = x : myAppend xs y
