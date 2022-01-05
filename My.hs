@@ -65,3 +65,11 @@ myTake y (x:xs)
     | myIsNeg y = error "N is negative"
 myTake 0 (x:xs) = []
 myTake y (x:xs) = x: myTake (y-1) xs
+
+myDrop :: Int -> [ a ] -> [ a ]
+myDrop y [] = error "empty list"
+myDrop y (x:xs)
+    | myIsNeg y = error "N is negative"
+    | y >= myLength (x:xs) = []
+myDrop 0 (x:xs) = x:xs
+myDrop y (x:xs) = myDrop (y-1) xs
