@@ -1,4 +1,5 @@
 import Data.Time.Format.ISO8601 (yearFormat)
+import Distribution.Simple.Utils (xargs)
 mySucc :: Int -> Int 
 mySucc x = x + 1
 
@@ -44,3 +45,23 @@ myHead (x:xs) = x
 myTail :: [ a ] -> [ a ]
 myTail [] = error "empty list"
 myTail (x:xs) = xs
+
+myLength :: [ a ] -> Int
+myLength [] = 0
+myLength (_:xs) = 1 + myLength xs
+
+myNth :: [ a ] -> Int -> a
+myNth [] y = error "empty list"
+myNth (x:xs) y
+    | y > myLength (x:xs) = error "index too large"
+    | myIsNeg y = error "Index is negative"
+myNth (x:xs) 0 = x
+myNth (x:xs) y = myNth xs (y-1)
+
+myTake :: Int -> [ a ] -> [ a ]
+myTake y [] = error "empty list"
+myTake y (x:xs)
+    | y >= myLength (x:xs) = x:xs
+    | myIsNeg y = error "N is negative"
+myTake 0 (x:xs) = []
+myTake y (x:xs) = x: myTake (y-1) xs
