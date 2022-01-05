@@ -81,3 +81,16 @@ myAppend (x:xs) y = x : myAppend xs y
 myReverse :: [ a ] -> [ a ]
 myReverse [] = []
 myReverse (x:xs) = myAppend (myReverse xs) [x]
+
+myInit :: [ a ] -> [ a ]
+myInit [] = error "empty list"
+myInit x = myReverse (myDrop 1 (myReverse x))
+
+myLast :: [ a ] -> a
+myLast [] = error "empty list"
+myLast x = myHead (myReverse x)
+
+myZip :: [ a ] -> [ b ] -> [( a , b )]
+myZip _ [] = []
+myZip [] _ = []
+myZip (x:xs) (y:ys) = (x,y) : myZip xs ys
