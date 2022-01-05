@@ -1,5 +1,3 @@
-import Data.Time.Format.ISO8601 (yearFormat)
-import Distribution.Simple.Utils (xargs)
 mySucc :: Int -> Int 
 mySucc x = x + 1
 
