@@ -92,3 +92,25 @@ myZip :: [ a ] -> [ b ] -> [( a , b )]
 myZip _ [] = []
 myZip [] _ = []
 myZip (x:xs) (y:ys) = (x,y) : myZip xs ys
+
+myUnzip :: [( a , b ) ] -> ([ a ] , [ b ])
+myUnzip [] = ([],[])
+myUnzip ((a,b) : y) = myTuple (a : myFst (myUnzip y)) (b : mySnd (myUnzip y))
+
+myMap :: ( a -> b ) -> [ a ] -> [ b ]
+myMap func [] = []
+myMap func (x:xs) = func x : myMap func xs
+
+myFilter :: ( a -> Bool ) -> [ a ] -> [ a ]
+myFilter func [] = []
+myFilter func (x:xs)
+    | func x = x : myFilter func xs
+    | otherwise = myFilter func xs
+
+myFoldl :: ( b -> a -> b ) -> b -> [ a ] -> b
+myFoldl func b [] = b
+myFoldl func b (x:xs) = myFoldl func (func b x) xs
+
+myFoldr :: ( a -> b -> b ) -> b -> [ a ] -> b
+myFoldr func b [] = b
+myFoldr func b x = myFoldr func (func (myLast x) b) (myTake (myLength x - 1) x)
