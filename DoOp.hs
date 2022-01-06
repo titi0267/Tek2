@@ -37,3 +37,9 @@ myLookup a [] = Nothing
 myLookup a ((x,xs) : y)
     | x == a = Just xs
     | otherwise = myLookup a y
+
+maybeDo :: ( a -> b -> c ) -> Maybe a -> Maybe b -> Maybe c
+maybeDo func Nothing (Just b) = Nothing 
+maybeDo func (Just a) Nothing = Nothing
+maybeDo func Nothing Nothing = Nothing
+maybeDo func (Just a) (Just b) = Just (func a b)
