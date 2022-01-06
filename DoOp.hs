@@ -1,5 +1,6 @@
 import Data.Maybe ()
 import Data.Char (isDigit)
+import Control.Monad
 
 myElem :: Eq a => a -> [ a ] -> Bool
 myElem a [] = False
@@ -48,8 +49,7 @@ maybeDo func (Just a) (Just b) = Just (func a b)
 readInt :: [ Char ] -> Maybe Int
 readInt [] = Nothing
 readInt (x:xs)
-    | all isDigit (x:xs) = Just (read (x:xs) :: Int)
-    | x == '-' && all isDigit xs = Just (read (x:xs) :: Int)
+    | x == '-' || all isDigit xs = Just (read (x:xs) :: Int)
     | otherwise = Nothing
 
 getLineLength :: IO Int
@@ -57,10 +57,28 @@ getLineLength = do
     line <- getLine
     return $ length line
 
+printAndGetLength :: String -> IO Int
+printAndGetLength x = do
+    putStrLn x
+    return (myLength x)
+
 printBox :: Int -> IO ()
-printBox x = do
-    if x <= 0
-        then return ()
-        else do putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
-                putStr $ unlines $ replicate (x-2) (concat["|", replicate (x*2-2) ' ', "|"])
-                putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
+printBox x = if x <= 0 then return ()
+    else do
+        putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
+        putStr $ unlines $ replicate (x-2) (
+            concat["|", replicate (x*2-2) ' ', "|"])
+        putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
+
+concatLines :: Int -> IO String
+concatLines x
+    | x <= 0 = return []
+    | otherwise = do
+        line <- getLine
+        lines <- concatLines (x - 1)
+        return (line ++ lines)
+
+getInt :: IO ( Maybe Int )
+getInt = do
+    line <- getLine 
+    return (readInt line)
