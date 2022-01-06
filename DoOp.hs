@@ -48,7 +48,11 @@ maybeDo func (Just a) (Just b) = Just (func a b)
 readInt :: [ Char ] -> Maybe Int
 readInt [] = Nothing
 readInt (x:xs)
-    | x == '-' = Just (read (x:xs) :: Int)
     | all isDigit (x:xs) = Just (read (x:xs) :: Int)
+    | x == '-' && all isDigit xs = Just (read (x:xs) :: Int)
     | otherwise = Nothing
 
+getLineLength :: IO Int
+getLineLength = do
+    line <- getLine
+    return $ length line
