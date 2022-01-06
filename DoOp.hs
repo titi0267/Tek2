@@ -25,5 +25,15 @@ safeNth [] y = Nothing
 safeNth (x:xs) y
     | y > myLength (x:xs) = Nothing
     | myIsNeg y = Nothing
-safeNth (x:xs) 0 = Just x
-safeNth (x:xs) y = safeNth xs (y-1)
+safeNth (x:_) 0 = Just x
+safeNth (_:xs) y = safeNth xs (y-1)
+
+safeSucc :: Maybe Int -> Maybe Int
+safeSucc Nothing = Nothing
+safeSucc (Just x) = Just (x+1)
+
+myLookup :: Eq a => a -> [( a , b ) ] -> Maybe b
+myLookup a [] = Nothing
+myLookup a ((x,xs) : y)
+    | x == a = Just xs
+    | otherwise = myLookup a y
