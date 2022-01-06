@@ -56,3 +56,11 @@ getLineLength :: IO Int
 getLineLength = do
     line <- getLine
     return $ length line
+
+printBox :: Int -> IO ()
+printBox x = do
+    if x <= 0
+        then return ()
+        else do putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
+                putStr $ unlines $ replicate (x-2) (concat["|", replicate (x*2-2) ' ', "|"])
+                putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
