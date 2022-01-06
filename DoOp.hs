@@ -64,11 +64,11 @@ printAndGetLength x = do
 
 printBox :: Int -> IO ()
 printBox x = if x <= 0 then return ()
-    else do
-        putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
-        putStr $ unlines $ replicate (x-2) (
-            concat["|", replicate (x*2-2) ' ', "|"])
-        putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
+                else do
+                    putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
+                    putStr $ unlines $ replicate (x-2) (
+                        concat["|", replicate (x*2-2) ' ', "|"])
+                    putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
 
 concatLines :: Int -> IO String
 concatLines x
