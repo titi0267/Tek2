@@ -1,4 +1,5 @@
 import Data.Maybe ()
+import Data.Char (isDigit)
 
 myElem :: Eq a => a -> [ a ] -> Bool
 myElem a [] = False
@@ -43,3 +44,11 @@ maybeDo func Nothing (Just b) = Nothing
 maybeDo func (Just a) Nothing = Nothing
 maybeDo func Nothing Nothing = Nothing
 maybeDo func (Just a) (Just b) = Just (func a b)
+
+readInt :: [ Char ] -> Maybe Int
+readInt [] = Nothing
+readInt (x:xs)
+    | x == '-' = Just (read (x:xs) :: Int)
+    | all isDigit (x:xs) = Just (read (x:xs) :: Int)
+    | otherwise = Nothing
+
