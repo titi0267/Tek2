@@ -56,7 +56,7 @@ maybeDo func (Just a) (Just b) = Just (func a b)
 readInt :: [ Char ] -> Maybe Int
 readInt [] = Nothing
 readInt ('-':xs)
-    | all isDigit xs = Just (read xs :: Int)
+    | all isDigit xs = Just ((read xs :: Int) * (-1))
     | otherwise = Nothing
 readInt x
     | all isDigit x = Just (read x :: Int)
@@ -104,7 +104,7 @@ myNth (x:xs) y = myNth xs (y-1)
 myReadInt :: [ Char ] -> Int
 myReadInt [] = 0
 myReadInt ('-':xs)
-    | all isDigit xs = read xs :: Int
+    | all isDigit xs = ((read xs :: Int) * (-1))
     | otherwise = 0
 myReadInt x
     | all isDigit x = read x :: Int
