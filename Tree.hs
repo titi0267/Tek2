@@ -14,3 +14,9 @@ instance Functor Tree where
 listToTree :: Ord a => [a] -> Tree a
 listToTree [] = Empty
 listToTree x = foldr addInTree Empty x
+
+treeToList :: Tree a -> [a]
+treeToList Empty = []
+treeToList (Node left a right) = treeToList left ++ [a] ++ treeToList right
+
+
