@@ -19,4 +19,12 @@ treeToList :: Tree a -> [a]
 treeToList Empty = []
 treeToList (Node left a right) = treeToList left ++ [a] ++ treeToList right
 
+treeSort :: Ord a => [a] -> [a]
+treeSort [] = []
+treeSort x = treeToList (listToTree x)
+
+instance Foldable Tree where
+    foldMap f Empty = mempty
+    foldMap f (Node l a r) =  (foldMap f l) <> (f a) <> (foldMap f r)
+
 
