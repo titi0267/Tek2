@@ -113,18 +113,24 @@ myReadInt x
 main :: IO ()
 main = do
     args <- getArgs
-    case myLength args /= 3 || myElem (myNth args 1) ["+","-","/","*","%"] == False
-        || readInt (myNth args 0) == Nothing || readInt (myNth args 2) == Nothing of 
+    case myLength args /= 3 ||
+        myElem (myNth args 1) ["+","-","/","*","%"] == False
+        || readInt (myNth args 0) == Nothing
+        || readInt (myNth args 2) == Nothing of 
         True  -> exitWith (ExitFailure 84)
         False  -> pure ()
     case myNth args 1 of
         "+" -> print $ myReadInt (myNth args 0) + myReadInt (myNth args 2)
         "-" -> print $ myReadInt (myNth args 0) - myReadInt (myNth args 2)
         "*" -> print $ myReadInt (myNth args 0) * myReadInt (myNth args 2)
-        "/" -> case safeDiv (myReadInt (myNth args 0))  (myReadInt (myNth args 2)) of
+        "/" -> case safeDiv (myReadInt (myNth args 0))
+                (myReadInt (myNth args 2)) of
                 Nothing -> exitWith (ExitFailure 84)
-                _ -> print $ myReadInt (myNth args 0) `div` myReadInt (myNth args 2)   
-        "%" -> case safeMod (myReadInt (myNth args 0))  (myReadInt (myNth args 2)) of
+                _ -> print $ myReadInt (myNth args 0) `div`
+                    myReadInt (myNth args 2)   
+        "%" -> case safeMod (myReadInt (myNth args 0))
+            (myReadInt (myNth args 2)) of
                 Nothing -> exitWith (ExitFailure 84)
-                _ -> print $ myReadInt (myNth args 0) `mod` myReadInt (myNth args 2)
+                _ -> print $ myReadInt (myNth args 0) `mod`
+                    myReadInt (myNth args 2)
         _ -> exitWith (ExitFailure 84)
