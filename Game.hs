@@ -54,3 +54,16 @@ equip a Mummy = Just Mummy
 equip a (Skeleton b)= Just $ Skeleton a
 equip a (Witch (Just b)) = Just $ Witch (Just a)
 equip a _ = Just $ Witch (Just a)
+
+class HasItem a where
+    getItem :: a -> Maybe Item;
+    hasItem :: a -> Bool;
+    hasItem a = case getItem a of
+        Nothing -> False
+        (Just _) -> True
+
+instance HasItem Mob where
+    getItem Mummy = Nothing
+    getItem (Witch (Just x)) = Just x
+    getItem (Skeleton x) = Just x
+    getItem _ = Nothing
