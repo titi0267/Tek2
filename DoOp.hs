@@ -74,11 +74,10 @@ printBox :: Int -> IO ()
 printBox 1 = putStrLn "++"
 printBox x = case x <= 0 of
     True -> return ()
-    False -> do 
-            putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
-            putStr $ unlines $ replicate (x-2) (
-                concat["|", replicate (x*2-2) ' ', "|"])
-            putStr $ concat["+",replicate (x*2-2) '-', "+\n"]
+    False -> (putStr $ concat["+",replicate (x*2-2) '-', "+\n"]) >>
+            (putStr $ unlines $ replicate (x-2) (
+                concat["|", replicate (x*2-2) ' ', "|"])) >>
+            (putStr $ concat["+",replicate (x*2-2) '-', "+\n"])
 
 concatLines :: Int -> IO String
 concatLines x
