@@ -7,6 +7,10 @@ addInTree a (Node left b right) =  case a < b of
     True -> (Node (addInTree a left) b right)
     False -> (Node left b (addInTree a right))
 
-class Functor f where
-    fmap :: f -> Tree a -> Tree a
+instance Functor Tree where
+    fmap f Empty = Empty
+    fmap f (Node left a right) = Node (fmap f left) (f a) (fmap f right)
 
+listToTree :: Ord a => [a] -> Tree a
+listToTree [] = Empty
+listToTree x = foldr addInTree Empty x
