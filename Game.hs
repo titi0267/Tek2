@@ -38,8 +38,8 @@ showMob (Skeleton Sword) = "dead knight"
 showMob (Skeleton MagicWand) = "skeleton holding a " ++ showItem MagicWand
 showMob (Witch Nothing) = "witch"
 showMob (Witch (Just MagicWand)) = "sorceress"
-showMob (Witch (Just Sword)) = "witch holding a " ++ showItem Sword
-showMob _ = ""
+showMob (Witch (Just x)) = "witch holding a " ++ showItem x
+--showMob _ = ""
 
 create :: String -> Maybe Mob
 create "mummy" = Just Mummy
