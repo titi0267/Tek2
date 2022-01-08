@@ -143,11 +143,11 @@ chooseOp str (x,y) = case str of
         "rrr" -> rrr (x,y)
         _ -> ([],[])
 
-loopOnString :: [String] -> ([Int], [Int]) -> ([Int], [Int])
-loopOnString [] list = list
-loopOnString (x:xs) ([],b) = loopOnString xs (chooseOp x ([],b))
-loopOnString (x:xs) (a,[]) = loopOnString xs (chooseOp x (a,[]))
-loopOnString (x:xs) (a,b) = loopOnString xs (chooseOp x (a,b))
+lpOnStr :: [String] -> ([Int], [Int]) -> ([Int], [Int])
+lpOnStr [] list = list
+lpOnStr (x:xs) ([],b) = lpOnStr xs (chooseOp x ([],b))
+lpOnStr (x:xs) (a,[]) = lpOnStr xs (chooseOp x (a,[]))
+lpOnStr (x:xs) (a,b) = lpOnStr xs (chooseOp x (a,b))
 
 stringToInt :: [String] -> [Int]
 stringToInt =  map (read::String->Int)
@@ -166,10 +166,10 @@ main :: IO ()
 main = do
     args <- getArgs
     line <- getLine
-    --print $ loopOnString (putStringInTab line) (stringToInt args,[])
-    case sorted (loopOnString (putStringInTab line) (stringToInt args,[])) of
+    --print $ lpOnStr (putStringInTab line) (stringToInt args,[])
+    case sorted (lpOnStr (putStringInTab line) (stringToInt args,[])) of
         True -> putStrLn "OK"
         False -> (putStr $ "KO: ") >>
-                (print $ loopOnString (putStringInTab line) (stringToInt args,[]))
+                (print $ lpOnStr (putStringInTab line) (stringToInt args,[]))
     --print $ stringToInt args
     --print $ (stringToInt args)
