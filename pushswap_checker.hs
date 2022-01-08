@@ -34,20 +34,24 @@ myFst (a,b) = a
 mySnd :: (a , b) -> b
 mySnd (a,b) = b
 
-sa :: [ Int ] -> [ Int ]
-sa [] = []
-sa x = [myNth x 1] ++ [myNth x 0] ++ myDrop 2 x
+sa :: ([Int],[Int]) -> ([Int],[Int])
+sa ([],[]) = ([],[])
+sa (x,[]) = ([myNth x 1] ++ [myNth x 0] ++ myDrop 2 x,[])
+sa ([],y) = ([],y)
+sa (x,y) = ([myNth x 1] ++ [myNth x 0] ++ myDrop 2 x, y)
 
-sb :: [ Int ] -> [ Int ]
-sb [] = []
-sb x = [myNth x 1] ++ [myNth x 0] ++ myDrop 2 x
+sb :: ([Int],[Int]) -> ([Int],[Int])
+sb ([],[]) = ([],[])
+sb (x,[]) = (x,[])
+sb ([],y) = ([],[myNth y 1] ++ [myNth y 0] ++ myDrop 2 y)
+sb (x,y) = (x, [myNth y 1] ++ [myNth y 0] ++ myDrop 2 y) 
 -- Concat second + first + (remove first & second)
 
 sc :: ([Int], [Int]) -> ([Int], [Int])
 sc ([],[]) = ([],[])
-sc ([], b) = ([], sb $ mySnd ([], b))
-sc (a, []) = (sa $ myFst (a, []) , [])
-sc (a,b) =  ( sa $ myFst (a, b) , sb $ mySnd (a, b) )
+sc ([], b) = ([], mySnd $ sb ([],b))
+sc (a, []) = (myFst $ sa (a, []), [])
+sc (a,b) =  (myFst $ sa (a, b),mySnd $ sb (a, b))
 
 pa :: ([Int], [Int]) -> ([Int], [Int])
 pa ([],[]) = ([],[])
@@ -102,34 +106,34 @@ rrr (x,y) = ([myNth x (myLength x-1)] ++ take (myLength x-1) x,
 putStringInTab :: String -> [String]
 putStringInTab = words
 
-loopOnString :: [String] -> String
-loopOnString [] = []
-loopOnString (x:xs) = case x == [] of
-    True -> []
-    False -> loopOnString 
-        --"sa" -> 1
-        --"sb" -> 2
-        --"sc" -> 3
-        --"pa" -> 4
-        --"pb" -> 5
-        --"ra" -> 6
-        --"rb" -> 7
-        --"rr" -> 8
-        --"rra" -> 9
-        --"rrb" -> 10
-        --"rrr" -> 11
-        --_ -> 0
+chooseOp :: String -> ([Int],[Int]) -> ([Int],[Int])
+chooseOp str (x,y) = case str of
+        "sa" -> sa (x,y)
+        "sb" -> sb (x,y)
+        "sc" -> sc (x,y)
+        "pa" -> pa (x,y)
+        "pb" -> pb (x,y)
+        "ra" -> ra (x,y)
+        "rb" -> rb (x,y)
+        "rr" -> rr (x,y)
+        "rra" -> rra (x,y)
+        "rrb" -> rrb (x,y)
+        "rrr" -> rrr (x,y)
+        _ -> ([],[])
+
+loopOnString :: [String] -> ([Int], [Int]) -> ([Int], [Int])
+loopOnString [] list = list
+loopOnString (x:xs) ([],b) = loopOnString xs (chooseOp x ([],b))
+loopOnString (x:xs) (a,[]) = loopOnString xs (chooseOp x (a,[]))
+loopOnString (x:xs) (a,b) = loopOnString xs (chooseOp x (a,b))
+
+stringToInt :: [String] -> [Int]
+stringToInt =  map (read::String->Int)
 
 main :: IO ()
 main = do
     args <- getArgs
     line <- getLine
-    print line
-    case (loopOnString (putStringInTab line)) of
-        "sa" -> print "sa"
-        _ -> print "rien"
-        --0 -> print "Nop"
-        --1 -> 
-        --9 -> print "9"
-        --3 -> print "3"
-        --_ -> print "Nop"
+    print $ loopOnString (putStringInTab line) (stringToInt args,[])
+
+
