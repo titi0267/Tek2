@@ -144,7 +144,7 @@ main = do
     --print $ loopOnString (putStringInTab line) (stringToInt args,[])
     case sorted (loopOnString (putStringInTab line) (stringToInt args,[])) of
         True -> putStrLn "OK"
-        False -> (putStrLn $ "Ko :") >>
+        False -> (putStr $ "Ko: ") >>
                 (print $ loopOnString (putStringInTab line) (stringToInt args,[]))
     --print $ stringToInt args
     --print $ (stringToInt args)
