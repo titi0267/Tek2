@@ -122,6 +122,27 @@ rrr (x,y) = ([myNth x (myLength x-1)] ++ take (myLength x-1) x,
 putStringInTab :: String -> [String]
 putStringInTab = words
 
+errorHandling :: String -> Bool
+errorHandling x = case x of
+        "sa" -> True
+        "sb" -> True
+        "sc" -> True
+        "pa" -> True
+        "pb" -> True
+        "ra" -> True
+        "rb" -> True
+        "rr" -> True
+        "rra" -> True
+        "rrb" -> True
+        "rrr" -> True
+        _ -> False
+
+putListInStr :: [String] -> Bool
+putListInStr [] = True
+putListInStr (x:xs)
+    | putListInStr xs = errorHandling x
+    | otherwise = False
+
 --chooseOp :: String -> ([Int],[Int]) -> ([Int],[Int])
 --chooseOp "sa" (x,y) = sa (x,y)
 --chooseOp "sb" (x,y) = sb (x,y)
@@ -167,6 +188,10 @@ main = do
     args <- getArgs
     line <- getLine
     --print $ lpOnStr (putStringInTab line) (stringToInt args,[])
+    --print $ putListInStr args--
+    case putListInStr (putStringInTab line) of
+        True -> pure ()
+        False -> exitWith (ExitFailure 84)
     case sorted (lpOnStr (putStringInTab line) (stringToInt args,[])) of
         True -> putStrLn "OK"
         False -> (putStr $ "KO: ") >>
