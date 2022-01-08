@@ -173,5 +173,3 @@ main = do
                 (print $ loopOnString (putStringInTab line) (stringToInt args,[]))
     --print $ stringToInt args
     --print $ (stringToInt args)
-    
-
