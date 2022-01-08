@@ -36,15 +36,23 @@ mySnd (a,b) = b
 
 sa :: ([Int],[Int]) -> ([Int],[Int])
 sa ([],[]) = ([],[])
-sa (x,[]) = ([myNth x 1] ++ [myNth x 0] ++ myDrop 2 x,[])
 sa ([],y) = ([],y)
-sa (x,y) = ([myNth x 1] ++ [myNth x 0] ++ myDrop 2 x, y)
+sa (x,[]) = case myLength x <= 1 of
+    True -> (x,[])
+    False -> ([myNth x 1] ++ [myNth x 0] ++ myDrop 2 x,[])
+sa (x,y) = case myLength x <= 1 of
+    True -> (x,y)
+    False -> ([myNth x 1] ++ [myNth x 0] ++ myDrop 2 x, y)
 
 sb :: ([Int],[Int]) -> ([Int],[Int])
 sb ([],[]) = ([],[])
 sb (x,[]) = (x,[])
-sb ([],y) = ([],[myNth y 1] ++ [myNth y 0] ++ myDrop 2 y)
-sb (x,y) = (x, [myNth y 1] ++ [myNth y 0] ++ myDrop 2 y) 
+sb ([],y) = case myLength y <= 1 of 
+    True -> ([],y)
+    False -> ([],[myNth y 1] ++ [myNth y 0] ++ myDrop 2 y)
+sb (x,y) = case myLength y <= 1 of
+    True -> (x,y)
+    False -> (x, [myNth y 1] ++ [myNth y 0] ++ myDrop 2 y) 
 -- Concat second + first + (remove first & second)
 
 sc :: ([Int], [Int]) -> ([Int], [Int])
@@ -55,15 +63,23 @@ sc (a,b) =  (myFst $ sa (a, b),mySnd $ sb (a, b))
 
 pa :: ([Int], [Int]) -> ([Int], [Int])
 pa ([],[]) = ([],[])
-pa ([],y:ys) = ([y],myDrop 1 [y] ++ ys)
+pa ([],y:ys) = case myLength (y:ys) == 0 of
+    True -> ([],y:ys)
+    False -> ([y],myDrop 1 [y] ++ ys)
 pa (x,[]) = (x,[])
-pa (x,y:ys) = (y : x,myDrop 1 [y] ++ ys)
+pa (x,y:ys) = case myLength (y:ys) == 0 of
+    True -> (x,y:ys)
+    False -> (y : x,myDrop 1 [y] ++ ys)
 
 pb :: ([Int], [Int]) -> ([Int], [Int])
 pb ([],[]) = ([],[])
 pb ([],y) = ([],y)
-pb (x:xs,[]) = (myDrop 1 [x] ++ xs, [x])
-pb (x:xs,y) = (myDrop 1 [x] ++ xs, x : y)
+pb (x:xs,[]) = case myLength (x:xs) == 0 of
+    True -> (x:xs,[])
+    False -> (myDrop 1 [x] ++ xs, [x])
+pb (x:xs,y) = case myLength (x:xs) == 0 of
+    True -> (x:xs,y)
+    False -> (myDrop 1 [x] ++ xs, x : y)
 
 ra :: ([Int], [Int]) -> ([Int], [Int])
 ra ([],[]) = ([],[])
@@ -106,6 +122,12 @@ rrr (x,y) = ([myNth x (myLength x-1)] ++ take (myLength x-1) x,
 putStringInTab :: String -> [String]
 putStringInTab = words
 
+--chooseOp :: String -> ([Int],[Int]) -> ([Int],[Int])
+--chooseOp "sa" (x,y) = sa (x,y)
+--chooseOp "sb" (x,y) = sb (x,y)
+--chooseOp _ (x,y) = sa (x,y)
+
+
 chooseOp :: String -> ([Int],[Int]) -> ([Int],[Int])
 chooseOp str (x,y) = case str of
         "sa" -> sa (x,y)
@@ -131,11 +153,14 @@ stringToInt :: [String] -> [Int]
 stringToInt =  map (read::String->Int)
 
 sorted :: Ord a => ([a],[a]) -> Bool
-sorted ([],_) = True
-sorted ([x],_) = True
+sorted ([],[]) = True
+sorted ([],y) = False
+sorted ([x],[]) = True
+sorted ([x],y) = False
 sorted ((x:y:xs),z) = case x <= y of
     True -> sorted ((y:xs),z)
     False -> False
+--sorted (x,_) = False
 
 main :: IO ()
 main = do
@@ -144,7 +169,7 @@ main = do
     --print $ loopOnString (putStringInTab line) (stringToInt args,[])
     case sorted (loopOnString (putStringInTab line) (stringToInt args,[])) of
         True -> putStrLn "OK"
-        False -> (putStr $ "Ko: ") >>
+        False -> (putStr $ "KO: ") >>
                 (print $ loopOnString (putStringInTab line) (stringToInt args,[]))
     --print $ stringToInt args
     --print $ (stringToInt args)
