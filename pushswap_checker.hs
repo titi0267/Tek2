@@ -130,10 +130,23 @@ loopOnString (x:xs) (a,b) = loopOnString xs (chooseOp x (a,b))
 stringToInt :: [String] -> [Int]
 stringToInt =  map (read::String->Int)
 
+sorted :: Ord a => ([a],[a]) -> Bool
+sorted ([],_) = True
+sorted ([x],_) = True
+sorted ((x:y:xs),z) = case x <= y of
+    True -> sorted ((y:xs),z)
+    False -> False
+
 main :: IO ()
 main = do
     args <- getArgs
     line <- getLine
-    print $ loopOnString (putStringInTab line) (stringToInt args,[])
-
+    --print $ loopOnString (putStringInTab line) (stringToInt args,[])
+    case sorted (loopOnString (putStringInTab line) (stringToInt args,[])) of
+        True -> putStrLn "OK"
+        False -> (putStrLn $ "Ko :") >>
+                (print $ loopOnString (putStringInTab line) (stringToInt args,[]))
+    --print $ stringToInt args
+    --print $ (stringToInt args)
+    
 
