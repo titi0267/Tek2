@@ -3,6 +3,8 @@ import Data.Char (isDigit)
 import System.Exit
 import System.Environment
 
+-- Lib functions
+
 myIsNeg :: Int -> Bool
 myIsNeg x
     | x < 0 = True
@@ -34,6 +36,17 @@ myFst (a,b) = a
 mySnd :: (a , b) -> b
 mySnd (a,b) = b
 
+readInt :: [ Char ] -> Maybe Int
+readInt [] = Nothing
+readInt ('-':xs)
+    | all isDigit xs = Just ((read xs :: Int) * (-1))
+    | otherwise = Nothing
+readInt x
+    | all isDigit x = Just (read x :: Int)
+    | otherwise = Nothing
+
+-- All ops for pushswap
+
 sa :: ([Int],[Int]) -> ([Int],[Int])
 sa ([],[]) = ([],[])
 sa ([],y) = ([],y)
@@ -52,8 +65,7 @@ sb ([],y) = case myLength y <= 1 of
     False -> ([],[myNth y 1] ++ [myNth y 0] ++ myDrop 2 y)
 sb (x,y) = case myLength y <= 1 of
     True -> (x,y)
-    False -> (x, [myNth y 1] ++ [myNth y 0] ++ myDrop 2 y) 
--- Concat second + first + (remove first & second)
+    False -> (x, [myNth y 1] ++ [myNth y 0] ++ myDrop 2 y)
 
 sc :: ([Int], [Int]) -> ([Int], [Int])
 sc ([],[]) = ([],[])
@@ -119,23 +131,12 @@ rrr (x,[]) = ([myNth x (myLength x-1)] ++ take (myLength x-1) x,[])
 rrr (x,y) = ([myNth x (myLength x-1)] ++ take (myLength x-1) x,
     [myNth y (myLength y-1)] ++ take (myLength y-1) y)
 
+-- From String to list of String parsed with spaces
+
 putStringInTab :: String -> [String]
 putStringInTab = words
 
-errorHandling :: String -> Bool
-errorHandling x = case x of
-        "sa" -> True
-        "sb" -> True
-        "sc" -> True
-        "pa" -> True
-        "pb" -> True
-        "ra" -> True
-        "rb" -> True
-        "rr" -> True
-        "rra" -> True
-        "rrb" -> True
-        "rrr" -> True
-        _ -> False
+--Parse ops list
 
 putListInStr :: [String] -> Bool
 putListInStr [] = True
@@ -143,11 +144,44 @@ putListInStr (x:xs)
     | putListInStr xs = errorHandling x
     | otherwise = False
 
---chooseOp :: String -> ([Int],[Int]) -> ([Int],[Int])
---chooseOp "sa" (x,y) = sa (x,y)
---chooseOp "sb" (x,y) = sb (x,y)
---chooseOp _ (x,y) = sa (x,y)
+-- error Handling for echo command
 
+errorHandlingR :: String -> Bool 
+errorHandlingR "ra" = True
+errorHandlingR "rb" = True
+errorHandlingR "rr" = True
+errorHandlingR "rra" = True
+errorHandlingR "rrb" = True
+errorHandlingR "rrr" = True
+errorHandlingR _ = False
+
+errorHandling :: String -> Bool
+errorHandling str = case str of
+        "sa" -> True
+        "sb" -> True
+        "sc" -> True
+        "pa" -> True
+        "pb" -> True
+        _ -> errorHandlingR str
+
+--Error handling for pushswap_checker args
+
+intOnly :: [String] -> Bool
+intOnly [] = True
+intOnly (x:xs) = case readInt x of
+    Nothing -> False
+    Just x -> intOnly xs
+
+--Parse echo command & call ops
+
+chooseOpR :: String -> ([Int],[Int]) -> ([Int],[Int])
+chooseOpR "ra" (x,y) = ra (x,y)
+chooseOpR "rb" (x,y) = rb (x,y)
+chooseOpR "rr" (x,y) = rr (x,y)
+chooseOpR "rra" (x,y) = rra (x,y)
+chooseOpR "rrb" (x,y) = rrb (x,y)
+chooseOpR "rrr"  (x,y) = rrr (x,y)
+chooseOpR _ (x,y) = ([],[])
 
 chooseOp :: String -> ([Int],[Int]) -> ([Int],[Int])
 chooseOp str (x,y) = case str of
@@ -156,13 +190,9 @@ chooseOp str (x,y) = case str of
         "sc" -> sc (x,y)
         "pa" -> pa (x,y)
         "pb" -> pb (x,y)
-        "ra" -> ra (x,y)
-        "rb" -> rb (x,y)
-        "rr" -> rr (x,y)
-        "rra" -> rra (x,y)
-        "rrb" -> rrb (x,y)
-        "rrr" -> rrr (x,y)
-        _ -> ([],[])
+        _ -> chooseOpR str (x,y)
+
+--Loop on list of String from echo command
 
 lpOnStr :: [String] -> ([Int], [Int]) -> ([Int], [Int])
 lpOnStr [] list = list
@@ -170,8 +200,12 @@ lpOnStr (x:xs) ([],b) = lpOnStr xs (chooseOp x ([],b))
 lpOnStr (x:xs) (a,[]) = lpOnStr xs (chooseOp x (a,[]))
 lpOnStr (x:xs) (a,b) = lpOnStr xs (chooseOp x (a,b))
 
+--Cast pushswap_checker args from String list to Int list
+
 stringToInt :: [String] -> [Int]
 stringToInt =  map (read::String->Int)
+
+--Loop on first list to check if sorted
 
 sorted :: Ord a => ([a],[a]) -> Bool
 sorted ([],[]) = True
@@ -181,20 +215,17 @@ sorted ([x],y) = False
 sorted ((x:y:xs),z) = case x <= y of
     True -> sorted ((y:xs),z)
     False -> False
---sorted (x,_) = False
+
+--Main function, ErrorHandling + do ops + check if first list sorted
 
 main :: IO ()
 main = do
     args <- getArgs
     line <- getLine
-    --print $ lpOnStr (putStringInTab line) (stringToInt args,[])
-    --print $ putListInStr args--
-    case putListInStr (putStringInTab line) of
+    case (putListInStr (putStringInTab line)) && intOnly args of
         True -> pure ()
         False -> exitWith (ExitFailure 84)
     case sorted (lpOnStr (putStringInTab line) (stringToInt args,[])) of
         True -> putStrLn "OK"
         False -> (putStr $ "KO: ") >>
                 (print $ lpOnStr (putStringInTab line) (stringToInt args,[]))
-    --print $ stringToInt args
-    --print $ (stringToInt args)
