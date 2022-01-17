@@ -1,0 +1,7 @@
+./Makefile
+./ex02/concat.h
+./ex00/prototype.h
+./print.h
+./whut.h
+./tests
+./vgcore.*
