@@ -51,14 +51,14 @@ bool int_list_add_elem_at_front(int_list_t *front_ptr, int elem)
 
 bool int_list_add_elem_at_back(int_list_t *front_ptr, int elem)
 {
-    int_list_t new_node = malloc(sizeof(int_list_t));
+    int_node_t *new_node = malloc(sizeof(int_node_t));
     int_list_t last_node = (*front_ptr);
     
     if (new_node == NULL)
         return (false);
     new_node->value = elem;
-    if (last_node == NULL)
-        last_node = new_node;
+    if ((*front_ptr) == NULL)
+        (*front_ptr) = new_node;
     else {
         while (last_node->next != NULL)
             last_node = last_node->next;
@@ -80,7 +80,7 @@ bool int_list_add_elem_at_position(int_list_t *front_ptr, int elem, unsigned int
     else {
         for (;last_node != NULL; position--, last_node = last_node->next) {
             if (position == 0) {
-                new_node->next = last_node->next; 
+                new_node->next = last_node->next;
                 last_node->next = new_node;
                 break;
             }
@@ -131,34 +131,60 @@ int int_list_get_elem_at_position(int_list_t list, unsigned int position)
 
 bool int_list_del_elem_at_front(int_list_t *front_ptr)
 {
-    /*int_list_t del_node = (*front_ptr);
+    int_list_t del_node = (*front_ptr);
 
     if (del_node == NULL)
         return (false);
-    
-  /*Moving head to the next node
-    *del_node = (*head)->next;
-  
-  /*Deleting the first node
-  free(tmp);*/
+    *front_ptr = (*front_ptr)->next;
+    free(del_node);
+    return (true);
 }
 
 bool int_list_del_elem_at_back(int_list_t *front_ptr)
 {
+    int_list_t del_node = (*front_ptr);
+    int_list_t last_node;
 
+    if (del_node == NULL)
+        return (false);
+    while(del_node->next->next != NULL)
+        del_node = del_node->next;
+      
+    last_node = del_node->next;
+    del_node->next = NULL;
+    free(last_node); 
 }
 
 bool int_list_del_elem_at_position(int_list_t *front_ptr, unsigned int position)
 {
+    int_list_t del_node = *front_ptr;
+    int_list_t next;
 
+    if (del_node == NULL)
+        return (false); 
+    if (position == 0)
+        return (int_list_del_elem_at_front(front_ptr));
+    for (int i = 0; del_node != NULL && i < position - 1; i++)
+        del_node = del_node->next;
+     if (del_node == NULL || del_node->next == NULL)
+        return (false);
+    next = del_node->next->next;
+    free(del_node->next);
 }
 
 void int_list_clear(int_list_t *front_ptr)
 {
+    int_list_t tmp;
 
+   while (*front_ptr != NULL)
+    {
+       tmp = *front_ptr;
+       *front_ptr = (*front_ptr)->next;
+       free(tmp);
+    }
 }
 
-/*
+
 static void populate_list ( int_list_t * list_head )
 {
 int_list_add_elem_at_back ( list_head , 5) ;
@@ -184,4 +210,4 @@ test_size ( list_head ) ;
 test_del (& list_head ) ;
 int_list_clear (& list_head ) ;
 return 0;
-}*/
+}
