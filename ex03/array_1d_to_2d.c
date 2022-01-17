@@ -9,13 +9,15 @@
 
 void array_1d_to_2d(const int *array, size_t height, size_t width, int ***res)
 {
+    int x = 0;
+
     (*res) = malloc(sizeof(int *) * height);
     for (int i = 0; i < (int)height; i++) {
         (*res)[i] = malloc(sizeof(int) * width);
     }
     for (int i = 0; i < (int)height; i++) {
-        for (int y = 0; y < (int)width; y++) {
-            (*res)[i][y] = array[y];
+        for (int y = 0; y < (int)width; y++, x++) {
+            (*res)[i][y] = array[x];
         }
     }
 }
