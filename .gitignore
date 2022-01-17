@@ -1,7 +1,7 @@
-./Makefile
+./Makefile_test
 ./ex02/concat.h
 ./ex00/prototype.h
-./print.h
+./ex04/print.h
 ./whut.h
 ./tests
 ./vgcore.*
