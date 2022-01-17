@@ -5,7 +5,7 @@
 ** print
 */
 #include <stdio.h>
-#include "../print.h"
+#include "print.h"
 #include <string.h>
 
 void print_normal(const char *str)
