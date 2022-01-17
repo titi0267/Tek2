@@ -1,13 +1,12 @@
 #include <stdio.h>
 
-int error_handling(int ac, char **av)
+int z(void)
 {
-    if (ac == 0)
-        return (time(NULL));
+    printf("z\n");
+    return (0);
 }
 
-int main(int ac, char **av)
+int main(void)
 {
-    return (error_handling(ac,av));
-    return (0);
+    return (z());
 }
