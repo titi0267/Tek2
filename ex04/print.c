@@ -15,7 +15,7 @@ void print_normal(const char *str)
 
 void print_reverse(const char *str)
 {
-    for (int i = strlen(str); i >= 0; i--) {
+    for (int i = strlen(str)-1; i >= 0; i--) {
         printf("%c", str[i]);
     }
     printf("\n");
@@ -23,7 +23,7 @@ void print_reverse(const char *str)
 
 void print_upper(const char *str)
 {
-    for (int i = 0; i <= (int)strlen(str); i++) {
+    for (int i = 0; i < (int)strlen(str); i++) {
         if (str[i] >= 97 && str[i] <= 122) 
             printf("%c", str[i] - 32);
         else
