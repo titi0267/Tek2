@@ -22,6 +22,7 @@ void array_1d_to_2d(const int *array, size_t height, size_t width, int ***res)
 
 void array_2d_free(int **array, size_t height, size_t width)
 {
+    width = width;
     for (int i = 0; i < (int)height; i++)
         free(array[i]);
     free(array);
