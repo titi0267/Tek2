@@ -34,10 +34,6 @@ bool list_add_elem_at_front(list_t *front_ptr, void *elem)
     if (new_node == NULL)
         return (false);
     new_node->value = elem;
-    if (list_is_empty(*front_ptr) == true) {
-        new_node->next = NULL;
-        return (true);
-    }
     new_node->next = (*front_ptr);
     (*front_ptr) = new_node;
     return (true);
