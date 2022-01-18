@@ -24,7 +24,6 @@ bool int_list_del_elem_at_front(int_list_t *front_ptr)
     }
     (*front_ptr) = (*front_ptr)->next;
     free(del_node);
-    del_node = NULL;
     return (true);
 }
 
@@ -33,10 +32,11 @@ bool int_list_del_elem_at_back(int_list_t *front_ptr)
     int_list_t del_node = (*front_ptr);
     int_list_t before = (*front_ptr);
 
-    if (int_list_is_empty(*front_ptr) == true)
+    if (int_list_is_empty(*front_ptr) == true) {
         return (false);
+    }
     if (del_node->next == NULL) {
-        free(del_node);
+        free(*front_ptr);
         *front_ptr = NULL;
         return (true);
     }
@@ -70,12 +70,12 @@ bool int_list_del_elem_at_position(int_list_t * front_ptr, unsigned int position
 
 void int_list_clear(int_list_t *front_ptr)
 {
-    int_list_t tmp;
+    int_list_t node = *front_ptr;
+    int_list_t next;
 
-    while (*front_ptr != NULL)
-    {
-       tmp = *front_ptr;
-       *front_ptr = (*front_ptr)->next;
-       free(tmp);
+    while (node != NULL) {
+        next = node->next;
+        free(node);
+        node = next;
     }
 }

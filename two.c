@@ -51,6 +51,7 @@ bool int_list_add_elem_at_position(int_list_t *front_ptr, int elem,
     int_list_t before_node = (*front_ptr);
 
     if (new_node == NULL || int_list_get_size(*front_ptr) < position) {
+        free(new_node);
         return (false);
     }
     new_node->value = elem;

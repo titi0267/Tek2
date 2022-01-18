@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-unsigned int list_get_size (list_t list)
+unsigned int list_get_size(list_t list)
 {
     unsigned int len = 0;
 
@@ -44,8 +44,9 @@ bool list_add_elem_at_back(list_t *front_ptr, void *elem)
     list_t new_node = malloc(sizeof(*new_node));
     list_t last_node;
     
-    if (new_node == NULL)
+    if (new_node == NULL) {
         return (false);
+    }
     new_node->value = elem;
     new_node->next = NULL;
     if (list_is_empty(*front_ptr) == true) {
@@ -66,8 +67,10 @@ bool list_add_elem_at_position(list_t *front_ptr, void *elem,
     list_t next_node = (*front_ptr);
     list_t before_node = (*front_ptr);
 
-    if (new_node == NULL || list_get_size(*front_ptr) < position)
+    if (new_node == NULL || list_get_size(*front_ptr) < position) {
+        free(new_node);
         return (false);
+    }
     new_node->value = elem;
     if (position == 0) {
         free(new_node);

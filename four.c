@@ -30,13 +30,13 @@ bool list_del_elem_at_position(list_t * front_ptr, unsigned int position)
 
 void list_clear(list_t *front_ptr)
 {
-    list_t tmp;
+    list_t node = *front_ptr;
+    list_t next;
 
-    while (*front_ptr != NULL)
-    {
-       tmp = *front_ptr;
-       *front_ptr = (*front_ptr)->next;
-       free(tmp);
+    while (node != NULL) {
+        next = node->next;
+        free(node);
+        node = next;
     }
 }
 

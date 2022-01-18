@@ -52,32 +52,31 @@ bool list_del_elem_at_front(list_t *front_ptr)
         return (false);
     if (del_node->next == NULL) {
         free(*front_ptr);
-        del_node = NULL;
+        *front_ptr = NULL;
         return (true);
     }
     (*front_ptr) = (*front_ptr)->next;
     free(del_node);
-    del_node = NULL;
     return (true);
 }
 
 bool list_del_elem_at_back(list_t *front_ptr)
 {
-    list_t del_node = (*front_ptr);
-    list_t before = (*front_ptr);
+    list_t tmp = *front_ptr;
+    list_t last;
 
-    if (list_is_empty(*front_ptr) == true)
+    if (front_ptr == NULL || (*front_ptr) == NULL)
         return (false);
-    if (del_node->next == NULL) {
-        free(del_node);
+    if ((*front_ptr)->next == NULL) {
+        free(*front_ptr);
         *front_ptr = NULL;
         return (true);
     }
-    while (del_node->next != NULL) {
-        before = del_node;
-        del_node = del_node->next;
-    }
-    before->next  = NULL;
-    free(del_node);
+    while (tmp->next->next != NULL)
+        tmp = tmp->next;
+    last = tmp->next;
+    tmp->next = NULL;
+    tmp = last;
+    free(last);
     return (true);
 }
