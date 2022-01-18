@@ -18,10 +18,6 @@ bool int_list_add_elem_at_front(int_list_t *front_ptr, int elem)
     if (new_node == NULL)
         return (false);
     new_node->value = elem;
-    if (int_list_is_empty(*front_ptr) == true) {
-        new_node->next = NULL;
-        return (true);
-    }
     new_node->next = (*front_ptr);
     (*front_ptr) = new_node;
     return (true);

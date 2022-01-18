@@ -18,7 +18,7 @@ void *list_get_elem_at_front(list_t list)
 
 void *list_get_elem_at_back(list_t list)
 {    
-    if (list_is_empty(list) == true)
+    if (list == NULL)
         return (NULL);
     if (list->next == NULL)
         return (list->value);
