@@ -23,7 +23,6 @@ void string_destroy (string_t *this)
 {
     this->str = NULL;
     free(this->str);
-    free(this);
 }
 
 void assign_s(string_t *this, const string_t *str)
