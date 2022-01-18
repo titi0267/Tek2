@@ -54,15 +54,13 @@ bool int_list_add_elem_at_position(int_list_t *front_ptr, int elem,
     int_list_t next_node = (*front_ptr);
     int_list_t before_node = (*front_ptr);
 
-    if (new_node == NULL)
+    if (new_node == NULL || int_list_get_size(*front_ptr) < position || position < 0)
         return (false);
     new_node->value = elem;
-    if (int_list_get_size(*front_ptr) < position || position < 0)
-        return (false);
-    if (int_list_get_size(*front_ptr) == position)
-        return (int_list_add_elem_at_back(front_ptr, elem));
-    if (position == 0)
+    if (position == 0) {
+        free(new_node);
         return (int_list_add_elem_at_front(front_ptr, elem));
+    }
     while (position != 0) {
         before_node = next_node;
         next_node = next_node->next;
