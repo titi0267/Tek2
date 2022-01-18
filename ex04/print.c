@@ -40,17 +40,8 @@ void print_42(const char *str)
 
 void do_action(action_t action, const char *str )
 {
-    void (*functionName[4]) (const char *) = {print_normal, print_reverse, print_upper, print_42};
+    void (*functionName[4]) (const char *) = {print_normal,
+        print_reverse, print_upper, print_42};
 
     (*functionName[action]) (str);
-}
-
-int main ( void )
-{
-const char * str = "So long , and thanks for all the fish .";
-do_action ( PRINT_NORMAL , str ) ;
-do_action ( PRINT_REVERSE , str ) ;
-do_action ( PRINT_UPPER , str ) ;
-do_action ( PRINT_42 , str ) ;
-return (0) ;
 }

@@ -30,5 +30,5 @@ int pyramid_path(unsigned int size, const unsigned int **map)
             index += 1;
         }
     }
-    return(path);
+    return (path);
 }
