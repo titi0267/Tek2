@@ -12,6 +12,7 @@
 bool list_del_elem_at_position(list_t * front_ptr, unsigned int position)
 {
     list_t tmp = *front_ptr;
+    list_t node;
 
     if (front_ptr == NULL)
         return (false);
@@ -21,7 +22,7 @@ bool list_del_elem_at_position(list_t * front_ptr, unsigned int position)
         tmp = tmp->next;
     if (tmp == NULL || tmp->next == NULL)
         return (false);
-    list_t node = tmp->next->next;
+    node = tmp->next->next;
     free(tmp->next);
     tmp->next = node;
     return (true);

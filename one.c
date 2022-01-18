@@ -51,6 +51,7 @@ bool int_list_del_elem_at_back(int_list_t *front_ptr)
 bool int_list_del_elem_at_position(int_list_t * front_ptr, unsigned int position)
 {
     int_list_t tmp = *front_ptr;
+    int_list_t node;
 
     if (front_ptr == NULL)
         return (false);
@@ -60,7 +61,7 @@ bool int_list_del_elem_at_position(int_list_t * front_ptr, unsigned int position
         tmp = tmp->next;
     if (tmp == NULL || tmp->next == NULL)
         return (false);
-    int_list_t node = tmp->next->next;
+    node = tmp->next->next;
     free(tmp->next);
     tmp->next = node;
     return (true);
