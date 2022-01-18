@@ -66,7 +66,7 @@ bool list_add_elem_at_position(list_t *front_ptr, void *elem,
     list_t next_node = (*front_ptr);
     list_t before_node = (*front_ptr);
 
-    if (new_node == NULL || list_get_size(*front_ptr) < (position + 1))
+    if (new_node == NULL || list_get_size(*front_ptr) < position)
         return (false);
     new_node->value = elem;
     if (position == 0) {
