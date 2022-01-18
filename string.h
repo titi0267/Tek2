@@ -8,8 +8,13 @@
 #ifndef STRING_H_
 #define STRING_H_
 
-typedef struct string_s {
+typedef struct string_s string_t;
+
+struct string_s {
     char *str;
-} string_t;
+    void (*assign_c)(string_t *this, const char *s);
+};
+
+void assign_c(string_t *this, const char *s);
 
 #endif /* !STRING_H_ */
