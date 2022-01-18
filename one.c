@@ -37,6 +37,7 @@ bool int_list_del_elem_at_back(int_list_t *front_ptr)
         return (false);
     if (del_node->next == NULL) {
         free(del_node);
+        *front_ptr = NULL;
         return (true);
     }
     while (del_node->next != NULL) {
