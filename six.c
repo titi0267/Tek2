@@ -78,4 +78,5 @@ bool list_del_elem_at_back(list_t *front_ptr)
     }
     before->next  = NULL;
     free(del_node);
+    return (true);
 }

@@ -45,6 +45,7 @@ bool int_list_del_elem_at_back(int_list_t *front_ptr)
     }
     before->next  = NULL;
     free(del_node);
+    return (true);
 }
 
 bool int_list_del_elem_at_position(int_list_t * front_ptr, unsigned int position)
