@@ -38,11 +38,9 @@ int int_list_get_elem_at_position(int_list_t list, unsigned int position)
 {
     int_list_t node;
 
-    if (int_list_get_size(list) < position || position < 0) {
-        return (false);
+    if (int_list_get_size(list) < position) {
+        return (0);
     }
-    if (int_list_get_size(list) == position)
-        return (int_list_get_elem_at_back(list));
     if (position == 0)
         return (int_list_get_elem_at_front(list));
     node = list;
