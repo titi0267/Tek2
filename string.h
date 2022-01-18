@@ -13,8 +13,10 @@ typedef struct string_s string_t;
 struct string_s {
     char *str;
     void (*assign_c)(string_t *this, const char *s);
+    void (*append_c)(string_t *this, const char *ap);
 };
 
+void append_c(string_t *this, const char *ap);
 void assign_c(string_t *this, const char *s);
 
 #endif /* !STRING_H_ */
