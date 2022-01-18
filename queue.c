@@ -34,8 +34,3 @@ void queue_clear(queue_t *queue_ptr)
     return (list_clear(queue_ptr));
 }
 
-void *queue_front(queue_t queue)
-{
-    return (list_get_elem_at_back(queue));
-}
-
