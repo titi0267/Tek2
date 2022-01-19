@@ -28,6 +28,8 @@ typedef struct
     push_back_t push_back;
     pop_front_t pop_front;
     pop_back_t pop_back;
+    get_front_t front;
+    get_back_t back;
 } ListClass;
 
 typedef struct {
@@ -314,6 +316,20 @@ static void List_setitem(ListClass *this, ...)
     va_end(args);
 }
 
+static Object *List_get_front(ListClass *this)
+{
+    if (this->_list_start == NULL)
+        raise("List is empty");
+    return this->_list_start->data;
+}
+
+static Object *List_get_back(ListClass *this)
+{
+    if (this->_list_end == NULL)
+        raise("List is empty");
+    return this->_list_end->data;
+}
+
 static const ListClass _descr = {
     {   /* Container struct */
         {   /* Class struct */
@@ -344,6 +360,8 @@ static const ListClass _descr = {
     .push_back = (push_back_t) &List_add_at_back,
     .pop_front = (pop_front_t) &List_del_at_front,
     .pop_back = (pop_back_t) &List_del_at_back,
+    .front = (get_front_t) &List_get_front,
+    .back = (get_back_t) &List_get_back,
 };
 
 const Class *List = (const Class*) &_descr;

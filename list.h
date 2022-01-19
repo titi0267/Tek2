@@ -15,6 +15,9 @@ typedef void (*push_back_t)(Object *this, Object *obj);
 typedef void (*pop_front_t)(Object *this);
 typedef void (*pop_back_t)(Object *this);
 
+typedef Object *(*get_front_t)(Object *this);
+typedef Object *(*get_back_t)(Object *this);
+
 extern const Class *List;
 
 #endif /* !LIST_H_ */
