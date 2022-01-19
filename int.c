@@ -8,6 +8,7 @@
 #include "int.h"
 #include <stdarg.h>
 #include "raise.h"
+#include "string.h"
 #include "new.h"
 
 typedef struct
@@ -18,12 +19,17 @@ typedef struct
 
 static char *Int_to_string(IntClass *this)
 {
-    char *str = malloc(sizeof(char) * (20));
+    char *str = malloc(sizeof(char) * (26));
 
     if (str == NULL)
         raise("Out of memory");
-    snprintf(str, 19, "<Int (%i)>", this->x);
+    snprintf(str, 25, "<Int (%i)>", this->x);
     return (str);
+}
+
+int Int_get_value(Object *this)
+{
+    return (((IntClass*) this)->x);
 }
 
 static Object *Int_add(IntClass *this, IntClass *other)
@@ -86,19 +92,20 @@ static void Int_dtor(IntClass *this)
 
 static const IntClass _description = {
     {/* Class struct */
-     .__size__ = sizeof(IntClass),
-     .__name__ = "Int",
-     .__ctor__ = (ctor_t)&Int_ctor,
-     .__dtor__ = (dtor_t)&Int_dtor,
-     .__str__ = (to_string_t)&Int_to_string,
-     .__add__ = (binary_operator_t)&Int_add,
-     .__sub__ = (binary_operator_t)&Int_sub,
-     .__mul__ = (binary_operator_t)&Int_mul,
-     .__div__ = (binary_operator_t)&Int_div,
-     .__eq__ = (binary_comparator_t)&Int_eq,
-     .__gt__ = (binary_comparator_t)&Int_gt,
-     .__lt__ = (binary_comparator_t)&Int_lt},
+        .__size__ = sizeof(IntClass),
+        .__name__ = "Int",
+        .__ctor__ = (ctor_t)&Int_ctor,
+        .__dtor__ = (dtor_t)&Int_dtor,
+        .__str__ = (to_string_t)&Int_to_string,
+        .__add__ = (binary_operator_t)&Int_add,
+        .__sub__ = (binary_operator_t)&Int_sub,
+        .__mul__ = (binary_operator_t)&Int_mul,
+        .__div__ = (binary_operator_t)&Int_div,
+        .__eq__ = (binary_comparator_t)&Int_eq,
+        .__gt__ = (binary_comparator_t)&Int_gt,
+        .__lt__ = (binary_comparator_t)&Int_lt,
+    },
     .x = 0,
-    };
+};
 
 const Class *Int = (const Class *)&_description;

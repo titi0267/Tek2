@@ -12,4 +12,6 @@
 
 extern const Class  *String;
 
+int Int_get_value(Object *this);
+
 #endif /* !STRING_H_ */

@@ -17,19 +17,12 @@ typedef struct ListNode_s {
     struct ListNode_s *prev;
 } ListNode;
 
-typedef struct
-{
-    Container   base;
+typedef struct {
+    ListMethods base;
     Class       *_type;
     size_t      _size;
     ListNode    *_list_start;
     ListNode    *_list_end;
-    push_front_t push_front;
-    push_back_t push_back;
-    pop_front_t pop_front;
-    pop_back_t pop_back;
-    get_front_t front;
-    get_back_t back;
 } ListClass;
 
 typedef struct {
@@ -316,6 +309,24 @@ static void List_setitem(ListClass *this, ...)
     va_end(args);
 }
 
+static void List_push_front(ListClass *this, ...)
+{
+    va_list args;
+
+    va_start(args, this);
+    List_add_at_front(this, va_new(this->_type, &args));
+    va_end(args);
+}
+
+static void List_push_back(ListClass *this, ...)
+{
+    va_list args;
+
+    va_start(args, this);
+    List_add_at_back(this, va_new(this->_type, &args));
+    va_end(args);
+}
+
 static Object *List_get_front(ListClass *this)
 {
     if (this->_list_start == NULL)
@@ -331,37 +342,39 @@ static Object *List_get_back(ListClass *this)
 }
 
 static const ListClass _descr = {
-    {   /* Container struct */
-        {   /* Class struct */
-            .__size__ = sizeof(ListClass),
-            .__name__ = "List",
-            .__ctor__ = (ctor_t)&List_ctor,
-            .__dtor__ = (dtor_t)&List_dtor,
-            .__str__ = NULL,
-            .__add__ = NULL,
-            .__sub__ = NULL,
-            .__mul__ = NULL,
-            .__div__ = NULL,
-            .__eq__ = NULL,
-            .__gt__ = NULL,
-            .__lt__ = NULL,
+    {   /* ListMethods struct */
+        {   /* Container struct */
+            {   /* Class struct */
+                .__size__ = sizeof(ListClass),
+                .__name__ = "List",
+                .__ctor__ = (ctor_t)&List_ctor,
+                .__dtor__ = (dtor_t)&List_dtor,
+                .__str__ = NULL,
+                .__add__ = NULL,
+                .__sub__ = NULL,
+                .__mul__ = NULL,
+                .__div__ = NULL,
+                .__eq__ = NULL,
+                .__gt__ = NULL,
+                .__lt__ = NULL,
+            },
+            .__len__ = (len_t)&List_len,
+            .__begin__ = (iter_t)&List_begin,
+            .__end__ = (iter_t)&List_end,
+            .__getitem__ = (getitem_t)&List_getitem,
+            .__setitem__ = (setitem_t)&List_setitem,
         },
-        .__len__ = (len_t)&List_len,
-        .__begin__ = (iter_t)&List_begin,
-        .__end__ = (iter_t)&List_end,
-        .__getitem__ = (getitem_t)&List_getitem,
-        .__setitem__ = (setitem_t)&List_setitem,
+        .__push_front__ = (push_front_t) &List_push_front,
+        .__push_back__ = (push_back_t) &List_push_back,
+        .__pop_front__ = (pop_front_t) &List_del_at_front,
+        .__pop_back__ = (pop_back_t) &List_del_at_back,
+        .__front__ = (get_front_t) &List_get_front,
+        .__back__ = (get_back_t) &List_get_back,
     },
     ._type = NULL,
     ._size = 0,
     ._list_start = NULL,
     ._list_end = NULL,
-    .push_front = (push_front_t) &List_add_at_front,
-    .push_back = (push_back_t) &List_add_at_back,
-    .pop_front = (pop_front_t) &List_del_at_front,
-    .pop_back = (pop_back_t) &List_del_at_back,
-    .front = (get_front_t) &List_get_front,
-    .back = (get_back_t) &List_get_back,
 };
 
 const Class *List = (const Class*) &_descr;

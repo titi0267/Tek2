@@ -6,6 +6,7 @@
 */
 #include "float.h"
 #include "new.h"
+#include "string.h"
 
 typedef struct
 {
@@ -13,15 +14,20 @@ typedef struct
     float     x;
 }   FloatClass;
 
+static Object *Float_add_float(FloatClass *this, FloatClass *other);
+static Object *Float_add_int(FloatClass *this, Object *other);
+
 static char *Float_to_string(FloatClass *this)
 {
-    char *str = malloc(sizeof(char) * (32 + 10));
+    char *str = malloc(sizeof(char) * (32 + 16));
 
     if (str == NULL)
         raise("Out of memory");
-    snprintf(str, 42, "<Float (%f)>", this->x);
+    snprintf(str, 48, "<Float (%f)>", this->x);
     return (str);
 }
+
+
 
 static void Float_ctor(FloatClass *this, va_list *args)
 {
@@ -35,7 +41,22 @@ static void Float_dtor(FloatClass *this)
     (void) this;
 }
 
-static Object *Float_add(FloatClass *this, FloatClass *other)
+static Object *Float_add_type(FloatClass *this, Object *obj)
+{
+    if (strcmp("Float", ((Class*)obj)->__name__) == 0)
+        return Float_add_float(this, obj);
+    if (strcmp("Int", ((Class*)obj)->__name__) == 0)
+        return Float_add_int(this, obj);
+}
+
+static Object *Float_add_int(FloatClass *this, Object *other)
+{
+    float y = this->x + (float)Int_get_value(other);
+
+    return (new(Float, y));
+}
+
+static Object *Float_add_float(FloatClass *this, FloatClass *other)
 {
     float x = this->x + other->x;
 
@@ -85,7 +106,7 @@ static const FloatClass _description = {
         .__ctor__ = (ctor_t)&Float_ctor,
         .__dtor__ = (dtor_t)&Float_dtor,
         .__str__ = (to_string_t) &Float_to_string,
-        .__add__ = (binary_operator_t) &Float_add,
+        .__add__ = (binary_operator_t) &Float_add_type,
         .__sub__ = (binary_operator_t) &Float_sub,
         .__mul__ = (binary_operator_t) &Float_mul,
         .__div__ = (binary_operator_t) &Float_div,
