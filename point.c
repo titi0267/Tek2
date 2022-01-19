@@ -9,6 +9,7 @@
 #include <stdarg.h>
 #include "point.h"
 #include "raise.h"
+#include "new.h"
 
 typedef struct
 {
@@ -32,6 +33,22 @@ static char *Point_to_string(PointClass *this)
     return (str);
 }
 
+static Object *Point_add(PointClass *this, PointClass *other)
+{
+    int x = this->x + other->x;
+    int y = this->y + other->y;
+    
+    return (new(Point, x, y));
+}
+
+static Object *Point_sub(PointClass *this, PointClass *other)
+{
+    int x = this->x - other->x;
+    int y = this->y - other->y;
+    
+    return (new(Point, x, y));
+}
+
 static void Point_ctor(PointClass *this, va_list *args)
 {
     int x = va_arg(*args, int);
@@ -53,8 +70,8 @@ static const PointClass _description = {
         .__ctor__ = (ctor_t)&Point_ctor,
         .__dtor__ = (dtor_t)&Point_dtor,
         .__str__ = (to_string_t) &Point_to_string,
-        .__add__ = NULL,    /* Implement this method for exercice 03 */
-        .__sub__ = NULL,    /* Implement this method for exercice 03 */
+        .__add__ = (binary_operator_t) &Point_add,
+        .__sub__ = (binary_operator_t) &Point_sub,
         .__mul__ = NULL,
         .__div__ = NULL,
         .__eq__ = NULL,
