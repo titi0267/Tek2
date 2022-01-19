@@ -20,7 +20,7 @@ Object *new(const Class *class, ...)
     obj = malloc(class->__size__);
     if (obj == NULL)
         raise("Out of memory");
-    memcpy(obj, class, sizeof(Class));
+    memcpy(obj, class, class->__size__);
     va_start(argu_list, class);
     class->__ctor__(obj, &argu_list);
     va_end(argu_list);
