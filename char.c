@@ -75,7 +75,7 @@ static bool Char_is_gt(CharClass *this, const CharClass *other)
 
 static void Char_ctor(CharClass *this, va_list *args)
 {
-    this->c = va_arg(*args, char);
+    this->c = (char) va_arg(*args, int);
 }
 
 static void Char_dtor(CharClass *this)
@@ -95,9 +95,9 @@ static const CharClass _description = {
         .__sub__ = (binary_operator_t) &Char_sub,
         .__mul__ = (binary_operator_t) &Char_mul,
         .__div__ = (binary_operator_t) &Char_div,
-        .__eq__ = (binary_operator_t) &Char_is_eq,
-        .__gt__ = (binary_operator_t) &Char_is_gt,
-        .__lt__ = (binary_operator_t) &Char_is_lt
+        .__eq__ = (binary_comparator_t) &Char_is_eq,
+        .__gt__ = (binary_comparator_t) &Char_is_gt,
+        .__lt__ = (binary_comparator_t) &Char_is_lt
     },
     .c = 0,
 };
