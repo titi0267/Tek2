@@ -158,6 +158,7 @@ static void     Array_setitem(ArrayClass *this, ...)
     index = va_arg(args, size_t);
     if (index >= this->_size)
         raise("Out of bounds memory");
+    delete(this->_tab[index]);
     this->_tab[index] = va_new(this->_type, &args);
     va_end(args);
 }
