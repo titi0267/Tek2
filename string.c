@@ -6,9 +6,12 @@
 */
 
 #include <stdlib.h>
+#include <string.h>
 #include <stdarg.h>
+#include <stdio.h>
 #include "raise.h"
 #include "string.h"
+#include "int.h"
 #include "new.h"
 
 typedef struct
@@ -18,17 +21,43 @@ typedef struct
     char *_str;
 }   StringClass;
 
+static Object *String_add_string(StringClass *this, StringClass *other);
+static Object *String_add_int(StringClass *this, Object *obj);
+
 static char *String_to_string(StringClass *this)
 {
-    char *str = malloc(sizeof(char) * (this->_size + 12));
+    char *str = malloc(sizeof(char) * (this->_size + 13));
 
     if (str == NULL)
         raise("Out of memory");
-    snprintf(str, this->_size + 11, "<String (%s)>", this->_str);
+    snprintf(str, this->_size + 12, "<String (%s)>", this->_str);
     return (str);
 }
 
-static Object *String_add(StringClass *this, StringClass *other)
+static Object *String_add_type(StringClass *this, Object *obj)
+{
+    if (strcmp("String", ((Class*) obj)->__name__) == 0) {
+        return (String_add_string(this, obj));
+    }
+    else if (strcmp("Int", ((Class*)obj)->__name__) == 0)
+        return (String_add_int(this, obj));
+}
+
+static Object *String_add_int(StringClass *this, Object *obj)
+{
+    char *int_str = malloc(sizeof(char) * 12);
+    char *str;
+
+    snprintf(int_str, 11, "%i", Int_get_value(obj));
+    str = malloc(sizeof(char) * (strlen(int_str) + this->_size + 1));
+    if (str == NULL)
+        raise("Out of memory");
+    strcpy(str, this->_str);
+    strcat(str, int_str);
+    return (new(String, str));
+}
+
+static Object *String_add_string(StringClass *this, StringClass *other)
 {
     char *str = malloc(sizeof(char) * (other->_size + this->_size + 1));
 
@@ -80,7 +109,7 @@ static const StringClass   _descr = {
         .__ctor__ = (ctor_t)&String_ctor,
         .__dtor__ = (dtor_t)&String_dtor,
         .__str__ = (to_string_t)&String_to_string,
-        .__add__ = (binary_operator_t)&String_add,
+        .__add__ = (binary_operator_t)&String_add_type,
         .__sub__ = NULL,
         .__mul__ = NULL,
         .__div__ = NULL,
