@@ -18,7 +18,8 @@
 #include "iterator.h"
 #include "container.h"
 #include "int.h"
-
+#include "array.h"
+#include "../list.h"
 
 Test (Task01, test_new_and_delete, .init = cr_redirect_stdout)
 {
@@ -177,4 +178,53 @@ Test (Testing_outputs, testing_vertex_pt)
     cr_assert_str_eq(sub, "<Vertex (-1, -1, -5)>");
     delete(p1);
     delete(p2);
+}
+
+Test(list, simple_list)
+{
+    Object *list = new(List, 10, Int, 0);
+    Object *it = begin(list);
+    Object *it_end = end(list);
+
+    while (lt(it, it_end)) {
+        cr_assert_str_eq(str(getval(it)), "<Int (0)>");
+        incr(it);
+    }
+
+    cr_assert_eq(len(list), 10);
+
+    delete(it);
+    delete(it_end);
+    delete(list);
+}
+
+Test(list, list_push_pop)
+{
+    Object *list = new(List, 0, Int, 0);
+    Object *it = begin(list);
+
+    push_front(list, 1);
+    push_front(list, 0);
+    push_back(list, 2);
+    push_back(list, 3);
+
+    cr_assert_str_eq(str(getval(it)), "<Int (0)>");
+    incr(it);
+    cr_assert_str_eq(str(getval(it)), "<Int (1)>");
+    incr(it);
+    cr_assert_str_eq(str(getval(it)), "<Int (2)>");
+    incr(it);
+    cr_assert_str_eq(str(getval(it)), "<Int (3)>");
+    incr(it);
+
+    cr_assert_str_eq(str(front(list)), "<Int (0)>");
+    pop_front(list);
+    cr_assert_str_eq(str(front(list)), "<Int (1)>");
+
+    cr_assert_str_eq(str(back(list)), "<Int (3)>");
+    pop_back(list);
+    cr_assert_str_eq(str(back(list)), "<Int (2)>");
+
+    delete(it);
+    delete(list);
 }
