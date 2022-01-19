@@ -14,5 +14,8 @@ point.h
 int.h
 float.h
 char.h
+container.h
+array.h
+iterator.h
 
 a.out
