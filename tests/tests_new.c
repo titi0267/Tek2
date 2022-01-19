@@ -46,6 +46,7 @@ Test (Testing_outputs, test_complex_output)
 {
     Object *array = new(Array, 5, Int, 0.0f);
     Object  *it = begin(array);
+    Object *it_test = begin(array);
     Object  *it_end = end(array);
     char *test_str = malloc(100);
     strcpy(test_str, "");
@@ -64,6 +65,9 @@ Test (Testing_outputs, test_complex_output)
         incr(it);
     }
     cr_assert_str_eq("<Int (10)>,<Int (20)>,<Int (30)>,<Int (40)>,<Int (50)>,", test_str);
+    cr_assert(gt(it_test, it) == 0);
+    cr_assert(lt(it_test, it));
+    cr_assert(eq(it_test, it) == 0);
     delete(it);
     delete(it_end);
     delete(array);
@@ -89,6 +93,8 @@ Test (Testing_outputs, testing_int)
     cr_assert(eq_ts == 0);
     cr_assert(gt_ts == 0);
     cr_assert(lt_ts == 1);
+    delete(p1);
+    delete(p2);
 }
 
 Test (Testing_outputs, testing_char)
@@ -111,6 +117,9 @@ Test (Testing_outputs, testing_char)
     cr_assert(eq_sec_ts == 1);
     cr_assert(gt_ts == 1);
     cr_assert(lt_ts == 0);
+    delete(p1);
+    delete(p2);
+    delete(p3);
 }
 
 Test (Testing_outputs, testing_floats)
@@ -135,24 +144,37 @@ Test (Testing_outputs, testing_floats)
     cr_assert(eq_sec_ts == 1);
     cr_assert(gt_ts == 1);
     cr_assert(lt_ts == 0);
+    delete(p1);
+    delete(p2);
+    delete(p3);
 }
 
-// Test (Testing_outputs, testing_points)
-// {
-//     Object  *p1 = new(Point, 4, 4);
-//     Object  *p2 = new(Point, 3, 2);
-//     Object  *p3 = new(Point, 3, 2);
+Test (Testing_outputs, testing_points_pt)
+{
+    Object  *p1 = new(Point, 4, 4);
+    Object  *p2 = new(Point, 3, 2);
+    Object  *p3 = new(Point, 3, 2);
 
-//     char *add = str(addition(p1, p2));
-//     char *sub = str(subtraction(p1, p2));
-//     char *mult = str(multiplication(p1, p2));
-//     char *div = str(division(p1, p2));
-//     int eq_ts = eq(p1, p2);
-//     int eq_sec_ts = eq(p2, p3);
-//     int gt_ts = gt(p1, p2);
-//     int lt_ts = lt(p1, p2);
-//     cr_assert_str_eq(add, "<Float (10.500000)>");
-//     cr_assert_str_eq(sub, "<Float (9.500000)>");
-//     cr_assert_str_eq(mult, "<Float (5.000000)>");
-//     cr_assert_str_eq(div, "<Float (20.000000)>");
-// }
+    char *add = str(addition(p1, p2));
+    char *sub = str(subtraction(p1, p2));
+
+    cr_assert_str_eq(add, "<Point (7, 6)>");
+    cr_assert_str_eq(sub, "<Point (1, 2)>");
+    delete(p1);
+    delete(p2);
+    delete(p3);
+}
+
+Test (Testing_outputs, testing_vertex_pt)
+{
+    Object  *p1 = new(Vertex, 4, 4, 3);
+    Object  *p2 = new(Vertex, 5, 5, 8);
+
+    char *add = str(addition(p1, p2));
+    char *sub = str(subtraction(p1, p2));
+
+    cr_assert_str_eq(add, "<Vertex (9, 9, 11)>");
+    cr_assert_str_eq(sub, "<Vertex (-1, -1, -5)>");
+    delete(p1);
+    delete(p2);
+}
