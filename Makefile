@@ -5,7 +5,8 @@
 ## Makefile
 ##
 
-SRC            =    new.c	\
+MAIN_SRC		=	list_main.c
+SRC				=	new.c	\
 					point.c	\
 					array.c \
 					list.c \
@@ -16,31 +17,40 @@ SRC            =    new.c	\
 					player.c \
 					float.c \
 
-TESTS_SRC    =    tests/tests_new.c
+TESTS_SRC    	=    tests/tests_new.c
 
-OBJ            =    $(SRC:%.c=%.o)
+MAIN_OBJ		=	$(MAIN_SRC:%.c=%.o)
+OBJ				=	$(SRC:%.c=%.o)
+TESTS_OBJ		=	$(TESTS_SRC:%.c=%.o)
 
-INC_DIR        =    ./
+INC_DIR			=	./tests
 
-CFLAGS        +=    -std=gnu17 -Wall -Wextra
+CFLAGS			+=	-std=gnu17 -Wall -Wextra -I$(INC_DIR)
 
-TESTS_NAME    =    string_tests
+NAME			=	list_example
+TESTS_NAME		=	unit_tests
 
-all: $(OBJ)
+all: $(NAME)
+
+$(NAME): $(OBJ) $(MAIN_OBJ)
+	gcc $(CFLAGS) -o $(NAME) $(OBJ) $(MAIN_OBJ)
 
 clean:
+	rm -f $(MAIN_OBJ)
 	rm -f $(OBJ)
-
-fclean: clean
-	rm -f $(TESTS_NAME)
+	rm -f $(TESTS_OBJ)
 	rm -f $(wildcard *.gcno)
 	rm -f $(wildcard *.gcda)
 	rm -f $(wildcard **/.gcno)
 	rm -f $(wildcard */.gcda)
 
+fclean: clean
+	rm -f $(NAME)
+	rm -f $(TESTS_NAME)
+
 tests_run: CFLAGS += --coverage
-tests_run: re
-	gcc $(OBJ) $(TESTS_SRC) -o $(TESTS_NAME) -lcriterion --coverage
+tests_run: re $(TESTS_OBJ)
+	gcc $(OBJ) $(TESTS_OBJ) -o $(TESTS_NAME) -lcriterion --coverage
 	./$(TESTS_NAME)
 
 re: fclean all
