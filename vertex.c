@@ -9,6 +9,7 @@
 #include <stdarg.h>
 #include "vertex.h"
 #include "raise.h"
+#include "new.h"
 
 typedef struct
 {
@@ -33,6 +34,23 @@ static char *Vertex_to_string(VertexClass *this)
     return (str);
 }
 
+static Object *Vertex_add(VertexClass *this, VertexClass *other)
+{
+    int x = this->x + other->x;
+    int y = this->y + other->y;
+    int z = this->z + other->z;
+
+    return (new(Vertex, x, y, z));
+}
+
+static Object *Vertex_sub(VertexClass *this, VertexClass *other)
+{
+    int x = this->x - other->x;
+    int y = this->y - other->y;
+    int z = this->z - other->z;
+
+    return (new(Vertex, x, y, z));
+}
 static void Vertex_ctor(VertexClass *this, va_list *args)
 {
     int x = va_arg(*args, int);
@@ -55,8 +73,8 @@ static const VertexClass _description = {
         .__ctor__ = (ctor_t)&Vertex_ctor,
         .__dtor__ = (dtor_t)&Vertex_dtor,
         .__str__ = (to_string_t) &Vertex_to_string,
-        .__add__ = NULL,    /* Implement this method for exercice 03 */
-        .__sub__ = NULL,    /* Implement this method for exercice 03 */
+        .__add__ = (binary_operator_t) &Vertex_add,
+        .__sub__ = (binary_operator_t) &Vertex_sub,
         .__mul__ = NULL,
         .__div__ = NULL,
         .__eq__ = NULL,
@@ -69,3 +87,4 @@ static const VertexClass _description = {
 };
 
 const Class   *Vertex = (const Class *)&_description;
+
