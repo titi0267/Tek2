@@ -5,19 +5,19 @@
 ** tests_new
 */
 
-#include <stdlib.h>
-#include "../new.h"
-#include "../player.h"
-#include "../array.h"
-#include "../point.h"
-#include "../vertex.h"
-#include "../char.h"
-#include "../float.h"
-#include "../iterator.h"
-#include "../container.h"
-#include "../int.h"
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
+#include <stdlib.h>
+#include "new.h"
+#include "player.h"
+#include "array.h"
+#include "point.h"
+#include "vertex.h"
+#include "char.h"
+#include "float.h"
+#include "iterator.h"
+#include "container.h"
+#include "int.h"
 
 
 Test (Task01, test_new_and_delete, .init = cr_redirect_stdout)

@@ -41,6 +41,8 @@ static Object *String_add_type(StringClass *this, Object *obj)
     }
     else if (strcmp("Int", ((Class*)obj)->__name__) == 0)
         return (String_add_int(this, obj));
+    raise("Addition of String with invalid type");
+    return NULL;
 }
 
 static Object *String_add_int(StringClass *this, Object *obj)

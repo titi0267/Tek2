@@ -27,8 +27,6 @@ static char *Float_to_string(FloatClass *this)
     return (str);
 }
 
-
-
 static void Float_ctor(FloatClass *this, va_list *args)
 {
     float x = va_arg(*args, double);
@@ -47,6 +45,8 @@ static Object *Float_add_type(FloatClass *this, Object *obj)
         return Float_add_float(this, obj);
     if (strcmp("Int", ((Class*)obj)->__name__) == 0)
         return Float_add_int(this, obj);
+    raise("Addition of String with invalid type");
+    return NULL;
 }
 
 static Object *Float_add_int(FloatClass *this, Object *other)
