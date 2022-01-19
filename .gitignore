@@ -4,3 +4,13 @@ ex02.c
 ex03.c
 ex04.c
 ex05.c
+
+raise.h
+new.h
+object.h
+player.h
+vertex.h
+point.h
+int.h
+float.h
+char.h
