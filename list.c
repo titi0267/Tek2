@@ -41,7 +41,7 @@ static void List_del_at_back(ListClass *this);
 static void List_del_at_position(ListClass *this, size_t pos);
 
 static Object *List_get_at_pos(ListClass *this, size_t pos);
-static Object *List_set_at_pos(ListClass *this, Object *obj, size_t pos);
+static void List_set_at_pos(ListClass *this, Object *obj, size_t pos);
 
 static void ListIterator_ctor(ListIteratorClass *this, va_list *args)
 {
@@ -272,7 +272,7 @@ static Object *List_get_at_pos(ListClass *this, size_t pos)
     return (node->data);
 }
 
-static Object *List_set_at_pos(ListClass *this, Object *obj, size_t pos)
+static void List_set_at_pos(ListClass *this, Object *obj, size_t pos)
 {
     List_del_at_position(this, pos);
     List_add_at_position(this, obj, pos);

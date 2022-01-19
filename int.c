@@ -81,6 +81,7 @@ static void Int_ctor(IntClass *this, va_list *args)
 
 static void Int_dtor(IntClass *this)
 {
+    (void) this;
 }
 
 static const IntClass _description = {

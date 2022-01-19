@@ -80,6 +80,7 @@ static void Char_ctor(CharClass *this, va_list *args)
 
 static void Char_dtor(CharClass *this)
 {
+    (void) this;
 }
 
 // Create additional functions here

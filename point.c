@@ -59,6 +59,7 @@ static void Point_ctor(PointClass *this, va_list *args)
 
 static void Point_dtor(PointClass *this)
 {
+    (void) this;
 }
 
 // Create additional functions here
