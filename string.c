@@ -45,9 +45,19 @@ static void String_set_values(StringClass *this, char *str, int size)
     this->_size = size;
 }
 
-static bool String_cmp(StringClass *this, StringClass *other)
+static bool Strcmp(StringClass *this, StringClass *other)
 {
-    return (false);
+    return (this->_size == other->_size);
+}
+
+static bool Strgt(StringClass *this, StringClass *other)
+{
+    return (this->_size > other->_size);
+}
+
+static bool Strlt(StringClass *this, StringClass *other)
+{
+    return (this->_size < other->_size);
 }
 
 static void String_ctor(StringClass *this, va_list *args)
@@ -74,9 +84,9 @@ static const StringClass   _descr = {
         .__sub__ = NULL,
         .__mul__ = NULL,
         .__div__ = NULL,
-        .__eq__ = (binary_comparator_t)&String_cmp,
-        .__gt__ = NULL,
-        .__lt__ = NULL,
+        .__eq__ = (binary_comparator_t)&Strcmp,
+        .__gt__ = (binary_comparator_t)&Strgt,
+        .__lt__ = (binary_comparator_t)&Strlt,
     },
     ._size = 0,
     ._str = NULL,
