@@ -15,11 +15,11 @@ typedef struct
 
 static char *Float_to_string(FloatClass *this)
 {
-    char *str = malloc(sizeof(char) * (32 + 10));
+    char *str = malloc(sizeof(char) * (32 + 16));
 
     if (str == NULL)
         raise("Out of memory");
-    snprintf(str, 42, "<Float (%f)>", this->x);
+    snprintf(str, 48, "<Float (%f)>", this->x);
     return (str);
 }
 

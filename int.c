@@ -18,11 +18,11 @@ typedef struct
 
 static char *Int_to_string(IntClass *this)
 {
-    char *str = malloc(sizeof(char) * (20));
+    char *str = malloc(sizeof(char) * (26));
 
     if (str == NULL)
         raise("Out of memory");
-    snprintf(str, 19, "<Int (%i)>", this->x);
+    snprintf(str, 25, "<Int (%i)>", this->x);
     return (str);
 }
 
