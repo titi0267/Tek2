@@ -22,3 +22,6 @@ iterator.h
 
 a.out
 main/
+
+**/*.gcno
+**/*.gcda
