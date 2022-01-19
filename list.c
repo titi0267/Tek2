@@ -24,6 +24,10 @@ typedef struct
     size_t      _size;
     ListNode    *_list_start;
     ListNode    *_list_end;
+    push_front_t push_front;
+    push_back_t push_back;
+    pop_front_t pop_front;
+    pop_back_t pop_back;
 } ListClass;
 
 typedef struct {
@@ -32,8 +36,8 @@ typedef struct {
     size_t _idx;
 } ListIteratorClass;
 
-static void List_add_front(ListClass *this, Object *obj);
-static void List_add_back(ListClass *this, Object *obj);
+static void List_add_at_front(ListClass *this, Object *obj);
+static void List_add_at_back(ListClass *this, Object *obj);
 static void List_add_at_position(ListClass *this, Object *obj, size_t pos);
 
 static void List_del_at_front(ListClass *this);
@@ -120,11 +124,11 @@ static void List_ctor(ListClass *this, va_list *args)
     Class *type = va_arg(*args, Class*);
     va_list args_cpy;
 
-    this->_size = size;
+    this->_size = 0;
     this->_type = type;
     va_copy(args_cpy, *args);
     for (size_t i = 0; i < size; i++) {
-        List_add_back(this, va_new(type, args));
+        List_add_at_back(this, va_new(type, args));
         va_copy(*args, args_cpy);
     }
 }
@@ -155,7 +159,7 @@ static Iterator *List_end(ListClass *this)
     return (new(ListIterator, this, this->_size));
 }
 
-static void List_add_front(ListClass *this, Object *obj)
+static void List_add_at_front(ListClass *this, Object *obj)
 {
     ListNode *node = malloc(sizeof(ListNode));
 
@@ -169,9 +173,10 @@ static void List_add_front(ListClass *this, Object *obj)
     this->_list_start = node;
     if (this->_list_end == NULL)
         this->_list_end = node;
+    this->_size += 1;
 }
 
-static void List_add_back(ListClass *this, Object *obj)
+static void List_add_at_back(ListClass *this, Object *obj)
 {
     ListNode *node = malloc(sizeof(ListNode));
 
@@ -185,6 +190,7 @@ static void List_add_back(ListClass *this, Object *obj)
     this->_list_end = node;
     if (this->_list_start == NULL)
         this->_list_start = node;
+    this->_size += 1;
 }
 
 static void List_add_at_position(ListClass *this, Object *obj, size_t pos)
@@ -209,6 +215,7 @@ static void List_add_at_position(ListClass *this, Object *obj, size_t pos)
         this->_list_end = node;
     node->prev = prev;
     node->next = next;
+    this->_size += 1;
 }
 
 static void List_del_at_front(ListClass *this)
@@ -221,6 +228,7 @@ static void List_del_at_front(ListClass *this)
         front->prev = NULL;
         this->_list_start = front->next;
     }
+    this->_size -= 1;
     delete(front->data);
     free(front);
 }
@@ -235,6 +243,7 @@ static void List_del_at_back(ListClass *this)
         back->next = NULL;
         this->_list_end = back->prev;
     }
+    this->_size -= 1;
     delete(back->data);
     free(back);
 }
@@ -255,6 +264,7 @@ static void List_del_at_position(ListClass *this, size_t pos)
     else if (next == NULL)
         List_del_at_back(this);
     else {
+        this->_size -= 1;
         next->prev = prev;
         prev->next = next;
         delete(node->data);
@@ -330,6 +340,10 @@ static const ListClass _descr = {
     ._size = 0,
     ._list_start = NULL,
     ._list_end = NULL,
+    .push_front = (push_front_t) &List_add_at_front,
+    .push_back = (push_back_t) &List_add_at_back,
+    .pop_front = (pop_front_t) &List_del_at_front,
+    .pop_back = (pop_back_t) &List_del_at_back,
 };
 
 const Class *List = (const Class*) &_descr;
