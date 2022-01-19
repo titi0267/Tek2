@@ -36,7 +36,7 @@ Object *va_new(const Class *class, va_list* ap)
     obj =  malloc(class->__size__);
     if (obj == NULL)
         raise("Out of memory");
-    memcpy(obj, class, sizeof(Class));
+    memcpy(obj, class, class->__size__);
     class->__ctor__(obj, ap);
     return (obj);
 }
