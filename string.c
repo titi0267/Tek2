@@ -47,17 +47,17 @@ static void String_set_values(StringClass *this, char *str, int size)
 
 static bool String_cmp(StringClass *this, StringClass *other)
 {
-    return (this->_size == other->_size);
+    return strcmp(this->_str, other->_str) == 0;
 }
 
 static bool String_gt(StringClass *this, StringClass *other)
 {
-    return (this->_size > other->_size);
+    return strcmp(this->_str, other->_str) > 0;
 }
 
 static bool String_lt(StringClass *this, StringClass *other)
 {
-    return (this->_size < other->_size);
+    return strcmp(this->_str, other->_str) < 0;
 }
 
 static void String_ctor(StringClass *this, va_list *args)
