@@ -89,8 +89,8 @@ static const FloatClass _description = {
         .__mul__ = (binary_operator_t) &Float_mul,
         .__div__ = (binary_operator_t) &Float_div,
         .__eq__ = (binary_comparator_t) &Float_eq,
-        .__gt__ = (binary_comparator_t) &Float_lt,
-        .__lt__ = (binary_comparator_t) &Float_gt,
+        .__gt__ = (binary_comparator_t) &Float_gt,
+        .__lt__ = (binary_comparator_t) &Float_lt,
     },
     .x = 0,
 };
