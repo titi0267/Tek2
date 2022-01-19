@@ -38,7 +38,7 @@ Test (Testing_outputs, test_all_obj_outputs)
     cr_assert_str_eq(str(point), "<Point (24, 32)>");
     cr_assert_str_eq(str(sec_point), "<Point (-25, 32)>");
     cr_assert_str_eq(str(vertex), "<Vertex (34, 22, 10)>");
-    cr_assert_str_eq(str(chars), "<Char (99)>");
+    cr_assert_str_eq(str(chars), "<Char (c)>");
     cr_assert_str_eq(str(floats), "<Float (2.340000)>");
 }
 
@@ -109,7 +109,50 @@ Test (Testing_outputs, testing_char)
     cr_assert_str_eq(sub, "<Char (\004)>");
     cr_assert(eq_ts == 0);
     cr_assert(eq_sec_ts == 1);
-    cr_assert(gt_ts == 0);
-    cr_assert(lt_ts == 1);
+    cr_assert(gt_ts == 1);
+    cr_assert(lt_ts == 0);
 }
 
+Test (Testing_outputs, testing_floats)
+{
+    Object  *p1 = new(Float, 10.0);
+    Object  *p2 = new(Float, 0.5);
+    Object  *p3 = new(Float, 0.5);
+
+    char *add = str(addition(p1, p2));
+    char *sub = str(subtraction(p1, p2));
+    char *mult = str(multiplication(p1, p2));
+    char *div = str(division(p1, p2));
+    int eq_ts = eq(p1, p2);
+    int eq_sec_ts = eq(p2, p3);
+    int gt_ts = gt(p1, p2);
+    int lt_ts = lt(p1, p2);
+    cr_assert_str_eq(add, "<Float (10.500000)>");
+    cr_assert_str_eq(sub, "<Float (9.500000)>");
+    cr_assert_str_eq(mult, "<Float (5.000000)>");
+    cr_assert_str_eq(div, "<Float (20.000000)>");
+    cr_assert(eq_ts == 0);
+    cr_assert(eq_sec_ts == 1);
+    cr_assert(gt_ts == 1);
+    cr_assert(lt_ts == 0);
+}
+
+// Test (Testing_outputs, testing_points)
+// {
+//     Object  *p1 = new(Point, 4, 4);
+//     Object  *p2 = new(Point, 3, 2);
+//     Object  *p3 = new(Point, 3, 2);
+
+//     char *add = str(addition(p1, p2));
+//     char *sub = str(subtraction(p1, p2));
+//     char *mult = str(multiplication(p1, p2));
+//     char *div = str(division(p1, p2));
+//     int eq_ts = eq(p1, p2);
+//     int eq_sec_ts = eq(p2, p3);
+//     int gt_ts = gt(p1, p2);
+//     int lt_ts = lt(p1, p2);
+//     cr_assert_str_eq(add, "<Float (10.500000)>");
+//     cr_assert_str_eq(sub, "<Float (9.500000)>");
+//     cr_assert_str_eq(mult, "<Float (5.000000)>");
+//     cr_assert_str_eq(div, "<Float (20.000000)>");
+// }
