@@ -96,8 +96,8 @@ static const CharClass _description = {
         .__mul__ = (binary_operator_t) &Char_mul,
         .__div__ = (binary_operator_t) &Char_div,
         .__eq__ = (binary_operator_t) &Char_is_eq,
-        .__gt__ = NULL,
-        .__lt__ = NULL
+        .__gt__ = (binary_operator_t) &Char_is_gt,
+        .__lt__ = (binary_operator_t) &Char_is_lt
     },
     .c = 0,
 };
