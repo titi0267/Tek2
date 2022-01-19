@@ -5,6 +5,8 @@ ex03.c
 ex04.c
 ex05.c
 
+main.c
+
 raise.h
 new.h
 object.h

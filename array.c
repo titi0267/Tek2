@@ -99,7 +99,7 @@ static void     Array_ctor(ArrayClass *this, va_list *args)
 {
     size_t size = va_arg(*args, size_t);
     Class *type = va_arg(*args, Class*);
-    Class **tab = malloc(sizeof(Class*) * size);
+    Object **tab = (Object**) malloc(sizeof(Object*) * size);
     va_list args_cpy;
 
     if (!tab)

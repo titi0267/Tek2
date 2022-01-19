@@ -37,7 +37,7 @@ static Object *Point_add(PointClass *this, PointClass *other)
 {
     int x = this->x + other->x;
     int y = this->y + other->y;
-    
+
     return (new(Point, x, y));
 }
 
@@ -45,7 +45,7 @@ static Object *Point_sub(PointClass *this, PointClass *other)
 {
     int x = this->x - other->x;
     int y = this->y - other->y;
-    
+
     return (new(Point, x, y));
 }
 
@@ -59,6 +59,7 @@ static void Point_ctor(PointClass *this, va_list *args)
 
 static void Point_dtor(PointClass *this)
 {
+    (void) this;
 }
 
 // Create additional functions here

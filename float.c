@@ -32,6 +32,7 @@ static void Float_ctor(FloatClass *this, va_list *args)
 
 static void Float_dtor(FloatClass *this)
 {
+    (void) this;
 }
 
 static Object *Float_add(FloatClass *this, FloatClass *other)

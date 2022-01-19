@@ -19,11 +19,11 @@ typedef struct
 
 static char *Char_to_string(CharClass *this)
 {
-    char *str = malloc(sizeof(char) * (15));
+    char *str = malloc(sizeof(char) * (12));
 
     if (str == NULL)
         raise("Out of memory");
-    snprintf(str, 14, "<Char (%hhi)>", this->c);
+    snprintf(str, 11, "<Char (%c)>", this->c);
     return (str);
 }
 
@@ -80,6 +80,7 @@ static void Char_ctor(CharClass *this, va_list *args)
 
 static void Char_dtor(CharClass *this)
 {
+    (void) this;
 }
 
 // Create additional functions here

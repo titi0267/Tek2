@@ -62,6 +62,7 @@ static void Vertex_ctor(VertexClass *this, va_list *args)
 
 static void Vertex_dtor(VertexClass *this)
 {
+    (void) this;
 }
 
 // Create additional functions here
