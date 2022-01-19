@@ -112,7 +112,6 @@ static const ListIteratorClass ListIteratorDescr = {
 
 static const Class *ListIterator = (const Class *)&ListIteratorDescr;
 
-
 static void List_ctor(ListClass *this, va_list *args)
 {
     size_t size = va_arg(*args, size_t);
@@ -220,7 +219,7 @@ static void List_del_at_front(ListClass *this)
     if (!front)
         return;
     if (front->next) {
-        front->prev = NULL;
+        front->next->prev = NULL;
         this->_list_start = front->next;
     }
     this->_size -= 1;
@@ -235,7 +234,7 @@ static void List_del_at_back(ListClass *this)
     if (!back)
         return;
     if (back->prev) {
-        back->next = NULL;
+        back->prev->next = NULL;
         this->_list_end = back->prev;
     }
     this->_size -= 1;
