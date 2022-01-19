@@ -19,11 +19,11 @@ typedef struct
 
 static char *Char_to_string(CharClass *this)
 {
-    char *str = malloc(sizeof(char) * (15));
+    char *str = malloc(sizeof(char) * (11));
 
     if (str == NULL)
         raise("Out of memory");
-    snprintf(str, 14, "<Char (%hhi)>", this->c);
+    snprintf(str, 10, "<Char (%c)>", this->c);
     return (str);
 }
 
