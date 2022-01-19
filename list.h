@@ -8,7 +8,7 @@
 #ifndef LIST_H_
 #define LIST_H_
 
-#include "container.h"
+#include "list_methods.h"
 
 extern const Class *List;
 

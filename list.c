@@ -17,9 +17,8 @@ typedef struct ListNode_s {
     struct ListNode_s *prev;
 } ListNode;
 
-typedef struct
-{
-    Container   base;
+typedef struct {
+    ListMethods base;
     Class       *_type;
     size_t      _size;
     ListNode    *_list_start;
@@ -32,8 +31,8 @@ typedef struct {
     size_t _idx;
 } ListIteratorClass;
 
-static void List_add_front(ListClass *this, Object *obj);
-static void List_add_back(ListClass *this, Object *obj);
+static void List_add_at_front(ListClass *this, Object *obj);
+static void List_add_at_back(ListClass *this, Object *obj);
 static void List_add_at_position(ListClass *this, Object *obj, size_t pos);
 
 static void List_del_at_front(ListClass *this);
@@ -120,11 +119,11 @@ static void List_ctor(ListClass *this, va_list *args)
     Class *type = va_arg(*args, Class*);
     va_list args_cpy;
 
-    this->_size = size;
+    this->_size = 0;
     this->_type = type;
     va_copy(args_cpy, *args);
     for (size_t i = 0; i < size; i++) {
-        List_add_back(this, va_new(type, args));
+        List_add_at_back(this, va_new(type, args));
         va_copy(*args, args_cpy);
     }
 }
@@ -155,7 +154,7 @@ static Iterator *List_end(ListClass *this)
     return (new(ListIterator, this, this->_size));
 }
 
-static void List_add_front(ListClass *this, Object *obj)
+static void List_add_at_front(ListClass *this, Object *obj)
 {
     ListNode *node = malloc(sizeof(ListNode));
 
@@ -169,9 +168,10 @@ static void List_add_front(ListClass *this, Object *obj)
     this->_list_start = node;
     if (this->_list_end == NULL)
         this->_list_end = node;
+    this->_size += 1;
 }
 
-static void List_add_back(ListClass *this, Object *obj)
+static void List_add_at_back(ListClass *this, Object *obj)
 {
     ListNode *node = malloc(sizeof(ListNode));
 
@@ -185,6 +185,7 @@ static void List_add_back(ListClass *this, Object *obj)
     this->_list_end = node;
     if (this->_list_start == NULL)
         this->_list_start = node;
+    this->_size += 1;
 }
 
 static void List_add_at_position(ListClass *this, Object *obj, size_t pos)
@@ -209,6 +210,7 @@ static void List_add_at_position(ListClass *this, Object *obj, size_t pos)
         this->_list_end = node;
     node->prev = prev;
     node->next = next;
+    this->_size += 1;
 }
 
 static void List_del_at_front(ListClass *this)
@@ -221,6 +223,7 @@ static void List_del_at_front(ListClass *this)
         front->prev = NULL;
         this->_list_start = front->next;
     }
+    this->_size -= 1;
     delete(front->data);
     free(front);
 }
@@ -235,6 +238,7 @@ static void List_del_at_back(ListClass *this)
         back->next = NULL;
         this->_list_end = back->prev;
     }
+    this->_size -= 1;
     delete(back->data);
     free(back);
 }
@@ -255,6 +259,7 @@ static void List_del_at_position(ListClass *this, size_t pos)
     else if (next == NULL)
         List_del_at_back(this);
     else {
+        this->_size -= 1;
         next->prev = prev;
         prev->next = next;
         delete(node->data);
@@ -304,27 +309,67 @@ static void List_setitem(ListClass *this, ...)
     va_end(args);
 }
 
+static void List_push_front(ListClass *this, ...)
+{
+    va_list args;
+
+    va_start(args, this);
+    List_add_at_front(this, va_new(this->_type, &args));
+    va_end(args);
+}
+
+static void List_push_back(ListClass *this, ...)
+{
+    va_list args;
+
+    va_start(args, this);
+    List_add_at_back(this, va_new(this->_type, &args));
+    va_end(args);
+}
+
+static Object *List_get_front(ListClass *this)
+{
+    if (this->_list_start == NULL)
+        raise("List is empty");
+    return this->_list_start->data;
+}
+
+static Object *List_get_back(ListClass *this)
+{
+    if (this->_list_end == NULL)
+        raise("List is empty");
+    return this->_list_end->data;
+}
+
 static const ListClass _descr = {
-    {   /* Container struct */
-        {   /* Class struct */
-            .__size__ = sizeof(ListClass),
-            .__name__ = "List",
-            .__ctor__ = (ctor_t)&List_ctor,
-            .__dtor__ = (dtor_t)&List_dtor,
-            .__str__ = NULL,
-            .__add__ = NULL,
-            .__sub__ = NULL,
-            .__mul__ = NULL,
-            .__div__ = NULL,
-            .__eq__ = NULL,
-            .__gt__ = NULL,
-            .__lt__ = NULL,
+    {   /* ListMethods struct */
+        {   /* Container struct */
+            {   /* Class struct */
+                .__size__ = sizeof(ListClass),
+                .__name__ = "List",
+                .__ctor__ = (ctor_t)&List_ctor,
+                .__dtor__ = (dtor_t)&List_dtor,
+                .__str__ = NULL,
+                .__add__ = NULL,
+                .__sub__ = NULL,
+                .__mul__ = NULL,
+                .__div__ = NULL,
+                .__eq__ = NULL,
+                .__gt__ = NULL,
+                .__lt__ = NULL,
+            },
+            .__len__ = (len_t)&List_len,
+            .__begin__ = (iter_t)&List_begin,
+            .__end__ = (iter_t)&List_end,
+            .__getitem__ = (getitem_t)&List_getitem,
+            .__setitem__ = (setitem_t)&List_setitem,
         },
-        .__len__ = (len_t)&List_len,
-        .__begin__ = (iter_t)&List_begin,
-        .__end__ = (iter_t)&List_end,
-        .__getitem__ = (getitem_t)&List_getitem,
-        .__setitem__ = (setitem_t)&List_setitem,
+        .__push_front__ = (push_front_t) &List_push_front,
+        .__push_back__ = (push_back_t) &List_push_back,
+        .__pop_front__ = (pop_front_t) &List_del_at_front,
+        .__pop_back__ = (pop_back_t) &List_del_at_back,
+        .__front__ = (get_front_t) &List_get_front,
+        .__back__ = (get_back_t) &List_get_back,
     },
     ._type = NULL,
     ._size = 0,
