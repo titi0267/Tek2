@@ -16,12 +16,12 @@
 #include "char.h"
 #include "float.h"
 #include "iterator.h"
-#include "container.h"
 #include "int.h"
 #include "array.h"
 #include "../list.h"
+#include "../string.h"
 
-Test (Task01, test_new_and_delete, .init = cr_redirect_stdout)
+Test (Testing_outputs, test_new_and_delete, .init = cr_redirect_stdout)
 {
     Object *player = new(Player);
     cr_assert(player != NULL);
@@ -45,7 +45,7 @@ Test (Testing_outputs, test_all_obj_outputs)
 
 Test (Testing_outputs, test_complex_output)
 {
-    Object *array = new(Array, 5, Int, 0.0f);
+    Object *array = new(Array, 5, Int, 0);
     Object  *it = begin(array);
     Object *it_test = begin(array);
     Object  *it_end = end(array);
@@ -178,6 +178,54 @@ Test (Testing_outputs, testing_vertex_pt)
     cr_assert_str_eq(sub, "<Vertex (-1, -1, -5)>");
     delete(p1);
     delete(p2);
+}
+
+Test (Testing_outputs, testing_strings)
+{
+    Object *p1 = new(String, "Hello");
+    Object *p2 = new(String, "JohnCena");
+    Object *p3 = new(String, "sands");
+
+    cr_assert_str_eq(str(p2), "<String (JohnCena)>");
+    cr_assert_str_eq(str(addition(p1, p2)), "<String (HelloJohnCena)>");
+    cr_assert(eq(p1, p2) == 0);
+    cr_assert(gt(p1, p2) == 0);
+    cr_assert(lt(p1, p2));
+    delete(p1);
+    delete(p2);
+    delete(p3);
+}
+
+Test (Testing_outputs, testing_arrays_st)
+{
+    Object *my_list = new(List, 5, Int, 0);
+    Object  *it = begin(my_list);
+    Object *it_test = begin(my_list);
+    Object  *it_end = end(my_list);
+    char *test_str = malloc(100);
+    strcpy(test_str, "");
+
+    setitem(my_list, 0, 10);
+    setitem(my_list, 1, 20);
+    setitem(my_list, 2, 30);
+    setitem(my_list, 3, 40);
+    setitem(my_list, 4, 50);
+    cr_assert(len(my_list) == 5);
+
+    while (lt(it, it_end))
+    {
+        strcat(test_str, str(getval(it)));
+        strcat(test_str, ",");
+        incr(it);
+    }
+    cr_assert_str_eq("<Int (10)>,<Int (20)>,<Int (30)>,<Int (40)>,<Int (50)>,", test_str);
+    cr_assert(gt(it_test, it) == 0);
+    cr_assert(lt(it_test, it));
+    cr_assert(eq(it_test, it) == 0);
+    delete(it);
+    delete(it_end);
+    delete(my_list);
+    free(test_str);
 }
 
 Test(list, simple_list)
