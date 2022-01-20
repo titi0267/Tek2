@@ -15,6 +15,7 @@ SRC=	assign.c			\
 		copy.c				\
 		c_str.c				\
 		empty.c				\
+		find.c				\
 
 OBJ		=	$(SRC:.c=.o)
 
