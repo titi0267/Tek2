@@ -13,6 +13,7 @@ SRC=	assign.c			\
 		length.c			\
 		compare.c			\
 		copy.c				\
+		c_str.c				\
 
 OBJ		=	$(SRC:.c=.o)
 
