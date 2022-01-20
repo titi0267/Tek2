@@ -27,6 +27,7 @@ struct string_s {
     int (*compare_c)(const string_t *this, const char *str);
     size_t (*copy)(const string_t * this, char *s, size_t n, size_t pos);
     const char * (*c_str)(const string_t *this);
+    int (*empty)(const string_t *this);
 };
 
 void append_s(string_t *this, const string_t *ap);
@@ -42,5 +43,6 @@ int compare_s(const string_t *this, const string_t *str);
 int compare_c(const string_t *this, const char *str);
 size_t copy(const string_t * this, char *s, size_t n, size_t pos);
 const char *c_str(const string_t *this);
+int empty(const string_t * this);
 
 #endif /* !STRING_H_ */
