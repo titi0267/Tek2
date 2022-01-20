@@ -8,6 +8,11 @@
 SRC=	assign.c			\
 		append.c			\
 		c_d_tor.c			\
+		at.c				\
+		clear.c				\
+		length.c			\
+		compare.c			\
+		copy.c				\
 
 OBJ		=	$(SRC:.c=.o)
 
