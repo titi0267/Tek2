@@ -17,6 +17,7 @@ SRC=	assign.c			\
 		empty.c				\
 		find.c				\
 		insert.c			\
+		to_int.c			\
 
 OBJ		=	$(SRC:.c=.o)
 

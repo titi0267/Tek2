@@ -30,6 +30,7 @@ void string_init(string_t *this, const char *s)
     this->find_s = &find_s;
     this->insert_c = &insert_c;
     this->insert_s = &insert_s;
+    this->to_int = &to_int;
 }
 
 void string_destroy(string_t *this)

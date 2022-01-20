@@ -32,6 +32,7 @@ struct string_s {
     int (*find_s)(const string_t * this, const string_t * str, size_t pos);
     void (*insert_c)(string_t * this, size_t pos, const char *str);
     void (*insert_s)(string_t *this, size_t pos, const string_t *str);
+    int (*to_int)(const string_t *this);
 };
 
 void append_s(string_t *this, const string_t *ap);
@@ -52,5 +53,6 @@ int find_c(const string_t * this, const char * str, size_t pos);
 int find_s(const string_t * this, const string_t * str, size_t pos);
 void insert_c(string_t * this, size_t pos, const char *str);
 void insert_s(string_t *this, size_t pos, const string_t *str);
+int to_int(const string_t *this);
 
 #endif /* !STRING_H_ */
