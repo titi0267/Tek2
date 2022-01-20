@@ -9,8 +9,6 @@
 
 void assign_c(string_t *this, const char *s)
 {
-    char *tmp = this->str;
-
     string_destroy(this);
     this->str = strdup(s);
 }

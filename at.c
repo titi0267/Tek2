@@ -12,7 +12,7 @@ char at(const string_t * this, size_t pos)
     if (this != NULL && this->str != NULL) {
         if (pos + 1 > strlen(this->str)) {
             return (-1);
-        } else if (pos < 0)
+        } else if ((int)pos < 0)
             return (-1);
         return (this->str[pos]);
     }
