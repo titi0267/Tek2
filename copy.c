@@ -9,11 +9,16 @@
 
 size_t copy(const string_t *this, char *s, size_t n, size_t pos)
 {
+    int j = 0;
+
     if (this == NULL || this->str == NULL || n + pos >= strlen(this->str)) {
         return (0);
     }
     for (int i = 0; i < n; i++) {
-        s[i] = this->str[pos + i];
+        if (pos + i < (size_t)length(this)) {
+            s[i] = this->str[pos + i];
+            j++;
+        }
     }
-    return (n);
+    return ((size_t)j);
 }
