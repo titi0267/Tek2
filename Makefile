@@ -5,7 +5,9 @@
 ## Makefile
 ##
 
-SRC=	string_handling.c	\
+SRC=	assign.c			\
+		append.c			\
+		c_d_tor.c			\
 
 OBJ		=	$(SRC:.c=.o)
 
