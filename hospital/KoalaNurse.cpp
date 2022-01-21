@@ -52,13 +52,3 @@ void KoalaNurse::timeCheck(void)
         working = false;
     }
 }
-
-int main(void)
-{
-    KoalaNurse n_koala(10);
-    SickKoala s_koala("Roger");
-    n_koala.giveDrug("Kinder", &s_koala);
-    n_koala.readReport("Joseph.report");
-    n_koala.timeCheck();
-    n_koala.timeCheck();
-}
