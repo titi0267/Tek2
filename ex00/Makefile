@@ -9,7 +9,7 @@ CC    =    g++
 
 CFLAGS	=	-std=c++20 -Wall -Wextra -Werror
 
-SRC    =    ex00/cat.cpp			\
+SRC    =    cat.cpp			\
 
 EXEC    =   my_cat
 
