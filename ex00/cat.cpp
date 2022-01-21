@@ -7,12 +7,11 @@
 
 #include <iostream>
 #include <fstream>
-using namespace std;
 
 void open_files(int ac, char **av)
 {
     for (int i = 1; i < ac; i++) {
-        fstream file (av[i], std::ios::in);
+        std::ifstream file (av[i], std::ios::in);
         if (!file)
             std::cerr << "my_cat : " << av[i] << ": No such file or directory" << std::endl;
         else {
