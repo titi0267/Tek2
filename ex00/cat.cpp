@@ -15,7 +15,7 @@ void open_files(int ac, char **av)
         if (!file)
             std::cerr << "my_cat: " << av[i] << ": No such file or directory" << std::endl;
         else {
-            std::cout << file.rdbuf() << std::endl;
+            std::cout << file.rdbuf();
             file.close();
         }
     }
