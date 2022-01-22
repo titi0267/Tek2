@@ -217,8 +217,3 @@ void Federation::Starfleet::Ship::fire(int torpedoes, Borg::Ship *target)
         std::cout << _name << ": No enough torpedoes to fire, " << _captain->getName() << "!";
     }
 }
-
-int main(void)
-{
-    return 0;
-}
