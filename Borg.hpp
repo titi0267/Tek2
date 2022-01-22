@@ -7,14 +7,22 @@
 
 
 #include <iostream>
-#include "Federation.hpp"
+#include "Destination.hpp"
+#include "WarpSystem.hpp"
 #ifndef BORG_HPP_
 #define BORG_HPP_
+
+namespace Federation {
+    namespace Starfleet {
+        class Ship;
+    };
+    class Ship;
+};
 
 namespace Borg {
     class Ship {
         public:
-            Ship();
+            Ship(int weaponFrequency, short repair);
             ~Ship();
             void checkCore();
             void setupCore(WarpSystem::Core *Core_ptr);
@@ -22,6 +30,15 @@ namespace Borg {
             bool move(int warp);
             bool move(Destination d);
             bool move(int warp, Destination d);
+            int getShield();
+            void setShield(int shield);
+            int getWeaponFrequency();
+            void setWeaponFrequency(int frequency);
+            short getRepair();
+            void setRepair(short repair);
+            void fire(Federation::Starfleet::Ship *target);
+            void fire (Federation::Ship *target);
+            void repair();
 
         protected:
         private:
@@ -30,6 +47,9 @@ namespace Borg {
         WarpSystem::Core *_core;
         Destination _location;
         Destination _home;
+        int _shield; // set to 100 upon construction
+        int _weaponFrequency; // provided upon construction
+        short _repair; // can be provided . if not , set to 3 upon construction
     };
 };
 
