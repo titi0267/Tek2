@@ -49,8 +49,10 @@ void Skat::addStimPaks(unsigned int number)
 
 void Skat::useStimPaks()
 {
-    if (_stimPaks > 0)
+    if (_stimPaks > 0) {
         std::cout << "Time to kick some ass and chew bubble gum." << std::endl;
+        _stimPaks--;
+    }
     else
         std::cout << "Mediiiiiic" << std::endl;
 }
