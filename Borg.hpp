@@ -22,7 +22,7 @@ namespace Federation {
 namespace Borg {
     class Ship {
         public:
-            Ship(int weaponFrequency, short repair);
+            Ship(int weaponFrequency = 20, short repair = 3);
             ~Ship();
             void checkCore();
             void setupCore(WarpSystem::Core *Core_ptr);

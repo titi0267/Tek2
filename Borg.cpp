@@ -8,7 +8,7 @@
 #include "Borg.hpp"
 #include "Federation.hpp"
 
-Borg::Ship::Ship(int weaponFrequency = 20 , short repair = 3)
+Borg::Ship::Ship(int weaponFrequency, short repair)
 {
     _side = 300;
     _maxWarp = 9;
@@ -140,6 +140,7 @@ Federation::Starfleet::Captain::Captain(std::string str)
     _name = str;
     _age = 0;
 }
+
 
 Federation::Starfleet::Captain::~Captain()
 {

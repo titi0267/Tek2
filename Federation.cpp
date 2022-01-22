@@ -8,7 +8,7 @@
 #include "Federation.hpp"
 #include "Borg.hpp"
 
-Federation::Starfleet::Ship::Ship(int length, int width, std::string name, short maxWarp, int torpedo = 0)
+Federation::Starfleet::Ship::Ship(int length, int width, std::string name, short maxWarp, int torpedo)
 {
     _length = length;
     _width = width;

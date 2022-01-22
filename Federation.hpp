@@ -28,7 +28,7 @@ namespace Federation {
         };
         class Ship {
             public:
-                Ship(int length, int width, std::string name, short maxWarp, int torpedo);
+                Ship(int length, int width, std::string name, short maxWarp, int torpedo = 0);
                 Ship();
                 ~Ship();
                 void setupCore(WarpSystem::Core *Core_ptr);
