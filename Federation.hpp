@@ -7,6 +7,7 @@
 
 #include <iostream>
 #include "WarpSystem.hpp"
+#include "Destination.hpp"
 #ifndef FEDERATION_HPP_
 #define FEDERATION_HPP_
 
@@ -32,6 +33,10 @@ namespace Federation {
                 void setupCore(WarpSystem::Core *Core_ptr);
                 void checkCore();
                 void promote(Federation::Starfleet::Captain *captain);
+                bool move();
+                bool move(int warp);
+                bool move(Destination d);
+                bool move(int warp, Destination d);
 
             protected:
             private:
@@ -41,6 +46,8 @@ namespace Federation {
                 short _maxWarp;
                 WarpSystem::Core *_core;
                 Federation::Starfleet::Captain *capitain;
+                Destination _location;
+                Destination _home;
         };
         class Ensign {
             public:
@@ -59,6 +66,10 @@ namespace Federation {
             ~Ship();
             void setupCore(WarpSystem::Core *Core_ptr);
             void checkCore();
+            bool move();
+            bool move(int warp);
+            bool move(Destination d);
+            bool move(int warp, Destination d);
 
         protected:
         private:
@@ -67,6 +78,8 @@ namespace Federation {
             std::string _name;
             short _maxWarp;
             WarpSystem::Core *_core;
+            Destination _location;
+            Destination _home;
         };
 };
 

@@ -18,12 +18,18 @@ namespace Borg {
             ~Ship();
             void checkCore();
             void setupCore(WarpSystem::Core *Core_ptr);
+            bool move();
+            bool move(int warp);
+            bool move(Destination d);
+            bool move(int warp, Destination d);
 
         protected:
         private:
         int _side;
         short _maxWarp;
         WarpSystem::Core *_core;
+        Destination _location;
+        Destination _home;
     };
 };
 
