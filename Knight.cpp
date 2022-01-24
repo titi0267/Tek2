@@ -19,11 +19,11 @@ Knight::~Knight()
 
 int Knight::attack()
 {
-    if (_power - 10 < 0) {
-        std::cout << getName() << " is out of power." << std::endl;
-        return (0);
-    } else if (_health <= 0) {
+    if (_health <= 0) {
         std::cout << getName() << " is out of combat." << std::endl;
+        return (0);
+    } else if (_power - 10 < 0) {
+        std::cout << getName() << " is out of power." << std::endl;
         return (0);
     }
     std::cout << getName() << " strikes with his sword." << std::endl;
