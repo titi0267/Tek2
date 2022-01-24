@@ -28,11 +28,11 @@ void Priest::rest()
     std::cout << getName() << " prays." << std::endl;
 }
 
-int main ( void )
-{
-Priest priest ("Trichelieu", 20) ;
-priest . attack () ;
-priest . special () ;
-priest . rest () ;
-priest . damage (50) ;
-}
+//int main ( void )
+//{
+//Priest priest ("Trichelieu", 20) ;
+//priest . attack () ;
+//priest . special () ;
+//priest . rest () ;
+//priest . damage (50) ;
+//}
