@@ -92,3 +92,35 @@ Test(Enchanter, Test_Enchanter_main, .init=redirect_all_stdout)
 cr_assert_stdout_eq_str("Merlin goes for an adventure.\nMerlin learns magic from his spellbook.\nMerlin doesn't know how to fight.\nMerlin is out of power.\nMerlin meditates.\nMerlin casts a fireball.\nMerlin takes 50 damage.\nLucas goes for an adventure.\nLucas learns magic from his spellbook.\nLucas is out of combat.\nLucas is out of combat.\nLucas is out of combat.\nLucas is out of combat.\nLucas closes his spellbook.\nLucas is back to his crops.\nMerlin closes his spellbook.\nMerlin is back to his crops.\n");
 }
 
+Test(Paladin, Paladin_main_test, .init=redirect_all_stdout)
+{
+    {
+    Paladin paladin("Uther", 99);
+    paladin.attack();
+    paladin.special();
+    paladin.rest();
+    paladin.damage(50);
+    }
+
+cr_assert_stdout_eq_str("Uther goes for an adventure.\nUther vows to protect the kingdom.\nUther learns magic from his spellbook.\nUther enters in the order.\nUther fights for the light.\nUther strikes with his sword.\nUther casts a fireball.\nUther prays.\nUther takes 50 damage.\nUther is blessed.\nUther finds peace.\nUther closes his spellbook.\nUther takes off his armor.\nUther is back to his crops.\n");
+}
+
+Test(Knight, Knight_main_test, .init=redirect_all_stdout)
+{
+    {
+    Knight knight("Arthur", 20);
+    knight.attack();
+    knight.special();
+    knight.attack();
+    knight.attack();
+    knight.rest();
+    knight.special();
+    knight.rest();
+    knight.rest();
+    knight.damage(100);
+    knight.attack();
+    knight.special();
+    knight.rest();
+    }
+    cr_assert_stdout_eq_str("Arthur goes for an adventure.\nArthur vows to protect the kingdom.\nArthur strikes with his sword.\nArthur is out of power.\nArthur strikes with his sword.\nArthur is out of power.\nArthur eats.\nArthur impales his enemy.\nArthur eats.\nArthur eats.\nArthur is out of combat.\nArthur is out of combat.\nArthur is out of combat.\nArthur is out of combat.\nArthur takes off his armor.\nArthur is back to his crops.\n");
+}
