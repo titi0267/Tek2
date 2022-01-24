@@ -6,10 +6,12 @@
 */
 
 #include <iostream>
+#include "ICharacter.hpp"
 #ifndef PEASANT_HPP_
 #define PEASANT_HPP_
 
-class Peasant {
+class Peasant : public ICharacter
+{
     public:
         Peasant(const std::string& name, int power);
         ~Peasant();

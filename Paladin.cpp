@@ -17,6 +17,21 @@ Paladin::~Paladin()
     std::cout << Knight::getName() << " is blessed." << std::endl;
 }
 
+int Paladin::attack()
+{
+    return Knight::attack();
+}
+
+int Paladin::special()
+{
+    return Enchanter::special();
+}
+
+void Paladin::rest()
+{
+    return Priest::rest();
+}
+
 //int main ( void )
 //{
 //Paladin paladin("Uther", 99) ;

@@ -16,10 +16,9 @@ class Paladin : public Knight, public Priest
     public:
         Paladin(const std::string &name, int power);
         ~Paladin();
-        using Knight::attack;
-        using Enchanter::special;
-        using Priest::rest;
-        using Knight::damage;
+        int attack();
+        int special();
+        void rest();
 
     protected:
     private:
