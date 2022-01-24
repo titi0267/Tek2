@@ -20,7 +20,6 @@ Knight::~Knight()
 int Knight::attack()
 {
     if (_power - 10 < 0) {
-        _power = 0;
         std::cout << getName() << " is out of power." << std::endl;
         return (0);
     } else if (_health <= 0) {
@@ -38,7 +37,6 @@ int Knight::special()
         std::cout << getName() << " is out of combat." << std::endl;
         return (0);
     } else if (_power - 30 < 0) {
-        _power = 0;
         std::cout << getName() << " is out of power." << std::endl;
         return (0);
     }
