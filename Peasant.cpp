@@ -10,7 +10,6 @@
 Peasant::Peasant(const std::string &name, int power)
 {
     _name = name;
-    _health = 100;
     if (power > 100)
         _power = 100;
     else
@@ -59,17 +58,17 @@ int Peasant::special()
         std::cout << getName() << " is out of combat." << std::endl;
         return (0);
     }
-    std::cout << _name << " doesn't know any special move." << std::endl;
+    std::cout << getName() << " doesn't know any special move." << std::endl;
     return (0);
 }
 
 void Peasant::rest()
 {
     if (_health <= 0) {
-        std::cout << _name << " is out of combat." << std::endl;
+        std::cout << getName() << " is out of combat." << std::endl;
         return;
     }
-    std::cout << _name << " takes a nap." << std::endl;
+    std::cout << getName() << " takes a nap." << std::endl;
     if (_power + 30 >= 100)
         _power = 100;
     else

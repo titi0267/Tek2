@@ -22,10 +22,10 @@ class Peasant {
         void damage(int damage);
 
     protected:
-    private:
         std::string _name;
         int _power;
-        int _health;
+        int _health = 100;
+    private:
 
 };
 
