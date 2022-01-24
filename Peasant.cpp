@@ -39,11 +39,11 @@ int Peasant::getHp() const
 
 int Peasant::attack()
 {
-    if (_power - 10 < 0) {
-        std::cout << getName() << " is out of power." << std::endl;
-        return (0);
-    } else if (_health <= 0) {
+    if (_health <= 0) {
         std::cout << getName() << " is out of combat." << std::endl;
+        return (0);
+    } else if (_power - 10 < 0) {
+        std::cout << getName() << " is out of power." << std::endl;
         return (0);
     }
     std::cout << getName() << " tosses a stone." << std::endl;
@@ -85,12 +85,3 @@ void Peasant::damage(int damage)
         return;
     }
 }
-
-//int main(void)
-//{
-//Peasant peasant ("Gildas", 42) ;
-//peasant . damage (50) ;
-//peasant . damage (100) ;
-//peasant . damage (200) ;
-//peasant . rest () ;
-//}
