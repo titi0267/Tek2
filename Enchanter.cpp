@@ -50,13 +50,3 @@ void Enchanter::rest()
     std::cout << getName() << " meditates." << std::endl;
         _power = 100;
 }
-
-// int main ( void )
-// {
-// Enchanter enchanter ("Merlin", 20) ;
-// enchanter . attack () ;
-// enchanter . special () ;
-// enchanter . rest () ;
-// enchanter . special () ;
-// enchanter . damage (50) ;
-// }
