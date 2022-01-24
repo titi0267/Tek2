@@ -39,7 +39,7 @@ int Peasant::getHp() const
 
 int Peasant::attack()
 {
-    if (_power - 10 <= 0) {
+    if (_power - 10 < 0) {
         _power = 0;
         std::cout << getName() << " is out of power." << std::endl;
         return (0);

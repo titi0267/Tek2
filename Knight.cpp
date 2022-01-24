@@ -9,17 +9,17 @@
 
 Knight::Knight(const std::string& name, int power) : Peasant(name, power)
 {
-    std::cout << _name << " vows to protect the kingdom." << std::endl;
+    std::cout << getName() << " vows to protect the kingdom." << std::endl;
 }
 
 Knight::~Knight()
 {
-    std::cout << _name << " takes off his armor." << std::endl;
+    std::cout << getName() << " takes off his armor." << std::endl;
 }
 
 int Knight::attack()
 {
-    if (_power - 10 <= 0) {
+    if (_power - 10 < 0) {
         _power = 0;
         std::cout << getName() << " is out of power." << std::endl;
         return (0);
@@ -37,7 +37,7 @@ int Knight::special()
     if (_health <= 0) {
         std::cout << getName() << " is out of combat." << std::endl;
         return (0);
-    } else if (_power - 30 <= 0) {
+    } else if (_power - 30 < 0) {
         _power = 0;
         std::cout << getName() << " is out of power." << std::endl;
         return (0);
