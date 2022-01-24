@@ -41,12 +41,16 @@ int Knight::special()
         return (0);
     }
     _power -= 30;
-    std::cout << getName() << " impales his ennemy." << std::endl;
+    std::cout << getName() << " impales his enemy." << std::endl;
     return (50);
 }
 
 void Knight::rest()
 {
+    if (_health <= 0) {
+        std::cout << getName() << " is out of combat." << std::endl;
+        return;
+    }
     _power += 50;
     if (_power > 100)
         _power = 100;
