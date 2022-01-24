@@ -9,7 +9,7 @@
 #ifndef KNIGHT_HPP_
 #define KNIGHT_HPP_
 
-class Knight : public Peasant
+class Knight : virtual public Peasant
 {
     public:
         Knight(const std::string& name, int power);

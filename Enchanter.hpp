@@ -9,7 +9,7 @@
 #ifndef ENCHANTER_HPP_
 #define ENCHANTER_HPP_
 
-class Enchanter : public Peasant
+class Enchanter : virtual public Peasant
 {
     public:
         Enchanter(const std::string &name, int power);
