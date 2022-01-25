@@ -7,7 +7,7 @@
 
 #include "Lemon.hpp"
 
-Lemon::Lemon()
+Lemon::Lemon() : Fruit(_fruit, _vitamins)
 {
     _fruit = "lemon";
     _vitamins = 3;

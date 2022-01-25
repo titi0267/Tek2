@@ -11,14 +11,14 @@
 
 class Fruit {
     public:
-        Fruit();
+        Fruit(const std::string &name, int vitamins);
         ~Fruit();
         std::string getName();
         int getVitamins();
 
     protected:
-        int _vitamins = 0;
-        std::string _fruit = "";
+        int _vitamins;
+        std::string _fruit;
     private:
 };
 

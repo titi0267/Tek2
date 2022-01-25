@@ -7,7 +7,7 @@
 
 #include "Banana.hpp"
 
-Banana::Banana()
+Banana::Banana() : Fruit(_fruit, _vitamins)
 {
     _vitamins = 5;
     _fruit = "banana";
