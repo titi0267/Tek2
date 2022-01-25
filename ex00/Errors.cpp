@@ -6,8 +6,9 @@
 */
 
 #include "Errors.hpp"
+#include <exception>
 
-NasaError::NasaError(std::string const &message, std::string const &component)
+NasaError::NasaError(std::string const &message, std::string const &component) : std::exception()
 {
     _message = message;
     _component = component;

@@ -2,8 +2,9 @@
 #pragma once
 
 #include <string>
+#include <exception>
 
-class NasaError
+class NasaError : std::exception
 {
     public:
         NasaError(std::string const &message, std::string const &component = "Unknown");
