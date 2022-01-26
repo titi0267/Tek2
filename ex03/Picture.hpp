@@ -13,6 +13,7 @@ class Picture {
     public:
         Picture();
         ~Picture();
+        Picture(const std::string &file);
         bool getPictureFromFile(const std::string &file);
         std::string data;
 

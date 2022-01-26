@@ -10,6 +10,12 @@
 
 Picture::Picture()
 {
+    data = "";
+}
+
+Picture::Picture(const std::string &file)
+{
+    getPictureFromFile(file);
 }
 
 Picture::~Picture()

@@ -8,8 +8,14 @@
 #include "Picture.hpp"
 #include <fstream>
 
+Picture::Picture(const std::string &file)
+{
+    getPictureFromFile(file);
+}
+
 Picture::Picture()
 {
+    data = "";
 }
 
 Picture::~Picture()
