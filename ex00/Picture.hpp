@@ -11,7 +11,7 @@
 
 class Picture {
     public:
-        Picture();
+        Picture(const std::string &file = "");
         ~Picture();
         bool getPictureFromFile(const std::string &file);
         std::string data;

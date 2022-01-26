@@ -8,8 +8,9 @@
 #include "Picture.hpp"
 #include <fstream>
 
-Picture::Picture()
+Picture::Picture(const std::string &file)
 {
+    getPictureFromFile(file);
 }
 
 Picture::~Picture()
@@ -35,3 +36,4 @@ bool Picture::getPictureFromFile(const std::string &file)
     }
     return true;
 }
+
