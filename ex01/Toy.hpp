@@ -24,7 +24,7 @@ class Toy : public Picture {
         std::string getName() const;
         void setName(std::string);
         bool setAscii(const std::string &file);
-        std::string getAscii();
+        std::string getAscii() const;
 
     protected:
         ToyType _type;
