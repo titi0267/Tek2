@@ -13,7 +13,7 @@
 class Toy : public Picture {
     public:
         Toy();
-        Toy& Toy::operator=(const Toy&);
+        Toy& operator=(const Toy&);
         ~Toy();
         enum ToyType {
             BASIC_TOY,
