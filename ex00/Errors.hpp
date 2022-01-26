@@ -37,7 +37,11 @@ class UserError : public NasaError
 };
 
 class CommunicationError : public NasaError
+{int main(void)
 {
+    int i = 0;
+    return (i);
+}
     public:
         CommunicationError(std::string const &message, std::string const &component = "CommunicationDevice") throw();
 };

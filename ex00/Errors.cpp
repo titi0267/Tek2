@@ -33,6 +33,7 @@ UserError::UserError(std::string const &message, std::string const &component) t
 
 CommunicationError::CommunicationError(std::string const &message, std::string const &component) throw() : NasaError(message, component)
 {
+    _component = "CommunicationDevice";
 }
 
 std::string const &NasaError::getComponent() const
