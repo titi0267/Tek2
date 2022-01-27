@@ -50,9 +50,9 @@ T clamp(T value, T a, T b)
         else
             return value;
     }
-    if (b > a)
-        return a;
-    return b;
+    if (b < a)
+        return b;
+    return a;
 }
 
 #endif /* !ALGORITHM_HPP_ */
