@@ -10,6 +10,9 @@
 #define ALGORITHM_HPP_
 
 template<typename T>
+bool operator<(const T &a, const T &b);
+
+template<typename T>
 void swap(T &a, T &b)
 {
     T c = a;
@@ -20,7 +23,7 @@ void swap(T &a, T &b)
 template<typename T>
 T min(T a, T b)
 {
-    if (a <= b)
+    if (a < b)
         return a;
     return b;
 }
@@ -28,7 +31,7 @@ T min(T a, T b)
 template<typename T>
 T max(T a, T b)
 {
-    if (a >= b)
+    if (b < a)
         return a;
     return b;
 }
@@ -36,20 +39,20 @@ T max(T a, T b)
 template<typename T>
 T clamp(T value, T a, T b)
 {
-    if (a <= b && a <= value) {
-        if (b > value)
-            return value;
-        else
+    if (a < b && a < value) {
+        if (b < value)
             return b;
-    } else if (b <= value && b <= a) {
-        if (a > value)
-            return value;
         else
+            return value;
+    } else if (b < value && b < a) {
+        if (a < value)
             return a;
-    } //else if (value <= a && value <= b) {
-    if (a > b)
-        return b;
-    return a;
+        else
+            return value;
+    }
+    if (b > a)
+        return a;
+    return b;
 }
 
 #endif /* !ALGORITHM_HPP_ */
