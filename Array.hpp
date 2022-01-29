@@ -17,7 +17,7 @@ class Array {
     public:
         Array() : _array(std::vector<Type>{Size}) {};
 
-        Type &operator[](int);
+        Type &operator[](size_t);
         std::size_t size() const;
         void forEach(const std::function<void(const Type&)>& task) const;
         template <typename U>
@@ -29,7 +29,7 @@ class Array {
 };
 
 template<typename T, size_t Size>
-T &Array<T,Size>::operator[](int index)
+T &Array<T,Size>::operator[](size_t index)
 {
     if (index >= Size)
         throw std::invalid_argument("Out of range");
@@ -40,7 +40,7 @@ template<typename Type, size_t Size>
 std::ostream &operator<<(std::ostream &os, Array<Type, Size> &array)
 {
     os << "[";
-    for (int i = 0; i < Size - 1; i++)
+    for (size_t i = 0; i < Size - 1; i++)
         os << array[i] << ", ";
     os << array[Size - 1] << "]";
     return os;
@@ -55,7 +55,7 @@ std::size_t Array<Type, Size>::size() const
 template<typename Type, size_t Size>
 void Array<Type, Size>::forEach(const std::function <void(const Type &)>& task) const
 {
-    for (int i = 0; i < Size; i++)
+    for (size_t i = 0; i < Size; i++)
         task(_array[i]);
 }
 
@@ -65,7 +65,7 @@ Array<U, Size> Array<Type, Size>::convert(const std::function <U(const Type&)>& 
 {
     Array<U, Size> arrayU;
 
-    for (int i = 0; i < Size; i++)
+    for (size_t i = 0; i < Size; i++)
         arrayU[i] = converter(_array[i]);
     return arrayU;
 }
