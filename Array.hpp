@@ -18,6 +18,7 @@ class Array {
         Array() : _array(std::vector<Type>{Size}) {};
 
         Type &operator[](size_t);
+        const Type operator[](size_t) const;
         std::size_t size() const;
         void forEach(const std::function<void(const Type&)>& task) const;
         template <typename U>
@@ -36,8 +37,16 @@ T &Array<T,Size>::operator[](size_t index)
     return _array[index];
 }
 
+template<typename T, size_t Size>
+const T Array<T,Size>::operator[](size_t index) const
+{
+    if (index >= Size)
+        throw std::invalid_argument("Out of range");
+    return _array[index];
+}
+
 template<typename Type, size_t Size>
-std::ostream &operator<<(std::ostream &os, Array<Type, Size> &array)
+std::ostream &operator<<(std::ostream &os, const Array<Type, Size> &array)
 {
     os << "[";
     for (size_t i = 0; i < Size - 1; i++)
