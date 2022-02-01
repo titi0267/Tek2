@@ -206,7 +206,7 @@ std::string Get_file::getRamInfo()
         ptr = strtok(NULL, "\n");
     }
     while (ptr2 != NULL) {
-        if (strncmp("MemAvailable:", ptr, 13) == 0) {
+        if (strncmp("MemAvailable:", ptr2, 10) == 0) {
             tmp2 = strdup(ptr2);
             break;
         }
