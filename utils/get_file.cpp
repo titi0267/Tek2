@@ -123,7 +123,7 @@ std::string Get_file::getOsName()
     std::string tmp;
 
     while (ptr != NULL) {
-        if (strncmp("NAME=", str, 5) == 0) {
+        if (strncmp("NAME=", ptr, 5) == 0) {
             tmp = strdup(ptr);
             break;
         }
