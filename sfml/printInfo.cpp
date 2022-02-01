@@ -18,10 +18,16 @@ void Window::Background()
 void Window::printName(Get_file a)
 {
     text.setFillColor(sf::Color::Green);
-    text.setPosition(sf::Vector2f(100, 20));
+    text.setString("Hostname :");
+    text.setPosition(sf::Vector2f(50, 20));
+    _window.draw(text);
+    text.setString("Username :");
+    text.setPosition(sf::Vector2f(450, 20));
+    _window.draw(text);
+    text.setPosition(sf::Vector2f(250, 20));
     text.setString(a.getHostname());
     _window.draw(text);
-    text.setPosition(sf::Vector2f(300, 20));
+    text.setPosition(sf::Vector2f(600, 20));
     text.setString(a.getUsername());
     _window.draw(text);
 }
@@ -51,8 +57,26 @@ void Window::printCpu(Get_file a)
     text.setPosition(sf::Vector2f(440, 150));
     text.setString(a.getModel());
     _window.draw(text);
+    text.setString("Activity :");
+    text.setPosition(sf::Vector2f(300, 190));
+    _window.draw(text);
     text.setString(a.getActivity());
     text.setPosition(sf::Vector2f(440, 190));
+    _window.draw(text);
+    text.setString("%");
+    text.setPosition(sf::Vector2f(600, 190));
+    _window.draw(text);
+    text.setString("Cores :");
+    text.setPosition(sf::Vector2f(300, 230));
+    _window.draw(text);
+    text.setString(a.getCores());
+    text.setPosition(sf::Vector2f(440, 230));
+    _window.draw(text);
+    text.setString("Ram :");
+    text.setPosition(sf::Vector2f(300, 270));
+    _window.draw(text);
+    text.setString(a.getRamInfo());
+    text.setPosition(sf::Vector2f(440, 270));
     _window.draw(text);
 }
 

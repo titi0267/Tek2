@@ -135,12 +135,6 @@ std::string Get_file::getOsName()
     return tmp;
 }
 
-std::string Get_file::getRamInfo()
-{
-    std::string err = "";
-    return (err);
-}
-
 std::string Get_file::getUsername()
 {
     return _username;
@@ -191,101 +185,42 @@ std::string Get_file::getModel()
     return tmp;
 }
 
+std::string Get_file::getRamInfo()
+{
+    std::string ram_info = get_file_content("/proc/meminfo");
+    char *str = strdup(ram_info.c_str());
+    char *ptr = strtok(str, "\n");
+    char *ptr2 = strtok(str, "\n");
+    int i = 0;
+    std::string tmp;
+    std::string tmp2;
+    std::string tmp3;
+    int total;
+
+    while (ptr != NULL) {
+        if (strncmp("MemTotal:", ptr, 9) == 0) {
+            tmp = strdup(ptr);
+            break;
+        }
+        for (; ptr[i] != '\n'; i++);
+        ptr = strtok(NULL, "\n");
+    }
+    while (ptr2 != NULL) {
+        if (strncmp("MemAvailable:", ptr, 13) == 0) {
+            tmp2 = strdup(ptr2);
+            break;
+        }
+        for (; ptr[i] != '\n'; i++);
+        ptr2 = strtok(NULL, "\n");
+    }
+    tmp.erase(0, 16);
+    tmp.pop_back();
+    tmp.pop_back();
+    return tmp;
+}
+
 std::string Get_file::getFrequency()
 {
     std::string cpuInfo = get_file_content("/proc/cpuinfo");
     return (eraseSubStr(get_file_line("cpu MHz		: ", cpuInfo, "\n"), "cpu MHz		: "));
 }
-
-// std::string *Get_file::getActivity()
-// {
-//     std::string *tab = NULL;
-//     const char *cores = this->getCores().c_str();
-//     int n = std::stoi(cores);
-//     tab = new std::string[n];
-//     std::string cpuInfo = get_file_content("/proc/stat");
-//     std::string temp;
-//     std::string dest;
-//     char ascii = 48;
-//     char space = ' ';
-//     char *cpu = "";
-
-//     for (int i = -1; i <= n; i++) {
-//         if (i < 0)
-//             tab[i] = (eraseSubStr(get_file_line("cpu  ", cpuInfo, "\n"), "cpu  "));
-//         if (i >= 0)
-//             dest = "cpu";
-//             dest.push_back(ascii);
-//             dest.push_back(space);
-//             tab[i] = (eraseSubStr(get_file_line(dest.c_str() , cpuInfo, "\n"), dest));
-//             ascii ++;
-//     }
-//     return (tab);
-// }
-
-// std::string Get_file::get_file_line(const char *find, std::string content, const char *delim)
-// {
-//     char *str = strdup(content.c_str());
-//     char *ptr = strtok(str, delim);
-//     int i = 0;
-
-//     while (ptr[i] != '\0') {
-//         if (strncmp(find, str, strlen(find)) == 0) {
-//             return ptr;
-//         }
-//         i++;
-//     }
-//     return ("\0");
-// }
-
-// std::string Get_file::eraseSubStr(std::string mainStr, const std::string &toErase)
-// {
-//     size_t pos = std::string::npos;
-//     if (mainStr.compare("\0"))
-//         return ("\0");
-//     while ((pos = mainStr.find(toErase))!= std::string::npos)
-//     {
-//         mainStr.erase(pos, toErase.length());
-//     }
-//     return (mainStr);
-// }
-
-// std::string Get_file::getOsName()
-// {
-//     char *ptr, *ptr2;
-//     std::string final, os;
-//     std::string version = get_file_content("/proc/version");
-//     std::string os_name = get_file_content("/etc/os-release");
-//     //std::string str = get_file_line("NAME=", os_name, "\n")_str();
-//     //char *str = strdup(version.c_str());
-//     //char *str2 = strdup(os_name.c_str());
-//     return (eraseSubStr(get_file_line("NAME=", os_name, "\n"), "NAME="));
-//     //return get_file_line("version", version, " ");
-
-//     /*ptr = strtok(str, " ");
-//     os = ptr;
-//     while (ptr != NULL)
-//     {
-//         if (strncmp("version", ptr, 5) == 0)
-//             break;
-//         ptr = strtok (NULL, " ");
-//         i++;
-//     }
-//     ptr2 = strtok(str2, "\n");
-//     if (strncmp("NAME=", ptr2, 4) == 0) {
-//             ptr2 = strtok(NULL, "\n");
-//             os = ptr2;
-//             return os;
-//         }
-//     while (ptr2 != NULL) {
-//         if (strncmp("NAME=", ptr2, 4) == 0) {
-//             ptr2 = strtok(NULL, "\"");
-//             break;
-//         }
-
-//     }
-
-//     final = ptr;
-//     os = ptr2;*/
-//     //return os;
-// }

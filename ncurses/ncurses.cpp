@@ -11,17 +11,17 @@ void printBox(char *title, char *to_print, int high)
 {
     int begin = high;
 
-    mvprintw(begin, (COLS / 2), "##");
-    mvprintw(begin, (COLS / 2) + 3, title);
-    mvprintw(begin, (COLS / 2) + 3 + strlen(title), " ");
-    mvprintw(begin, (COLS / 2) + 4 + strlen(title), std::string(25 - strlen(title), '#').c_str());
-    mvprintw(begin + 1, (COLS / 2), "#                           #");
-    mvprintw(begin + 2, (COLS / 2), "#");
-    mvprintw(begin + 2, (COLS / 2) + 1, std::string(14 - (strlen(to_print) / 2), ' ').c_str());
-    mvprintw(begin + 2, (COLS / 2) + (14 - (strlen(to_print) / 2)), to_print);
-    mvprintw(begin + 2, (COLS / 2) + 28, "#");
-    mvprintw(begin + 3, (COLS / 2), "#                           #");
-    mvprintw(begin + 4, (COLS / 2), "#############################");
+    mvprintw(begin, 0, "##");
+    mvprintw(begin, 3, title);
+    mvprintw(begin, 3 + strlen(title), " ");
+    mvprintw(begin, 4 + strlen(title), std::string(25 - strlen(title), '#').c_str());
+    mvprintw(begin + 1, 0, "#                           #");
+    mvprintw(begin + 2, 0, "#");
+    mvprintw(begin + 2, 1, std::string(14 - (strlen(to_print) / 2), ' ').c_str());
+    mvprintw(begin + 2,  (14 - (strlen(to_print) / 2)), to_print);
+    mvprintw(begin + 2,  28, "#");
+    mvprintw(begin + 3, 0, "#                           #");
+    mvprintw(begin + 4, 0, "#############################");
 }
 
 int loop()
@@ -39,11 +39,19 @@ int loop()
     while (1) {
         clear();
         getmaxyx(stdscr, y, x);
-        printBox((char*)"Time", (char *)info.getTime().c_str(), (LINES / 2) + line);
+        printBox((char*)"Time", (char *)info.getTime().c_str(), line);
         line += 6;
-        printBox((char*)"Username", (char *)info.getUsername().c_str(), (LINES / 2) + line);
+        printBox((char*)"Username", (char *)info.getUsername().c_str(),  line);
         line += 6;
-        printBox((char*)"Hostname", (char *)info.getHostname().c_str(), (LINES / 2) + line);
+        printBox((char*)"Hostname", (char *)info.getHostname().c_str(), line);
+        line += 6;
+        printBox((char*)"Os Name", (char *)info.getOsName().c_str(), line);
+        line += 6;
+        printBox((char*)"Activity in %%", (char *)info.getActivity().c_str(), line);
+        line += 6;
+        printBox((char*)"Number of Core", (char *)info.getCores().c_str(), line);
+        line += 6;
+        mvprintw(line, 0, (char*)info.getModel().c_str());
         info.updateTime();
         line = 0;
         refresh();
