@@ -127,6 +127,8 @@ std::string Get_file::getOsName()
             tmp = strdup(ptr);
             break;
         }
+        for (; ptr[i] != '\n'; i++);
+        ptr = strtok(NULL, "\n");
     }
     tmp.erase(0, 6);
     tmp.pop_back();
