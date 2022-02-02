@@ -190,7 +190,8 @@ std::string Get_file::getRamInfo()
     std::string ram_info = get_file_content("/proc/meminfo");
     char *str = strdup(ram_info.c_str());
     char *ptr = strtok(str, "\n");
-    char *ptr2 = strtok(str, "\n");
+    char *str2 = strdup(ram_info.c_str());
+    char *ptr2 = strtok(str2, "\n");
     int i = 0;
     std::string tmp;
     std::string tmp2;
@@ -206,17 +207,22 @@ std::string Get_file::getRamInfo()
         ptr = strtok(NULL, "\n");
     }
     while (ptr2 != NULL) {
-        if (strncmp("MemAvailable:", ptr2, 10) == 0) {
+        if (strncmp("MemAvailable:", ptr2, 13) == 0) {
             tmp2 = strdup(ptr2);
             break;
         }
-        for (; ptr[i] != '\n'; i++);
+        for (; ptr2[i] != '\n'; i++);
         ptr2 = strtok(NULL, "\n");
     }
-    tmp.erase(0, 16);
+    tmp.erase(0, 17);
     tmp.pop_back();
     tmp.pop_back();
-    return tmp;
+    tmp2.erase(0, 17);
+    tmp2.pop_back();
+    tmp2.pop_back();
+    total = (atoi(tmp.c_str()) - atoi(tmp2.c_str()));
+    tmp3 = std::to_string(total);
+    return tmp3;
 }
 
 std::string Get_file::getFrequency()
