@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-from re import X
 import sys
 
 def usage():
@@ -15,7 +14,7 @@ def usage():
     exit(0)
 
 def checkArgs():
-    for i in range (1, 5):
+    for i in range (1, 6):
         if (int(sys.argv[i]) < 0 or int(sys.argv[i]) > 6):
             exit(84)
     combineArray = ["pair", "three", "four", "straight", "yams"]
@@ -42,9 +41,56 @@ def errorHandling():
         exit(84)
     checkArgs()
 
+def pair(nbrArray: list, combine: list):
+    if (nbrArray.count(int(combine[1])) >= 2):
+        print("Chances to get a " + str(combine[1]) + " pair: 100.00%")
+
+def three(nbrArray: list, combine: list):
+    if (nbrArray.count(int(combine[1])) >= 3):
+        print("Chances to get a " + str(combine[1]) + " three-of-a-kind: 100.00%")
+
+def four(nbrArray: list, combine: list):
+    if (nbrArray.count(int(combine[1])) >= 4):
+        print("Chances to get a " + str(combine[1]) + " four-of-a-kind: 100.00%")
+
+def straight(nbrArray: list, combine: list):
+    smallNbr = min(nbrArray)
+    maxNbr = smallNbr + 4
+    while (smallNbr != maxNbr):
+        if (nbrArray.count(smallNbr) == 1):
+            smallNbr += 1
+        else:
+            break
+    if (smallNbr == maxNbr):
+        print("Chances to get a " + str(combine[1]) + " yahtzee: 100.00%")
+
+def full(nbrArray: list, combine: list):
+    if ((nbrArray.count(int(combine[1])) == 2 and nbrArray.count(int(combine[2])) == 3) or (nbrArray.count(int(combine[1])) == 3 and nbrArray.count(int(combine[2])) == 2)):
+        print("Chances to get a " + str(combine[1]) + " full of " + str(combine[2]) + ": 100.00%")
+
+def yams(nbrArray: list, combine: list):
+    if (nbrArray.count(int(combine[1])) == 5):
+        print("Chances to get a " + str(combine[1]) + " yahtzee: 100.00%")
+
+def compute(nbrArray: list, combine: list):
+    if (combine[0] == "pair"):
+        pair(nbrArray, combine)
+    if (combine[0] == "three"):
+        three(nbrArray, combine)
+    if (combine[0] == "four"):
+        four(nbrArray, combine)
+    if (combine[0] == "full"):
+        full(nbrArray, combine)
+    if (combine[0] == "yams"):
+        yams(nbrArray, combine)
+
 def main():
     errorHandling()
-
+    nbrArray = []
+    for i in range (1, 6):
+        nbrArray.append(int(sys.argv[i]))
+    combine = sys.argv[6].split('_')
+    compute(nbrArray, combine)
 
 if __name__ == "__main__":
     main()
