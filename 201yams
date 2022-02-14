@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+from re import X
+import sys
+
+def usage():
+    print("USAGE")
+    print("    ./201yams d1 d2 d3 d4 d5 c\n")
+    print("DESCRIPTION")
+    print("    d1    value of the first die (0 if not thrown)")
+    print("    d2    value of the second die (0 if not thrown)")
+    print("    d3    value of the third die (0 if not thrown)")
+    print("    d4    value of the fourth die (0 if not thrown)")
+    print("    d5    value of the fifth die (0 if not thrown)")
+    print("    c     expected combination")
+    exit(0)
+
+def checkArgs():
+    for i in range (1, 5):
+        if (int(sys.argv[i]) < 0 or int(sys.argv[i]) > 6):
+            exit(84)
+    combineArray = ["pair", "three", "four", "straight", "yams"]
+    expected = sys.argv[6].split('_')
+    if (len(expected) == 2):
+        if (expected[0] not in combineArray):
+            exit(84)
+        if (int(expected[1]) < 1 or int(expected[1]) > 6):
+            exit(84)
+    if (len(expected) == 3):
+        if (expected[0] != "full"):
+            exit(84)
+        if ((int(expected[1]) < 1 or int(expected[1]) > 6) or (int(expected[2]) < 1 or int(expected[2]) > 6)):
+            exit(84)
+    if (len(expected) < 2 or len(expected) > 3):
+        exit(84)
+
+def errorHandling():
+    if (len(sys.argv) == 2):
+        if (sys.argv[1] == '-h'):
+            usage()
+        exit(84)
+    if (len(sys.argv) != 7):
+        exit(84)
+    checkArgs()
+
+def main():
+    errorHandling()
+
+
+if __name__ == "__main__":
+    main()
