@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import sys
+import math
 
 def usage():
     print("USAGE")
@@ -41,36 +42,46 @@ def errorHandling():
         exit(84)
     checkArgs()
 
+def formule(n: int, p: int):
+    return (math.factorial(n) / (math.factorial(p) * math.factorial(n - p))) * pow((1 / 6), p) * pow((5 / 6), (n - p))
+
+def calcProba(a : int, nbrArray: list, combine : int):
+    nbr = 0
+    if (nbrArray.count(combine) >= a):
+        return 1
+    else:
+        for i in range(a - nbrArray.count(combine), 5 - nbrArray.count(combine)+1):
+            nbr += formule(5 - nbrArray.count(combine), i)
+    return nbr
+
 def pair(nbrArray: list, combine: list):
-    if (nbrArray.count(int(combine[1])) >= 2):
-        print("Chances to get a " + str(combine[1]) + " pair: 100.00%")
+    print("Chances to get a " + str(combine[1]) + " pair: " + format(calcProba(2, nbrArray, int(combine[1]))*100, ".2f") + "%")
 
 def three(nbrArray: list, combine: list):
-    if (nbrArray.count(int(combine[1])) >= 3):
-        print("Chances to get a " + str(combine[1]) + " three-of-a-kind: 100.00%")
+    print("Chances to get a " + str(combine[1]) + " three-of-a-kind: " + format(calcProba(3, nbrArray, int(combine[1]))*100, ".2f") +"%")
 
 def four(nbrArray: list, combine: list):
-    if (nbrArray.count(int(combine[1])) >= 4):
-        print("Chances to get a " + str(combine[1]) + " four-of-a-kind: 100.00%")
+    print("Chances to get a " + str(combine[1]) + " four-of-a-kind: " + format(calcProba(4, nbrArray, int(combine[1]))*100, ".2f") + "%")
 
 def straight(nbrArray: list, combine: list):
-    smallNbr = min(nbrArray)
-    maxNbr = smallNbr + 4
-    while (smallNbr != maxNbr):
-        if (nbrArray.count(smallNbr) == 1):
-            smallNbr += 1
-        else:
-            break
-    if (smallNbr == maxNbr):
-        print("Chances to get a " + str(combine[1]) + " yahtzee: 100.00%")
+    possibility = 6
+    nbrSet = set(nbrArray)
+    if (nbrSet.issuperset([int(combine[1])])):
+        possibility  = 5
+    result = math.factorial(possibility - len(nbrSet)) / pow(6, possibility - len(nbrSet))
+    print("Chances to get a " + str(combine[1]) + " straight: " + format(result * 100, ".2f") + "%")
 
 def full(nbrArray: list, combine: list):
-    if ((nbrArray.count(int(combine[1])) == 2 and nbrArray.count(int(combine[2])) == 3) or (nbrArray.count(int(combine[1])) == 3 and nbrArray.count(int(combine[2])) == 2)):
+    res = 1
+    if (calcProba(3, nbrArray, int(combine[1])) == 1 and calcProba(2, nbrArray, int(combine[2])) == 1):
         print("Chances to get a " + str(combine[1]) + " full of " + str(combine[2]) + ": 100.00%")
+    else:
+        for i in range(5 - nbrArray.count(int(combine[1])) - nbrArray.count(int(combine[2])), 6 - nbrArray.count(int(combine[1])) - nbrArray.count(int(combine[2]))):
+            res *= formule(5 - nbrArray.count(int(combine[1])) - nbrArray.count(int(combine[2])), i)
+        print("Chances to get a " + str(combine[1]) + " full of " + str(combine[2]) + ": " + format(res*1000, ".2f") + "%")
 
 def yams(nbrArray: list, combine: list):
-    if (nbrArray.count(int(combine[1])) == 5):
-        print("Chances to get a " + str(combine[1]) + " yahtzee: 100.00%")
+    print("Chances to get a " + str(combine[1]) + " yams: " + format(calcProba(5, nbrArray, combine)*100, ".2f") + "%")
 
 def compute(nbrArray: list, combine: list):
     if (combine[0] == "pair"):
@@ -83,6 +94,8 @@ def compute(nbrArray: list, combine: list):
         full(nbrArray, combine)
     if (combine[0] == "yams"):
         yams(nbrArray, combine)
+    if (combine[0] == "straight"):
+        straight(nbrArray, combine)
 
 def main():
     errorHandling()
