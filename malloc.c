@@ -48,15 +48,13 @@ block_t *extend_heap(block_t *last, size_t s)
 
 block_t *get_meta(void *ptr)
 {
-    block_t *tmp = ptr;
-
     return (ptr - sizeof(block_t));
 }
 
-int valid_addr (void *p)
+int valid_address(void *p)
 {
     if (base) {
-        if ( p > base && p < sbrk(0)) {
+        if (p > base && p < sbrk(0)) {
             return (p == (get_meta(p))->ptr);
         }
     }
@@ -67,7 +65,7 @@ void free(void *ptr)
 {
     block_t *b;
 
-    if (valid_addr(ptr) == 0) {
+    if (valid_address(ptr) == 0) {
         b = get_meta(ptr);
         b->free = 1;
     }
@@ -80,7 +78,6 @@ void *malloc(size_t size)
     size_t data;
 
     data = align4(size);
-    //write(1, "t", 1);
     if (base) {
         last = base;
         for (; last->next; last = last->next);
