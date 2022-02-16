@@ -5,11 +5,7 @@
 ** main
 */
 
-#include <iostream>
-#include <sstream>
-#include <vector>
-#include <string>
-#include <fstream>
+#include "nano.hpp"
 
 std::string getStrFromFile(const std::string &file)
 {
@@ -46,10 +42,11 @@ int main(int ac, char **av)
     if (ac != 2)
         return 84;
     std::string file = getStrFromFile(av[1]);
-    std::string *array;
+    std::vector<std::string> splited_array;
 
     if (file == "ERROR")
         return 84;
-    split(file, '\n');
+    splited_array = split(file, '\n');
+    //check_error(splited_array);
     return (0);
 }
