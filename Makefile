@@ -5,7 +5,8 @@
 ## make
 ##
 
-SRC =	src/main.cpp
+SRC =	src/main.cpp	\
+		src/utils.cpp
 
 OBJ	=	$(SRC:.cpp=.o)
 

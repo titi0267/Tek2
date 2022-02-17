@@ -25,18 +25,6 @@ std::string getStrFromFile(const std::string &file)
     return str;
 }
 
-std::vector<std::string> split(std::string to_split, char token)
-{
-    std::stringstream streamData(to_split);
-    std::vector<std::string> outputArray;
-    std::string val;
-
-    while (std::getline(streamData, val, token)) {
-        outputArray.push_back(val);
-    }
-    return outputArray;
-}
-
 void handleCommand(std::string cmd)
 {
     if (cmd == "exit")
@@ -48,16 +36,18 @@ int main(int ac, char **av)
     if (ac != 2)
         return 84;
     std::string file = getStrFromFile(av[1]);
-    std::vector<std::string> splited_array;
     std::string input;
+    std::vector<std::string>  splitedFile = split(file, '.');
+    std::tuple<std::string, std::string> *chipset = getChipset(splitedFile);
+    std::tuple<std::string, std::string, std::string, std::string> *links = getLinks(splitedFile);
 
     if (file == "ERROR")
         return 84;
-    splited_array = split(file, '\n');
-    while (1) {
-        std::cout << "> ";
-        std::cin >> input;
-        handleCommand(input);
-    }
+    
+    // while (1) {
+    //     std::cout << "> ";
+    //     std::cin >> input;
+    //     handleCommand(input);
+    // }
     return (0);
 }
