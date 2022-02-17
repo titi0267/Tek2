@@ -37,16 +37,27 @@ std::vector<std::string> split(std::string to_split, char token)
     return outputArray;
 }
 
+void handleCommand(std::string cmd)
+{
+    if (cmd == "exit")
+        exit(0);
+}
+
 int main(int ac, char **av)
 {
     if (ac != 2)
         return 84;
     std::string file = getStrFromFile(av[1]);
     std::vector<std::string> splited_array;
+    std::string input;
 
     if (file == "ERROR")
         return 84;
     splited_array = split(file, '\n');
-    //check_error(splited_array);
+    while (1) {
+        std::cout << "> ";
+        std::cin >> input;
+        handleCommand(input);
+    }
     return (0);
 }
