@@ -36,8 +36,8 @@ block_t *extend_heap(block_t *last, size_t s)
     block_t *b = sbrk(0);
     void *full = sbrk(sizeof(block_t) + s);
 
-    if (full == (void *)-1)
-        return (NULL );
+    if (full < 0)
+        return (NULL);
     b->size = s;
     b->next = NULL;
     if (last)

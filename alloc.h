@@ -11,7 +11,7 @@
 #ifndef ALLOC_H_
 #define ALLOC_H_
 
-#define align4(x) (((((x)-1)>>2)<<2)+4)
+#define align4(x) (((((x)-1)/4)*4)+4)
 
 typedef struct block_s {
     size_t size;
