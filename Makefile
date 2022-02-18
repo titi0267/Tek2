@@ -7,13 +7,14 @@
 
 CC = gcc
 
-SRC	=	malloc.c
+SRC	=	malloc.c	\
+		tools.c
 
 OBJ = $(SRC:.c=.o)
 
 CFLAGS += -fPIC
 
-NAME	=	libmy.so
+NAME	=	libmy_malloc.so
 
 all:	$(NAME)
 

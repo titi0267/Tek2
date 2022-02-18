@@ -5,11 +5,11 @@
 ** alloc
 */
 
-#include <stdio.h>
-#include <unistd.h>
+#pragma once
 
-#ifndef ALLOC_H_
-#define ALLOC_H_
+#include <stdio.h>
+#include <string.h>
+#include <unistd.h>
 
 #define align4(x) (((((x)-1)/4)*4)+4)
 
@@ -20,12 +20,10 @@ typedef struct block_s {
     void *ptr;
 } block_t;
 
-static void *base = NULL;
+//static void *base = NULL;
 
 void *malloc(size_t size);
 void free(void *ptr) ;
 void *calloc(size_t nmemb, size_t size);
 void *realloc(void *ptr, size_t size);
 void *reallocarray(void *ptr, size_t nmemb, size_t size);
-
-#endif /* !ALLOC_H_ */

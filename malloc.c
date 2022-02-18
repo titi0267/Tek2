@@ -6,60 +6,7 @@
 */
 
 #include "alloc.h"
-
-void split_block(block_t *b, size_t data)
-{
-    block_t *new = (void *)b + sizeof(block_t) + data;
-    new->size = b->size - data - sizeof(block_t);
-    new->next = b->next;
-    new->free = 1;
-    b->size = data;
-    b->next = new;
-}
-
-block_t *find_block(size_t size)
-{
-    block_t *optimal = NULL;
-    block_t *b = base;
-
-    for (; b; b = b->next)
-    {
-        if (b->free == 1 && b->size >= size && (optimal == NULL || optimal->size > b->size)) {
-            optimal = b;
-        }
-    }
-    return (optimal);
-}
-
-block_t *extend_heap(block_t *last, size_t s)
-{
-    block_t *b = sbrk(0);
-    void *full = sbrk(sizeof(block_t) + s);
-
-    if (full < 0)
-        return (NULL);
-    b->size = s;
-    b->next = NULL;
-    if (last)
-        last->next = b;
-    b->free = 0;
-    return (b);
-}
-
-block_t *get_meta(void *ptr)
-{
-    return (ptr - sizeof(block_t));
-}
-
-int valid_address(void *p)
-{
-    if (base) {
-        if (p > base && p < sbrk(0)) {
-            return (p == (get_meta(p))->ptr);
-        }
-    }
-    return (0);
-}
+#include "tools.h"
 
 void free(void *ptr)
 {
@@ -73,29 +20,66 @@ void free(void *ptr)
 
 void *malloc(size_t size)
 {
-    block_t *b;
+    static block_t *base = NULL;
+    block_t *b = base;
     block_t *last;
     size_t data;
+    void *test = base;
 
     data = align4(size);
     if (base) {
         last = base;
         for (; last->next; last = last->next);
-        b = find_block(data);
+        b = find_block(data, base);
         if (b) {
             if ((b->size - data) >= (sizeof(block_t)))
                 split_block(b, data);
             b->free = 0;
         } else {
-            b = extend_heap(last, data);
+            b = extend_heap(last, data, base);
             if (!b)
                 return(NULL);
         }
     } else {
-        b = extend_heap(NULL, data);
+        b = extend_heap(NULL, data, base);
         if (!b)
             return(NULL);
         base = b;
     }
     return((void *)b + sizeof(block_t));
+}
+
+void *calloc(size_t nmemb, size_t size)
+{
+    void *str;
+    size_t data = align4(nmemb * size);
+
+    if (nmemb == 0 || size == 0)
+        return (NULL);
+    str = malloc(nmemb * size);
+    if (str != NULL)
+        memset(str, 0, nmemb * size);
+    else
+        return (NULL);
+    return (str);
+}
+
+
+void *realloc(void *ptr, size_t size)
+{
+    block_t *tmp;
+    void *new;
+
+    if (!ptr)
+        return (malloc(size));
+    free(ptr);
+    if (!size)
+        return (NULL);
+    tmp = ptr - sizeof(block_t);
+    new = malloc(size);
+    if (!new)
+        return (NULL);
+    memcpy(new, ptr, tmp->size);
+
+    return (new);
 }
