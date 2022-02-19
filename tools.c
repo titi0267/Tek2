@@ -10,6 +10,7 @@
 void split_block(block_t *b, size_t data)
 {
     block_t *new = (void *)b + sizeof(block_t) + data;
+
     new->size = b->size - data - sizeof(block_t);
     new->next = b->next;
     new->free = 1;
@@ -33,28 +34,7 @@ block_t *find_block(size_t size, void *base)
     return (optimal);
 }
 
-/*static int page = 0;
-    int total_size = 0;
-    int page_to_malloc = 0;
-    block_t *tmp = base;
-    for (; tmp; total_size += tmp->size, tmp = tmp->next);
-    if ((total_size + sizeof(block_t) + s) > (page * getpagesize())) {
-        for (; page_to_malloc < (sizeof(block_t) + s); page_to_malloc += 2);
-        page += page_to_malloc;
-    }
-    block_t *b = sbrk(0);
-    void *full = sbrk(sizeof(block_t) + s);// + (page_to_malloc * getpagesize()));
-
-    if (full < 0)
-        return (NULL);
-    b->size = s;
-    b->next = NULL;
-    if (last)
-        last->next = b;
-    b->free = 0;
-    return (b);*/
-
-block_t *extend_heap(block_t *last, size_t s, void *base)
+block_t *extend_heap(block_t *last, size_t s)
 {
     block_t *b = sbrk(0);
     block_t *empty;
@@ -67,7 +47,7 @@ block_t *extend_heap(block_t *last, size_t s, void *base)
         return (NULL);
     b->size = s;
     empty = (void *)b + sizeof(block_t) + s;
-    empty->size = pageSize - s - sizeof(block_t);
+    empty->size = pageSize - s - sizeof(block_t) * 2;
     empty->next = NULL;
     b->next = empty;
     if (last)
@@ -82,12 +62,12 @@ block_t *get_meta(void *ptr)
     return (ptr - sizeof(block_t));
 }
 
-int valid_address(void *p)
+int valid_address(void *p, void *base)
 {
-    if (p) {
-        if (p < sbrk(0)) {
+    if (base) {
+        if (p > base && p < sbrk(0)) {
             return (p == (get_meta(p))->ptr);
         }
     }
-    return (1);
+    return (0);
 }

@@ -8,11 +8,13 @@
 #include "alloc.h"
 #include "tools.h"
 
+static void *base = NULL;
+
 void free(void *ptr)
 {
     block_t *b;
 
-    if (valid_address(ptr) == 0) {
+    if (valid_address(ptr, base) == 1) {
         b = get_meta(ptr);
         b->free = 1;
     }
@@ -20,28 +22,26 @@ void free(void *ptr)
 
 void *malloc(size_t size)
 {
-    static block_t *base = NULL;
     block_t *b = base;
-    block_t *last;
+    block_t *last = base;
     size_t data;
-    void *test = base;
 
     data = align4(size);
     if (base) {
-        last = base;
         for (; last->next; last = last->next);
         b = find_block(data, base);
         if (b) {
-            if ((b->size - data) >= (sizeof(block_t)))
+            if (b->size >= sizeof(block_t) + data) {
                 split_block(b, data);
+            }
             b->free = 0;
         } else {
-            b = extend_heap(last, data, base);
+            b = extend_heap(last, data);
             if (!b)
                 return(NULL);
         }
     } else {
-        b = extend_heap(NULL, data, base);
+        b = extend_heap(NULL, data);
         if (!b)
             return(NULL);
         base = b;
@@ -64,22 +64,33 @@ void *calloc(size_t nmemb, size_t size)
     return (str);
 }
 
-
 void *realloc(void *ptr, size_t size)
 {
     block_t *tmp;
-    void *new;
+    void *new = malloc(size);
+    size_t copySize = 0;
 
+    if (!new) {
+        free(ptr);
+        return (NULL);
+    }
     if (!ptr)
-        return (malloc(size));
-    free(ptr);
-    if (!size)
-        return (NULL);
+        return(new);
     tmp = ptr - sizeof(block_t);
-    new = malloc(size);
-    if (!new)
-        return (NULL);
-    memcpy(new, ptr, tmp->size);
-
+    copySize = size > tmp->size ? tmp->size : size;
+    memcpy(new, ptr, copySize);
+    free(ptr);
     return (new);
+}
+
+size_t malloc_usable_size(void *ptr)
+{
+    if (!ptr)
+        return (0);
+    return (get_meta(ptr)->size);
+}
+
+void *reallocarray(void *ptr, size_t nmemb ,size_t size)
+{
+    return (realloc(ptr, nmemb * size));
 }
