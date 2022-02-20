@@ -5,7 +5,7 @@
 ** tools
 */
 
-#include "alloc.h"
+#include "tools.h"
 
 void split_block(block_t *b, size_t data)
 {
