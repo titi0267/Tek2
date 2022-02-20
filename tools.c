@@ -24,8 +24,7 @@ block_t *find_block(size_t size, void *base)
     block_t *optimal = NULL;
     block_t *b = base;
 
-    for (; b; b = b->next)
-    {
+    for (; b; b = b->next) {
         if (b->free == 1 && b->size >= size && (optimal == NULL
             || optimal->size > b->size)) {
             optimal = b;

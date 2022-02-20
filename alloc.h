@@ -14,6 +14,8 @@
 
 #define align4(x) (((((x)-1)/4)*4)+4)
 
+#define ERROR 1
+
 typedef struct block_s {
     size_t size;
     struct block_s *next;

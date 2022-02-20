@@ -8,7 +8,8 @@
 CC = gcc
 
 SRC	=	malloc.c	\
-		tools.c
+		tools.c		\
+		sec_tools.c
 
 OBJ = $(SRC:.c=.o)
 

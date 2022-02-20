@@ -20,6 +20,20 @@ void free(void *ptr)
     }
 }
 
+void *malloc_sec(block_t *b, size_t data, block_t *last)
+{
+    if (b) {
+        if (b->size >= sizeof(block_t) + data)
+            split_block(b, data);
+        b->free = 0;
+    } else {
+        b = extend_heap(last, data);
+        if (!b)
+            return(NULL);
+    }
+    return (b);
+}
+
 void *malloc(size_t size)
 {
     block_t *b = base;
@@ -27,19 +41,12 @@ void *malloc(size_t size)
     size_t data;
 
     data = align4(size);
-    if (base) {
+    if (base != NULL) {
         for (; last->next; last = last->next);
         b = find_block(data, base);
-        if (b) {
-            if (b->size >= sizeof(block_t) + data) {
-                split_block(b, data);
-            }
-            b->free = 0;
-        } else {
-            b = extend_heap(last, data);
-            if (!b)
-                return(NULL);
-        }
+        b = malloc_sec(b, data, last);
+        if (!b)
+            return (NULL);
     } else {
         b = extend_heap(NULL, data);
         if (!b)
@@ -67,8 +74,8 @@ void *calloc(size_t nmemb, size_t size)
 void *realloc(void *ptr, size_t size)
 {
     block_t *tmp;
-    void *new = malloc(size);
     size_t copySize = 0;
+    void *new = malloc(size);
 
     if (!new) {
         free(ptr);
@@ -77,20 +84,11 @@ void *realloc(void *ptr, size_t size)
     if (!ptr)
         return(new);
     tmp = ptr - sizeof(block_t);
-    copySize = size > tmp->size ? tmp->size : size;
+    if (size > tmp->size)
+        copySize = tmp->size;
+    else
+        copySize = size;
     memcpy(new, ptr, copySize);
     free(ptr);
     return (new);
-}
-
-size_t malloc_usable_size(void *ptr)
-{
-    if (!ptr)
-        return (0);
-    return (get_meta(ptr)->size);
-}
-
-void *reallocarray(void *ptr, size_t nmemb ,size_t size)
-{
-    return (realloc(ptr, nmemb * size));
 }
