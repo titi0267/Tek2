@@ -21,11 +21,15 @@ def checkArgs():
     combineArray = ["pair", "three", "four", "straight", "yams"]
     expected = sys.argv[6].split('_')
     if (len(expected) == 2):
+        if (expected[1] == ""):
+            exit(84)
         if (expected[0] not in combineArray):
             exit(84)
         if (int(expected[1]) < 1 or int(expected[1]) > 6):
             exit(84)
     if (len(expected) == 3):
+        if (expected[1] == "" or expected[2] == ""):
+            exit(84)
         if (expected[0] != "full"):
             exit(84)
         if ((int(expected[1]) < 1 or int(expected[1]) > 6) or (int(expected[2]) < 1 or int(expected[2]) > 6)):
