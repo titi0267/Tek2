@@ -2,22 +2,6 @@ BITS 64
 SECTION .text
 GLOBAL strchr
 
-;char *strchr(char *str, int c)
-;{
-;    int i = 0;
-;    int x = 0;
-;    char *ret_val;
-;
-;    while (str[i] != '\0' || str[i] != c)
-;        i++;
-;    while (str[i] != '\0') {
-;        ret_val[x] = str[i];
-;        x++;
-;        i++;
-;    }
-;    return (ret_val);
-;}
-
 strchr:
         XOR     RAX, RAX
 

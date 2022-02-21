@@ -9,7 +9,7 @@ extern strlen
 
 .rev_str:
         CMP     RCX, 0
-        JE      fail
+        JE      .fail
         MOVSX   EDX, BYTE[RDI + RCX]
         CMP     EDX, ESI
         JE      .founded
