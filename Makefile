@@ -7,6 +7,7 @@
 
 SRC    =    lib/strlen.asm      \
 			lib/strchr.asm		\
+			lib/strrchr.asm		\
 
 OBJ=    $(SRC:.asm=.o)
 
