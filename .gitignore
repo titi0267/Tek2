@@ -1,0 +1,6 @@
+lib/*.o
+*.so
+test.c
+main.c
+main.txt
+a.out

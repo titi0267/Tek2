@@ -5,7 +5,8 @@
 ## Makefile
 ##
 
-SRC    =    strlen.asm        \
+SRC    =    lib/strlen.asm      \
+			lib/strchr.asm		\
 
 OBJ=    $(SRC:.asm=.o)
 
