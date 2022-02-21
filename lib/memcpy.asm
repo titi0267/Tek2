@@ -1,6 +1,6 @@
 BITS 64
 SECTION .text
-GLOBAL memset
+GLOBAL memcpy
 
 memcpy:
         XOR     RAX, RAX
