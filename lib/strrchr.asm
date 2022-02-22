@@ -7,26 +7,20 @@ strrchr:
         CALL    strlen WRT ..plt
         MOV     RCX, RAX
 
-.rev_str:
+movto_end:
         CMP     RCX, 0
-        JE      .fail
-        MOVSX   EDX, BYTE[RDI + RCX]
-        CMP     EDX, ESI
-        JE      .founded
+        JE      fail
+        CMP     SIL, BYTE[RDI + RCX]
+        JE      found
         DEC     RCX
-        JMP     .rev_str
+        JMP     movto_end
 
-.founded:
-        XOR     EDX, EDX
+found:
+        LEA     RAX, [RDI + RCX]
+        JMP     end
 
-.final:
-        MOVSX   EDX, BYTE[RDI + RCX]
-        CMP     BYTE[RDI + RAX], 0
-        JE      .end
-        JMP     .final
-
-.fail:
+fail:
         MOV     RAX, 0
 
-.end:
+end:
         RET
