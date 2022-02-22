@@ -3,7 +3,7 @@ SECTION .text
 GLOBAL strrchr
 extern strlen
 
-.strrchr:
+strrchr:
         CALL    strlen WRT ..plt
         MOV     RCX, RAX
 
