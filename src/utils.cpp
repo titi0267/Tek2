@@ -7,14 +7,33 @@
 
 #include "nano.hpp"
 
+std::string removeComments(std::string str)
+{
+    std::string newStr(str.length(), '\0');
+    std::string::size_type i = 0;
+    int j = 0;
+    bool isCommented = false;
+
+    for (; i < str.size(); i++) {
+        if (str[i] == '#')
+            isCommented = true;
+        for (; isCommented && i < str.size(); i++)
+            isCommented = str[i] == '\n' ? false : true;
+        if (!isCommented)
+            newStr[j] = str[i];
+        j++;
+    }
+    return newStr;
+}
+
 std::tuple<std::string, std::string, std::string, std::string> *getLinks(std::vector<std::string> splitedFile)
 {
     int matchLen = 0;
     int i = 0;
 
     std::regex rgx("(\\w+):([0-9]) (\\w+[0-9]|out):([0-9])");
-    std::sregex_iterator iter(splitedFile[2].begin(), splitedFile[2].end(), rgx);
-    std::sregex_iterator other_iter(splitedFile[2].begin(), splitedFile[2].end(), rgx);
+    std::sregex_iterator iter(splitedFile[1].begin(), splitedFile[1].end(), rgx);
+    std::sregex_iterator other_iter(splitedFile[1].begin(), splitedFile[1].end(), rgx);
     std::sregex_iterator end;
 
     while (iter != end) {
@@ -37,8 +56,8 @@ std::tuple<std::string, std::string> *getChipset(std::vector<std::string> splite
     int i = 0;
 
     std::regex rgx("(\\w+) (\\w+)");
-    std::sregex_iterator iter(splitedFile[1].begin(), splitedFile[1].end(), rgx);
-    std::sregex_iterator other_iter(splitedFile[1].begin(), splitedFile[1].end(), rgx);
+    std::sregex_iterator iter(splitedFile[0].begin(), splitedFile[0].end(), rgx);
+    std::sregex_iterator other_iter(splitedFile[0].begin(), splitedFile[0].end(), rgx);
     std::sregex_iterator end;
 
     while (iter != end) {

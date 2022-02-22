@@ -36,11 +36,11 @@ int main(int ac, char **av)
     if (ac != 2)
         return 84;
     std::string file = getStrFromFile(av[1]);
+    std::string unCommentedFile = removeComments(file);
     std::string input;
-    std::vector<std::string>  splitedFile = split(file, '.');
+    std::vector<std::string>  splitedFile = split(unCommentedFile, '.');
     std::tuple<std::string, std::string> *chipset = getChipset(splitedFile);
     std::tuple<std::string, std::string, std::string, std::string> *links = getLinks(splitedFile);
-
     if (file == "ERROR")
         return 84;
     
