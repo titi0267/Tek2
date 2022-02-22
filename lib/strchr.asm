@@ -4,27 +4,22 @@ GLOBAL strchr
 
 strchr:
         XOR     RAX, RAX
+        XOR     RCX, RCX
 
 loop:
-        CMP     BYTE[RDI, RAX], 0
-        JE      fail
-        MOVSX   EDX, BYTE[RDI + RAX]
-        CMP     EDX, ESI
-        JE      first_occ
-        INC     RAX
+        CMP     BYTE[RDI + RCX], 0
+        JE      str_end
+        CMP     BYTE[RDI + RCX], SIL
+        JE      found
         INC     RCX
         JMP     loop
 
-fail:
-        MOV     RAX, 0
+str_end:
+        XOR     RAX, RAX
         JMP     end
 
-first_occ:
-        CMP     BYTE[RDI + RCX], 0
-        JE      end
-        MOVSX   EDX, BYTE[RDI + RCX]
-        INC     RCX
-        JMP     first_occ
+found:
+        LEA    RAX, [RDI + RCX]
 
 end:
         RET
