@@ -1,14 +1,16 @@
 BITS 64
 SECTION .text
-GLOBAL strcmp
+GLOBAL strncmp
 
-strcmp:
+strncmp:
         XOR     RAX, RAX
         XOR     RCX, RCX
 
 loop:
         MOV     AL, BYTE[RDI + RCX]
         MOV     AH, BYTE[RSI + RCX]
+        CMP     RDX, RCX
+        JE      compare_ptr
         CMP     BYTE[RDI + RCX], 0
         JE      compare_ptr
         CMP     BYTE[RSI + RCX], 0
