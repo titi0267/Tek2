@@ -7,13 +7,13 @@ strrchr:
         CALL    strlen WRT ..plt
         MOV     RCX, RAX
 
-movto_end:
+revers_mov:
         CMP     RCX, 0
         JE      fail
         CMP     SIL, BYTE[RDI + RCX]
         JE      found
         DEC     RCX
-        JMP     movto_end
+        JMP     revers_mov
 
 found:
         LEA     RAX, [RDI + RCX]
