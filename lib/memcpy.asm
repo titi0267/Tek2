@@ -3,7 +3,6 @@ SECTION .text
 GLOBAL memcpy
 
 memcpy:
-        XOR     RAX, RAX
         XOR     RCX, RCX
 
 loop:
