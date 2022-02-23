@@ -3,7 +3,9 @@ SECTION .text
 GLOBAL memcpy
 
 memcpy:
+        XOR     RAX, RAX
         XOR     RCX, RCX
+        MOV     RAX, RDI
 
 loop:
         CMP     RDX, RCX

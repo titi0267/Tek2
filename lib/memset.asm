@@ -9,7 +9,7 @@ memset:
 loop:
         CMP     RDX, RCX
         JE      end
-        MOV     BYTE[RDI + RCX], SIL
+        MOV     BYTE[RAX + RCX], SIL
         INC     RCX
         JMP     loop
 
