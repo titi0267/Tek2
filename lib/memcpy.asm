@@ -4,14 +4,16 @@ GLOBAL memcpy
 
 memcpy:
         XOR     RAX, RAX
-        MOV     RAX, RDI
+        XOR     RCX, RCX
 
 loop:
         CMP     RDX, RCX
         JE      end
-        MOV     R8B, BYTE[RSI + RCX]
-        MOV     BYTE[RAX + RCX], R8B
+        MOV     AH, BYTE[RSI]
+        MOV     BYTE[RDI], AH
         INC     RCX
+        INC     RDI
+        INC     RSI
         JMP     loop
 
 end:
