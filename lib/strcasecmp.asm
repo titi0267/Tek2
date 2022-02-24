@@ -1,7 +1,6 @@
 BITS 64
 SECTION .text
 GLOBAL strcasecmp
-extern strcmp
 
 strcasecmp:
         XOR     RAX, RAX
