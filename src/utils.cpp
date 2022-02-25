@@ -74,7 +74,7 @@ std::tuple<std::string, std::string, std::string, std::string> *getLinks(std::ve
         i++;
         ++other_iter;
     }
-    links[i] = std::make_tuple(NULL, NULL, NULL, NULL);
+    links[i] = std::make_tuple("", "", "", "");
 
     return links;
 }
@@ -99,7 +99,7 @@ std::tuple<std::string, std::string> *getChipset(std::vector<std::string> splite
         i++;
         ++other_iter;
     }
-    chipset[i] = std::make_tuple(NULL, NULL);
+    chipset[i] = std::make_tuple("", "");
 
     return chipset;
 }

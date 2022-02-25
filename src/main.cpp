@@ -31,10 +31,12 @@ void handleCommand(std::string cmd)
         exit(0);
 }
 
-std::string getGoodFile(char **av)
+std::vector<std::string> getGoodFile(char **av)
 {
     std::regex rgx(".chipsets:\n((input|output|\\d{4}|clock|true|false)([ \t]+)\\w+\n)+.links:\n(\\w+:\\w+([ \t]+)\\w+:\\w+(\n|))+");
     std::string file = getStrFromFile(av[1]);
+    if (file == "ERROR")
+        exit(84);
     std::string unCommentedFile = removeComments(file);
     std::string noNewLineFile = removeNewLine(unCommentedFile);
     std::string str = strdup(noNewLineFile.c_str());
@@ -45,21 +47,20 @@ std::string getGoodFile(char **av)
         std::cout << "match pas" << std::endl;
         exit (84);
     }
+    std::vector<std::string>  splitedFile = split(str, '.');
 
-    return str;
+    return splitedFile;
 }
 
 int main(int ac, char **av)
 {
     if (ac != 2)
         return 84;
-    std::string file = getGoodFile(av);
+    std::vector<std::string> splitedFile = getGoodFile(av);
     std::string input;
-    std::vector<std::string>  splitedFile = split(file, '.');
+    Chipsets *chipsets = new Chipsets(av);
     std::tuple<std::string, std::string> *chipset = getChipset(splitedFile);
     std::tuple<std::string, std::string, std::string, std::string> *links = getLinks(splitedFile);
-    if (file == "ERROR")
-        return 84;
     // while (1) {
     //     std::cout << "> ";
     //     std::cin >> input;
