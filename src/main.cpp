@@ -56,11 +56,8 @@ int main(int ac, char **av)
 {
     if (ac != 2)
         return 84;
-    std::vector<std::string> splitedFile = getGoodFile(av);
     std::string input;
     Chipsets *chipsets = new Chipsets(av);
-    std::tuple<std::string, std::string> *chipset = getChipset(splitedFile);
-    std::tuple<std::string, std::string, std::string, std::string> *links = getLinks(splitedFile);
     // while (1) {
     //     std::cout << "> ";
     //     std::cin >> input;
