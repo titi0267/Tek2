@@ -68,12 +68,13 @@ std::tuple<std::string, std::string, std::string, std::string> *getLinks(std::ve
         matchLen++;
         ++iter;
     }
-    std::tuple <std::string, std::string, std::string, std::string> links[matchLen];
+    std::tuple <std::string, std::string, std::string, std::string> *links = new std::tuple <std::string, std::string, std::string, std::string>[matchLen + 1];
     while (other_iter != end) {
         links[i] = std::make_tuple((*other_iter)[1], (*other_iter)[2], (*other_iter)[3], (*other_iter)[4]);
         i++;
         ++other_iter;
     }
+    links[i] = std::make_tuple(NULL, NULL, NULL, NULL);
 
     return links;
 }
@@ -84,20 +85,21 @@ std::tuple<std::string, std::string> *getChipset(std::vector<std::string> splite
     int i = 0;
 
     std::regex rgx("(\\w+) (\\w+)");
-    std::sregex_iterator iter(splitedFile[0].begin(), splitedFile[0].end(), rgx);
-    std::sregex_iterator other_iter(splitedFile[0].begin(), splitedFile[0].end(), rgx);
+    std::sregex_iterator iter(splitedFile[1].begin(), splitedFile[1].end(), rgx);
+    std::sregex_iterator other_iter(splitedFile[1].begin(), splitedFile[1].end(), rgx);
     std::sregex_iterator end;
 
     while (iter != end) {
         matchLen++;
         ++iter;
     }
-    std::tuple <std::string, std::string> chipset[matchLen];
+    std::tuple <std::string, std::string> *chipset = new std::tuple <std::string, std::string>[matchLen + 1];
     while (other_iter != end) {
         chipset[i] = std::make_tuple((*other_iter)[1], (*other_iter)[2]);
         i++;
         ++other_iter;
     }
+    chipset[i] = std::make_tuple(NULL, NULL);
 
     return chipset;
 }
