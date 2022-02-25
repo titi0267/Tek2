@@ -37,8 +37,10 @@ int main(int ac, char **av)
         return 84;
     std::string file = getStrFromFile(av[1]);
     std::string unCommentedFile = removeComments(file);
+    std::string noNewLineFile = removeNewLine(unCommentedFile);
+    std::cout << noNewLineFile;
     std::string input;
-    std::vector<std::string>  splitedFile = split(unCommentedFile, '.');
+    std::vector<std::string>  splitedFile = split(noNewLineFile, '.');
     std::tuple<std::string, std::string> *chipset = getChipset(splitedFile);
     std::tuple<std::string, std::string, std::string, std::string> *links = getLinks(splitedFile);
     if (file == "ERROR")

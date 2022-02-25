@@ -7,6 +7,34 @@
 
 #include "nano.hpp"
 
+int get_space(std::string str, int value)
+{
+    int i = value;
+    int j = 0;
+
+    for (; str[i + 1] == ' '; i++)
+        j++;
+
+    return j;
+}
+
+std::string removeNewLine(std::string str)
+{
+    std::string newStr(str.length(), '\0');
+    std::string::size_type i = 0;
+    int j = 0;
+
+    for (; str[i] == '\n'; i++);
+    for (; i < str.size(); i++) {
+        for (; str[i + 1] && str[i] ==  '\n' && str[i + 1] == '\n'; i++);
+        newStr[j] = str[i];
+        if (str[i] == '\n' && str[i + 1] && str[i + 1] == ' ')
+            i += get_space(str, i);
+        j++;
+    }
+    return (newStr);
+}
+
 std::string removeComments(std::string str)
 {
     std::string newStr(str.length(), '\0');
