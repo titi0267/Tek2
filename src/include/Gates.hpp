@@ -15,7 +15,7 @@
 #include "../gates/include/Inverter.hpp"
 #include "Components.hpp"
 
-class Gates : public Components
+class Gates
 {
     public:
         Gates();

@@ -15,5 +15,6 @@ class Components : public nts::IComponent
         ~Components();
 
     protected:
+        std::vector<nts::Tristate> create4081();
     private:
 };

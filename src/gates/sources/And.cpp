@@ -11,15 +11,16 @@ And::And()
 {
 }
 
-nts::Tristate getAnd(nts::Tristate a, nts::Tristate b)
+nts::Tristate getAnd(std::vector<nts::Tristate> a, std::vector<nts::Tristate> b)
 {
     nts::Tristate TRUE = nts::Tristate::TRUE;
     nts::Tristate FALSE = nts::Tristate::FALSE;
     nts::Tristate UNDEFINED = nts::Tristate::UNDEFINED;
 
-    if ((a == TRUE && b == TRUE))
+
+    if ((a[0] == TRUE && b[0] == TRUE))
         return TRUE;
-    else if ((a == UNDEFINED && b == TRUE) || (a == TRUE && b == UNDEFINED))
+    else if ((a[0] == UNDEFINED && b[0] == TRUE) || (a[0] == TRUE && b[0] == UNDEFINED))
         return UNDEFINED;
     return FALSE;
 }

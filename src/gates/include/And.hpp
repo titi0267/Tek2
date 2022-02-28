@@ -13,7 +13,7 @@ class And : public Gates
 {
     public:
         And();
-        nts::Tristate getAnd(nts::Tristate a, nts::Tristate b);
+        nts::Tristate getAnd(std::vector<nts::Tristate> a, std::vector<nts::Tristate> b);
         ~And();
 
     protected:

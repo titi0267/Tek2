@@ -7,15 +7,19 @@
 
 #pragma once
 
-#include "../include/Components.hpp"
+#include "../include/IComponent.hpp"
 #include "../include/Gates.hpp"
 
-class Comp4081 : public Components
+class Comp4081 : public Components, public And
 {
     public:
-        Comp4081();
+        Comp4081(std::vector<nts::Tristate> pins[7]);
         nts::Tristate compute(size_t pin);
         ~Comp4081();
+
+    protected:
+        std::vector<nts::Tristate> pins[7];
+        And andGate;
 
     private:
 };
