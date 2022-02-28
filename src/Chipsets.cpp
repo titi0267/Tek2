@@ -60,18 +60,34 @@ std::tuple<std::string, std::string> *getComponents(std::tuple<std::string, std:
     return inputs;
 }
 
+void checkLinks(std::tuple<std::string, std::string, std::string, std::string> *links, std::tuple<std::string, std::string> *chipsets)
+{
+    std::string firstValue = "a";
+    std::string secondValue = "";
+
+    for (int i = 0; firstValue != ""; i++) {
+        firstValue = std::get<0>(links[i]);
+        secondValue = std::get<2>(links[i]);
+        if (!isInChipsets(chipsets, firstValue) || !isInChipsets(chipsets, secondValue))
+            exit(84);
+    }
+}
+
 Chipsets::Chipsets(char **av)
 {
+    std::string tmp = "a";
     std::vector<std::string> goodFile = getGoodFile(av);
     std::tuple<std::string, std::string> *chipset = getChipset(goodFile);
+    std::tuple<std::string, std::string, std::string, std::string> *links = getLinks(goodFile);
 
+    checkLinks(links, chipset);
     _inputs = getComponents(chipset, "input");
     _outputs = getComponents(chipset, "output");
     _clocks = getComponents(chipset, "clock");
     _trues = getComponents(chipset, "true");
     _falses = getComponents(chipset, "false");
     _components = getLogic(chipset);
-    _links = getLinks(goodFile);
+    _links = links;
 }
 
 Chipsets::~Chipsets()

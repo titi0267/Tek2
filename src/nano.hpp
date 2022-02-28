@@ -25,4 +25,5 @@ std::string removeComments(std::string str);
 std::string removeNewLine(std::string str);
 std::vector<std::string> getGoodFile(char **av);
 bool isValidComponent(std::string value);
+bool isInChipsets(std::tuple<std::string, std::string> *chipsets, std::string link);
 

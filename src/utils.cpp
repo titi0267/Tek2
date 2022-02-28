@@ -17,6 +17,18 @@ bool isValidComponent(std::string value)
     return false;
 }
 
+bool isInChipsets(std::tuple<std::string, std::string> *chipsets, std::string link)
+{
+    std::string tmp = "a";
+
+    for (int i = 0; tmp != ""; i++) {
+        tmp = std::get<1>(chipsets[i]);
+        if (tmp == link)
+            return true;
+    }
+    return false;
+}
+
 int get_space(std::string str, int value)
 {
     int i = value;
@@ -69,9 +81,9 @@ std::tuple<std::string, std::string, std::string, std::string> *getLinks(std::ve
     int matchLen = 0;
     int i = 0;
 
-    std::regex rgx("(\\w+):([0-9]) (\\w+[0-9]|out):([0-9])");
-    std::sregex_iterator iter(splitedFile[1].begin(), splitedFile[1].end(), rgx);
-    std::sregex_iterator other_iter(splitedFile[1].begin(), splitedFile[1].end(), rgx);
+    std::regex rgx("(\\w+):([0-9]+)[ \t]+(\\w+):([0-9]+)");
+    std::sregex_iterator iter(splitedFile[2].begin(), splitedFile[2].end(), rgx);
+    std::sregex_iterator other_iter(splitedFile[2].begin(), splitedFile[2].end(), rgx);
     std::sregex_iterator end;
 
     while (iter != end) {
