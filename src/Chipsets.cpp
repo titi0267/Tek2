@@ -7,78 +7,57 @@
 
 #include "Chipsets.hpp"
 
-std::tuple<std::string, std::string> *getLogic(std::tuple<std::string, std::string> *chipsets)
+std::vector<ChipsetPair> nts::Chipsets::getLogic(std::vector<ChipsetPair> chipsets)
 {
-    int len = 0;
-    int h = 0;
-    int j = 0;
-    std::string tmp = "a";
+    std::string tmp = "";
+    std::vector<ChipsetPair> comp;
+    auto itr = std::begin(chipsets);
 
-    for (int i = 0; tmp != ""; i++) {
-        tmp = std::get<0>(chipsets[i]);
+    for (; itr != std::end(chipsets); ++itr) {
+        tmp = std::get<0>(*itr);
         if (isdigit(tmp[0])) {
-            if (!isValidComponent(tmp))
-                exit(84);
-            len++;
+            if (!tools.isValidComponent(tmp))
+                throw Error("Component doesn't exist");
+            comp.push_back(std::make_tuple(tmp, std::get<1>(*itr)));
         }
     }
-    tmp = "a";
-    std::tuple<std::string, std::string> *comp = new std::tuple<std::string, std::string>[len + 1];
-        for (; tmp != ""; h++) {
-        tmp = std::get<0>(chipsets[h]);
-        if (isdigit(tmp[0])) {
-            comp[j] = std::make_tuple(tmp, std::get<1>(chipsets[h]));
-            j++;
-        }
-    }
-    comp[j] = std::make_tuple("", "");
     return comp;
 }
 
-std::tuple<std::string, std::string> *getComponents(std::tuple<std::string, std::string> *chipsets, std::string word)
+std::vector<ChipsetPair> nts::Chipsets::getComponents(std::vector<ChipsetPair> chipsets, std::string word)
 {
-    int len = 0;
-    int h = 0;
-    int j = 0;
-    std::string tmp = "a";
+    std::string tmp = "";
+    std::vector<ChipsetPair> inputs;
+    auto itr = std::begin(chipsets);
 
-    for (int i = 0; tmp != ""; i++) {
-        tmp = std::get<0>(chipsets[i]);
+    for (; itr != std::end(chipsets); ++itr) {
+        tmp = std::get<0>(*itr);
         if (tmp == word)
-            len++;
+            inputs.push_back(std::make_tuple(tmp, std::get<1>(*itr)));
     }
-    tmp = "a";
-    std::tuple<std::string, std::string> *inputs = new std::tuple<std::string, std::string>[len + 1];
-    for (; tmp != ""; h++) {
-        tmp = std::get<0>(chipsets[h]);
-        if (tmp == word) {
-            inputs[j] = std::make_tuple(tmp, std::get<1>(chipsets[h]));
-            j++;
-        }
-    }
-    inputs[j] = std::make_tuple("", "");
     return inputs;
 }
 
-void checkLinks(std::tuple<std::string, std::string, std::string, std::string> *links, std::tuple<std::string, std::string> *chipsets)
+void nts::Chipsets::checkLinks(std::vector<LinkPairs> links, std::vector<ChipsetPair> chipsets)
 {
-    std::string firstValue = "a";
+    std::string firstValue = "";
     std::string secondValue = "";
+    auto itr = std::begin(links);
 
-    for (int i = 0; firstValue != ""; i++) {
-        firstValue = std::get<0>(links[i]);
-        secondValue = std::get<2>(links[i]);
-        if (!isInChipsets(chipsets, firstValue) || !isInChipsets(chipsets, secondValue))
-            exit(84);
+    for (; itr != std::end(links); ++itr) {
+        firstValue = std::get<0>(*itr);
+        secondValue = std::get<2>(*itr);
+        if (!tools.isInChipsets(chipsets, firstValue) || !tools.isInChipsets(chipsets, secondValue))
+            throw Error("Invalid Link");
     }
 }
 
-Chipsets::Chipsets(char **av)
+nts::Chipsets::Chipsets(char **av)
 {
     std::string tmp = "a";
-    std::vector<std::string> goodFile = getGoodFile(av);
-    std::tuple<std::string, std::string> *chipset = getChipset(goodFile);
-    std::tuple<std::string, std::string, std::string, std::string> *links = getLinks(goodFile);
+    std::vector<std::string> goodFile = tools.getGoodFile(av);
+    std::vector<ChipsetPair> chipset = tools.getChipset(goodFile);
+    std::vector<LinkPairs> links = tools.getLinks(goodFile);
 
     checkLinks(links, chipset);
     _inputs = getComponents(chipset, "input");
@@ -90,41 +69,42 @@ Chipsets::Chipsets(char **av)
     _links = links;
 }
 
-Chipsets::~Chipsets()
+nts::Chipsets::~Chipsets()
 {
+    ;
 }
 
-std::tuple<std::string, std::string> *Chipsets::getInputs()
+std::vector<ChipsetPair>  nts::Chipsets::getInputs()
 {
     return  _inputs;
 }
 
-std::tuple<std::string, std::string> *Chipsets::getOutputs()
+std::vector<ChipsetPair>  nts::Chipsets::getOutputs()
 {
     return _outputs;
 }
 
-std::tuple<std::string, std::string> *Chipsets::getClocks()
+std::vector<ChipsetPair>  nts::Chipsets::getClocks()
 {
     return _clocks;
 }
 
-std::tuple<std::string, std::string> *Chipsets::getTrues()
+std::vector<ChipsetPair>  nts::Chipsets::getTrues()
 {
     return _trues;
 }
 
-std::tuple<std::string, std::string> *Chipsets::getFalses()
+std::vector<ChipsetPair>  nts::Chipsets::getFalses()
 {
     return _falses;
 }
 
-std::tuple<std::string, std::string> *Chipsets::getLogicComponents()
+std::vector<ChipsetPair>  nts::Chipsets::getLogicComponents()
 {
     return _components;
 }
 
-std::tuple<std::string, std::string, std::string, std::string> *Chipsets::getChipsetLinks()
+std::vector<LinkPairs> nts::Chipsets::getChipsetLinks()
 {
     return _links;
 }

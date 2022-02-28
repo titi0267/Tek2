@@ -6,8 +6,9 @@
 ##
 
 SRC =	src/main.cpp	\
-		src/utils.cpp	\
+		src/Utils/Utils.cpp	\
 		src/Chipsets.cpp	\
+		src/Error/Error.cpp		\
 
 OBJ	=	$(SRC:.cpp=.o)
 
