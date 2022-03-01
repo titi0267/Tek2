@@ -13,10 +13,11 @@ namespace nts {
     class Input : public Components
     {
         public:
-            Input(size_t key);
+            Input(size_t key, std::string name);
             ~Input();
 
             Tristate compute(size_t pin);
+            void dump() const;
         protected:
         private:
     };

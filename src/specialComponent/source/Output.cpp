@@ -20,7 +20,7 @@ nts::Tristate nts::Output::compute(size_t pin)
 
 void nts::Output::dump() const
 {
-    std::cout << "Output(s):" << std::endl << "  " << getName() << ": " << nts::Output::compute(1) << std::endl;
+    std::cout << "Output(s):" << std::endl << "  " << getName() << ": " << _pin.getPin(0) << std::endl;
 }
 
 nts::Output::~Output()

@@ -14,7 +14,7 @@ namespace nts {
             Pins();
             ~Pins();
 
-            Tristate Pins::getPin(std::size_t key);
+            Tristate Pins::getPin(std::size_t key) const;
             void Pins::setPin(std::size_t key, Tristate state);
         protected:
         private:

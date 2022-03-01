@@ -11,11 +11,10 @@ nts::Pins::Pins()
 {
 }
 
-nts::Tristate nts::Pins::getPin(std::size_t key)
+nts::Tristate nts::Pins::getPin(std::size_t key) const
 {
-    std::map<std::size_t, nts::Tristate>::iterator itr;
+    std::map<std::size_t, nts::Tristate>::const_iterator itr;
     std::cout << std::endl << "The map itr is :" << std::endl;
-    std::cout << "\tKEY\tELEMENT\n";
     for (itr = nts::Pins::_pin.begin(); itr != _pin.end() || itr->first == key; ++itr) {
         std::cout << '\t' << itr->first << '\t' << itr->second << std::endl;
     }
