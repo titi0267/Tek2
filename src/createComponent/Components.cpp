@@ -5,17 +5,28 @@
 ** Components
 */
 
-#include "../../include/Components.hpp"
+#include "../include/Components.hpp"
 
-Components::Components()
+nts::Components::Components()
 {
 }
 
-std::vector<nts::Tristate> create4081()
+/*std::vector<nts::Tristate> create4081()
 {
     return Comp4081::compute(...);
 }
+*/
 
-Components::~Components()
+void nts::Components::setName(std::string name)
+{
+    _compName = name;
+}
+
+std::string nts::Components::getName() const
+{
+    return _compName;
+}
+
+nts::Components::~Components()
 {
 }

@@ -8,12 +8,16 @@
 #pragma once
 #include "../include/IComponent.hpp"
 
-class Pins {
-    public:
-        Pins();
-        nts::Tristate setPin(size_t pin, nts::Tristate a);
-        ~Pins();
+namespace nts {
+    class Pins {
+        public:
+            Pins();
+            ~Pins();
 
-    protected:
-    private:
-};
+            Tristate Pins::getPin(std::size_t key);
+            void Pins::setPin(std::size_t key, Tristate state);
+        protected:
+        private:
+            std::map<std::size_t, Tristate> _pin;
+    };
+}

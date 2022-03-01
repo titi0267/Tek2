@@ -6,25 +6,26 @@
 */
 
 #include "comp4081.hpp"
+#include "../gates/Gates.hpp"
 
-Comp4081::Comp4081(std::vector<nts::Tristate> pins[7])
+nts::Comp4081::Comp4081(std::vector<nts::Tristate> pins) : _pins(pins)
 {
     for (int i = 0; i < 8; i++)
-        Comp4081::pins[i] = pins[i];
+        _pins[i] = pins[i];
 }
 
-nts::Tristate Comp4081::compute(size_t pin)
+nts::Tristate nts::Comp4081::compute(size_t pin)
 {
     switch (pin)
     {
         case 3:
-            return andGate.getAnd(Comp4081::pins[0], Comp4081::pins[1]);
+            return And(_pins[0], _pins[1]);
         case 4:
-            return andGate.getAnd(Comp4081::pins[2], Comp4081::pins[3]);
+            return And(_pins[2], _pins[3]);
         case 10:
-            return andGate.getAnd(Comp4081::pins[4], Comp4081::pins[5]);
+            return And(_pins[4], _pins[5]);
         case 11:
-            return andGate.getAnd(Comp4081::pins[6], Comp4081::pins[7]);
+            return And(_pins[6], _pins[7]);
     }
 }
 
