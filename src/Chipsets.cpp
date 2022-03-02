@@ -38,6 +38,20 @@ std::vector<ChipsetPair> nts::Chipsets::getComponents(std::vector<ChipsetPair> c
     return inputs;
 }
 
+std::vector<InputPair> nts::Chipsets::getInputComponents(std::vector<ChipsetPair> chipsets)
+{
+    std::string tmp = "";
+    std::vector<InputPair> inputs;
+    auto itr = std::begin(chipsets);
+
+    for (; itr != std::end(chipsets); ++itr) {
+        tmp = std::get<0>(*itr);
+        if (tmp == "input")
+            inputs.push_back(std::make_tuple(tmp, std::get<1>(*itr), nts::Tristate::UNDEFINED));
+    }
+    return inputs;
+}
+
 void nts::Chipsets::checkLinks(std::vector<LinkPairs> links, std::vector<ChipsetPair> chipsets)
 {
     std::string firstValue = "";
@@ -60,7 +74,7 @@ nts::Chipsets::Chipsets(char **av)
     std::vector<LinkPairs> links = tools.getLinks(goodFile);
 
     checkLinks(links, chipset);
-    _inputs = getComponents(chipset, "input");
+    _inputs = getInputComponents(chipset);
     _outputs = getComponents(chipset, "output");
     _clocks = getComponents(chipset, "clock");
     _trues = getComponents(chipset, "true");
@@ -69,12 +83,37 @@ nts::Chipsets::Chipsets(char **av)
     _links = links;
 }
 
+void nts::Chipsets::setInputValue(std::string str)
+{
+    std::vector<std::string> splitedValue = tools.split(str, '=');
+    auto itr = std::begin(_inputs);
+    nts::Tristate toSet = nts::UNDEFINED;
+    bool hasBeenSet = false;
+
+    if (splitedValue[1] == "U")
+        toSet = nts::UNDEFINED;
+    else if (splitedValue[1] == "0")
+        toSet = nts::FALSE;
+    else
+        toSet = nts::TRUE;
+
+    for (; itr != std::end(_inputs); ++itr) {
+        if (std::get<1>(*itr) == splitedValue[0]) {
+            std::get<2>(*itr) = toSet;
+            hasBeenSet = true;
+            break;
+        }
+    }
+    if (!hasBeenSet)
+        std::cout << "This input doesn't exist\n";
+}
+
 nts::Chipsets::~Chipsets()
 {
     ;
 }
 
-std::vector<ChipsetPair>  nts::Chipsets::getInputs()
+std::vector<InputPair>  nts::Chipsets::getInputs()
 {
     return  _inputs;
 }
