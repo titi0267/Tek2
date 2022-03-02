@@ -36,14 +36,14 @@ int nts::Components::getCompNum() const
     return _compNumber;
 }
 
-std::unique_ptr<nts::Components> nts::Components::createComponent(const std::string &compType)
+std::unique_ptr<nts::Components> nts::Components::createComponent(const std::string &compType, const std::string &name)
 {
     if (compType == "Input") {
         nts::Components::newComp();
-        return std::make_unique<nts::Input>(getCompNum(), "compName"); //compName provided by ludo
+        return std::make_unique<nts::Input>(getCompNum(), name); //compName provided by ludo
     }
     else if (compType == "Output") {
-        return std::make_unique<nts::Output>(getCompNum(), "compName");
+        return std::make_unique<nts::Output>(getCompNum(), name);
     }
 }
 

@@ -18,7 +18,7 @@ namespace nts {
 
             virtual nts::Tristate compute(size_t pin) = 0;
             virtual void dump() const = 0;
-            std::unique_ptr<nts::Components> createComponent(const std::string &compType);
+            std::unique_ptr<nts::Components> createComponent(const std::string &compType, const std::string &name);
             void setComp(int compNumber, std::string compType);
             std::map<std::string, int>::const_iterator nts::Components::getComp(std::string compName) const;
             void nts::Components::newComp();
