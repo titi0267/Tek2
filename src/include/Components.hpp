@@ -18,20 +18,20 @@ namespace nts {
 
             virtual nts::Tristate compute(size_t pin) = 0;
             virtual void dump() const = 0;
-        /*std::unique_ptr<nts::IComponent> createComponent(const std::string &str) {
-            if (str == "4001")
-                return std::make_unique<C4001>();
-            else if ...*/
-        
+            std::unique_ptr<nts::Components> createComponent(const std::string &compType);
+            void setComp(int compNumber, std::string compType);
+            std::map<std::string, int>::const_iterator nts::Components::getComp(std::string compName) const;
+            void nts::Components::newComp();
+            int nts::Components::getCompNum() const;
 
         protected:
-            void nts::Components::setName(std::string name);
-            std::string nts::Components::getName() const;
-            Pins _pin;
-            int component_number;
-            //std::vector<nts::Tristate> create4081();
+            void nts::Components::setName(const std::string &name);
+            std::string &nts::Components::getName() const;
+            //Pins _pin;
+
         private:
-            std::string _compName;
+            std::map<std::string, int> _saveComp;
+            int _compNumber;
     };
 }
 /*

@@ -18,6 +18,7 @@ namespace nts {
 
             Tristate compute(size_t pin);
             void dump() const;
+            void setLink(size_t pin, nts::IComponent &other, size_t otherPin);
         protected:
         private:
     };

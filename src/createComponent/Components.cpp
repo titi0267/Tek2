@@ -6,25 +6,45 @@
 */
 
 #include "../include/Components.hpp"
+#include "../specialComponent/include/Input.hpp"
+#include "../specialComponent/include/Output.hpp"
 
-nts::Components::Components()
+nts::Components::Components() : _compNumber(0)
 {
 }
 
-/*std::vector<nts::Tristate> create4081()
+void nts::Components::setComp(int compNumber, std::string compName)
 {
-    return Comp4081::compute(...);
-}
-*/
-
-void nts::Components::setName(std::string name)
-{
-    _compName = name;
+    _saveComp.insert(std::pair<std::string, int>(compName, compNumber));
 }
 
-std::string nts::Components::getName() const
+std::map<std::string, int>::const_iterator nts::Components::getComp(std::string compName) const
 {
-    return _compName;
+    std::map<std::string, int>::const_iterator itr;
+
+    itr = _saveComp.find(compName);
+    return itr;
+}
+
+void nts::Components::newComp()
+{
+    _compNumber += 1;
+}
+
+int nts::Components::getCompNum() const
+{
+    return _compNumber;
+}
+
+std::unique_ptr<nts::Components> nts::Components::createComponent(const std::string &compType)
+{
+    if (compType == "Input") {
+        nts::Components::newComp();
+        return std::make_unique<nts::Input>(getCompNum(), "compName"); //compName provided by ludo
+    }
+    else if (compType == "Output") {
+        return std::make_unique<nts::Output>(getCompNum(), "compName");
+    }
 }
 
 nts::Components::~Components()

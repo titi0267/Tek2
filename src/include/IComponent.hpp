@@ -8,6 +8,7 @@
 #include <unistd.h>
 #include <vector>
 #include <map>
+#include <memory>
 #include <iostream>
 
 namespace nts
