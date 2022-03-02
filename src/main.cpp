@@ -7,10 +7,15 @@
 
 #include "Chipsets.hpp"
 
-void handleCommand(std::string cmd)
+int handleCommand(std::string cmd, nts::Chipsets *chipset)
 {
+    std::regex rgx("(\\w+)=([0-1-U])");
+
     if (cmd == "exit")
-        exit(0);
+        return 1;
+    if (std::regex_match(cmd, rgx))
+        chipset->setInputValue(cmd);
+    return 0;
 }
 
 int main(int ac, char **av)
@@ -19,6 +24,14 @@ int main(int ac, char **av)
         return 84;
     try {
         nts::Chipsets chipsets(av);
+        std::string input;
+
+        while (1) {
+            std::cout << "> ";
+            std::cin >> input;
+            if (handleCommand(input, &chipsets) == 1)
+                return 0;
+        }
     } catch (Error e) {
         std:: cerr << e.what() << std::endl;
         return 84;
@@ -26,10 +39,5 @@ int main(int ac, char **av)
         std::cerr << "Unknown error" << std::endl;
         return 84;
     }
-    // while (1) {
-    //     std::cout << "> ";
-    //     std::cin >> input;
-    //     handleCommand(input);
-    // }
     return (0);
 }
