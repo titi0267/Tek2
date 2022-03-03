@@ -10,6 +10,8 @@ memcpy:
 loop:
         CMP     RDX, RCX
         JE      end
+        CMP     BYTE[RSI], 0
+        JE      end
         MOV     AH, BYTE[RSI]
         MOV     BYTE[RDI], AH
         INC     RCX
