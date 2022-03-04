@@ -9,43 +9,69 @@
 #include "../specialComponent/include/Input.hpp"
 #include "../specialComponent/include/Output.hpp"
 
-nts::Components::Components() : _compNumber(0)
+nts::Components::Components()
 {
 }
 
-void nts::Components::setComp(int compNumber, std::string compName)
+void nts::Components::setComp(std::string compName, std::string type)
 {
-    _saveComp.insert(std::pair<std::string, int>(compName, compNumber));
+    _name = compName;
+    _type = type;
+    //_saveComp.insert(std::pair<std::string, int>(compName, compNumber));
 }
 
-std::map<std::string, int>::const_iterator nts::Components::getComp(std::string compName) const
+std::string nts::Components::getType() const
 {
-    std::map<std::string, int>::const_iterator itr;
-
-    itr = _saveComp.find(compName);
-    return itr;
+    return _type;
 }
 
-void nts::Components::newComp()
+void nts::Components::setTick(size_t tick)
 {
-    _compNumber += 1;
+    _tick += tick;
 }
 
-int nts::Components::getCompNum() const
+size_t nts::Components::getTick() const
 {
-    return _compNumber;
+    return _tick;
 }
 
-std::unique_ptr<nts::Components> nts::Components::createComponent(const std::string &compType, const std::string &name)
+std::string nts::Components::getComp() const
 {
-    if (compType == "Input") {
-        nts::Components::newComp();
-        return std::make_unique<nts::Input>(getCompNum(), name); //compName provided by ludo
-    }
-    else if (compType == "Output") {
-        return std::make_unique<nts::Output>(getCompNum(), name);
-    }
+    return _name;
 }
+
+void nts::Components::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
+{
+    ;
+}
+
+std::vector<nts::Tristate> nts::Components::getState() const
+{
+    return _pins;
+}
+
+void nts::Components::setState(size_t pin, nts::Tristate state)
+{
+    _pins[pin - 1] = state;
+}
+
+nts::Tristate nts::Components::compute(size_t pin)
+{
+    return nts::UNDEFINED;
+}
+
+void nts::Components::simulate(size_t tick)
+{
+//    setTick(tick);
+    
+}
+
+void nts::Components::dump() const
+{
+    ;
+}
+
+
 
 nts::Components::~Components()
 {

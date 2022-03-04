@@ -6,15 +6,28 @@
 */
 
 #include "Chipsets.hpp"
+#include "./include/Components.hpp"
+#include "./include/Factory.hpp"
 
-int handleCommand(std::string cmd, nts::Chipsets *chipset)
+
+void simulateAll(nts::Factory factory)
+{
+    for (auto itr : factory.getComp()) {
+        itr.simulate(1);
+        std::cout << itr.getState()[0] << std::endl;
+    }
+}
+
+int handleCommand(std::string cmd, nts::Factory facto)
 {
     std::regex rgx("(\\w+)=([0-1-U])");
 
     if (cmd == "exit")
         return 1;
+    if (cmd == "simulate")
+        simulateAll(facto);
     if (std::regex_match(cmd, rgx))
-        chipset->setInputValue(cmd);
+        facto.setInputValue(cmd);
     return 0;
 }
 
@@ -25,11 +38,13 @@ int main(int ac, char **av)
     try {
         nts::Chipsets chipsets(av);
         std::string input;
+        nts::Factory factory;
 
+        factory.storeComp(chipsets);
         while (1) {
             std::cout << "> ";
             std::cin >> input;
-            if (handleCommand(input, &chipsets) == 1)
+            if (handleCommand(input, factory) == 1)
                 return 0;
         }
     } catch (Error e) {

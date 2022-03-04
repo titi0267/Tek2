@@ -141,7 +141,7 @@ std::vector<LinkPairs> nts::Utils::getLinks(std::vector<std::string> splitedFile
 
 std::vector<ChipsetPair> nts::Utils::getChipset(std::vector<std::string> splitedFile)
 {
-    std::regex rgx("(\\w+) (\\w+)");
+    std::regex rgx("(\\w+)[ \t]+(\\w+)");
     std::sregex_iterator iter(splitedFile[1].begin(), splitedFile[1].end(), rgx);
     std::sregex_iterator end;
     std::vector<ChipsetPair> chipset;

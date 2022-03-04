@@ -7,7 +7,7 @@
 
 #pragma once
 #include "../../include/Components.hpp"
-#include "../../pins/Pins.hpp"
+//#include "../../pins/Pins.hpp"
 
 namespace nts {
     class Input : public Components
@@ -17,6 +17,7 @@ namespace nts {
             ~Input();
 
             Tristate compute(size_t pin);
+            void simulate(size_t tick);
             void dump() const;
         protected:
         private:

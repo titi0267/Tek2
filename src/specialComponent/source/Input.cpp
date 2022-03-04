@@ -9,14 +9,23 @@
 
 nts::Input::Input(int compNumber, const std::string &name)
 {
-    setComp(compNumber, name);
+    setComp(name, "input");
+    _pins.push_back(nts::Tristate::UNDEFINED);
+    for (auto itr : _pins)
+        std::cout << itr << std::endl;
+    std::cout << "oui" << std::endl;
     //_pin.setPin(key, nts::Tristate::UNDEFINED);
     //setName(name);
 }
 
 nts::Tristate nts::Input::compute(size_t pin)
 {
-    //return _pin.getPin(pin);
+    return getState()[0];
+}
+
+void nts::Input::simulate(size_t tick)
+{
+    ;
 }
 
 void nts::Input::dump() const

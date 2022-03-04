@@ -7,33 +7,47 @@
 
 #pragma once
 #include "IComponent.hpp"
-#include "../pins/Pins.hpp"
+//#include "../pins/Pins.hpp"
 
 namespace nts {
+
+    struct Link {
+        IComponent &component;
+        size_t pin;
+    };
+
     class Components : public IComponent
     {
         public:
             Components();
             ~Components();
 
-            virtual nts::Tristate compute(size_t pin) = 0;
-            virtual void dump() const = 0;
-            std::unique_ptr<nts::Components> createComponent(const std::string &compType, const std::string &name);
-            void setComp(int compNumber, std::string compType);
-            std::map<std::string, int>::const_iterator nts::Components::getComp(std::string compName) const;
-            void nts::Components::newComp();
-            int nts::Components::getCompNum() const;
+            nts::Tristate compute(size_t pin);
+            void dump() const;
+            void simulate(size_t tick); //{};
+            void setLink(size_t pin, nts::IComponent &other, size_t otherPin);
+
+            void setComp(std::string compName, std::string type);
+            std::string getComp() const;
+            void setTick(size_t tick);
+            std::string getType() const;
+            size_t getTick() const;
+            void setState(size_t pin, nts::Tristate state);
+            std::vector<nts::Tristate> getState() const;
+            
 
         protected:
-            void nts::Components::setName(const std::string &name);
-            std::string &nts::Components::getName() const;
-            //Pins _pin;
+            //void nts::Components::setName(const std::string &name);
+            //std::string &nts::Components::getName() const;
+            std::map<size_t, Link> _saveLink;
+            std::string _type;
+            std::vector<nts::Tristate> _pins;
 
         private:
-            std::map<std::string, int> _saveComp;
-            int _compNumber;
+            size_t _tick;
+            std::string _name;
     };
-}
+};
 /*
 p + (x) = (a-x)/(50 - 150)
 pxy = (b - y)/(9b-15)*/
