@@ -14,18 +14,22 @@ namespace nts {
         public:
             Factory();
             ~Factory();
+            Factory(const Factory &) = delete;
 
-            std::unique_ptr<nts::Components> createComponent(const std::string &compType, const std::string &name);
-            void newComp();
-            int getCompNum() const;
-            std::vector<nts::Components> getComp() const;
+            std::unique_ptr<nts::IComponent> createComponent(const std::string &compType);//, const std::string &name);
+            std::map<std::string, std::unique_ptr<nts::IComponent>> &getComp();
             void storeComp(Chipsets comp);
-            int getComponentByName(std::string name);
+            //int getComponentByName(std::string name);
             void setInputValue(std::string str);
+            void setTick(size_t tick);
+            size_t getTick() const;
+            void addQueue(std::string cmd);
+            void setupQueue();
 
         protected:
-            std::vector<nts::Components> _components;
+            std::map<std::string, std::unique_ptr<nts::IComponent>> _components;
         private:
-            int _compNumber;
+            size_t _tick;
+            std::vector<std::string> _queue;
     };
-}
+};

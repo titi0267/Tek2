@@ -28,5 +28,10 @@ namespace nts
         virtual nts::Tristate compute(size_t pin) = 0;
         virtual void setLink(size_t pin, nts::IComponent &other, size_t otherPin) = 0;
         virtual void dump() const = 0;
+
+        virtual void setState(size_t pin, nts::Tristate state) = 0;
+        virtual std::vector<nts::Tristate> getState() const = 0;
+        virtual std::string getType() const = 0;
+        virtual void setType(std::string type) = 0;
     };
 }

@@ -72,9 +72,9 @@ nts::Chipsets::Chipsets(char **av)
     std::vector<ChipsetPair> chipset = tools.getChipset(goodFile);
     std::vector<LinkPairs> links = tools.getLinks(goodFile);
 
+
     checkLinks(links, chipset);
     _inputs = getInputComponents(chipset);
-    std::cout << std::get<0>(_inputs[0]) << "    " << std::get<1>(_inputs[0]) << std::endl;
     _outputs = getComponents(chipset, "output");
     _clocks = getComponents(chipset, "clock");
     _trues = getComponents(chipset, "true");

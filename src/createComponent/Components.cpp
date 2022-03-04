@@ -13,31 +13,14 @@ nts::Components::Components()
 {
 }
 
-void nts::Components::setComp(std::string compName, std::string type)
+void nts::Components::setType(std::string type)
 {
-    _name = compName;
     _type = type;
-    //_saveComp.insert(std::pair<std::string, int>(compName, compNumber));
 }
 
 std::string nts::Components::getType() const
 {
     return _type;
-}
-
-void nts::Components::setTick(size_t tick)
-{
-    _tick += tick;
-}
-
-size_t nts::Components::getTick() const
-{
-    return _tick;
-}
-
-std::string nts::Components::getComp() const
-{
-    return _name;
 }
 
 void nts::Components::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
@@ -53,6 +36,7 @@ std::vector<nts::Tristate> nts::Components::getState() const
 void nts::Components::setState(size_t pin, nts::Tristate state)
 {
     _pins[pin - 1] = state;
+    std::cout <<  "la je print" << _pins[pin - 1] << std::endl;
 }
 
 nts::Tristate nts::Components::compute(size_t pin)
@@ -62,8 +46,6 @@ nts::Tristate nts::Components::compute(size_t pin)
 
 void nts::Components::simulate(size_t tick)
 {
-//    setTick(tick);
-    
 }
 
 void nts::Components::dump() const

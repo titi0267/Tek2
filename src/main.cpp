@@ -9,25 +9,59 @@
 #include "./include/Components.hpp"
 #include "./include/Factory.hpp"
 
-
-void simulateAll(nts::Factory factory)
+void display(nts::Factory &factory)
 {
-    for (auto itr : factory.getComp()) {
-        itr.simulate(1);
-        std::cout << itr.getState()[0] << std::endl;
+    std::cout << "tick: " << factory.getTick() << std::endl;
+    std::cout << "input(s):" << std::endl;
+    for (auto &itr : factory.getComp()) {
+        if (itr.second->getType() == "input")
+            std::cout << "  " << itr.first << ": " << ((itr.second->getState()[0] == nts::Tristate::UNDEFINED) ? "U" : std::to_string(itr.second->getState()[0])) << std::endl;
+    }
+    std::cout << "output(s):" << std::endl;
+    for (auto &itr : factory.getComp()) {
+        if (itr.second->getType() == "output")
+            std::cout << "  " << itr.first << ": " << ((itr.second->getState()[0] == nts::Tristate::UNDEFINED) ? "U" : std::to_string(itr.second->getState()[0])) << std::endl;
     }
 }
 
-int handleCommand(std::string cmd, nts::Factory facto)
+void simulateAll(nts::Factory &factory)
+{
+    std::cout << "Set Queue" << std::endl;
+    factory.setupQueue();
+    factory.setTick(factory.getTick() + 1);
+    std::cout << "Start component" << std::endl;
+    for (auto &itr : factory.getComp()) {
+        std::cout << itr.second->getType() << std::endl;
+        std::cout << itr.second->getState()[0] << std::endl;
+        itr.second->simulate(1);
+    }
+    /*
+    auto &itr = factory.getComp();
+    for (itr.begin();itr != itr.end(); itr++) {
+        itr.second->simulate(1);
+    }*/
+    //std::cout << itr.second->getState()[0] << std::endl;
+}
+
+int handleCommand(const std::string &cmd, nts::Factory &facto)
 {
     std::regex rgx("(\\w+)=([0-1-U])");
 
     if (cmd == "exit")
         return 1;
-    if (cmd == "simulate")
+    if (cmd == "simulate") {
         simulateAll(facto);
-    if (std::regex_match(cmd, rgx))
-        facto.setInputValue(cmd);
+        return (0);
+    }
+    if (cmd == "display") {
+        display(facto);
+        return (0);
+    }
+    if (std::regex_match(cmd, rgx)) {
+        facto.addQueue(cmd);
+        return (0);
+    }
+    std::cout << "Command not found\n";
     return 0;
 }
 
@@ -41,11 +75,11 @@ int main(int ac, char **av)
         nts::Factory factory;
 
         factory.storeComp(chipsets);
-        while (1) {
-            std::cout << "> ";
-            std::cin >> input;
+        std::cout << "> ";
+        while (std::getline(std::cin, input)) {
             if (handleCommand(input, factory) == 1)
                 return 0;
+            std::cout << "> ";
         }
     } catch (Error e) {
         std:: cerr << e.what() << std::endl;

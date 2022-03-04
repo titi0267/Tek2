@@ -27,25 +27,20 @@ namespace nts {
             void simulate(size_t tick); //{};
             void setLink(size_t pin, nts::IComponent &other, size_t otherPin);
 
-            void setComp(std::string compName, std::string type);
-            std::string getComp() const;
-            void setTick(size_t tick);
             std::string getType() const;
-            size_t getTick() const;
             void setState(size_t pin, nts::Tristate state);
             std::vector<nts::Tristate> getState() const;
+            void setType(std::string type);
             
 
         protected:
             //void nts::Components::setName(const std::string &name);
             //std::string &nts::Components::getName() const;
             std::map<size_t, Link> _saveLink;
-            std::string _type;
             std::vector<nts::Tristate> _pins;
 
         private:
-            size_t _tick;
-            std::string _name;
+            std::string _type;
     };
 };
 /*
