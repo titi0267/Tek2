@@ -82,7 +82,7 @@ def computeThirdPart(a: int, b:int):
     print("expected value of X:    " + format(totalX, ".1f"))
     print("variance of X:          " + format(varX, ".1f"))
     print("expected value of Y:    " + format(totalY, ".1f"))
-    print("variance of X:          " + format(varY, ".1f"))
+    print("variance of Y:          " + format(varY, ".1f"))
     print("expected value of Z:    " + format(totalY + totalX, ".1f"))
     print("variance of Z:          " + format(varY + varX, ".1f"))
 
