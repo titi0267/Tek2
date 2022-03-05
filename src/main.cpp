@@ -41,6 +41,12 @@ int handleCommand(const std::string &cmd, nts::Factory &facto)
         display(facto);
         return (0);
     }
+    if (cmd == "loop") {
+        while (1) {
+            nts::Simulate::simulateLoop(facto);
+            display(facto);
+        }
+    }
     if (std::regex_match(cmd, rgx)) {
         facto.addQueue(cmd);
         return (0);
