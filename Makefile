@@ -9,6 +9,14 @@ SRC =	src/main.cpp	\
 		src/Utils/Utils.cpp	\
 		src/Chipsets.cpp	\
 		src/Error/Error.cpp		\
+		src/createComponent/Components.cpp \
+		src/createComponent/Factory.cpp		\
+		src/specialComponent/source/Input.cpp	\
+		src/specialComponent/source/Output.cpp	\
+		src/specialComponent/source/False.cpp	\
+		src/specialComponent/source/True.cpp	\
+		src/Simulate/Simulate.cpp	\
+		src/createComponent/Link.cpp
 
 OBJ	=	$(SRC:.cpp=.o)
 
