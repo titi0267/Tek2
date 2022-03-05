@@ -104,9 +104,8 @@ void nts::Factory::setInputValue(std::string str)
     else
         toSet = nts::TRUE;
 
-    auto itr1 = _components.begin();
-    for (; itr1 != _components.end(); itr1++) {
-        if (itr1->second->getType() == "input" && itr1->first == splitedValue[0]) {
+    for (; itr != _components.end(); itr++) {
+        if (itr->second->getType() == "input" && itr->first == splitedValue[0]) {
             itr->second->setState(1, toSet);
             break;
         }

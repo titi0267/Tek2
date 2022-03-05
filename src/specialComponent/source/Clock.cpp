@@ -20,13 +20,17 @@ nts::Tristate nts::Clock::compute(size_t pin)
 
 void nts::Clock::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
 {
-    _saveLink.emplace(pin, Link{other, otherPin});
+    nts::Link *link;
+    link->component = other;
+    link->pin = otherPin;
+
+    _saveLink.emplace(pin, link);
 }
 
 void nts::Clock::simulate(size_t tick)
 {
     for (auto itr : _saveLink) {
-        setState(itr.first, itr.second.component.compute(itr.second.pin));
+        setState(itr.first, itr.second->component.compute(itr.second->pin));
     }
 }
 

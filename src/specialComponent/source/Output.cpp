@@ -15,7 +15,10 @@ nts::Output::Output()
 
 nts::Tristate nts::Output::compute(size_t pin)
 {
-    return getState()[0];
+    nts::Link *link = _saveLink[1];
+
+    _pins[0] = link->component.compute(link->pin);
+    return _pins[0];
 }
 
 void nts::Output::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
@@ -26,14 +29,15 @@ void nts::Output::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
     } else if (other.getType() == "false") {
         setState(1, nts::Tristate::FALSE);
     }*/
-    _saveLink.emplace(pin, Link{other, otherPin});
+    nts::Link *link = new nts::Link(other, otherPin);
+    _saveLink.emplace(pin, link);
 }
 
 void nts::Output::simulate(size_t tick)
 {
     std::cout << "SIMULATE" << std::endl;
     for (auto itr : _saveLink) {
-        setState(itr.first, itr.second.component.compute(itr.second.pin));
+        setState(itr.first, itr.second->component.compute(itr.second->pin));
     }
 }
 

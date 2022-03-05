@@ -18,7 +18,7 @@ void nts::Components::setType(std::string type)
     _type = type;
 }
 
-std::string nts::Components::getType() const
+std::string &nts::Components::getType()
 {
     return _type;
 }
@@ -28,7 +28,7 @@ void nts::Components::setLink(size_t pin, nts::IComponent &other, size_t otherPi
     ;
 }
 
-std::vector<nts::Tristate> nts::Components::getState() const
+std::vector<nts::Tristate> &nts::Components::getState()
 {
     return _pins;
 }
@@ -43,6 +43,11 @@ nts::Tristate nts::Components::compute(size_t pin)
 {
     return nts::UNDEFINED;
 }
+
+/*std::map<size_t, nts::Link *> &nts::Components::getLink()
+{
+    return _saveLink;
+}*/
 
 void nts::Components::simulate(size_t tick)
 {

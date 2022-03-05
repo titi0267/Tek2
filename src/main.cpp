@@ -8,6 +8,7 @@
 #include "Chipsets.hpp"
 #include "./include/Components.hpp"
 #include "./include/Factory.hpp"
+#include "./Simulate/Simulate.hpp"
 
 void display(nts::Factory &factory)
 {
@@ -24,25 +25,6 @@ void display(nts::Factory &factory)
     }
 }
 
-void simulateAll(nts::Factory &factory)
-{
-    std::cout << "Set Queue" << std::endl;
-    factory.setupQueue();
-    factory.setTick(factory.getTick() + 1);
-    std::cout << "Start component" << std::endl;
-    for (auto &itr : factory.getComp()) {
-        std::cout << itr.second->getType() << std::endl;
-        std::cout << itr.second->getState()[0] << std::endl;
-        itr.second->simulate(1);
-    }
-    /*
-    auto &itr = factory.getComp();
-    for (itr.begin();itr != itr.end(); itr++) {
-        itr.second->simulate(1);
-    }*/
-    //std::cout << itr.second->getState()[0] << std::endl;
-}
-
 int handleCommand(const std::string &cmd, nts::Factory &facto)
 {
     std::regex rgx("(\\w+)=([0-1-U])");
@@ -50,7 +32,7 @@ int handleCommand(const std::string &cmd, nts::Factory &facto)
     if (cmd == "exit")
         return 1;
     if (cmd == "simulate") {
-        simulateAll(facto);
+        nts::Simulate::simulateLoop(facto);
         return (0);
     }
     if (cmd == "display") {

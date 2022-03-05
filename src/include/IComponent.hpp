@@ -30,8 +30,8 @@ namespace nts
         virtual void dump() const = 0;
 
         virtual void setState(size_t pin, nts::Tristate state) = 0;
-        virtual std::vector<nts::Tristate> getState() const = 0;
-        virtual std::string getType() const = 0;
+        virtual std::vector<nts::Tristate> &getState() = 0;
+        virtual std::string &getType() = 0;
         virtual void setType(std::string type) = 0;
     };
 }
