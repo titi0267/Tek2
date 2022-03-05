@@ -33,7 +33,6 @@ void nts::Factory::setupQueue()
     int queueLen = 0;
 
     for (auto &itr: _queue) {
-        std::cout << itr << std::endl;
         setInputValue(itr);
         queueLen++;
     }
@@ -62,19 +61,15 @@ std::unique_ptr<nts::IComponent> nts::Factory::createComponent(const std::string
 void nts::Factory::storeComp(Chipsets comp)
 {
     for (auto itr_input : comp.getInputs()) {
-        std::cout << "construct input" << std::endl;
         _components.emplace((std::get<1>(itr_input)), createComponent("input"));
     }
     for (auto itr_output : comp.getOutputs()) {
-        std::cout << "construct output" << std::endl;
         _components.emplace((std::get<1>(itr_output)), createComponent("output"));
     }
     for (auto itr_false : comp.getFalses()) {
-        std::cout << "construct false" << std::endl;
         _components.emplace((std::get<1>(itr_false)), createComponent("false"));
     }
     for (auto itr_true : comp.getTrues()) {
-        std::cout << "construct true" << std::endl;
         _components.emplace((std::get<1>(itr_true)), createComponent("true"));
     }
     for (auto itr2 : comp.getChipsetLinks()) {

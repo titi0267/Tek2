@@ -35,7 +35,6 @@ void nts::Output::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
 
 void nts::Output::simulate(size_t tick)
 {
-    std::cout << "SIMULATE" << std::endl;
     for (auto itr : _saveLink) {
         setState(itr.first, itr.second->component.compute(itr.second->pin));
     }

@@ -36,7 +36,6 @@ std::vector<nts::Tristate> &nts::Components::getState()
 void nts::Components::setState(size_t pin, nts::Tristate state)
 {
     _pins[pin - 1] = state;
-    std::cout <<  "la je print" << _pins[pin - 1] << std::endl;
 }
 
 nts::Tristate nts::Components::compute(size_t pin)
