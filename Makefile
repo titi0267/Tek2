@@ -15,8 +15,10 @@ SRC =	src/main.cpp	\
 		src/specialComponent/source/Output.cpp	\
 		src/specialComponent/source/False.cpp	\
 		src/specialComponent/source/True.cpp	\
+		src/specialComponent/source/Clock.cpp	\
 		src/Simulate/Simulate.cpp	\
-		src/createComponent/Link.cpp
+		src/gates/Gates.cpp		\
+		src/createComponent/Link.cpp	\
 
 OBJ	=	$(SRC:.cpp=.o)
 

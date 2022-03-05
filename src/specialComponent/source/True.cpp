@@ -20,9 +20,7 @@ nts::Tristate nts::True::compute(size_t pin)
 
 void nts::True::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
 {
-    nts::Link *link;
-    link->component = other;
-    link->pin = otherPin;
+    nts::Link *link = new nts::Link{other, otherPin};
 
     _saveLink.emplace(pin, link);
 }

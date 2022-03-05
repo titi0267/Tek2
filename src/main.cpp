@@ -17,6 +17,8 @@ void display(nts::Factory &factory)
     for (auto &itr : factory.getComp()) {
         if (itr.second->getType() == "input")
             std::cout << "  " << itr.first << ": " << ((itr.second->getState()[0] == nts::Tristate::UNDEFINED) ? "U" : std::to_string(itr.second->getState()[0])) << std::endl;
+        if (itr.second->getType() == "clock")
+            std::cout << "  " << itr.first << ": " << ((itr.second->getState()[0] == nts::Tristate::UNDEFINED) ? "U" : std::to_string(itr.second->getState()[0])) << std::endl;
     }
     std::cout << "output(s):" << std::endl;
     for (auto &itr : factory.getComp()) {

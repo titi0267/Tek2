@@ -11,6 +11,7 @@
 #include "../specialComponent/include/Output.hpp"
 #include "../specialComponent/include/False.hpp"
 #include "../specialComponent/include/True.hpp"
+#include "../specialComponent/include/Clock.hpp"
 #include "../Chipsets.hpp"
 
 nts::Factory::Factory() : _components()
@@ -55,6 +56,8 @@ std::unique_ptr<nts::IComponent> nts::Factory::createComponent(const std::string
         return std::make_unique<nts::False>();
     } else if (compType == "true") {
         return std::make_unique<nts::True>();
+    } else if (compType == "clock") {
+        return std::make_unique<nts::Clock>();
     }
 }
 
@@ -71,6 +74,9 @@ void nts::Factory::storeComp(Chipsets comp)
     }
     for (auto itr_true : comp.getTrues()) {
         _components.emplace((std::get<1>(itr_true)), createComponent("true"));
+    }
+    for (auto itr_clock : comp.getClocks()) {
+        _components.emplace((std::get<1>(itr_clock)), createComponent("clock"));
     }
     for (auto itr2 : comp.getChipsetLinks()) {
         _components.find(std::get<0>(itr2))->second->setLink
@@ -102,6 +108,10 @@ void nts::Factory::setInputValue(std::string str)
     for (; itr != _components.end(); itr++) {
         if (itr->second->getType() == "input" && itr->first == splitedValue[0]) {
             itr->second->setState(1, toSet);
+            break;
+        }
+        if (itr->second->getType() == "clock" && itr->first == splitedValue[0]) {
+            itr->second->setState(1, nts::Gates::Not(toSet));
             break;
         }
     }

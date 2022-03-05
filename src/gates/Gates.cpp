@@ -20,7 +20,7 @@ nts::Tristate nts::Gates::And(nts::Tristate a, nts::Tristate b)
     return FALSE;
 }
 
-nts::Tristate Not(nts::Tristate a)
+nts::Tristate nts::Gates::Not(nts::Tristate a)
 {
     nts::Tristate TRUE = nts::Tristate::TRUE;
     nts::Tristate FALSE = nts::Tristate::FALSE;
@@ -33,7 +33,7 @@ nts::Tristate Not(nts::Tristate a)
     return UNDEFINED;
 }
 
-nts::Tristate Xor(nts::Tristate a, nts::Tristate b)
+nts::Tristate nts::Gates::Xor(nts::Tristate a, nts::Tristate b)
 {
     nts::Tristate TRUE = nts::Tristate::TRUE;
     nts::Tristate FALSE = nts::Tristate::FALSE;
@@ -48,7 +48,7 @@ nts::Tristate Xor(nts::Tristate a, nts::Tristate b)
     return UNDEFINED;
 }
 
-nts::Tristate Nand(nts::Tristate a, nts::Tristate b)
+nts::Tristate nts::Gates::Nand(nts::Tristate a, nts::Tristate b)
 {
     nts::Tristate TRUE = nts::Tristate::TRUE;
     nts::Tristate FALSE = nts::Tristate::FALSE;
@@ -61,7 +61,7 @@ nts::Tristate Nand(nts::Tristate a, nts::Tristate b)
     return TRUE;
 }
 
-nts::Tristate Or(nts::Tristate a, nts::Tristate b)
+nts::Tristate nts::Gates::Or(nts::Tristate a, nts::Tristate b)
 {
     nts::Tristate TRUE = nts::Tristate::TRUE;
     nts::Tristate FALSE = nts::Tristate::FALSE;
@@ -74,7 +74,7 @@ nts::Tristate Or(nts::Tristate a, nts::Tristate b)
     return TRUE;
 }
 
-nts::Tristate Nor(nts::Tristate a, nts::Tristate b)
+nts::Tristate nts::Gates::Nor(nts::Tristate a, nts::Tristate b)
 {
     nts::Tristate TRUE = nts::Tristate::TRUE;
     nts::Tristate FALSE = nts::Tristate::FALSE;

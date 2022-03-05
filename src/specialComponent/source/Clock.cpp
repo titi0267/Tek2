@@ -20,10 +20,9 @@ nts::Tristate nts::Clock::compute(size_t pin)
 
 void nts::Clock::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
 {
-    nts::Link *link;
-    link->component = other;
-    link->pin = otherPin;
+    nts::Link *link = new nts::Link{other, otherPin};
 
+    setState(pin, nts::Gates::Not(getState()[pin]));
     _saveLink.emplace(pin, link);
 }
 

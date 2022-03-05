@@ -8,6 +8,7 @@
 #pragma once
 #include "IComponent.hpp"
 #include "Link.hpp"
+#include "../gates/Gates.hpp"
 //#include "../pins/Pins.hpp"
 
 namespace nts {
