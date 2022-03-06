@@ -5,8 +5,9 @@
 ## make
 ##
 
-SRC =	src/main.cpp	\
-		src/Utils/Utils.cpp	\
+MAIN_SRC            =    src/main.cpp
+
+SRC =	src/Utils/Utils.cpp	\
 		src/Chipsets.cpp	\
 		src/Error/Error.cpp		\
 		src/createComponent/Components.cpp \
@@ -26,23 +27,40 @@ SRC =	src/main.cpp	\
 		src/createComponent/source/Comp4011.cpp		\
 		src/createComponent/source/Comp4030.cpp		\
 
-OBJ	=	$(SRC:.cpp=.o)
+TESTS_SRC		= 		tests/test_main.cpp
 
-NAME	=	nanotekspice
+GCNO_FILES            =    $(SRC:.cpp=.gcno) $(TESTS_SRC:.cpp=.gcno)
+GCDA_FILES            =    $(SRC:.cpp=.gcda) $(TESTS_SRC:.cpp=.gcda)
 
-CFLAGS += -g
+MAIN_OBJ            =    $(MAIN_SRC:.cpp=.o)
+OBJ                    =    $(SRC:.cpp=.o)
+TESTS_OBJ            =    $(TESTS_SRC:.cpp=.o)
 
-all:  $(NAME)
+NAME                =    nanotekspice
+NAME_TESTS            =    unit_tests
 
-$(NAME):	$(OBJ)
-	g++ $(OBJ) -o $(NAME)	$(CFLAGS)
+all: $(NAME)
+
+$(NAME): $(MAIN_OBJ) $(OBJ)
+	g++ -o $(NAME) $(MAIN_OBJ) $(OBJ)
+
+tests_run: CXXFLAGS += --coverage
+tests_run: fclean $(OBJ) $(TESTS_OBJ)
+	g++ $(CXXFLAGS) -o $(NAME_TESTS) $(OBJ) $(TESTS_OBJ) -lcriterion
+	./$(NAME_TESTS)
+
+debug: CXXFLAGS += -g
+debug: re
 
 clean:
+	rm -f $(MAIN_OBJ)
 	rm -f $(OBJ)
+	rm -f $(TESTS_OBJ)
+	rm -f $(GCNO_FILES)
+	rm -f $(GCDA_FILES)
 
 fclean: clean
 	rm -f $(NAME)
+	rm -f $(NAME_TESTS)
 
 re: fclean all
-
-.PHONY:	all re clean fclean

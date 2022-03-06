@@ -68,7 +68,7 @@ int nts::Utils::get_space(std::string str, int value)
 bool nts::Utils::isValidComponent(std::string value)
 {
     std::string components[] = {"4069", "4081", "4071", "4001", "4011", "4030"};
-    for (int i = 0; i < 15; i++) {
+    for (int i = 0; i != 6; i++) {
         if (value == components[i])
             return true;
     }

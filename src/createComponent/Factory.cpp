@@ -69,25 +69,30 @@ std::unique_ptr<nts::IComponent> nts::Factory::createComponent(const std::string
     return std::make_unique<nts::Output>();
 }
 
+void nts::Factory::addComp(std::string name, std::string type)
+{
+    _components.emplace(name, createComponent(type));
+}
+
 void nts::Factory::storeComp(Chipsets comp)
 {
     for (auto itr_input : comp.getInputs()) {
-        _components.emplace((std::get<1>(itr_input)), createComponent(std::get<0>(itr_input)));
+        addComp(std::get<1>(itr_input), std::get<0>(itr_input));
     }
     for (auto itr_output : comp.getOutputs()) {
-        _components.emplace((std::get<1>(itr_output)), createComponent(std::get<0>(itr_output)));
+        addComp(std::get<1>(itr_output), std::get<0>(itr_output));
     }
     for (auto itr_false : comp.getFalses()) {
-        _components.emplace((std::get<1>(itr_false)), createComponent(std::get<0>(itr_false)));
+        addComp(std::get<1>(itr_false), std::get<0>(itr_false));
     }
     for (auto itr_true : comp.getTrues()) {
-        _components.emplace((std::get<1>(itr_true)), createComponent(std::get<0>(itr_true)));
+        addComp(std::get<1>(itr_true), std::get<0>(itr_true));
     }
     for (auto itr_clock : comp.getClocks()) {
-        _components.emplace((std::get<1>(itr_clock)), createComponent(std::get<0>(itr_clock)));
+        addComp(std::get<1>(itr_clock), std::get<0>(itr_clock));
     }
     for (auto itr_comp : comp.getLogicComponents()) {
-        _components.emplace((std::get<1>(itr_comp)), createComponent(std::get<0>(itr_comp)));
+        addComp(std::get<1>(itr_comp), std::get<0>(itr_comp));
     }
     for (auto itr2 : comp.getChipsetLinks()) {
         _components.find(std::get<0>(itr2))->second->setLink

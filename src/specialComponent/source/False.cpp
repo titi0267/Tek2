@@ -20,9 +20,6 @@ nts::Tristate nts::False::compute(size_t pin)
 
 void nts::False::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
 {
-    nts::Link *link = new nts::Link{other, otherPin};
-
-    _saveLink.emplace(pin, link);
 }
 
 void nts::False::simulate(size_t tick)

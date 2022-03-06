@@ -26,6 +26,7 @@ namespace nts {
             size_t getTick() const;
             void addQueue(std::string cmd);
             void setupQueue();
+            void addComp(std::string name, std::string type);
 
         protected:
             std::map<std::string, std::unique_ptr<nts::IComponent>> _components;
