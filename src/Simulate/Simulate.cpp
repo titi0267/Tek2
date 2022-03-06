@@ -13,11 +13,6 @@ nts::Tristate secondPartRec(nts::IComponent &comp)
         return comp.getState()[0];
 }
 
-/*void crazyRec(std::unique_ptr<nts::IComponent> &itr)
-{
-    itr->setState(1, secondPartRec(itr->getLink()[1].component));
-}*/
-
 void nts::Simulate::simulateLoop(nts::Factory &factory)
 {
     factory.setupQueue();

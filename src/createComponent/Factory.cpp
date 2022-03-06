@@ -57,6 +57,8 @@ std::unique_ptr<nts::IComponent> nts::Factory::createComponent(const std::string
         return std::make_unique<nts::Comp4069>();
     } else if (compType == "4081") {
         return std::make_unique<nts::Comp4081>();
+    } else if (compType == "4071") {
+        return std::make_unique<nts::Comp4071>();
     }
 }
 

@@ -67,11 +67,11 @@ nts::Tristate nts::Gates::Or(nts::Tristate a, nts::Tristate b)
     nts::Tristate FALSE = nts::Tristate::FALSE;
     nts::Tristate UNDEFINED = nts::Tristate::UNDEFINED;
 
-    if ((a == UNDEFINED && b == UNDEFINED))
-        return UNDEFINED;
-    else if ((a == FALSE && b == FALSE))
-        return FALSE;
-    return TRUE;
+    if ((a == FALSE && b == FALSE))
+       return FALSE;
+    else if ((a == TRUE && (b == TRUE || b == FALSE || b == UNDEFINED)) || (b == TRUE && (a == TRUE || a == FALSE || a == UNDEFINED)))
+        return TRUE;
+    return UNDEFINED;
 }
 
 nts::Tristate nts::Gates::Nor(nts::Tristate a, nts::Tristate b)
