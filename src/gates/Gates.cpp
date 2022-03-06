@@ -15,7 +15,7 @@ nts::Tristate nts::Gates::And(nts::Tristate a, nts::Tristate b)
 
     if ((a == TRUE && b == TRUE))
         return TRUE;
-    else if ((a == UNDEFINED && b == TRUE) || (a == TRUE && b == UNDEFINED))
+    else if ((a == UNDEFINED && b == TRUE) || (a == TRUE && b == UNDEFINED) || (a == UNDEFINED && b == UNDEFINED))
         return UNDEFINED;
     return FALSE;
 }
