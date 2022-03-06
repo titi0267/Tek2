@@ -23,10 +23,7 @@ void nts::Simulate::simulateLoop(nts::Factory &factory)
     factory.setupQueue();
     factory.setTick(factory.getTick() + 1);
     for (auto &itr : factory.getComp()) {
-        if ((itr.second->getType() == "output"))// || (itr.second->getType() == "4069")) {
+        if ((itr.second->getType() == "output"))
             itr.second->compute(1);
-        //if (itr.second->getType() == "4069")
-            //itr.second->compute(1);
-        //}
     }
 }

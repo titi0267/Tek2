@@ -19,7 +19,8 @@ SRC =	src/main.cpp	\
 		src/Simulate/Simulate.cpp	\
 		src/gates/Gates.cpp		\
 		src/createComponent/Link.cpp	\
-		src/createComponent/source/Comp4069.cpp
+		src/createComponent/source/Comp4069.cpp		\
+		src/createComponent/source/Comp4081.cpp		\
 
 OBJ	=	$(SRC:.cpp=.o)
 
