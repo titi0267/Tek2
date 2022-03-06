@@ -66,6 +66,7 @@ std::unique_ptr<nts::IComponent> nts::Factory::createComponent(const std::string
     } else if (compType == "4030") {
         return std::make_unique<nts::Comp4030>();
     }
+    return std::make_unique<nts::Output>();
 }
 
 void nts::Factory::storeComp(Chipsets comp)
