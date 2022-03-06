@@ -16,3 +16,4 @@
 #include "../createComponent/include/Comp4069.hpp"
 #include "../createComponent/include/Comp4081.hpp"
 #include "../createComponent/include/Comp4071.hpp"
+#include "../createComponent/include/Comp4001.hpp"

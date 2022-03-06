@@ -7,12 +7,6 @@
 
 #include "Simulate.hpp"
 
-nts::Tristate secondPartRec(nts::IComponent &comp)
-{
-    if (comp.getType() == "input")
-        return comp.getState()[0];
-}
-
 void nts::Simulate::simulateLoop(nts::Factory &factory)
 {
     factory.setupQueue();
