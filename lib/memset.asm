@@ -5,6 +5,7 @@ GLOBAL memset
 memset:
         XOR     RAX, RAX
         XOR     RCX, RCX
+        MOV     RAX, RDI
 
 loop:
         CMP     RDX, RCX
