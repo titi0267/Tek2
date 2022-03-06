@@ -99,7 +99,7 @@ std::string nts::Utils::removeComments(std::string str)
         if (str[i] == '#')
             isCommented = true;
         for (; isCommented && i < str.size(); i++)
-            isCommented = str[i] == '\n' ? false : true;
+            isCommented = (str[i] == '\n' && str[i + 1] != '#') ? false : true;
         if (!isCommented)
             newStr[j] = str[i];
         j++;
