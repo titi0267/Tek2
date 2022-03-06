@@ -2,7 +2,7 @@ BITS 64
 SECTION .text
 GLOBAL memmove
 
-memcpy:
+memmove:
         XOR     RCX, RCX
         XOR     RAX, RAX
 
