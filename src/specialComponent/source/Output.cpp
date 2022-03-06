@@ -15,13 +15,13 @@ nts::Output::Output()
 
 nts::Tristate nts::Output::compute(size_t pin)
 {
-    nts::Link *link = _saveLink[1];
+    nts::Link *link = _saveLink[pin];
 
     if (link->component.getType() == "clock") {
         link->component.setState(1, nts::Gates::Not(link->component.getState()[0]));
     }
-    _pins[0] = link->component.compute(link->pin);
-    return _pins[0];
+    setState(pin, link->component.compute(link->pin));
+    return getState()[pin-1];
 }
 
 void nts::Output::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
@@ -38,9 +38,6 @@ void nts::Output::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
 
 void nts::Output::simulate(size_t tick)
 {
-    for (auto itr : _saveLink) {
-        setState(itr.first, itr.second->component.compute(itr.second->pin));
-    }
 }
 
 void nts::Output::dump() const

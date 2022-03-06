@@ -15,7 +15,7 @@ nts::True::True()
 
 nts::Tristate nts::True::compute(size_t pin)
 {
-    return getState()[0];
+    return getState()[pin-1];
 }
 
 void nts::True::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
@@ -27,9 +27,6 @@ void nts::True::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
 
 void nts::True::simulate(size_t tick)
 {
-    for (auto itr : _saveLink) {
-        setState(itr.first, itr.second->component.compute(itr.second->pin));
-    }
 }
 
 void nts::True::dump() const

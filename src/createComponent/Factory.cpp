@@ -7,11 +7,6 @@
 
 #include "../include/Factory.hpp"
 #include "../include/Components.hpp"
-#include "../specialComponent/include/Input.hpp"
-#include "../specialComponent/include/Output.hpp"
-#include "../specialComponent/include/False.hpp"
-#include "../specialComponent/include/True.hpp"
-#include "../specialComponent/include/Clock.hpp"
 #include "../Chipsets.hpp"
 
 nts::Factory::Factory() : _components()
@@ -58,25 +53,30 @@ std::unique_ptr<nts::IComponent> nts::Factory::createComponent(const std::string
         return std::make_unique<nts::True>();
     } else if (compType == "clock") {
         return std::make_unique<nts::Clock>();
+    } else if (compType == "4069") {
+        return std::make_unique<nts::Comp4069>();
     }
 }
 
 void nts::Factory::storeComp(Chipsets comp)
 {
     for (auto itr_input : comp.getInputs()) {
-        _components.emplace((std::get<1>(itr_input)), createComponent("input"));
+        _components.emplace((std::get<1>(itr_input)), createComponent(std::get<0>(itr_input)));
     }
     for (auto itr_output : comp.getOutputs()) {
-        _components.emplace((std::get<1>(itr_output)), createComponent("output"));
+        _components.emplace((std::get<1>(itr_output)), createComponent(std::get<0>(itr_output)));
     }
     for (auto itr_false : comp.getFalses()) {
-        _components.emplace((std::get<1>(itr_false)), createComponent("false"));
+        _components.emplace((std::get<1>(itr_false)), createComponent(std::get<0>(itr_false)));
     }
     for (auto itr_true : comp.getTrues()) {
-        _components.emplace((std::get<1>(itr_true)), createComponent("true"));
+        _components.emplace((std::get<1>(itr_true)), createComponent(std::get<0>(itr_true)));
     }
     for (auto itr_clock : comp.getClocks()) {
-        _components.emplace((std::get<1>(itr_clock)), createComponent("clock"));
+        _components.emplace((std::get<1>(itr_clock)), createComponent(std::get<0>(itr_clock)));
+    }
+    for (auto itr_comp : comp.getLogicComponents()) {
+        _components.emplace((std::get<1>(itr_comp)), createComponent(std::get<0>(itr_comp)));
     }
     for (auto itr2 : comp.getChipsetLinks()) {
         _components.find(std::get<0>(itr2))->second->setLink

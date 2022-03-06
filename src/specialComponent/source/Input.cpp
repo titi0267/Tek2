@@ -15,7 +15,7 @@ nts::Input::Input()
 
 nts::Tristate nts::Input::compute(size_t pin)
 {
-    return getState()[0];
+    return getState()[pin-1];
 }
 
 void nts::Input::simulate(size_t tick)

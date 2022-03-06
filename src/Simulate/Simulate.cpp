@@ -20,16 +20,13 @@ nts::Tristate secondPartRec(nts::IComponent &comp)
 
 void nts::Simulate::simulateLoop(nts::Factory &factory)
 {
-    nts::Link *link;
     factory.setupQueue();
     factory.setTick(factory.getTick() + 1);
     for (auto &itr : factory.getComp()) {
-        if (itr.second->getType() == "output") {
-            itr.second->compute(0);
-            //link->component
-        }
-            //itr.second->setState(1, secondPartRec(itr.second->getLink()[1]->component));
-        
-        //    crazyRec(itr.second);
+        if ((itr.second->getType() == "output"))// || (itr.second->getType() == "4069")) {
+            itr.second->compute(1);
+        //if (itr.second->getType() == "4069")
+            //itr.second->compute(1);
+        //}
     }
 }

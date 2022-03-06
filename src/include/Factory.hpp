@@ -7,6 +7,7 @@
 
 #pragma once
 #include "Components.hpp"
+#include "IncludeComponents.hpp"
 #include "../Chipsets.hpp"
 
 namespace nts {

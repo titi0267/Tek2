@@ -15,7 +15,7 @@ nts::Clock::Clock()
 
 nts::Tristate nts::Clock::compute(size_t pin)
 {
-    return getState()[0];
+    return getState()[pin-1];
 }
 
 void nts::Clock::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
@@ -28,9 +28,6 @@ void nts::Clock::setLink(size_t pin, nts::IComponent &other, size_t otherPin)
 
 void nts::Clock::simulate(size_t tick)
 {
-    for (auto itr : _saveLink) {
-        setState(itr.first, itr.second->component.compute(itr.second->pin));
-    }
 }
 
 void nts::Clock::dump() const
