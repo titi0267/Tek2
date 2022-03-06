@@ -19,7 +19,6 @@ namespace nts {
             static Tristate And(Tristate a, Tristate b);
             static Tristate Not(Tristate a);
             static Tristate Xor(Tristate a, Tristate b);
-            static Tristate Nand(Tristate a, Tristate b);
             static Tristate Or(Tristate a, Tristate b);
     };
 }

@@ -48,19 +48,6 @@ nts::Tristate nts::Gates::Xor(nts::Tristate a, nts::Tristate b)
     return UNDEFINED;
 }
 
-nts::Tristate nts::Gates::Nand(nts::Tristate a, nts::Tristate b)
-{
-    nts::Tristate TRUE = nts::Tristate::TRUE;
-    nts::Tristate FALSE = nts::Tristate::FALSE;
-    nts::Tristate UNDEFINED = nts::Tristate::UNDEFINED;
-
-    if ((a == TRUE && b == UNDEFINED) || (a == UNDEFINED && b == TRUE))
-        return UNDEFINED;
-    if ((a == TRUE && b == TRUE))
-        return FALSE;
-    return TRUE;
-}
-
 nts::Tristate nts::Gates::Or(nts::Tristate a, nts::Tristate b)
 {
     nts::Tristate TRUE = nts::Tristate::TRUE;
