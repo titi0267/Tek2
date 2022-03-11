@@ -42,16 +42,6 @@ int parse_args(int ac, char **av, args_t *args)
     return (0);
 }
 
-char *strdup(const char *c)
-{
-    char *dup = malloc(strlen(c) + 1);
-
-    if (dup != NULL)
-       strcpy(dup, c);
-
-    return dup;
-}
-
 int file_error(args_t *args)
 {
     args->file[args->error_file] = strdup(args->flags[0]);

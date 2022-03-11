@@ -13,7 +13,7 @@ SRC	=	elf64.c	\
 		elf32.c			\
 		main.c
 
-CFLAGS	=	-Wall	-Wextra	-pedantic	--std=c99	-I./	-g
+CFLAGS	=	-Wall	-Wextra	-pedantic	--std=c99	-I./
 
 NAME	=	objdump
 

@@ -53,7 +53,7 @@ void iterate_section(args_t *args, Elf64_Ehdr *elf)
         choose_print_type(args, shdr[i], str);
 }
 
-void elf_64(Elf64_Ehdr *elf, args_t *args)
+int elf_64(Elf64_Ehdr *elf, args_t *args)
 {
     args->elf = elf;
     if (elf->e_machine == EM_X86_64)
@@ -70,4 +70,5 @@ void elf_64(Elf64_Ehdr *elf, args_t *args)
         //printf(" 0x00000150:\n", elf->e_entry);
     }
     iterate_section(args, elf);
+    return (0);
 }

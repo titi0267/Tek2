@@ -12,6 +12,16 @@ void usage()
     printf("Usage :\n");
 }
 
+char *strdup(const char *c)
+{
+    char *dup = malloc(strlen(c) + 1);
+
+    if (dup != NULL)
+       strcpy(dup, c);
+
+    return dup;
+}
+
 int free_func(args_t *args)
 {
     int z = args->error_file;
