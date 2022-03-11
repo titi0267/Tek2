@@ -26,4 +26,5 @@ int elf_32(struct stat buffer, int open_ret, args_t *args)
     } else {
         printf("?:\n");
     }
+    return (0);
 }
