@@ -15,21 +15,27 @@ SRC_OBJ	=	src_objdump/elf64.c			\
 
 SRC_NM =	src_nm/main.c		\
 
+OBJS_OBJ	=	$(SRC_OBJ:.c=.o)
+
+OBJS_NM	=	$(SRC_NM:.c=.o)
+
 CFLAGS	=	-Wall	-Wextra	-pedantic	--std=c99	-I./
 
 NAME_OBJ	=	my_objdump
 
 NAME_NM		=	my_nm
 
-nm:
-	$(CC)	$(NAME_NM)	$(SRC_NM)	$(CFLAGS)
-
-objdump:
-	$(CC)	$(NAME_OBJ)	$(SRC_OBJ)	$(CFLAGS)
-
 all:	nm	objdump
 
+nm:		$(OBJS_NM)
+	$(CC)	$(NAME_NM)	$(OBJS_NM)	$(CFLAGS)
+
+objdump:	$(OBJS_OBJ)
+	$(CC)	$(NAME_OBJ)	$(OBJS_OBJ)	$(CFLAGS)
+
 clean:
+	rm -f $(OBJS_NM)
+	rm -f $(OBJS_OBJ)
 
 fclean: clean
 	rm	-f	$(NAME_OBJ)
