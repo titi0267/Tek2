@@ -12,13 +12,20 @@ void usage()
     printf("Usage :\n");
 }
 
-void free_func(args_t *args)
+int free_func(args_t *args)
 {
-    for (int i = 0; i < args->flag_nbr; i++) {
+    int z = args->error_file;
+
+    for (int i = 0; i <= args->flag_nbr; i++)
         free(args->flags[i]);
-    }
     free(args->flags);
+    for (int i = 0; i != args->error_file; i++)
+        free(args->file[i]);
+    free(args->file);
     free(args);
+    if (z != 0)
+        return (84);
+    return (0);
 }
 
 int main(int ac, char **av)
@@ -29,15 +36,15 @@ int main(int ac, char **av)
         return (ERROR);
     args->flag_nbr = 0;
     args->error_file = 0;
+    args->file_nbr = 0;
+    args->file = malloc(sizeof(char *) * ac);
     if (ac == 1)
         usage();
     if (ac > 1) {
         if (parse_args(ac, av, args) == ERROR)
             usage();
     }
-    if (args->error_file == ERROR) {
-        ERROR_FILE(args->flags[0]);
-        return (84);
-    }
-    free_func(args);
+    for (int i = 0; i != args->error_file; i++)
+        ERROR_FILE(args->file[i]);
+    return (free_func(args));
 }

@@ -42,6 +42,23 @@ int parse_args(int ac, char **av, args_t *args)
     return (0);
 }
 
+char *strdup(const char *c)
+{
+    char *dup = malloc(strlen(c) + 1);
+
+    if (dup != NULL)
+       strcpy(dup, c);
+
+    return dup;
+}
+
+int file_error(args_t *args)
+{
+    args->file[args->error_file] = strdup(args->flags[0]);
+    args->error_file += 1;
+    return (-1);
+}
+
 int open_file(args_t *args, char *av)
 {
     int open_ret = 0;
@@ -49,16 +66,18 @@ int open_file(args_t *args, char *av)
 
     if (av[0] != '-') {
         open_ret = open(av, O_RDONLY);
+        if (args->file_nbr != 0)
+            free(args->flags[0]);
         args->flags[0] = malloc(strlen(av) * sizeof(char) + 2);
         if (args->flags[0] == NULL)
             exit (84);
-        args->flag_nbr += 1;
+        args->file_nbr += 1;
         for (; av[z] != '\0'; z++)
             args->flags[0][z] = av[z];
         args->flags[0][z] = '\0';
     }
     if (open_ret == -1) {
-        args->error_file = 84;
+        file_error(args);
         return (-1);
     }
     return (open_ret);

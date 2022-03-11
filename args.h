@@ -16,9 +16,10 @@
 #include <ctype.h>
 #include <elf.h>
 #include <sys/mman.h>
+#include <string.h>
 #include <sys/stat.h>
 
-#define ERROR_FILE(file_name) printf("objdump: '%s': No such file", file_name);
+#define ERROR_FILE(file_name) printf("objdump: '%s': No such file\n", file_name);
 
 typedef struct file_s
 {
@@ -27,6 +28,8 @@ typedef struct file_s
     int flag_nbr;
     void *elf;
     int error_file;
+    int file_nbr;
+    char **file;
 } args_t;
 
 enum File {
