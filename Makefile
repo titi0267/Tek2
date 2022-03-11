@@ -7,7 +7,10 @@
 
 CC	=	gcc		-o
 
-SRC	=	flag_f.c	\
+SRC	=	elf64.c	\
+		elf64_bis.c		\
+		parsing.c		\
+		elf32.c			\
 		main.c
 
 CFLAGS	=	-Wall	-Wextra	-pedantic	--std=c99	-I./	-g
