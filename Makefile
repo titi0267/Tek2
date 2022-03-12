@@ -13,13 +13,16 @@ SRC_OBJ	=	src_objdump/elf64.c			\
 		src_objdump/elf32.c			\
 		src_objdump/main.c
 
-SRC_NM =	src_nm/main.c		\
+SRC_NM =	src_nm/main.c	\
+			src_nm/elf32.c	\
+			src_nm/elf64.c	\
+			src_nm/parsing.c
 
 OBJS_OBJ	=	$(SRC_OBJ:.c=.o)
 
 OBJS_NM	=	$(SRC_NM:.c=.o)
 
-CFLAGS	=	-Wall	-Wextra	-pedantic	--std=c99	-I./
+CFLAGS	=	-Wall	-Wextra	-pedantic	--std=c99	-I./	-g
 
 NAME_OBJ	=	my_objdump
 
