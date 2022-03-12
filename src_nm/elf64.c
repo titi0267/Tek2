@@ -86,14 +86,16 @@ int get_list_size(node_t list)
     return (len);
 }
 
-int get_list_third(node_t list)
+int get_list_third(node_t list, nm_t *nm)
 {
     int len = 0;
 
     if (int_list_is_empty(list) == 1)
         return (0);
     for (; list != NULL; list = list->next) {
-        if (list->adress == NULL)
+        if (nm->file_type == OBJ && list->position == 0)
+            printf("%016x %c %s\n", list->adress, list->type, list->sym);
+        else if (list->adress == NULL)
             printf("                 %c %s\n", list->type, list->sym);
         else
             printf("%016x %c %s\n", list->adress, list->type, list->sym);
@@ -106,12 +108,13 @@ int get_list_size_sec(node_t list)
 {
     int len = 0;
     int i = 0;
+    int z = 0;
 
     if (int_list_is_empty(list) == 1)
         return (0);
     for (; list != NULL; list = list->next) {
-        list->sym_clear = malloc(sizeof(char) * strlen(list->sym) + 1);
-        for (int z = 0, i = 0; list->sym[i] != '\0'; i++) {
+        list->sym_clear = malloc(sizeof(char) * strlen(list->sym) + 2);
+        for (z = 0, i = 0; list->sym[i] != '\0'; i++) {
             if (list->sym[i] != '_') {
                 list->sym_clear[z] = list->sym[i];
                 if (list->sym_clear[z] >= 65 && list->sym_clear[z] <= 90)
@@ -119,10 +122,7 @@ int get_list_size_sec(node_t list)
                 z++;
             }
         }
-        //printf("%s\n", list->sym_clear);
-        //for (int y = i, z = 0; list->sym[y] != '\0'; y++, z++)
-            //list->sym_clear[z] = list->sym[y];
-        //printf("%s\n", list->sym_clear);
+        list->sym_clear[z] = '\0';
         len++;
     }
     return (len);
@@ -137,6 +137,24 @@ void reset_positions(node_t *front)
     }
 }
 
+int del_elem_at_front(node_t *front_ptr)
+{
+    node_t del_node = (*front_ptr);
+
+    if (int_list_is_empty(*front_ptr) == 1)
+        return (0);
+    if (del_node->next == NULL) {
+        free(*front_ptr);
+        del_node = NULL;
+        return (1);
+    }
+    (*front_ptr) = (*front_ptr)->next;
+    free(del_node);
+    //printf("front = %s & %i\n", (*front_ptr)->sym, (*front_ptr)->sorted);
+    reset_positions(front_ptr);
+    return (1);
+}
+
 int del_elem_at_position(node_t *front_ptr, unsigned int position)
 {
     node_t tmp = (*front_ptr);
@@ -144,8 +162,6 @@ int del_elem_at_position(node_t *front_ptr, unsigned int position)
 
     if (front_ptr == NULL)
         return (0);
-    //if (position == 0)
-      //  return (int_list_del_elem_at_front(front_ptr));
     for (; tmp->position != position - 1 && tmp != NULL; tmp = tmp->next);
     if (tmp == NULL || tmp->next == NULL)
         return (0);
@@ -158,8 +174,15 @@ int del_elem_at_position(node_t *front_ptr, unsigned int position)
 
 int node_add_front(node_t *front, node_t node)
 {
-    node_t new_node = malloc(sizeof(*new_node));
+    node_t new_node;
+    node_t front_ptr = (*front);
 
+    if (node->position == 0) {
+        node->sorted = -1;
+        reset_positions(front);
+        return (0);
+    }
+    new_node = malloc(sizeof(*new_node));
     if (new_node == NULL)
         return (0);
     new_node->sym = node->sym;
@@ -170,6 +193,7 @@ int node_add_front(node_t *front, node_t node)
     new_node->adress = node->adress;
     new_node->next = (*front);
     (*front) = new_node;
+    reset_positions(front);
     del_elem_at_position(front, node->position);
     return (1);
 }
@@ -197,7 +221,6 @@ int my_strcmp(const char *s1, const char *s2)
             return (-1);
         }
     }
-
     return (0);
 }
 
@@ -211,6 +234,7 @@ node_t find_highest(node_t *front)
     find_node = node;
     for (; node != NULL; node = node->next) {
         b = my_strcmp(find_node->sym_clear, node->sym_clear);
+        //printf("node = %i & %s\n", b, find_node->sym_clear);
         if (b < 0 && node->sorted != -1) {
             find_node = node;
         } else if (b == 0 && node->sorted != -1) {
@@ -267,13 +291,12 @@ int elf_64_nm(Elf64_Ehdr *elf, nm_t *nm)
         }
     }
     //printf("Start LIST\n");
-    //get_list_size_sec(list);
     reset_positions(&list);
     get_list_size_sec(list);
     for (int i = 0; i < get_list_size(list); i++) {
         node_add_front(&list, find_highest(&list));
     }
-    get_list_third(list);
+    get_list_third(list, nm);
     //printf("NEW LIST\n");
     list_clear(&list);
     return (1);
