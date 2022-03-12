@@ -7,7 +7,7 @@
 
 #include "../include/nm.h"
 
-void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front)
+void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front, char *str)
 {
     node_t node = (*front);
     char c;
@@ -33,9 +33,6 @@ void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front)
        && shdr[sym.st_shndx].sh_flags == (SHF_ALLOC | SHF_WRITE))
         node->type = 'B';
     else if (shdr[sym.st_shndx].sh_type == SHT_PROGBITS
-       && shdr[sym.st_shndx].sh_flags == SHF_ALLOC)
-        node->type = 'R';
-    else if (shdr[sym.st_shndx].sh_type == SHT_PROGBITS
        && shdr[sym.st_shndx].sh_flags == (SHF_ALLOC | SHF_WRITE))
         node->type = 'D';
     else if (shdr[sym.st_shndx].sh_type == SHT_PROGBITS
@@ -43,8 +40,14 @@ void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front)
         node->type = 'T';
     else if (shdr[sym.st_shndx].sh_type == SHT_DYNAMIC)
         node->type = 'D';
-    else
+    else if (shdr[sym.st_shndx].sh_type == SHT_PROGBITS
+       && shdr[sym.st_shndx].sh_flags == SHF_ALLOC)
+        node->type = 'R';
+    else if (shdr[sym.st_shndx].sh_type == SHT_NOTE)
+        node->type = 'R';
+    else {
         node->type = 'D';
+    }
     if (ELF64_ST_BIND(sym.st_info) == STB_LOCAL && node->type != '?')
         node->type += 32;
 }
@@ -259,7 +262,7 @@ int elf_64_nm(Elf64_Ehdr *elf, nm_t *nm)
     for (int i = 0, z = 0; i < size; i++) {
         if (section_str[i].st_info != STT_FILE && section_str[i].st_name != 0) {
             create_list(&list, &(str[section_str[i].st_name]), z, section_str[i].st_value);
-            print_type(section_str[i], shdr, &list);
+            print_type(section_str[i], shdr, &list, &(str[section_str[i].st_name]));
             z++;
         }
     }
