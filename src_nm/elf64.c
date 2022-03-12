@@ -72,15 +72,7 @@ int del_elem_at_position(node_t *front_ptr, unsigned int position)
         return (0);
     //if (position == 0)
       //  return (int_list_del_elem_at_front(front_ptr));
-    //printf("position = %i\n", position);
-    //printf("position = %i\n", position);
-    //printf("pfuck = %i & %s\n", position, tmp->sym);
     for (; tmp->position != position - 1 && tmp != NULL; tmp = tmp->next);
-    // {
-    //     printf("%s\n", tmp->sym);
-    // }
-    //printf("position = %i & %s\n", tmp->position, tmp->sym);
-    //printf("tmp = %i\n", tmp->position);
     if (tmp == NULL || tmp->next == NULL)
         return (0);
     node = tmp->next->next;
@@ -101,9 +93,6 @@ int node_add_front(node_t *front, node_t node)
     new_node->position = 0;
     new_node->next = (*front);
     (*front) = new_node;
-    //printf("lol\n");
-    //printf("here %i\n", (*front)->position);
-    //printf("delete at pos : %i\n", node->position);
     del_elem_at_position(front, node->position);
     return (1);
 }
@@ -115,16 +104,10 @@ node_t find_highest(node_t *front)
 
     for (; node->sorted == -1 && node != NULL; node = node->next);
     find_node = node;
-    //printf("node = %s & find = %s\n", node->sym, find_node->sym);
     for (; node != NULL; node = node->next) {
-        //printf("%s\n", node->sym);
-        if (strcoll(find_node->sym, node->sym) < 0 && node->sorted != -1) {
-            //printf("node = %s && %i\n", node->sym, node->sorted);
-            //printf("node = %s with pos:%i & %i\n", node->sym, node->position, node->sorted);
+        if (strcoll(find_node->sym, node->sym) < 0 && node->sorted != -1)
             find_node = node;
-        }
     }
-    //printf("high= %s\n", find_node->sym);
     return (find_node);
 }
 
@@ -136,7 +119,6 @@ void print_section_content(Elf64_Shdr *shdr, nm_t *nm, int i)
  
     nm->str = (elf + (shdr[shdr[i].sh_link].sh_offset));
     nm->size = shdr[i].sh_size / shdr[i].sh_entsize;
-    //printf("wouf = %s\n", nm->str);
 }
 
 int elf_64_nm(Elf64_Ehdr *elf, nm_t *nm)
@@ -147,7 +129,6 @@ int elf_64_nm(Elf64_Ehdr *elf, nm_t *nm)
     int size;
     node_t list = NULL;
 
-    //printf("%s\n", shdr[0].sh_type);
     for (int i = 0; i < elf->e_shnum; i++) {
         if (shdr[i].sh_type == SHT_SYMTAB) {
             section_str = (Elf64_Sym *)((void *)elf + shdr[i].sh_offset);
@@ -156,22 +137,19 @@ int elf_64_nm(Elf64_Ehdr *elf, nm_t *nm)
             break;
         }
     }
-    //printf("youhou\n");
     for (int i = 0, z = 0; i < size; i++) {
-        if (section_str[i].st_info != STT_FILE) {// && &(nm->str[nm->section_str[i].st_name]) != 0) {
-            //printf("%s\n", &(str[section_str[i].st_name]));
+        if (section_str[i].st_info != STT_FILE && section_str[i].st_name != 0) {
             create_list(&list, &(str[section_str[i].st_name]), z);
             z++;
         }
     }
-    printf("Start LIST\n");
-    get_list_size_sec(list);
-    //printf("%i\n", int_list_get_size(list));
+    //printf("Start LIST\n");
+    //get_list_size_sec(list);
     reset_positions(&list);
     for (int i = 0; i < get_list_size(list); i++) {
         node_add_front(&list, find_highest(&list));
     }
-    printf("NEW LIST\n");
-    get_list_size_sec(list);
+    //printf("NEW LIST\n");
+    //get_list_size_sec(list);
     return (1);
 }
