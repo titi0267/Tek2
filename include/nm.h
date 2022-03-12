@@ -37,8 +37,11 @@ typedef struct nm_s
 typedef struct list_s
 {
     char *sym;
+    char *sym_clear;
     int sorted;
     int position;
+    char type;
+    Elf64_Addr adress;
     struct list_s *next;
 } list_t;
 
