@@ -43,7 +43,6 @@ node_t find_highest(node_t *front)
     find_node = node;
     for (; node != NULL; node = node->next) {
         b = my_strcmp(find_node->sym_clear, node->sym_clear);
-        //printf("node = %i & %s\n", b, find_node->sym_clear);
         if (b < 0 && node->sorted != -1) {
             find_node = node;
         } else if (b == 0 && node->sorted != -1) {

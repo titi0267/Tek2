@@ -16,7 +16,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
-#define ERROR_FILE(file_name) printf("objdump: '%s': No such file\n", file_name);
+#define ERROR_FILE(name) printf("objdump: '%s': No such file\n", name);
 
 #define ERROR 84
 
