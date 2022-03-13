@@ -23,7 +23,7 @@ int parse_args(int ac, char **av, args_t *args)
 {
     int b = 0;
 
-    args->flags = malloc(sizeof(char*) * (ac + 1));
+    args->flags = malloc(sizeof(char *) * (ac + 1));
     if (args->flags == NULL)
         return (ERROR);
     for (int i = 1; i < ac; i++) {
@@ -32,8 +32,7 @@ int parse_args(int ac, char **av, args_t *args)
             return (ERROR);
         else if (b == 0) {
             args->flags[i] = malloc(strlen(av[i]) * sizeof(char) + 1);
-            for (int t = 0; av[i][t] != '\0'; t++)
-                args->flags[i][t] = av[i][t];
+            store_flags(i, args, av);
             args->flag_nbr += 1;
         }
     }
@@ -81,9 +80,8 @@ int store_file(args_t *args, char *av)
     if (open_ret != 0 && open_ret != -1) {
         if (av[strlen(av) - 2] == '.' && av[strlen(av) - 1] == 'o')
             args->file_type = OBJECT;
-        else if ((av[strlen(av) - 2] == '.' && av[strlen(av) - 1] == 'a')
-        || (strlen(av) >= 3 && av[strlen(av) - 3] == '.' && av[strlen(av) - 2]
-            == 's' && av[strlen(av) - 1] == 'o'))
+        else if ((strlen(av) >= 3 && av[strlen(av) - 3] == '.' &&
+            av[strlen(av) - 2] == 's' && av[strlen(av) - 1] == 'o'))
             args->file_type = SHAREDL;
         else
             args->file_type = BIN;

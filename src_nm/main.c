@@ -35,6 +35,7 @@ int main(int ac, char **av)
     nm->flag_nbr = 0;
     nm->error_file = 0;
     nm->file_nbr = 0;
+    nm->sym_size = 0;
     if (ac == 1)
         return (usage());
     if (ac > 1) {

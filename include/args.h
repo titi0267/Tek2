@@ -6,7 +6,6 @@
 */
 
 #pragma once
-#define ERROR 84
 
 #include <unistd.h>
 #include <stdio.h>
@@ -18,6 +17,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
+#define ERROR 84
 #define ERROR_FILE(name) fprintf(stderr, "objdump: '%s': No such file\n", name);
 
 typedef struct file_s
@@ -45,3 +45,4 @@ int print_section_name(char *section[], int z, Elf64_Shdr shdr, char *str);
 void select_section(char *str, Elf64_Shdr shdr, args_t *args, enum File type);
 int elf_64(Elf64_Ehdr *elf, args_t *args);
 int elf_32(struct stat buffer, int open_ret, args_t *args);
+void store_flags(int i, args_t *args, char **av);

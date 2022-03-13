@@ -59,8 +59,7 @@ int store_file(nm_t *nm, char *av)
         if (av[strlen(av) - 2] == '.' && av[strlen(av) - 1] == 'o')
             nm->file_type = OBJ;
         else if (strlen(av) >= 3 && av[strlen(av) - 3] == '.'
-            && av[strlen(av) - 2]
-            == 's' && av[strlen(av) - 1] == 'o')
+            && av[strlen(av) - 2] == 's' && av[strlen(av) - 1] == 'o')
             nm->file_type = SHL;
         else
             nm->file_type = BN;
@@ -87,7 +86,7 @@ int parse_args(int ac, char **av, nm_t *nm)
 {
     int b = 0;
 
-    nm->flags = malloc(sizeof(char*) * (ac + 1));
+    nm->flags = malloc(sizeof(char *) * (ac + 1));
     if (nm->flags == NULL)
         return (ERROR);
     nm->multiple_files = multiple_files(ac, av);
@@ -97,8 +96,7 @@ int parse_args(int ac, char **av, nm_t *nm)
             return (ERROR);
         else if (b == 0) {
             nm->flags[i] = malloc(strlen(av[i]) * sizeof(char) + 1);
-            for (int t = 0; av[i][t] != '\0'; t++)
-                nm->flags[i][t] = av[i][t];
+            store_flags(i, av, nm);
             nm->flag_nbr += 1;
         }
     }

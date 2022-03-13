@@ -32,6 +32,7 @@ typedef struct nm_s
     char *str;
     Elf64_Sym *section_str;
     int multiple_files;
+    int sym_size;
 } nm_t;
 
 typedef struct list_s
@@ -69,3 +70,4 @@ int get_list_size(node_t list);
 void reset_positions(node_t *front);
 int list_is_empty(node_t list);
 int file_error(nm_t *nm);
+void store_flags(int i, char **av, nm_t *nm);

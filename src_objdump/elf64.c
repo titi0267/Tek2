@@ -32,7 +32,6 @@ void print_object_type(Elf64_Shdr shdr, char *str, args_t *args)
         if (print_section_name(section_obj, z, shdr, str) == 1)
             print_section_content(z, shdr, str, args);
     }
-
 }
 
 void choose_print_type(args_t *args, Elf64_Shdr shdr, char *str)
@@ -62,8 +61,7 @@ int elf_64(Elf64_Ehdr *elf, args_t *args)
     if (args->file_type == OBJECT) {
         printf(" 0x00000011:\nHAS_RELOC, HAS_SYMS\n");
         printf("start address 0x%016lx\n\n", elf->e_entry);
-    }
-    else if (args->file_type == BIN || args->file_type == SHAREDL) {
+    } else if (args->file_type == BIN || args->file_type == SHAREDL) {
         printf(" 0x00000150:\nHAS_SYMS, DYNAMIC, D_PAGED\n");
         printf("start address 0x%016lx\n\n", elf->e_entry);
     } else {

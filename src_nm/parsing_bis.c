@@ -13,3 +13,9 @@ int file_error(nm_t *nm)
     nm->error_file += 1;
     return (-1);
 }
+
+void store_flags(int i, char **av, nm_t *nm)
+{
+    for (int t = 0; av[i][t] != '\0'; t++)
+        nm->flags[i][t] = av[i][t];
+}

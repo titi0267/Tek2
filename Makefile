@@ -11,6 +11,7 @@ SRC_OBJ	=	src_objdump/elf64.c			\
 		src_objdump/elf64_bis.c		\
 		src_objdump/parsing.c		\
 		src_objdump/elf32.c			\
+		src_objdump/parsing_bis.c	\
 		src_objdump/main.c
 
 SRC_NM =	src_nm/main.c	\
