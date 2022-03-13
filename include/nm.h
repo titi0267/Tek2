@@ -16,7 +16,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 
-#define ERROR_FILE(name) printf("objdump: '%s': No such file\n", name);
+#define ERROR_FILE(name) fprintf(stderr, "nm: '%s': No such file\n", name);
 
 #define ERROR 84
 
@@ -28,10 +28,10 @@ typedef struct nm_s
     void *elf;
     int error_file;
     int file_nbr;
-    char **file;
     size_t size;
     char *str;
     Elf64_Sym *section_str;
+    int multiple_files;
 } nm_t;
 
 typedef struct list_s

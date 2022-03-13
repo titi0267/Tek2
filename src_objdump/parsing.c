@@ -44,7 +44,7 @@ int parse_args(int ac, char **av, args_t *args)
 
 int file_error(args_t *args)
 {
-    args->file[args->error_file] = strdup(args->flags[0]);
+    ERROR_FILE(args->flags[0]);
     args->error_file += 1;
     return (-1);
 }
