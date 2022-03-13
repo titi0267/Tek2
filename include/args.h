@@ -46,3 +46,5 @@ void select_section(char *str, Elf64_Shdr shdr, args_t *args, enum File type);
 int elf_64(Elf64_Ehdr *elf, args_t *args);
 int elf_32(struct stat buffer, int open_ret, args_t *args);
 void store_flags(int i, args_t *args, char **av);
+int print_section_name_min(char *section[], int z, Elf32_Shdr shdr, char *str);
+void print_section_content_min(int z, Elf32_Shdr shdr, char *str, args_t *args);
