@@ -67,7 +67,6 @@ int elf_64(Elf64_Ehdr *elf, args_t *args)
         printf(" 0x00000150:\nHAS_SYMS, DYNAMIC, D_PAGED\n");
         printf("start address 0x%016lx\n\n", elf->e_entry);
     } else {
-        //printf(" 0x00000150:\n", elf->e_entry);
     }
     iterate_section(args, elf);
     return (0);
