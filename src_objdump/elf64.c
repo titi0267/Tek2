@@ -15,7 +15,7 @@ void print_bin_type(Elf64_Shdr shdr, char *str, args_t *args)
     ".fini_array", ".init_array", ".eh_frame_hdr", ".fini", ".plt", ".init",
     ".rela.plt", ".rela.dyn", ".gnu.version_r", ".gnu.version", ".dynstr",
     ".dynsym", ".gnu.hash", ".note.ABI-tag", ".note.gnu.build-id",
-    ".note.gnu.property", ".interp", NULL};
+    ".note.gnu.property", ".interp", ".jcr", NULL};
 
     for (int z = 0; section_bin[z] != NULL ; z++) {
         if (print_section_name(section_bin, z, shdr, str) == 1)
