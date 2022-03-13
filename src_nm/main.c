@@ -8,19 +8,9 @@
 #include <stdio.h>
 #include "../include/nm.h"
 
-void usage()
+int usage()
 {
-    printf("Usage :\n");
-}
-
-char *strdup(const char *c)
-{
-    char *dup = malloc(strlen(c) + 1);
-
-    if (dup != NULL)
-       strcpy(dup, c);
-
-    return dup;
+    return (ERROR);
 }
 
 int free_func(nm_t *nm)
@@ -46,7 +36,7 @@ int main(int ac, char **av)
     nm->error_file = 0;
     nm->file_nbr = 0;
     if (ac == 1)
-        usage();
+        return (usage());
     if (ac > 1) {
         if (parse_args(ac, av, nm) == ERROR)
             usage();

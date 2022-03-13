@@ -39,7 +39,6 @@ enum File {
 int parse_args(int ac, char **av, args_t *args);
 int use_mmap(int open_ret, args_t *args, struct stat buffer);
 int store_file(args_t *args, char *av);
-char *strdup(const char *c);
 int use_mmap(int open_ret, args_t *args, struct stat buffer);
 void print_section_content(int z, Elf64_Shdr shdr, char *str, args_t *args);
 int print_section_name(char *section[], int z, Elf64_Shdr shdr, char *str);

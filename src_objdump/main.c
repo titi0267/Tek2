@@ -7,19 +7,9 @@
 
 #include "../include/args.h"
 
-void usage()
+int usage()
 {
-    printf("Usage :\n");
-}
-
-char *strdup(const char *c)
-{
-    char *dup = malloc(strlen(c) + 1);
-
-    if (dup != NULL)
-       strcpy(dup, c);
-
-    return dup;
+    return (ERROR);
 }
 
 int free_func(args_t *args)
@@ -45,7 +35,7 @@ int main(int ac, char **av)
     args->error_file = 0;
     args->file_nbr = 0;
     if (ac == 1)
-        usage();
+        return (usage());
     if (ac > 1) {
         if (parse_args(ac, av, args) == ERROR)
             usage();

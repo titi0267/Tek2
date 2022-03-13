@@ -56,7 +56,6 @@ enum NM {
 int elf_64_nm(Elf64_Ehdr *elf, nm_t *nm);
 int elf_32_nm(struct stat buffer, int open_ret, nm_t *nm);
 int parse_args(int ac, char **av, nm_t *nm);
-char *strdup(const char *c);
 void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front, char *str);
 void format_str(node_t list);
 int create_list(node_t *front, char *name, int i, Elf64_Addr addr);
