@@ -7,18 +7,10 @@
 
 #include "../include/nm.h"
 
-void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front, char *str)
-{
-    node_t node = (*front);
-    char c;
 
-    if (ELF64_ST_BIND(sym.st_info) == STB_GNU_UNIQUE)
-        node->type = 'u';
-    else if (ELF64_ST_BIND(sym.st_info) == STB_WEAK) {
-        node->type = 'W';
-        if (sym.st_shndx == SHN_UNDEF)
-            node->type = 'w';
-    } else if (ELF64_ST_BIND(sym.st_info) == STB_WEAK && ELF64_ST_TYPE(sym.st_info) == STT_OBJECT) {
+void print_type_sec(Elf64_Sym sym, Elf64_Shdr *shdr, node_t node, char *str)
+{
+    if (ELF64_ST_BIND(sym.st_info) == STB_WEAK && ELF64_ST_TYPE(sym.st_info) == STT_OBJECT) {
         node->type = 'V';
       if (sym.st_shndx == SHN_UNDEF)
         node->type = 'v';
@@ -48,6 +40,20 @@ void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front, char *str)
     else {
         node->type = 'D';
     }
+}
+
+void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front, char *str)
+{
+    node_t node = (*front);
+
+    if (ELF64_ST_BIND(sym.st_info) == STB_GNU_UNIQUE)
+        node->type = 'u';
+    else if (ELF64_ST_BIND(sym.st_info) == STB_WEAK) {
+        node->type = 'W';
+        if (sym.st_shndx == SHN_UNDEF)
+            node->type = 'w';
+    } else
+        print_type_sec(sym, shdr, node, str);
     if (ELF64_ST_BIND(sym.st_info) == STB_LOCAL && node->type != '?')
         node->type += 32;
 }

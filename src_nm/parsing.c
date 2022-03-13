@@ -24,13 +24,6 @@ int use_mmap(int open_ret, nm_t *nm, struct stat buffer)
     return (0);
 }
 
-int file_error(nm_t *nm)
-{
-    ERROR_FILE(nm->flags[0]);
-    nm->error_file += 1;
-    return (-1);
-}
-
 int open_file(nm_t *nm, char *av)
 {
     int open_ret = 0;
@@ -65,7 +58,8 @@ int store_file(nm_t *nm, char *av)
     if (open_ret != 0 && open_ret != -1) {
         if (av[strlen(av) - 2] == '.' && av[strlen(av) - 1] == 'o')
             nm->file_type = OBJ;
-        else if (strlen(av) >= 3 && av[strlen(av) - 3] == '.' && av[strlen(av) - 2]
+        else if (strlen(av) >= 3 && av[strlen(av) - 3] == '.'
+            && av[strlen(av) - 2]
             == 's' && av[strlen(av) - 1] == 'o')
             nm->file_type = SHL;
         else

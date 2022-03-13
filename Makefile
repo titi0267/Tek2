@@ -20,7 +20,8 @@ SRC_NM =	src_nm/main.c	\
 			src_nm/elf64_bis.c	\
 			src_nm/linked_list.c	\
 			src_nm/linked_list_bis.c	\
-			src_nm/format_string.c
+			src_nm/format_string.c	\
+			src_nm/parsing_bis.c	
 
 OBJS_OBJ	=	$(SRC_OBJ:.c=.o)
 

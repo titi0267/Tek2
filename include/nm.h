@@ -68,3 +68,4 @@ void nm_output(node_t list, nm_t *nm);
 int get_list_size(node_t list);
 void reset_positions(node_t *front);
 int list_is_empty(node_t list);
+int file_error(nm_t *nm);

@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include "../include/nm.h"
 
-int usage()
+int usage(void)
 {
     return (ERROR);
 }

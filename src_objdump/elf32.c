@@ -13,11 +13,8 @@ int elf_32(struct stat buffer, int open_ret, args_t *args)
 
     elf = mmap(NULL, buffer.st_size, PROT_READ, MAP_PRIVATE, open_ret, 0);
     args->elf = elf;
-    printf("\n%s:     file format elf32", args->flags[0]);
-    if (elf->e_machine == EM_386)
-        printf("-386\narchitecture: i386");
-    else if (elf->e_machine == EM_X86_64)
-        printf("-x86-64\narchitecture: i386:x86-64");
+    printf("\n%s:     file format elf32-i386\narchitecture: i386",
+        args->flags[0]);
     if (args->file_type == OBJECT) {
         printf("0x00000011:\nHAS_RELOC, HAS_SYMS\nstart address 0x0000000000000000\n\n");
     }

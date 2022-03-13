@@ -7,7 +7,7 @@
 
 #include "../include/args.h"
 
-int usage()
+int usage(void)
 {
     return (ERROR);
 }
