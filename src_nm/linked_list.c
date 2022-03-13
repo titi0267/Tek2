@@ -73,6 +73,7 @@ void list_clear(node_t *front_ptr)
 
     while (node != NULL) {
         next = node->next;
+        free(node->sym_clear);
         free(node);
         node = next;
     }

@@ -10,8 +10,6 @@
 int use_mmap(int open_ret, args_t *args, struct stat buffer)
 {
     Elf64_Ehdr *elf;
-    int is_64 = 0;
-    int status;
 
     elf = mmap(NULL, buffer.st_size, PROT_READ, MAP_PRIVATE, open_ret, 0);
     if (elf->e_ident[EI_CLASS] == ELFCLASSNONE)
@@ -83,8 +81,9 @@ int store_file(args_t *args, char *av)
     if (open_ret != 0 && open_ret != -1) {
         if (av[strlen(av) - 2] == '.' && av[strlen(av) - 1] == 'o')
             args->file_type = OBJECT;
-        else if (strlen(av) >= 3 && av[strlen(av) - 3] == '.' && av[strlen(av) - 2]
-            == 's' && av[strlen(av) - 1] == 'o')
+        else if ((av[strlen(av) - 2] == '.' && av[strlen(av) - 1] == 'a')
+        || (strlen(av) >= 3 && av[strlen(av) - 3] == '.' && av[strlen(av) - 2]
+            == 's' && av[strlen(av) - 1] == 'o'))
             args->file_type = SHAREDL;
         else
             args->file_type = BIN;
