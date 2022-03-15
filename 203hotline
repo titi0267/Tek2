@@ -1,10 +1,98 @@
 #!/usr/bin/env python3
 
 import sys
+import time
 import math
 
+def formula(n :int, k : int):
+    return (math.factorial(n) // (math.factorial(k) * math.factorial(n - k)))
+
+def printFormula(n : int, k : int):
+    print(str(k) + "-combinations of a set of size " + str(n) + ":\n%d" % formula(n, k))
+
+def proba(d : int):
+    return (d / (8*3600))
+
+def binomial(d : int):
+    print("Binomial distribution:")
+    begin = time.time()
+    overload = float(0)
+    for i in range(0,51):
+        jsp = formula(3500, i) * pow(proba(d), i) * pow((1 - proba(d)), 3500 - i)
+        if (i > 25):
+            overload += jsp
+        if (i < 10):
+            if (i % 5 == 4):
+                print(str(i) + " -> " + format(jsp, ".3f"))
+            else:
+                print(str(i) + " -> " + format(jsp, ".3f") + "     ", end="")
+        elif (i == 50):
+                print(str(i) + " -> " + format(jsp, ".3f"), end="")
+        else:
+            if (i % 5 == 4):
+                print(str(i) + " -> " + format(jsp, ".3f"))
+            else:
+                print(str(i) + " -> " + format(jsp, ".3f") + "    ", end="")
+    end = time.time()
+    print("\nOverload: " + format(overload * 100, ".1f") + "%")
+    print("Computation time: " + format((end - begin) * 1000, ".2f") +" ms")
+
+
+def poisson(d : int):
+    print("Poisson distribution:")
+    begin = time.time()
+    overload = float(0)
+    for i in range(0,51):
+        jsp = math.exp((proba(d) * 3500) * -1) * float((pow(proba(d) * 3500, i))) / float(math.factorial(i))
+        if (i > 25):
+            overload += jsp
+        if (i < 10):
+            if (i % 5 == 4):
+                print(str(i) + " -> " + format(jsp, ".3f"))
+            else:
+                print(str(i) + " -> " + format(jsp, ".3f") + "     ", end="")
+        elif (i == 50):
+                print(str(i) + " -> " + format(jsp, ".3f"), end="")
+        else:
+            if (i % 5 == 4):
+                print(str(i) + " -> " + format(jsp, ".3f"))
+            else:
+                print(str(i) + " -> " + format(jsp, ".3f") + "    ", end="")
+    end = time.time()
+    print("\nOverload: " + format(overload * 100, ".1f") + "%")
+    print("Computation time: " + format((end - begin) * 1000, ".2f") +" ms")
+
+def usage():
+    print("USAGE\n    ./203hotline [n k | d]\n\nDESCRIPTION")
+    print("    n      n value for the computation of C(n, k)")
+    print("    k      k value for the computation of C(n, k)")
+    print("    d      average duration of calls (in seconds)")
+    exit(0)
+
+def errorHandling():
+    if (len(sys.argv) == 2):
+        if (sys.argv[1] == '-h'):
+            usage()
+    if (len(sys.argv) != 2 and len(sys.argv) != 3):
+        exit(84)
+
 def main():
-    print("lol")
+    errorHandling()
+    if (len(sys.argv) == 2):
+        try:
+            a = int(sys.argv[1])
+            binomial(a)
+            print("")
+            poisson(a)
+        except ValueError:
+            exit(84)
+    if (len(sys.argv) == 3):
+            try:
+                a = int(sys.argv[1])
+                b = int(sys.argv[2])
+                printFormula(a, b)
+            except ValueError:
+                exit(84)
 
 if __name__ == "__main__":
     main()
