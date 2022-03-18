@@ -1,0 +1,16 @@
+version: '3.8'
+services:
+  jenkins:
+    build: .
+    privileged: true
+    ports:
+     - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - USER_CHOCOLATEEN_PASSWORD=1234
+      - USER_VAUGIE_G_PASSWORD=1234
+      - USER_I_DONT_KNOW_PASSWORD=1234
+      - USER_NASSO_PASSWORD=1234
+    volumes:
+     - ./my_marvin.yml:/var/jenkins_home/casc_configs/my_marvin.yml
