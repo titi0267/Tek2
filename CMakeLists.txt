@@ -7,6 +7,9 @@ set(SRCS
     )
 
 set(HEADERS
+        arcade-interface-master/ICore.hpp
+        arcade-interface-master/IDisplayModule.hpp
+        arcade-interface-master/IGameModule.hpp
     )
 
 add_executable(arcade ${SRCS} ${HEADERS})
