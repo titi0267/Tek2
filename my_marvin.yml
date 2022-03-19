@@ -18,3 +18,68 @@ jenkins:
         - id: nasso
           name: Nassim
           password: ${USER_NASSO_PASSWORD}
+  authorizationStrategy:
+    roleBased:
+      roles:
+        global:
+        - assignments:
+          - "chocolateen"
+          name: "admin"
+          description: "Marvin master"
+          permissions:
+          - "Job/Move"
+          - "Job/Build"
+          - "Credentials/Delete"
+          - "Credentials/ManageDomains"
+          - "View/Create"
+          - "Agent/Configure"
+          - "Job/Read"
+          - "Credentials/Update"
+          - "Agent/Create"
+          - "Job/Delete"
+          - "Agent/Build"
+          - "View/Configure"
+          - "Agent/Provision"
+          - "SCM/Tag"
+          - "Job/Create"
+          - "Job/Discover"
+          - "Credentials/View"
+          - "Agent/Connect"
+          - "Agent/Delete"
+          - "Agent/Disconnect"
+          - "Run/Delete"
+          - "Job/Cancel"
+          - "Overall/Read"
+          - "Run/Update"
+          - "Credentials/Create"
+          - "Overall/Administer"
+          - "View/Delete"
+          - "Job/Configure"
+          - "Job/Workspace"
+          - "View/Read"
+        - assignments:
+          - "i_dont_know"
+          - "vaugie_g"
+          name: "ape"
+          description: "Pedagogical team member"
+          permissions:
+          - "Overall/Read"
+          - "Job/Build"
+          - "Job/Workspace"
+        - assignments:
+          - "vaugie_g"
+          name: "gorilla"
+          description: "Group Obsessively Researching Innovation Linked to Learning and Accomplishment"
+          permissions:
+          - "Job/Move"
+          - "Job/Delete"
+          - "Job/Create"
+          - "Job/Configure"
+        - assignments:
+          - "nasso"
+          name: "assist"
+          description: "Assistant"
+          permissions:
+          - "Overall/Read"
+          - "Job/Workspace"
+
