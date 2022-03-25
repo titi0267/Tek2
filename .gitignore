@@ -1,1 +1,5 @@
-build/
+build/*
+.vscode
+run.sh
+arcade
+libmy_malloc.so

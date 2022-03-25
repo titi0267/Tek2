@@ -5,7 +5,17 @@
 ** Main
 */
 
-int main(void)
+#include "define.hpp"
+#include "Error/Error.hpp"
+#include "DlLib.hpp"
+
+int main(int ac, char **av)
 {
-    return (0);
+    Error error;
+    DlLib dl;
+
+    error.checkArgs(ac, av);
+    dl.open(av[1]);
+    dl.close();
+    return (SUCCESS);
 }
