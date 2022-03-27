@@ -35,6 +35,7 @@ jenkins:
           description: "Pedagogical team member"
           permissions:
           - "Overall/Read"
+          - "Job/Read"
           - "Job/Build"
           - "Job/Workspace"
         - assignments:
@@ -42,16 +43,22 @@ jenkins:
           name: "gorilla"
           description: "Group Obsessively Researching Innovation Linked to Learning and Accomplishment"
           permissions:
-          - "Job/Move"
-          - "Job/Delete"
+          - "Overall/Read"
+          - "Job/Read"
+          - "Job/Build"
+          - "Job/Workspace"
           - "Job/Create"
           - "Job/Configure"
+          - "Job/Delete"
+          - "Job/Move"
+          - "Job/Cancel"
         - assignments:
           - "nasso"
           name: "assist"
           description: "Assistant"
           permissions:
           - "Overall/Read"
+          - "Job/Read"
           - "Job/Workspace"
 
 jobs:
