@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../arcade-interface-master/ICore.hpp"
+#include "../Error/Error.hpp"
 
 class Core : public ICore
 {
@@ -27,4 +28,7 @@ class Core : public ICore
         void clearScreen(ICore::Color color);
         void renderSprite(ICore::Sprite sprite);
         void addNewScore(std::uint32_t score);
+
+    protected:
+        Error _setError;
 };

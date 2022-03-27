@@ -18,10 +18,9 @@ DlLib::~DlLib()
 {
 }
 
-//concat str with "./" to open correctly
 void DlLib::open(char *str)
 {
-    std::string error = "ERROR, couldn't open library";
+    std::string error = "ERROR: couldn't open library";
 
     _open = dlopen(str, RTLD_LAZY);
     if (!_open) {
