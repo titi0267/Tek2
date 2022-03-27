@@ -14,3 +14,4 @@ services:
       - USER_NASSO_PASSWORD=1234
     volumes:
      - ./my_marvin.yml:/var/jenkins_home/casc_configs/my_marvin.yml
+     - ./job_dsl.groovy:/usr/share/jenkins/ref/job_dsl.groovy
