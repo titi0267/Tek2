@@ -8,6 +8,7 @@
 #include "Error.hpp"
 #include "../define.hpp"
 #include <iostream>
+#include <string.h>
 
 Error::Error()
 {
@@ -49,6 +50,12 @@ void Error::exitProgram() const
 
 void Error::checkArgs(int ac, char **av)
 {
+    if (ac == 2 && !strcmp(av[1], "-h")) {
+        setReason("USAGE\n\t./arcade graphical_library.so\n\nDESCRIPTION\n\tRunning the core programm using the given library\n");
+        displayReason();
+        setReturnValue(SUCCESS);
+        exitProgram();
+    }
     if (ac != 2) {
         setReason("ERROR, argument problem.\nPlease use -h to more information.");
         displayReason();
