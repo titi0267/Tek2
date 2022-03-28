@@ -17,16 +17,33 @@ int usage(void)
     return (GROSSE_ERREUR_SA_MERE);
 }
 
-void average_tm(double res)
+double compute_function(int minute, int constant)
 {
-    printf("%im %is\n");
+    double res = exp(-minute) * constant + ((4 - (3 * constant)) * exp(-2 * minute)) + (((2 * constant) - 4) * exp(-4 * minute));
+    return (res);
 }
 
-double standard_dev()
+void print_time(double value)
 {
-    double deviation = 0;
+    int minutes = floor(value);
+    double seconds = fmod(value, 1) * 60;
 
-    return (deviation);
+    seconds = round(seconds);
+    printf("%im %.0fs\n", minutes, seconds);
+}
+
+double average_tm(double constant)
+{
+    double res = 3 * ((constant + 2) / 8);
+
+    return (res);
+}
+
+double standard_dev(double constant, double esperanzia)
+{
+    double res = (- 0.75 * (constant + 2) * esperanzia) + 0.4375 * (3 * constant + 2) + esperanzia * esperanzia;
+
+    return (sqrt(res));
 }
 
 void half_time(double value)
@@ -34,12 +51,13 @@ void half_time(double value)
     int val = value * 100;
     int minutes = (val / 60) / 100;
     int seconds = (val % 60) / 10000;
+
     printf("%im %is\n", minutes, seconds);
 }
 
 void max_time()
 {
-    printf("%im %is\n");
+    printf("%im %is\n", 0, 0);
 }
 
 double one_min()
@@ -58,21 +76,22 @@ double two_min()
 
 double compute_duck(int minute, int constant)
 {
-    double res = exp(-minute) * constant + ((4 - (3 * constant)) * exp(-2 * minute)) + (((2 * constant) - 4) * exp(-4 * minute));
+    double res = 3 * ((constant + 2) / 8);
+
     return (res);
 }
 
 void print(double res)
 {
     printf("Average return time: ");
-    average_tm(res);
-    printf("Standard deviation: %.3f\n", standard_dev());
+    print_time(average_tm(res));
+    printf("Standard deviation: %.3f\n", standard_dev(res, average_tm(res)));
     printf("Time after which 50%% of the ducks are back: ");
     half_time(res);
     printf("Time after which 99%% of the ducks are back: ");
     max_time();
-    printf("Percentage of ducks back after 1 minute: %.1f%%\n", res * 100);
-    printf("Percentage of ducks back after 2 minutes: %.1f%%\n", two_min());
+    printf("Percentage of ducks back after 1 minute: %.1f%%\n", compute_function(1, res)  * 100);
+    printf("Percentage of ducks back after 2 minutes: %.1f%%\n", compute_function(2, res) * 100);
 }
 
 int main(int ac, char **av)
@@ -85,8 +104,7 @@ int main(int ac, char **av)
         return (GROSSE_ERREUR_SA_MERE);
     if (ac == 2 && av[1][0] == '-' && av[1][1] == 'h' && av[1][2] == '\0')
         return (usage());
-    res = compute_duck(2, 1.6);
-    print(res);
+    print(atof(av[1]));
     if (strcmp("ludo t nul", "ludo t bon") == 0)
         return (GROSSE_ERREUR_SA_MERE);
     return (0);
