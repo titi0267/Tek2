@@ -14,28 +14,60 @@ int usage(void)
     return (ERROR);
 }
 
-int flags(int ac, char **av)
+int flags(int ac, char **av, char **env)
 {
+    int error = 0;
+
     if (strcmp("--help", av[1]) == 0)
         return (usage());
     for (int i = 1; i < ac; i++) {
         if (strcmp("-p", av[i]) == 0)
-            flag_p();
+            error = flag_p(ac, av, i);
         else if (strcmp("-s", av[i]) == 0)
-            flag_s();
+            error = flag_s();
         else {
-            printf("Unknown flag: %s\n", av[i]);
-            return (ERROR);
+            no_options(ac, av, i);
+            //printf("Unknown flag: %s\n", av[i]);
         }
+        if (error == ERROR)
+            return (ERROR);
+        if (strcmp("-p", av[i]) == 0)
+            i++;
     }
-    return (0);
+    return (error);
 }
 
-int main(int ac, char **av)
+void free_func(strace_t *strace)
 {
+    for (int i = 0; strace->envp[i] != NULL; i++) {
+        free(strace->envp[i]);
+    }
+    free(strace->envp);
+    free(strace);
+}
+
+char **copy_env(char **env, strace_t *strace)
+{
+    int i = 0;
+
+    for (; env[i] != NULL; i++);
+    strace->envp = malloc(sizeof(char *) * (i + 1));
+    for (i = 0; env[i] != NULL; i++) {
+        strace->envp[i] = malloc(sizeof(char) * (strlen(env[i]) + 1));
+        strcpy(strace->envp[i], env[i]);
+    }
+    strace->envp[i] = NULL;
+}
+
+int main(int ac, char **av, char **env)
+{
+    strace_t *strace;
+    int error = 0;
     if (ac == 1)
-        return (no_options());
-    else
-        return (flags(ac, av));
-    return (0);
+        return (ERROR);
+    strace = malloc(sizeof(strace_t));
+    copy_env(env, strace);
+    //error = flags(ac, av, env);
+    free_func(strace);
+    return (error);
 }

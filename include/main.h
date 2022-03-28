@@ -9,9 +9,17 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <sys/ptrace.h>
+#include <stdlib.h>
 
 #define ERROR 84
+#define TRUE 1
+#define FALSE 0
+
+typedef struct strace_s {
+    char **envp;
+} strace_t;
 
 int flag_s(void);
-int flag_p(void);
-int no_options(void);
+int flag_p(int ac, char **av, int i);
+int no_options(int ac, char **av, int i);

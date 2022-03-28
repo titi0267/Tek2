@@ -7,8 +7,49 @@
 
 #include "../include/main.h"
 
-int no_options(void)
+int no_options(int ac, char **av, int i)
 {
+    for (; i < ac; i++) {
+        
+    }
+    //ptrace();
     printf("No flags specified\n");
     return (0);
 }
+/*
+int execute_command(char **args, char next, shell_t *shell)
+{
+    char *bin = NULL;
+    int status = 0;
+
+    if ((bin = search_binary(args, shell)) != NULL) {
+        status = run_file(bin, args, next, shell);
+        free(bin);
+        return (0);
+    } else {
+        if (errno && errno != 2)
+            print_err(args[0]);
+        else {
+            write(2, args[0], my_strlen(args[0]));
+            write(2, ": Command not found.\n", 21);
+        }
+        return (1);
+    }
+}
+
+int run_file(char *bin, char **args, char next, shell_t *shell)
+{
+    if ((shell->prev_pid = fork()) == -1) {
+        return (-1);
+    } else if (shell->prev_pid == 0) {
+        for (int i = 3; i < 16; i++)
+            close(i);
+        if (execve(bin, args, shell->env) == -1)
+            printf("strace: Can't stat '%s': No such file or directory\n", args[0]); //args[0] is the command itself
+        my_perror(args[0], EXECVE_FAIL);
+        return (1);
+    } else {
+        return (0);
+    }
+    return (1);
+}*/
