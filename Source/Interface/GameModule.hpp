@@ -1,11 +1,13 @@
 #pragma once
 
 #include "../../arcade-interface-master/IGameModule.hpp"
+#include "Core.hpp"
 
 class GameModule : public IGameModule {
     public:
-        ~GameModule() = default;
-        void init(ICore *coreHandle);
+        GameModule();
+        ~GameModule();
+        void init(Core *coreHandle);
         void update();
         void draw();
 };

@@ -38,10 +38,60 @@ void Core::setFramerate(unsigned framerate)
 
 ICore::Texture *Core::loadTexture(const std::string &filename, char character, ICore::Color characterColor, ICore::Color backgroundColor, std::size_t width, std::size_t height)
 {
+    ICore::Texture *tmp;
+    (void)filename;
+    (void)character;
+    (void)characterColor;
+    (void)backgroundColor;
+    (void)width;
+    (void)height;
+    return tmp;
+}
+
+void Core::openWindow(ICore::Vector2u pixelsWantedWindowSize)
+{
+    (void)pixelsWantedWindowSize;
+}
+
+bool Core::isButtonPressed(Core::Button button)
+{
+    (void)button;
+    return false;
+}
+
+ICore::MouseButtonReleaseEvent Core::getMouseButtonReleaseEvent()
+{
+    ICore::MouseButtonReleaseEvent tmp;
+    return tmp;
+}
+
+void Core::startTextInput()
+{
 
 }
 
-void openWindow(ICore::Vector2u pixelsWantedWindowSize)
+std::string Core::getTextInput()
+{
+    std::string tmp;
+    return tmp;
+}
+
+void Core::endTextInput()
 {
 
+}
+
+void Core::clearScreen(Core::Color color)
+{
+    (void)color;
+}
+
+void Core::renderSprite(Core::Sprite sprite)
+{
+    (void)sprite;
+}
+
+void Core::addNewScore(std::uint32_t score)
+{
+    (void)score;
 }
