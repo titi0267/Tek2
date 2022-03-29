@@ -17,21 +17,23 @@ int usage(void)
 int flags(int ac, char **av, strace_t *strace)
 {
     int error = 1;
+    int i = 1;
 
-    for (int i = 1; i < ac; i++) {
+    for (; i < ac; i++) {
         if (strcmp("-p", av[i]) != 0 && strcmp("-s", av[i]) != 0) {
             printf("av = %s\n", av[i]);
-            no_options(ac, av, i);
+            break;
         }
         if (strcmp("-p", av[i]) == 0 &&
             (error = (flag_p(ac, av, i, strace) != ERROR)))
             i++;
-        if (strcmp("-s", av[i]) == 0) {
+        else if (strcmp("-s", av[i]) == 0)
             error = flag_s();
-        }
         if (error == FALSE)
             return (ERROR);
     }
+    if (i < ac)
+        no_options(ac, av, i, strace);
     return (0);
 }
 

@@ -24,4 +24,4 @@ typedef struct strace_s {
 
 int flag_s(void);
 int flag_p(int ac, char **av, int i, strace_t *strace);
-int no_options(int ac, char **av, int i);
+int no_options(int ac, char **av, int i, strace_t *strace);

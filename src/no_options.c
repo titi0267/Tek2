@@ -7,10 +7,10 @@
 
 #include "../include/main.h"
 
-int no_options(int ac, char **av, int i)
+int no_options(int ac, char **av, int i, strace_t *strace)
 {
     for (; i < ac; i++) {
-        
+        //strace 
     }
     //ptrace();
     printf("No flags specified\n");
