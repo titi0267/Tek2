@@ -19,6 +19,7 @@
 typedef struct strace_s {
     char **envp;
     char **command;
+    int is_command;
     int pid;
 } strace_t;
 

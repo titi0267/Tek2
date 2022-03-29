@@ -9,11 +9,17 @@
 
 int no_options(int ac, char **av, int i, strace_t *strace)
 {
-    for (; i < ac; i++) {
-        //strace 
+    int b = 0;
+
+    strace->is_command = TRUE;
+    if ((strace->command = malloc(sizeof(char *) * ((ac - i) + 1))) == NULL)
+        exit(ERROR);
+    for (; i < ac; i++, b++) {
+        if ((strace->command[b] = malloc(sizeof(char) * (strlen(av[i]) + 1))) == NULL)
+            exit(ERROR);
+        strcpy(strace->command[b], av[i]);
     }
-    //ptrace();
-    printf("No flags specified\n");
+    strace->command[b] = NULL;
     return (0);
 }
 /*
