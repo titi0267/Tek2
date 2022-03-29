@@ -1,3 +1,4 @@
 .vscode
 strace
 *.o
+vgcore*
