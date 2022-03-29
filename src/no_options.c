@@ -22,6 +22,7 @@ int no_options(int ac, char **av, int i, strace_t *strace)
     strace->command[b] = NULL;
     return (0);
 }
+
 /*
 int execute_command(char **args, char next, shell_t *shell)
 {
@@ -42,20 +43,21 @@ int execute_command(char **args, char next, shell_t *shell)
         return (1);
     }
 }
+*/
 
-int run_file(char *bin, char **args, char next, shell_t *shell)
+int run_file(char *bin, char **args, char next, strace_t *strace)
 {
-    if ((shell->prev_pid = fork()) == -1) {
+    if ((strace->prev_pid = fork()) == -1) {
         return (-1);
-    } else if (shell->prev_pid == 0) {
+    } else if (strace->prev_pid == 0) {
         for (int i = 3; i < 16; i++)
             close(i);
-        if (execve(bin, args, shell->env) == -1)
-            printf("strace: Can't stat '%s': No such file or directory\n", args[0]); //args[0] is the command itself
-        my_perror(args[0], EXECVE_FAIL);
+        execve(bin, args, strace->env);
+        printf("strace: Can't stat '%s': No such file or directory\n",
+            strace->command[0]);
         return (1);
     } else {
         return (0);
     }
     return (1);
-}*/
+}

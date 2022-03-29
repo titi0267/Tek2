@@ -21,6 +21,7 @@ typedef struct strace_s {
     char **command;
     int is_command;
     int pid;
+    int prev_pid;
 } strace_t;
 
 int flag_s(void);
