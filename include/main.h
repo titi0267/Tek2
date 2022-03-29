@@ -18,8 +18,10 @@
 
 typedef struct strace_s {
     char **envp;
+    char **command;
+    int pid;
 } strace_t;
 
 int flag_s(void);
-int flag_p(int ac, char **av, int i);
+int flag_p(int ac, char **av, int i, strace_t *strace);
 int no_options(int ac, char **av, int i);

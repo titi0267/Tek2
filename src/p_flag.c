@@ -14,18 +14,25 @@ int is_num(char c)
     return (FALSE);
 }
 
-int flag_p(int ac, char **av, int i)
+/*
+PID doesn't exist :
+    printf("strace: attach: ptrace(PTRACE_SEIZE, %i):", strace->pid);
+    printf(" No such process\n");
+*/
+int flag_p(int ac, char **av, int i, strace_t *strace)
 {
     if ((i + 1) >= ac) {
-        printf("Missing PID with -p\n");
+        printf("strace: option requires an argument -- 'p'\n");
+        printf("Try 'strace -h' for more information.\n");
         return (ERROR);
     }
     for (int c = 0; av[i + 1][c] != '\0'; c++) {
         if (is_num(av[i + 1][c]) == 0) {
-            printf("Invalid or missing PID\n");
+            printf("strace: Invalid process id: '%s'\n", av[i + 1]);
             return (ERROR);
         }
     }
-    printf("P is flags\n");
+    strace->pid = atoi(av[i + 1]);
+    printf("pid = %i\n", strace->pid);
     return (0);
 }
