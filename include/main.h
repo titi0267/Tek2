@@ -11,6 +11,7 @@
 #include <string.h>
 #include <sys/ptrace.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define ERROR 84
 #define TRUE 1

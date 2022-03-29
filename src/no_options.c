@@ -52,7 +52,7 @@ int run_file(char *bin, char **args, char next, strace_t *strace)
     } else if (strace->prev_pid == 0) {
         for (int i = 3; i < 16; i++)
             close(i);
-        execve(bin, args, strace->env);
+        execve(bin, args, strace->envp);
         printf("strace: Can't stat '%s': No such file or directory\n",
             strace->command[0]);
         return (1);
