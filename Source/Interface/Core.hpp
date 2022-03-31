@@ -1,11 +1,19 @@
+/*
+** EPITECH PROJECT, 2022
+** B-OOP-400-STG-4-1-arcade-alexandre.frantz
+** File description:
+** Core
+*/
+
 #pragma once
 
 #include "../../arcade-interface-master/ICore.hpp"
-#include "DisplayModule.hpp"
+#include "../../arcade-interface-master/IDisplayModule.hpp"
+#include "../../arcade-interface-master/IGameModule.hpp"
 #include "../Error/Error.hpp"
+#include "Texture.hpp"
 
-class Core : public ICore
-{
+class Core : public ICore {
     public:
         Core();
         ~Core();
@@ -13,24 +21,22 @@ class Core : public ICore
         void setFramerate(unsigned framerate);
         using Vector2u = IDisplayModule::Vector2u;
         using Color = IDisplayModule::Color;
-        class Texture;
-        ICore::Texture *loadTexture(const std::string &filename, char character, ICore::Color characterColor, ICore::Color backgroundColor, std::size_t width, std::size_t height);
+        using Texture = ICore::Texture;
+        Core::Texture *loadTexture(const std::string &filename, char character, Core::Color characterColor, Core::Color backgroundColor, std::size_t width, std::size_t height);
         void openWindow(Core::Vector2u pixelsWantedWindowSize);
-        using Button = DisplayModule::Button;
+        using Button = IDisplayModule::Button;
         bool isButtonPressed(Core::Button button);
-        using MouseButtonReleaseEvent = DisplayModule::MouseButtonReleaseEvent;
+        using MouseButtonReleaseEvent = IDisplayModule::MouseButtonReleaseEvent;
         ICore::MouseButtonReleaseEvent getMouseButtonReleaseEvent();
         void startTextInput();
         std::string getTextInput();
         void endTextInput();
-        struct Sprite {
-            Core::Vector2u pixelPosition;
-            Core::Texture *texture;
-        };
         void clearScreen(Core::Color color);
-        void renderSprite(Core::Sprite sprite);
+        void renderSprite(ICore::Sprite sprite);
         void addNewScore(std::uint32_t score);
 
     protected:
         Error _setError;
+        std::unique_ptr<IDisplayModule> _disp;
+        std::unique_ptr<IGameModule> _game;
 };

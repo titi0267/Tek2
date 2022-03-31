@@ -8,6 +8,14 @@
 #include "Core.hpp"
 #include "../define.hpp"
 
+Core::Core()
+{
+}
+
+Core::~Core()
+{
+}
+
 void Core::setPixelsPerCell(std::uint32_t pixelsPerCell)
 {
     std::string error = "ERROR: there must be at least one pixel per cell";
@@ -18,6 +26,7 @@ void Core::setPixelsPerCell(std::uint32_t pixelsPerCell)
         _setError.setReturnValue(ERROR);
         _setError.exitProgram();
     }
+    _disp->setPixelsPerCell(pixelsPerCell);
 }
 
 void Core::setFramerate(unsigned framerate)
@@ -36,59 +45,60 @@ void Core::setFramerate(unsigned framerate)
     }
 }
 
-ICore::Texture *Core::loadTexture(const std::string &filename, char character, ICore::Color characterColor, ICore::Color backgroundColor, std::size_t width, std::size_t height)
+Core::Texture *Core::loadTexture(const std::string &filename, char character, Core::Color characterColor, Core::Color backgroundColor, std::size_t width, std::size_t height)
 {
-    ICore::Texture *tmp;
-    (void)filename;
-    (void)character;
-    (void)characterColor;
-    (void)backgroundColor;
-    (void)width;
-    (void)height;
-    return tmp;
+    ;
+    //return (_disp->loadTexture(filename, character, characterColor, backgroundColor, width, height));
+    /* tmp->setFilename(filename);
+    tmp->setChar(character);
+    tmp->setCharColor(characterColor);
+    tmp->setBackColor(backgroundColor);
+    tmp->setWidth(width);
+    tmp->setHeight(height); */
 }
 
 void Core::openWindow(ICore::Vector2u pixelsWantedWindowSize)
 {
-    (void)pixelsWantedWindowSize;
+    _disp->openWindow(pixelsWantedWindowSize);
 }
 
 bool Core::isButtonPressed(Core::Button button)
 {
-    (void)button;
-    return false;
+    return (_disp->isButtonPressed(button));
 }
 
 ICore::MouseButtonReleaseEvent Core::getMouseButtonReleaseEvent()
 {
-    ICore::MouseButtonReleaseEvent tmp;
-    return tmp;
+    return (_disp->getMouseButtonReleaseEvent());
 }
 
 void Core::startTextInput()
 {
-
+    _disp->startTextInput();
 }
 
 std::string Core::getTextInput()
 {
-    std::string tmp;
-    return tmp;
+    return _disp->getTextInput();
 }
 
 void Core::endTextInput()
 {
-
+    _disp->endTextInput();
 }
 
 void Core::clearScreen(Core::Color color)
 {
-    (void)color;
+    _disp->clearScreen(color);
 }
 
-void Core::renderSprite(Core::Sprite sprite)
+void Core::renderSprite(ICore::Sprite sprite)
 {
-    (void)sprite;
+    IDisplayModule::Sprite sprt;
+    sprt.rawPixelPosition.x = sprite.pixelPosition.x;
+    sprt.rawPixelPosition.y = sprite.pixelPosition.y;
+    //sprt.texture = sprite.texture.getRaw();
+    _disp->renderSprite(sprt);
 }
 
 void Core::addNewScore(std::uint32_t score)

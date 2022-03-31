@@ -1,6 +1,4 @@
 build/*
 .vscode
-run.sh
 clear.sh
-arcade
 libmy_malloc.so

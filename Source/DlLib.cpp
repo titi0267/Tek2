@@ -29,7 +29,8 @@ void DlLib::open(char *str)
         _setError.setReturnValue(ERROR);
         _setError.exitProgram();
     }
-    *(void **)(&_about) = dlsym(_open, "about");
+    *(void **)(&_about) = dlsym(_open, "gEpitechArcadeGetDisplayModuleHandle");
+    //_about.openIn
 }
 
 void DlLib::close()
