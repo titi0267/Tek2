@@ -10,6 +10,7 @@
 
 int usage(void)
 {
+    printf("Usage: nm [option(s)] [file(s)]\n");
     return (ERROR);
 }
 
@@ -36,11 +37,9 @@ int main(int ac, char **av)
     nm->error_file = 0;
     nm->file_nbr = 0;
     nm->sym_size = 0;
-    if (ac == 1)
+    if (ac == 2 && (strcmp("-h", av[1]) == 0 || strcmp("--help", av[1]) == 0))
         return (usage());
-    if (ac > 1) {
-        if (parse_args(ac, av, nm) == ERROR)
+    if (parse_args(ac, av, nm) == ERROR)
             usage();
-    }
     return (free_func(nm));
 }

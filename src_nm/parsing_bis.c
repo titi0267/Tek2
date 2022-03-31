@@ -19,3 +19,16 @@ void store_flags(int i, char **av, nm_t *nm)
     for (int t = 0; av[i][t] != '\0'; t++)
         nm->flags[i][t] = av[i][t];
 }
+
+int multiple_files(int ac, char **av)
+{
+    int z = 0;
+
+    for (int i = 1; i < ac; i++) {
+        if (av[i][0] != '-')
+            z++;
+    }
+    if (z > 1)
+        return (1);
+    return (0);
+}
