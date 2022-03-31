@@ -10,7 +10,7 @@
 void print_type_fourth(Elf64_Sym sym, Elf64_Shdr *shdr, node_t node, char *str)
 {
     if (shdr[sym.st_shndx].sh_type == SHT_PROGBITS
-       && shdr[sym.st_shndx].sh_flags == SHF_ALLOC)
+        && shdr[sym.st_shndx].sh_flags == SHF_ALLOC)
         node->type = 'R';
     else if (shdr[sym.st_shndx].sh_type == SHT_NOTE)
         node->type = 'R';
@@ -21,10 +21,10 @@ void print_type_fourth(Elf64_Sym sym, Elf64_Shdr *shdr, node_t node, char *str)
 void print_type_third(Elf64_Sym sym, Elf64_Shdr *shdr, node_t node, char *str)
 {
     if (shdr[sym.st_shndx].sh_type == SHT_NOBITS
-       && shdr[sym.st_shndx].sh_flags == (SHF_ALLOC | SHF_WRITE))
+        && shdr[sym.st_shndx].sh_flags == (SHF_ALLOC | SHF_WRITE))
         node->type = 'B';
     else if (shdr[sym.st_shndx].sh_type == SHT_PROGBITS
-       && shdr[sym.st_shndx].sh_flags == (SHF_ALLOC | SHF_WRITE))
+        && shdr[sym.st_shndx].sh_flags == (SHF_ALLOC | SHF_WRITE))
         node->type = 'D';
     else {
         if (shdr[sym.st_shndx].sh_type == SHT_PROGBITS

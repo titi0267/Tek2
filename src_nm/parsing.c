@@ -69,36 +69,38 @@ int store_file(nm_t *nm, char *av)
     return (open_ret);
 }
 
-int multiple_files(int ac, char **av)
+int store_args(int ac, char **av, int i, nm_t *nm)
 {
-    int z = 0;
+    int b = 0;
 
-    for (int i = 1; i < ac; i++) {
-        if (av[i][0] != '-')
-            z++;
+    if (ac == 1)
+        b = store_file(nm, "a.out");
+    else
+        b = store_file(nm, av[i]);
+    if (b == ERROR)
+        return (ERROR);
+    else if (b == 0) {
+        nm->flags[i] = malloc(strlen(av[i]) * sizeof(char) + 1);
+        store_flags(i, av, nm);
+        nm->flag_nbr += 1;
     }
-    if (z > 1)
-        return (1);
     return (0);
 }
 
 int parse_args(int ac, char **av, nm_t *nm)
 {
     int b = 0;
+    int i = 1;
 
     nm->flags = malloc(sizeof(char *) * (ac + 1));
     if (nm->flags == NULL)
         return (ERROR);
     nm->multiple_files = multiple_files(ac, av);
-    for (int i = 1; i < ac; i++) {
-        b = store_file(nm, av[i]);
-        if (b == ERROR)
+    if (ac == 1)
+        i = 0;
+    for (; i < ac; i++) {
+        if (store_args(ac, av, i, nm) == ERROR)
             return (ERROR);
-        else if (b == 0) {
-            nm->flags[i] = malloc(strlen(av[i]) * sizeof(char) + 1);
-            store_flags(i, av, nm);
-            nm->flag_nbr += 1;
-        }
     }
     return (0);
 }

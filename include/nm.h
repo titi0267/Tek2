@@ -48,7 +48,8 @@ typedef struct list_s
 
 typedef list_t *node_t;
 
-enum NM {
+enum NM
+{
     OBJ,
     SHL,
     BN
@@ -71,3 +72,4 @@ void reset_positions(node_t *front);
 int list_is_empty(node_t list);
 int file_error(nm_t *nm);
 void store_flags(int i, char **av, nm_t *nm);
+int multiple_files(int ac, char **av);
