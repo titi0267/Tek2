@@ -22,90 +22,60 @@ int no_options(int ac, char **av, int i, strace_t *strace)
         strcpy(strace->command[b], av[i]);
     }
     strace->command[b] = NULL;
-    run_file(strace);
+    run_command(strace);
     return (0);
 }
 
-/*
-int execute_command(char **args, char next, shell_t *shell)
+int wait_for_syscall(strace_t *strace)
 {
-    char *bin = NULL;
-    int status = 0;
+    int status;
 
-    if ((bin = search_binary(args, shell)) != NULL) {
-        status = run_file(bin, args, next, shell);
-        free(bin);
-        return (0);
-    } else {
-        if (errno && errno != 2)
-            print_err(args[0]);
-        else {
-            write(2, args[0], my_strlen(args[0]));
-            write(2, ": Command not found.\n", 21);
-        }
-        return (1);
+    while (1) {
+        ptrace(PTRACE_SINGLESTEP, strace->prev_pid, 0, 0);
+        waitpid(strace->prev_pid, &status, 0);
+        if (WIFSTOPPED(status) && WSTOPSIG(status) & 0x80)
+            return (0);
+        if (WIFEXITED(status))
+            return (1);
+    }
+    return (0);
+}
+
+void exec_ptrace(strace_t *strace)
+{
+    int status, syscall, retval;
+
+    waitpid(strace->prev_pid, &status, 0);
+    ptrace(PTRACE_SETOPTIONS, strace->prev_pid, 0, PTRACE_O_TRACESYSGOOD);
+    while(1) {
+        if (wait_for_syscall(strace) != 0)
+            break;
+        syscall = ptrace(PTRACE_PEEKUSER, strace->prev_pid,
+            sizeof(long) * ORIG_RAX);
+        printf("syscall(%d) = ", syscall);
+        if (wait_for_syscall(strace) != 0)
+            break;
+        retval = ptrace(PTRACE_PEEKUSER, strace->prev_pid,
+            sizeof(long) * RAX);
+        printf("%d\n", retval);
     }
 }
 
-
-int get_env_name_length(char *line)
+int run_command(strace_t *strace)
 {
-    int len = 0;
-
-    for (int i = 0; line[i] != '\0' && line[i] != '='; len++, i++);
-    return (len);
-}*/
-
-/*char *search_bin_in_path(char **args, strace_t *strace)
-{
-    char *bin = NULL;
-    char *env_path = get_env_value("PATH", strace->envp);
-    char *start = NULL;
-    int len = 0;
-
-    if (!env_path)
-        return (NULL);
-    for (start = env_path; *env_path; env_path += 1) {
-        if (*env_path == ':') {
-            if ((bin = search_binary_into_dir(args, start, len)))
-                return (bin);
-            start = env_path + 1;
-            len = 0;
-        } else
-            len++;
-    }
-    bin = search_binary_into_dir(args, start, len);
-    return (bin);
-}
-
-char *get_env_value(char *name, char **env)
-{
-    int name_len = my_strlen(name);
-    int env_name_len;
-
-    for (; *env; env++) {
-        env_name_len = get_env_name_length(*env);
-        if (name_len == env_name_len && !strcmp(*env, name))
-            return (*env + env_name_len + 1);
-    }
-    return (NULL);
-}
-*/
-
-int run_file(strace_t *strace)
-{
-    char bin[10];
+    int status;
 
     if ((strace->prev_pid = fork()) == -1) {
         return (-1);
     } else if (strace->prev_pid == 0) {
-        strcpy(bin, "/usr/bin/");
-        strcat(bin, strace->command[0]);
-        execve(bin, strace->command, strace->envp);
+        ptrace(PTRACE_TRACEME);
+        kill(getpid(), SIGSTOP);
+        execve(strace->command[0], strace->command, strace->envp);
         printf("strace: Can't stat '%s': No such file or directory\n",
             strace->command[0]);
         return (1);
     } else {
+        exec_ptrace(strace);
         return (0);
     }
     return (1);

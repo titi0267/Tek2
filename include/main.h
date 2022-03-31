@@ -10,6 +10,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/ptrace.h>
+#include <sys/syscall.h>
+#include <sys/wait.h>
+#include <sys/reg.h>
 #include <stdlib.h>
 #include <unistd.h>
 
@@ -22,10 +25,10 @@ typedef struct strace_s {
     char **command;
     int is_command;
     int pid;
-    int prev_pid;
+    pid_t prev_pid;
 } strace_t;
 
 int flag_s(void);
 int flag_p(int ac, char **av, int i, strace_t *strace);
 int no_options(int ac, char **av, int i, strace_t *strace);
-int run_file(strace_t *strace);
+int run_command(strace_t *strace);

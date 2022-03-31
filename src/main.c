@@ -77,6 +77,7 @@ int main(int ac, char **av, char **env)
     if ((strace = malloc(sizeof(strace_t))) == NULL)
         return (ERROR);
     strace->is_command = FALSE;
+    strace->prev_pid = -1;
     copy_env(env, strace);
     error = flags(ac, av, strace);
     free_func(strace);
