@@ -40,6 +40,6 @@ int main(int ac, char **av)
     if (ac == 2 && (strcmp("-h", av[1]) == 0 || strcmp("--help", av[1]) == 0))
         return (usage());
     if (parse_args(ac, av, nm) == ERROR)
-            usage();
+        usage();
     return (free_func(nm));
 }
