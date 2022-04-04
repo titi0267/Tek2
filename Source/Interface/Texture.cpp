@@ -7,15 +7,21 @@
 
 #include "Texture.hpp"
 
-ICore::Texture::Texture()
+ICore::Texture::Texture(std::unique_ptr<IDisplayModule::RawTexture> rawTexture, const std::string &filename, char character, ICore::Color characterColor, ICore::Color backgroundColor, std::size_t width, std::size_t height)
 {
+    setFilename(filename);
+    setChar(character);
+    setCharColor(characterColor);
+    setBackColor(backgroundColor);
+    setWidth(width);
+    setHeight(height);
 }
 
 ICore::Texture::~Texture()
 {
 }
 
-void ICore::Texture::setFilename(const std::string filename)
+void ICore::Texture::setFilename(const std::string &filename)
 {
     _filename = filename;
 }
@@ -75,8 +81,7 @@ std::size_t ICore::Texture::getHeight() const
     return _height;
 }
 
-/*std::unique_ptr<IDisplayModule::RawTexture> ICore::Texture::getRaw() const
+IDisplayModule::RawTexture *ICore::Texture::getRaw() const
 {
-    return std::make_unique;
+    return _raw.get();
 }
-*/

@@ -47,14 +47,10 @@ void Core::setFramerate(unsigned framerate)
 
 Core::Texture *Core::loadTexture(const std::string &filename, char character, Core::Color characterColor, Core::Color backgroundColor, std::size_t width, std::size_t height)
 {
-    ;
-    //return (_disp->loadTexture(filename, character, characterColor, backgroundColor, width, height));
-    /* tmp->setFilename(filename);
-    tmp->setChar(character);
-    tmp->setCharColor(characterColor);
-    tmp->setBackColor(backgroundColor);
-    tmp->setWidth(width);
-    tmp->setHeight(height); */
+    Texture texture(std::move(_disp->loadTexture(filename, character, characterColor, backgroundColor, width, height)), filename, character, characterColor, backgroundColor, width, height);
+
+    textureMap.push_back(std::move(texture));
+    return (&textureMap.back());
 }
 
 void Core::openWindow(ICore::Vector2u pixelsWantedWindowSize)

@@ -14,3 +14,18 @@ Nibbler::Nibbler()
 Nibbler::~Nibbler()
 {
 }
+
+void Nibbler::init(ICore *coreHandle)
+{
+    ;
+}
+
+void Nibbler::update()
+{
+    ;
+}
+
+void Nibbler::draw()
+{
+    ;
+}

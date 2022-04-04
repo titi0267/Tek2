@@ -9,7 +9,8 @@ set(SRCS
     Source/Games/Nibbler/Nibbler.cpp
     Source/Games/Pacman/Pacman.cpp
     Source/Interface/Core.cpp
-    Source/Interface/GameModule.cpp
+    Source/Interface/DisplayModule.cpp
+    Source/Interface/Texture.cpp
     )
 
 set(SRCS_NCURSES
@@ -61,7 +62,8 @@ set(HEADERS
     Source/Graphical/Sdl2/Sdl2.hpp
     Source/Graphical/SFML/Sfml.hpp
     Source/Interface/Core.hpp
-    Source/Interface/GameModule.hpp
+    Source/Interface/DisplayModule.hpp
+    Source/Interface/Texture.hpp
     )
 
     add_library(arcade_ncurses SHARED ${SRCS_NCURSES} ${HEADERS_NCURSES})

@@ -14,3 +14,19 @@ Pacman::Pacman()
 Pacman::~Pacman()
 {
 }
+
+void Pacman::init(ICore *coreHandle)
+{
+    ;
+}
+
+void Pacman::update()
+{
+    ;
+}
+
+void Pacman::draw()
+{
+    ;
+}
+

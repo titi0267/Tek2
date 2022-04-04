@@ -8,12 +8,17 @@
 #ifndef NIBBLER_HPP_
 #define NIBBLER_HPP_
 
-#include "../../Interface/GameModule.hpp"
+#include "../../../arcade-interface-master/IGameModule.hpp"
+#include "../../../arcade-interface-master/ICore.hpp"
 
-class Nibbler : public GameModule {
+class Nibbler : public IGameModule {
     public:
         Nibbler();
         ~Nibbler();
+
+        void init(ICore *coreHandle);
+        void update();
+        void draw();
 };
 
 #endif /* !NIBBLER_HPP_ */

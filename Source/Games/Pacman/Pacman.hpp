@@ -8,12 +8,16 @@
 #ifndef PACMAN_HPP_
 #define PACMAN_HPP_
 
-#include "../../Interface/GameModule.hpp"
+#include "../../../arcade-interface-master/IGameModule.hpp"
+#include "../../../arcade-interface-master/ICore.hpp"
 
-class Pacman : public GameModule {
+class Pacman : public IGameModule {
     public:
         Pacman();
         ~Pacman();
+        void init(ICore *coreHandle);
+        void update();
+        void draw();
 };
 
 #endif /* !PACMAN_HPP_ */

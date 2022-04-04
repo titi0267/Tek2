@@ -12,6 +12,7 @@
 #include "../../arcade-interface-master/IGameModule.hpp"
 #include "../Error/Error.hpp"
 #include "Texture.hpp"
+#include <deque>
 
 class Core : public ICore {
     public:
@@ -39,4 +40,6 @@ class Core : public ICore {
         Error _setError;
         std::unique_ptr<IDisplayModule> _disp;
         std::unique_ptr<IGameModule> _game;
+        std::unique_ptr<Texture> _texture;
+        std::deque<Texture> textureMap;
 };
