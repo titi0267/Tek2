@@ -17,9 +17,12 @@ int usage(void)
     return (GROSSE_ERREUR_SA_MERE);
 }
 
-double compute_function(int minute, int constant)
+double compute_function(int minute, double constant)
 {
-    double res = exp(-minute) * constant + ((4 - (3 * constant)) * exp(-2 * minute)) + (((2 * constant) - 4) * exp(-4 * minute));
+    //double res = exp(-minute) * constant + ((4 - (3 * constant)) * exp(-2 * minute)) + (((2 * constant) - 4) * exp(-4 * minute));
+    //double res = (-0.5 * exp(-4*minute)) * (constant * (2 * exp(minute) + 1) * pow((exp(minute) - 1), 2) + 4 * exp(2 * minute) - 2);
+    double res = 1 - (constant * exp(-minute) + (4 - 3 * constant)/2 * exp(-2 * minute) + ((2 * constant - 4) / 4) * exp(-4 * minute));
+
     return (res);
 }
 
@@ -51,6 +54,7 @@ void half_time(double value)
     int val = value * 100;
     int minutes = (val / 60) / 100;
     int seconds = (val % 60) / 10000;
+    //printf("%f\n", compute_function(3, value) * 100);
 
     printf("%im %is\n", minutes, seconds);
 }
