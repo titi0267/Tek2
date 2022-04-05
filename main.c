@@ -17,10 +17,8 @@ int usage(void)
     return (GROSSE_ERREUR_SA_MERE);
 }
 
-double compute_function(int minute, double constant)
+double compute_function(double minute, double constant)
 {
-    //double res = exp(-minute) * constant + ((4 - (3 * constant)) * exp(-2 * minute)) + (((2 * constant) - 4) * exp(-4 * minute));
-    //double res = (-0.5 * exp(-4*minute)) * (constant * (2 * exp(minute) + 1) * pow((exp(minute) - 1), 2) + 4 * exp(2 * minute) - 2);
     double res = 1 - (constant * exp(-minute) + (4 - 3 * constant)/2 * exp(-2 * minute) + ((2 * constant - 4) / 4) * exp(-4 * minute));
 
     return (res);
@@ -49,19 +47,25 @@ double standard_dev(double constant, double esperanzia)
     return (sqrt(res));
 }
 
-void half_time(double value)
+void pourcent_time(double constant, double pourcent)
 {
-    int val = value * 100;
-    int minutes = (val / 60) / 100;
-    int seconds = (val % 60) / 10000;
-    //printf("%f\n", compute_function(3, value) * 100);
+    double sec = 0;
+    double min = 0;
+    double max = 1;
+    double middle = 0;
 
-    printf("%im %is\n", minutes, seconds);
-}
-
-void max_time()
-{
-    printf("%im %is\n", 0, 0);
+    for (; compute_function(max, constant) <= pourcent; max *= 2);
+    while (!(fabs(max - min) < 0.001)) {
+        middle = (max + min) / 2;
+        if (compute_function(middle, constant) >= pourcent) {
+            max = middle;
+        } else {
+            min = middle;
+        }
+    }
+    sec = (fmod(middle, 1)) * 60 / 100;
+    printf("%im ",(int)middle);
+    ((int)round(sec * 100) < 10) ? printf("0%is\n", (int)round(sec * 100)) : printf("%is\n", (int)round(sec * 100));
 }
 
 double one_min()
@@ -91,9 +95,9 @@ void print(double res)
     print_time(average_tm(res));
     printf("Standard deviation: %.3f\n", standard_dev(res, average_tm(res)));
     printf("Time after which 50%% of the ducks are back: ");
-    half_time(res);
+    pourcent_time(res, 0.5);
     printf("Time after which 99%% of the ducks are back: ");
-    max_time();
+    pourcent_time(res, 0.99);
     printf("Percentage of ducks back after 1 minute: %.1f%%\n", compute_function(1, res)  * 100);
     printf("Percentage of ducks back after 2 minutes: %.1f%%\n", compute_function(2, res) * 100);
 }
