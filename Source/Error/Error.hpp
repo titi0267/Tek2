@@ -31,6 +31,7 @@ class Error {
 
         // Exit
         void exitProgram() const;
+        void exitError(int retValue, const std::string reason);
 
     protected:
         std::string _reason;

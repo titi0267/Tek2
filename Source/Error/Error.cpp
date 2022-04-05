@@ -40,12 +40,12 @@ void Error::setReason(const std::string reason)
 
 void Error::displayReason() const
 {
-    std::cerr << getReason() << std::endl;
+    std::cerr << _reason << std::endl;
 }
 
 void Error::exitProgram() const
 {
-    exit(getReturnValue());
+    exit(_returnValue);
 }
 
 void Error::checkArgs(int ac, char **av)
@@ -62,4 +62,12 @@ void Error::checkArgs(int ac, char **av)
         setReturnValue(ERROR);
         exitProgram();
     }
+}
+
+void Error::exitError(int retValue, const std::string reason)
+{
+    Error::setReason(reason);
+    Error::setReturnValue(retValue);
+    Error::displayReason();
+    Error::exitProgram();
 }
