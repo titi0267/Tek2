@@ -30,7 +30,7 @@ void print_time(double value)
     double seconds = fmod(value, 1) * 60;
 
     seconds = round(seconds);
-    printf("%im %.0fs\n", minutes, seconds);
+    printf("%im %02ds\n", minutes, (int)seconds);
 }
 
 double average_tm(double constant)
@@ -64,8 +64,7 @@ void pourcent_time(double constant, double pourcent)
         }
     }
     sec = (fmod(middle, 1)) * 60 / 100;
-    printf("%im ",(int)middle);
-    ((int)round(sec * 100) < 10) ? printf("0%is\n", (int)round(sec * 100)) : printf("%is\n", (int)round(sec * 100));
+    printf("%im %02ds\n",(int)middle, (int)round(sec * 100));
 }
 
 double one_min()
