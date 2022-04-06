@@ -18,17 +18,17 @@ Menu::~Menu()
 void Menu::init(ICore *coreHandle)
 {
     ICore::Vector2u windowSize{1920, 1080};
-    ICore::Vector2u windowSize2{10, 10};
+    ICore::Vector2u windowSize2{11, 11};
     ICore::Vector2u windowSize3{10, 11};
     ICore::Vector2u windowSize4{10, 12};
     ICore::Vector2u windowSize5{10, 13};
 
     coreHandle->openWindow(windowSize);
     //_sprite.push_back({windowSize2, coreHandle->loadTexture("./Assets/Menu/Background.jpg", ' ', ICore::Color::white, ICore::Color::yellow, 612, 437)});
-    _sprite.push_back({windowSize2, coreHandle->loadTexture("./Assets/Menu/Background.jpg", 'c', ICore::Color::blue, ICore::Color::blue, 612, 437)});
-    _sprite.push_back({windowSize3, coreHandle->loadTexture("./Assets/Menu/Background.jpg", 'a', ICore::Color::red, ICore::Color::blue, 612, 437)});
-    _sprite.push_back({windowSize4, coreHandle->loadTexture("./Assets/Menu/Background.jpg", 'c', ICore::Color::black, ICore::Color::blue, 612, 437)});
-    _sprite.push_back({windowSize5, coreHandle->loadTexture("./Assets/Menu/Background.jpg", 'a', ICore::Color::green, ICore::Color::blue, 612, 437)});
+    _sprite.push_back({windowSize2, coreHandle->loadTexture("./Assets/Menu/Background.jpg", '>', ICore::Color::black, ICore::Color::red, 612, 437)});
+    _sprite.push_back({windowSize3, coreHandle->loadTexture("./Assets/Menu/Background.jpg", '/', ICore::Color::black, ICore::Color::magenta, 612, 437)});
+    _sprite.push_back({windowSize4, coreHandle->loadTexture("./Assets/Menu/Background.jpg", '|', ICore::Color::black, ICore::Color::magenta, 612, 437)});
+    _sprite.push_back({windowSize5, coreHandle->loadTexture("./Assets/Menu/Background.jpg", '*', ICore::Color::black, ICore::Color::cyan, 612, 437)});
 
     coreHandle->setFramerate(20);
     coreHandle->setPixelsPerCell(8);
