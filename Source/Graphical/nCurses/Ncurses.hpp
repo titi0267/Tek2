@@ -41,6 +41,8 @@ class Ncurses : public IDisplayModule {
     void renderSprite(IDisplayModule::Sprite sprite);
     void display();
     void update();
+    void createPairs();
+    int getPair(IDisplayModule::Color one, IDisplayModule::Color two);
 
     protected:
         std::uint32_t _pixelsPerCell;
