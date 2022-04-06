@@ -8,8 +8,11 @@
 #include "Core.hpp"
 #include "../define.hpp"
 
-Core::Core()
+Core::Core(std::deque<char *> chooseLib, int chooseLibIterator) : _dl(chooseLib[chooseLibIterator])
 {
+    _chooseLib = chooseLib;
+    _chooseLibIterator = chooseLibIterator;
+    loadLibs(_dl.getLib());
 }
 
 Core::~Core()
@@ -32,6 +35,7 @@ void Core::setPixelsPerCell(std::uint32_t pixelsPerCell)
 void Core::setFramerate(unsigned framerate)
 {
     std::string error = "ERROR: framerate set to 0";
+    timespec *time;
 
     if (framerate == 0) {
         _setError.setReason(error);
@@ -43,9 +47,11 @@ void Core::setFramerate(unsigned framerate)
         _setError.setReason(error);
         _setError.displayReason();
     }
+    time->tv_sec = framerate;
+    clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, time, NULL);
 }
 
-Core::Texture *Core::loadTexture(const std::string &filename, char character, Core::Color characterColor, Core::Color backgroundColor, std::size_t width, std::size_t height)
+Core::Texture *Core::loadTexture(const std::string &filename, char character, Color characterColor, Color backgroundColor, std::size_t width, std::size_t height)
 {
     Texture texture(std::move(_disp->loadTexture(filename, character, characterColor, backgroundColor, width, height)), filename, character, characterColor, backgroundColor, width, height);
 
@@ -91,13 +97,54 @@ void Core::clearScreen(Core::Color color)
 void Core::renderSprite(ICore::Sprite sprite)
 {
     IDisplayModule::Sprite sprt;
+
     sprt.rawPixelPosition.x = sprite.pixelPosition.x;
     sprt.rawPixelPosition.y = sprite.pixelPosition.y;
-    //sprt.texture = sprite.texture.getRaw();
-    _disp->renderSprite(sprt);
+    sprite;//px pos & Texture
+    sprt.texture = _texture->getRaw();
+    _disp->renderSprite(sprt); //px pos & Rawtexture
 }
 
 void Core::addNewScore(std::uint32_t score)
 {
     (void)score;
+}
+
+void Core::loadLibs(std::unique_ptr<IDisplayModule> disp)
+{
+    _disp = std::move(disp);
+}
+
+void Core::loadGames(std::unique_ptr<IGameModule> game)
+{
+    _game = std::move(game);
+}
+
+void Core::ChooseLib()
+{
+    if (isButtonPressed(Core::Button::F1) == true) { //change iterator from graphic library list
+        if (_chooseLibIterator > 0)
+            _chooseLibIterator--;
+        else if (_chooseLibIterator == 0)
+            _chooseLibIterator = 2;
+        _dl.close();
+        _dl.open(_chooseLib[_chooseLibIterator]);
+        loadLibs(_dl.getLib());
+    } else if (isButtonPressed(Core::Button::F2) == true) {
+        if (_chooseLibIterator == 2)
+            _chooseLibIterator++;
+        else if (_chooseLibIterator < 2)
+            _chooseLibIterator++;
+        _dl.close();
+        _dl.open(_chooseLib[_chooseLibIterator]);
+        loadLibs(_dl.getLib());
+    }
+}
+
+void Core::gameLoop()
+{
+    while (_disp->isClosing()) {
+        ChooseLib();
+
+    }
 }

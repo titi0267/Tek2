@@ -9,8 +9,6 @@
 
 #include "../../arcade-interface-master/ICore.hpp"
 #include "../../arcade-interface-master/IDisplayModule.hpp"
-#include "../Interface/DisplayModule.hpp"
-#include "Core.hpp"
 
 class ICore::Texture
 {

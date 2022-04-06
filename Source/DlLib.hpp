@@ -9,17 +9,25 @@
 #define DLLIB_HPP_
 
 #include "Error/Error.hpp"
+#include "../arcade-interface-master/IDisplayModule.hpp"
+#include "../arcade-interface-master/IGameModule.hpp"
+
+extern "C" {
+    #include <dlfcn.h>
+}
 
 class DlLib {
     public:
-        DlLib();
+        DlLib(char *libName);
         ~DlLib();
     void open(char *str);
     void close();
-    void getLib();
+    std::unique_ptr<IDisplayModule> getLib();
+    std::unique_ptr<IGameModule> getGame();
 
     protected:
-        void (*_about)(void);
+        void (*_lib)(void);
+        void (*_game)(void);
         void *_open;
         Error _setError;
 };

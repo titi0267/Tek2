@@ -7,11 +7,11 @@
 
 #include "DlLib.hpp"
 #include "define.hpp"
-#include <dlfcn.h>
 #include <iostream>
 
-DlLib::DlLib()
+DlLib::DlLib(char *libName)
 {
+    open(libName);
 }
 
 DlLib::~DlLib()
@@ -29,8 +29,21 @@ void DlLib::open(char *str)
         _setError.setReturnValue(ERROR);
         _setError.exitProgram();
     }
-    *(void **)(&_about) = dlsym(_open, "gEpitechArcadeGetDisplayModuleHandle");
-    //_about.openIn
+}
+
+std::unique_ptr<IDisplayModule> DlLib::getLib()
+{
+    *(void **)(&_lib) = dlsym(_open, "gEpitechArcadeGetDisplayModuleHandle");
+
+    //_lib->;
+    //return std::make_unique<IDisplayModule>();
+}
+
+std::unique_ptr<IGameModule> DlLib::getGame()
+{
+    *(void **)(&_game) = dlsym(_open, "gEpitechArcadeGetGameModuleHandle");
+
+    //return (_game);
 }
 
 void DlLib::close()

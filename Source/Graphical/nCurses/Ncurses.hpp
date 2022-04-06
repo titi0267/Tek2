@@ -11,6 +11,7 @@
 #include "../../../arcade-interface-master/IDisplayModule.hpp"
 #include "../../Error/Error.hpp"
 #include "../../define.hpp"
+#include "RawTextureNCurses.hpp"
 
 extern "C" {
     #include <curses.h>
@@ -43,6 +44,7 @@ class Ncurses : public IDisplayModule {
 
     protected:
         std::uint32_t _pixelsPerCell;
+        std::unique_ptr<RawTextureNCurses> _raw;
         Error _setError;
 };
 

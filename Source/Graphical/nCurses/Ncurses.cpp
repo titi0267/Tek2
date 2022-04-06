@@ -27,14 +27,8 @@ std::uint32_t Ncurses::getPixelsPerCell()
 
 std::unique_ptr<IDisplayModule::RawTexture> Ncurses::loadTexture(const std::string &filename, char character, IDisplayModule::Color characterColor, IDisplayModule::Color backgroundColor, std::size_t width, std::size_t height)
 {
-    std::unique_ptr<IDisplayModule::RawTexture> tmp;
     (void)filename;
-    (void)character;
-    (void)characterColor;
-    (void)backgroundColor;
-    (void)width;
-    (void)height;
-    return tmp;
+    return std::make_unique<RawTextureNCurses>(character, characterColor, backgroundColor, width, height);
 }
 
 void Ncurses::openWindow(IDisplayModule::Vector2u pixelsWantedWindowSize)
@@ -73,26 +67,31 @@ bool Ncurses::isButtonPressed(IDisplayModule::Button button)
 
 IDisplayModule::MouseButtonReleaseEvent Ncurses::getMouseButtonReleaseEvent()
 {
-    /* IDisplayModule::MouseButtonReleaseEvent mouse;
+    IDisplayModule::MouseButtonReleaseEvent mouse;
     int key;
     MEVENT event;
 
     if ((key = getch()) == -1)
         _setError.exitError(ERROR, "ERROR: getch() for mouse didn't work");
-    
-    if (key != KEY_MOUSE)
-        mouse.type = IDisplayModule::MouseButtonReleaseEvent::Type::None;
-        return mouse; */
+    mouse.type = IDisplayModule::MouseButtonReleaseEvent::Type::None;
+    mousemask(ALL_MOUSE_EVENTS, NULL);
+    mouse.cellPosition.x = event.x;
+    mouse.cellPosition.y = event.y;
+    if (key == KEY_MOUSE && getmouse(&event) == OK && event.bstate) {
+        if (BUTTON1_RELEASED) mouse.type = IDisplayModule::MouseButtonReleaseEvent::Type::Left;
+        else if (BUTTON2_RELEASED) mouse.type = IDisplayModule::MouseButtonReleaseEvent::Type::Right;
+    }
+    return mouse;
 }
 
 bool Ncurses::isClosing()
 {
-    return true;
+    return false;
 }
 
 void Ncurses::startTextInput()
 {
-
+    ;
 }
 
 std::string Ncurses::getTextInput()
@@ -108,17 +107,56 @@ void Ncurses::endTextInput()
 
 void Ncurses::clearScreen(IDisplayModule::Color color)
 {
-    (void)color;
+    int bck = 0;
+    clear();
+    start_color();
+    if (color == IDisplayModule::Color::black) bck = COLOR_BLACK;
+    if (color == IDisplayModule::Color::red) bck = COLOR_RED;
+    if (color == IDisplayModule::Color::green) bck = COLOR_GREEN;
+    if (color == IDisplayModule::Color::yellow) bck = COLOR_YELLOW;
+    if (color == IDisplayModule::Color::blue) bck = COLOR_BLUE;
+    if (color == IDisplayModule::Color::magenta) bck = COLOR_MAGENTA;
+    if (color == IDisplayModule::Color::cyan) bck = COLOR_CYAN;
+    if (color == IDisplayModule::Color::white) bck = COLOR_WHITE;
+    init_pair(1, bck, bck);
+    wbkgd(stdscr, COLOR_PAIR(1));
 }
 
 void Ncurses::renderSprite(IDisplayModule::Sprite sprite)
 {
-    (void)sprite;
+    int color1;
+    int color2;
+    IRawTexture *raw = dynamic_cast<IRawTexture *>(sprite.texture);
+    move(sprite.rawPixelPosition.y, sprite.rawPixelPosition.x);
+    char *str;
+    
+    if (raw->getCharColor() == IDisplayModule::Color::black) color1 = COLOR_BLACK;
+    if (raw->getCharColor() == IDisplayModule::Color::red) color1 = COLOR_RED;
+    if (raw->getCharColor() == IDisplayModule::Color::green) color1 = COLOR_GREEN;
+    if (raw->getCharColor() == IDisplayModule::Color::yellow) color1 = COLOR_YELLOW;
+    if (raw->getCharColor() == IDisplayModule::Color::blue) color1 = COLOR_BLUE;
+    if (raw->getCharColor() == IDisplayModule::Color::magenta) color1 = COLOR_MAGENTA;
+    if (raw->getCharColor() == IDisplayModule::Color::cyan) color1 = COLOR_CYAN;
+    if (raw->getCharColor() == IDisplayModule::Color::white) color1 = COLOR_WHITE;
+    if (raw->getBackColor() == IDisplayModule::Color::black) color2 = COLOR_BLACK;
+    if (raw->getBackColor() == IDisplayModule::Color::red) color2 = COLOR_RED;
+    if (raw->getBackColor() == IDisplayModule::Color::green) color2 = COLOR_GREEN;
+    if (raw->getBackColor() == IDisplayModule::Color::yellow) color2 = COLOR_YELLOW;
+    if (raw->getBackColor() == IDisplayModule::Color::blue) color2 = COLOR_BLUE;
+    if (raw->getBackColor() == IDisplayModule::Color::magenta) color2 = COLOR_MAGENTA;
+    if (raw->getBackColor() == IDisplayModule::Color::cyan) color2 = COLOR_CYAN;
+    if (raw->getBackColor() == IDisplayModule::Color::white) color2 = COLOR_WHITE;
+    start_color();
+    init_pair(1, color1, color2);
+    attron(COLOR_PAIR(1));
+    str = new char(raw->getChar());
+    printw(str);
+    attroff(COLOR_PAIR(1));
 }
 
 void Ncurses::display()
 {
-
+    refresh();
 }
 
 void Ncurses::update()

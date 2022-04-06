@@ -12,18 +12,21 @@
 #include "../../arcade-interface-master/IGameModule.hpp"
 #include "../Error/Error.hpp"
 #include "Texture.hpp"
+#include "../DlLib.hpp"
 #include <deque>
+#include <chrono>
+#include <list>
 
 class Core : public ICore {
     public:
-        Core();
+        Core(std::deque<char *> chooseLib, int chooseLibIterator);
         ~Core();
         void setPixelsPerCell(std::uint32_t pixelsPerCell);
         void setFramerate(unsigned framerate);
         using Vector2u = IDisplayModule::Vector2u;
         using Color = IDisplayModule::Color;
         using Texture = ICore::Texture;
-        Core::Texture *loadTexture(const std::string &filename, char character, Core::Color characterColor, Core::Color backgroundColor, std::size_t width, std::size_t height);
+        Core::Texture *loadTexture(const std::string &filename, char character, Color characterColor, Color backgroundColor, std::size_t width, std::size_t height);
         void openWindow(Core::Vector2u pixelsWantedWindowSize);
         using Button = IDisplayModule::Button;
         bool isButtonPressed(Core::Button button);
@@ -32,9 +35,13 @@ class Core : public ICore {
         void startTextInput();
         std::string getTextInput();
         void endTextInput();
-        void clearScreen(Core::Color color);
+        void clearScreen(Color color);
         void renderSprite(ICore::Sprite sprite);
         void addNewScore(std::uint32_t score);
+        void loadLibs(std::unique_ptr<IDisplayModule> disp);
+        void loadGames(std::unique_ptr<IGameModule> game);
+        void gameLoop();
+        void ChooseLib();
 
     protected:
         Error _setError;
@@ -42,4 +49,7 @@ class Core : public ICore {
         std::unique_ptr<IGameModule> _game;
         std::unique_ptr<Texture> _texture;
         std::deque<Texture> textureMap;
+        std::deque<char *> _chooseLib;
+        int _chooseLibIterator;
+        DlLib _dl;
 };
