@@ -107,7 +107,7 @@ int main(int ac, char **av)
 
     if (ac != 2)
         return (GROSSE_ERREUR_SA_MERE);
-    if (atof(av[1]) > 2.5 || atof(av[1]) < 0)
+    if (atof(av[1]) >= 2.5 || atof(av[1]) <= 0)
         return (GROSSE_ERREUR_SA_MERE);
     if (ac == 2 && av[1][0] == '-' && av[1][1] == 'h' && av[1][2] == '\0')
         return (usage());
