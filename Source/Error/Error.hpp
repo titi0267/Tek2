@@ -9,6 +9,8 @@
 #define ERROR_HPP_
 
 #include <iostream>
+#include "../define.hpp"
+#include <string>
 
 class Error {
     public:

@@ -9,9 +9,9 @@
 #include "../../../arcade-interface-master/IGameModule.hpp"
 #include "../../../arcade-interface-master/ICore.hpp"
 #include <deque>
+#include <iostream>
 
-
-class Menu : IGameModule {
+class Menu : public IGameModule {
     public:
         Menu();
         ~Menu();
@@ -22,6 +22,4 @@ class Menu : IGameModule {
     protected:
         ICore *_core;
         std::deque<ICore::Sprite> _sprite;
-
-    private:
 };

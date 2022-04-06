@@ -8,7 +8,6 @@ set(SRCS
     Source/DlLib.cpp
     Source/Interface/Core.cpp
     Source/Interface/Texture.cpp
-    Source/Games/Menu/Menu.cpp
     )
 
 set(HEADERS
@@ -20,7 +19,6 @@ set(HEADERS
     Source/DlLib.hpp
     Source/Interface/Core.hpp
     Source/Interface/Texture.hpp
-    Source/Games/Menu/Menu.cpp
     )
 
 set(SRCS_PACMAN
@@ -45,6 +43,7 @@ set(HEADERS_NIBBLER
 
 set(SRCS_NCURSES
     Source/Graphical/nCurses/Ncurses.cpp
+    Source/Error/Error.cpp
     Source/Graphical/nCurses/RawTextureNCurses.cpp
 )
 
@@ -80,6 +79,16 @@ set(SRCS_SFML
     Source/Graphical/SFML/Sfml.cpp
 )
 
+set(SRCS_MENU
+    Source/Games/Menu/Menu.cpp
+)
+
+set(HEADERS_MENU
+    arcade-interface-master/ICore.hpp
+    arcade-interface-master/IGameModule.hpp
+    Source/Games/Menu/Menu.hpp
+)
+
     add_library(arcade_ncurses SHARED ${SRCS_NCURSES} ${HEADERS_NCURSES})
     set_target_properties(arcade_ncurses PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
     SET_TARGET_PROPERTIES(arcade_ncurses PROPERTIES PREFIX "")
@@ -96,6 +105,10 @@ set(SRCS_SFML
     add_library(arcade_nibbler SHARED ${SRCS_NIBBLER} ${HEADERS_NIBBLER})
     set_target_properties(arcade_nibbler PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
     SET_TARGET_PROPERTIES(arcade_nibbler PROPERTIES PREFIX "")
+    add_library(arcade_menu SHARED ${SRCS_MENU} ${HEADERS_MENU})
+    set_target_properties(arcade_menu PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
+    SET_TARGET_PROPERTIES(arcade_menu PROPERTIES PREFIX "")
     add_executable(arcade ${SRCS} ${HEADERS})
     set_target_properties(arcade PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/")
     target_link_libraries(arcade dl)
+    target_compile_options(arcade PRIVATE -g)

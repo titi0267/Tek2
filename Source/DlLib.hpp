@@ -18,17 +18,20 @@ extern "C" {
 
 class DlLib {
     public:
-        DlLib(char *libName);
+        DlLib(char *libName, char *gameName);
         ~DlLib();
-    void open(char *str);
-    void close();
+    void openGame(char *str);
+    void openLib(char *str);
+    void closeGame();
+    void closeLib();
     std::unique_ptr<IDisplayModule> getLib();
     std::unique_ptr<IGameModule> getGame();
 
     protected:
-        void (*_lib)(void);
-        void (*_game)(void);
-        void *_open;
+        std::unique_ptr<IDisplayModule> (*_lib)(void);
+        std::unique_ptr<IGameModule> (*_game)(void);
+        void *_openLib;
+        void *_openGame;
         Error _setError;
 };
 

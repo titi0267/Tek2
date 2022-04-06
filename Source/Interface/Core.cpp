@@ -8,11 +8,12 @@
 #include "Core.hpp"
 #include "../define.hpp"
 
-Core::Core(std::deque<char *> chooseLib, int chooseLibIterator) : _dl(chooseLib[chooseLibIterator])
+Core::Core(std::deque<char *> chooseLib, int chooseLibIterator) : _dl(chooseLib[chooseLibIterator], (char *)("/home/timothe/git_epi/arcade/B-OOP-400-STG-4-1-arcade-alexandre.frantz/lib/arcade_menu.so"))
 {
     _chooseLib = chooseLib;
     _chooseLibIterator = chooseLibIterator;
     loadLibs(_dl.getLib());
+    loadGames(_dl.getGame());
 }
 
 Core::~Core()
@@ -35,7 +36,7 @@ void Core::setPixelsPerCell(std::uint32_t pixelsPerCell)
 void Core::setFramerate(unsigned framerate)
 {
     std::string error = "ERROR: framerate set to 0";
-    timespec *time;
+    //timespec *time;
 
     if (framerate == 0) {
         _setError.setReason(error);
@@ -47,8 +48,8 @@ void Core::setFramerate(unsigned framerate)
         _setError.setReason(error);
         _setError.displayReason();
     }
-    time->tv_sec = framerate;
-    clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, time, NULL);
+    //time->tv_sec = framerate;
+    //clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, time, NULL);
 }
 
 Core::Texture *Core::loadTexture(const std::string &filename, char character, Color characterColor, Color backgroundColor, std::size_t width, std::size_t height)
@@ -100,9 +101,8 @@ void Core::renderSprite(ICore::Sprite sprite)
 
     sprt.rawPixelPosition.x = sprite.pixelPosition.x;
     sprt.rawPixelPosition.y = sprite.pixelPosition.y;
-    sprite;//px pos & Texture
-    sprt.texture = _texture->getRaw();
-    _disp->renderSprite(sprt); //px pos & Rawtexture
+    sprt.texture = sprite.texture->getRaw();
+    _disp->renderSprite(sprt);
 }
 
 void Core::addNewScore(std::uint32_t score)
@@ -127,24 +127,32 @@ void Core::ChooseLib()
             _chooseLibIterator--;
         else if (_chooseLibIterator == 0)
             _chooseLibIterator = 2;
-        _dl.close();
-        _dl.open(_chooseLib[_chooseLibIterator]);
+        _dl.closeLib();
+        _dl.openLib(_chooseLib[_chooseLibIterator]);
         loadLibs(_dl.getLib());
     } else if (isButtonPressed(Core::Button::F2) == true) {
         if (_chooseLibIterator == 2)
             _chooseLibIterator++;
         else if (_chooseLibIterator < 2)
             _chooseLibIterator++;
-        _dl.close();
-        _dl.open(_chooseLib[_chooseLibIterator]);
+        _dl.closeLib();
+        _dl.openLib(_chooseLib[_chooseLibIterator]);
         loadLibs(_dl.getLib());
     }
 }
 
 void Core::gameLoop()
 {
-    while (_disp->isClosing()) {
+    while (_disp->isClosing() == false) {
+        _game->update();
+        _disp->update();
+        _game->draw();
+        _disp->display();
         ChooseLib();
-
     }
+}
+
+IGameModule *Core::getGame() const
+{
+    return (_game.get());
 }

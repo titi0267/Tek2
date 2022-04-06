@@ -42,6 +42,7 @@ class Core : public ICore {
         void loadGames(std::unique_ptr<IGameModule> game);
         void gameLoop();
         void ChooseLib();
+        IGameModule *getGame() const;
 
     protected:
         Error _setError;

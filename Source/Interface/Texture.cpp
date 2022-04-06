@@ -15,6 +15,7 @@ ICore::Texture::Texture(std::unique_ptr<IDisplayModule::RawTexture> rawTexture, 
     setBackColor(backgroundColor);
     setWidth(width);
     setHeight(height);
+    _raw = std::move(rawTexture);
 }
 
 ICore::Texture::~Texture()
