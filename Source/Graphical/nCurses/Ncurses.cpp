@@ -35,11 +35,11 @@ std::unique_ptr<IDisplayModule::RawTexture> Ncurses::loadTexture(const std::stri
 void Ncurses::openWindow(IDisplayModule::Vector2u pixelsWantedWindowSize)
 {
     initscr();
+    noecho();
+    curs_set(0);
     keypad(stdscr, TRUE);
-    getmaxyx(stdscr, pixelsWantedWindowSize.y, pixelsWantedWindowSize.x);
     start_color();
     createPairs();
-    curs_set(0);
 }
 
 bool Ncurses::isButtonPressed(IDisplayModule::Button button)
