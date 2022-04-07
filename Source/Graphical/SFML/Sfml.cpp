@@ -133,7 +133,9 @@ void Sfml::display()
 
 void Sfml::update()
 {
-    ;
+    while (_window->pollEvent(_event)) {
+        if (_event.type == sf::Event::Closed) _window->close();
+    }
 }
 
 std::unique_ptr<IDisplayModule> gEpitechArcadeGetDisplayModuleHandle()
