@@ -22,14 +22,18 @@ void Pacman::init(ICore *coreHandle)
     ICore::Vector2u border{0, 0};
 
     coreHandle->openWindow(windowsSize);
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotLeft.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotRight.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopLeft.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopRight.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneBotWall.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneTopWall.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    //_sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneTopWall.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/littlePacGum.png", '.', ICore::Color::black, ICore::Color::black, 8, 8)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotLeft.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotRight.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopLeft.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopRight.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneBotWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneTopWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/littlePacGum.png", '.', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneLeftWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneRightWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/bigPacGum.png", 'o', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/door.png", '-', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/door2.png", '|', ICore::Color::black, ICore::Color::black, 16, 16)});
 
     coreHandle->setFramerate(30);
     coreHandle->setPixelsPerCell(8);
@@ -74,6 +78,16 @@ void Pacman::draw()
             _core->renderSprite({{_sprite[5].pixelPosition.x + z, _sprite[5].pixelPosition.y + y}, _sprite[5].texture});
         if (_map[i] == '.')
             _core->renderSprite({{_sprite[6].pixelPosition.x + z, _sprite[6].pixelPosition.y + y}, _sprite[6].texture});
+        if (_map[i] == 'l')
+            _core->renderSprite({{_sprite[7].pixelPosition.x + z, _sprite[7].pixelPosition.y + y}, _sprite[7].texture});
+        if (_map[i] == 'r')
+            _core->renderSprite({{_sprite[8].pixelPosition.x + z, _sprite[8].pixelPosition.y + y}, _sprite[8].texture});
+        if (_map[i] == 'o')
+            _core->renderSprite({{_sprite[9].pixelPosition.x + z, _sprite[9].pixelPosition.y + y}, _sprite[9].texture});
+        if (_map[i] == '-')
+            _core->renderSprite({{_sprite[10].pixelPosition.x + z, _sprite[10].pixelPosition.y + y}, _sprite[10].texture});
+        if (_map[i] == '|')
+            _core->renderSprite({{_sprite[11].pixelPosition.x + z, _sprite[11].pixelPosition.y + y}, _sprite[11].texture});
         if (_map[i] == '\n') {
             y++;
             z = -1;
