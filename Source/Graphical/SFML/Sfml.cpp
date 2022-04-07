@@ -120,7 +120,7 @@ void Sfml::renderSprite(IDisplayModule::Sprite sprite)
     txtr.loadFromFile(raw->getFilename());
     sprt.setTexture(txtr);
     sprt.setPosition(sf::Vector2f(sprite.rawPixelPosition.x*48, sprite.rawPixelPosition.y*48));
-    sprt.setScale(sf::Vector2f(3, 3));
+    sprt.setScale(sf::Vector2f((raw->getWidth()/16)*3, (raw->getHeight()/16)*3));
     _window->draw(sprt);
 }
 

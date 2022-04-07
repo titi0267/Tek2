@@ -8,7 +8,7 @@
 #include "Core.hpp"
 #include "../define.hpp"
 
-Core::Core(std::deque<char *> chooseLib, int chooseLibIterator) : _dl(chooseLib[chooseLibIterator], (char *)("./lib/arcade_nibbler.so"))
+Core::Core(std::deque<char *> chooseLib, int chooseLibIterator) : _dl(chooseLib[chooseLibIterator], (char *)("./lib/arcade_pacman.so"))
 {
     _chooseLib = chooseLib;
     _chooseLibIterator = chooseLibIterator;

@@ -10,6 +10,10 @@
 
 #include "../../../arcade-interface-master/IGameModule.hpp"
 #include "../../../arcade-interface-master/ICore.hpp"
+#include <deque>
+#include <iostream>
+#include <fstream>
+#include <vector>
 
 class Pacman : public IGameModule {
     public:
@@ -18,6 +22,19 @@ class Pacman : public IGameModule {
         void init(ICore *coreHandle);
         void update();
         void draw();
+        void constructMap();
+
+    protected:
+        ICore *_core;
+        std::deque<ICore::Sprite> _sprite;
+        int _direction;
+        enum class Direction {
+            up = 0,
+            down = 1,
+            right = 2,
+            left = 3,
+        };
+        std::vector<char> _map;
 };
 
 #endif /* !PACMAN_HPP_ */
