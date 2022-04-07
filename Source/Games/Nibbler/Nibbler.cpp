@@ -206,8 +206,8 @@ void Nibbler::update()
                 setDirection((int)Direction::right);
                 break;
         }
-    }*/
-    setGum();
+    }
+    setGum();*/
 }
 
 std::unique_ptr<IGameModule> gEpitechArcadeGetGameModuleHandle()
