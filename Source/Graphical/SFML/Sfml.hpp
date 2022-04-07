@@ -14,6 +14,7 @@
 #include "../../Interface/RawTexture.hpp"
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
+#include <deque>
 
 class Sfml : public IDisplayModule {
     public:
@@ -91,6 +92,7 @@ class Sfml : public IDisplayModule {
         std::unique_ptr<sf::RenderWindow> _window;
         sf::Event _event;
         Error _setError;
+        std::deque<bool> _butt;
 };
 
 #endif /* !SFML_HPP_ */
