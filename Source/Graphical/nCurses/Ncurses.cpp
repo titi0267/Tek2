@@ -44,9 +44,9 @@ void Ncurses::openWindow(IDisplayModule::Vector2u pixelsWantedWindowSize)
 
 bool Ncurses::isButtonPressed(IDisplayModule::Button button)
 {
-    int key;
+    int key = getch();
 
-    if ((key = getch()) == -1) _setError.exitError(ERROR, "ERROR: getch() for keyboard didn't work (nCurses)");
+    //if ((key = getch()) == -1) _setError.exitError(ERROR, "ERROR: getch() for keyboard didn't work (nCurses)");
     if (button == IDisplayModule::Button::Left && key == 'q') return true;
     if (button == IDisplayModule::Button::Right && key == 'd') return true;
     if (button == IDisplayModule::Button::Up && key == 'z') return true;
@@ -72,11 +72,11 @@ bool Ncurses::isButtonPressed(IDisplayModule::Button button)
 IDisplayModule::MouseButtonReleaseEvent Ncurses::getMouseButtonReleaseEvent()
 {
     IDisplayModule::MouseButtonReleaseEvent mouse;
-    int key;
+    int key = getch();
     MEVENT event;
 
-    if ((key = getch()) == -1)
-        _setError.exitError(ERROR, "ERROR: getch() for mouse didn't work");
+    /*if ((key = getch()) == -1)
+        _setError.exitError(ERROR, "ERROR: getch() for mouse didn't work");*/
     mouse.type = IDisplayModule::MouseButtonReleaseEvent::Type::None;
     mousemask(ALL_MOUSE_EVENTS, NULL);
     mouse.cellPosition.x = event.x;
