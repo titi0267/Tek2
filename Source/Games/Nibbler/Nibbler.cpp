@@ -6,11 +6,13 @@
 */
 
 #include "Nibbler.hpp"
+#include <SFML/Config.hpp>
 
 Nibbler::Nibbler()
 {
     _gum = true;
     _snakeSize = 4;
+    setDirection((int)Direction::right);
 }
 
 Nibbler::~Nibbler()
@@ -19,7 +21,7 @@ Nibbler::~Nibbler()
 
 void Nibbler::init(ICore *coreHandle)
 {
-    ICore::Vector2u windowSize{1920, 1080};
+    ICore::Vector2u windowSize{200, 150};
     ICore::Vector2u border{0, 0};
     ICore::Vector2u grass{1, 1};
     ICore::Vector2u gums{9, 3};
@@ -158,16 +160,24 @@ void Nibbler::setDirection(int direction)
     switch (_direction)
     {
         case (int)Direction::up:
+            std::cout << "up" << std::endl;
             _snake[0].texture = _sprite[3].texture;
+            std::cout << "after up" << std::endl;
             break;
         case (int)Direction::down:
+            std::cout << "down" << std::endl;
             _snake[0].texture = _sprite[4].texture;
+            std::cout << "after down" << std::endl;
             break;
         case (int)Direction::right:
+            std::cout << "right" << std::endl;
             _snake[0].texture = _sprite[5].texture;
+            std::cout << "after right" << std::endl;
             break;
         case (int)Direction::left:
+            std::cout << "left" << std::endl;
             _snake[0].texture = _sprite[6].texture;
+            std::cout << "after left" << std::endl;
             break;
     }
 }
@@ -182,7 +192,7 @@ void Nibbler::draw()
 
 void Nibbler::update()
 {
-    /*if (_core->isButtonPressed(IDisplayModule::Button::Left) == true) {
+    if (_core->isButtonPressed(IDisplayModule::Button::Left) == true) {
         switch (getDirection()) {
             case (int)Direction::left:
                 setDirection((int)Direction::down);
@@ -207,7 +217,7 @@ void Nibbler::update()
                 break;
         }
     }
-    setGum();*/
+    //setGum();
 }
 
 std::unique_ptr<IGameModule> gEpitechArcadeGetGameModuleHandle()
