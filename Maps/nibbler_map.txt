@@ -1,17 +1,11 @@
 ####################
 #                  #
 #                  #
-#        o         #
 #                  #
-#       TSSH       #
+#                  #
+#                  #
 #                  #
 #                  #
 #                  #
 #                  #
 ####################
-
-# = walls
-H = snake head
-S = snake body
-T = snake tail
-o = gums

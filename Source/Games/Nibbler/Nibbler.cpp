@@ -21,9 +21,9 @@ Nibbler::~Nibbler()
 
 void Nibbler::init(ICore *coreHandle)
 {
-    ICore::Vector2u windowSize{200, 150};
+    ICore::Vector2u windowSize{290, 130};
     ICore::Vector2u border{0, 0};
-    ICore::Vector2u grass{1, 1};
+    ICore::Vector2u grass{0, 0};
     ICore::Vector2u gums{9, 3};
     ICore::Vector2u head{10, 5};
     ICore::Vector2u body{9, 5};
@@ -56,10 +56,15 @@ void Nibbler::init(ICore *coreHandle)
 void Nibbler::constructMap()
 {
     std::ifstream map("./Maps/nibbler_map.txt", std::ios::in);
-    char byte = 0;
+    char element;
 
-    while (map.get(byte)) {
-        _map.push_back(byte);
+    if (!map.fail()) {
+        while (map.get(element))
+            _map.push_back(element);
+        std::cout << "map here:" << std::endl;
+    } else {
+        //error
+        std::cout << "fail here:" << std::endl;
     }
 }
 
@@ -187,6 +192,18 @@ void Nibbler::setDirection(int direction)
 void Nibbler::draw()
 {
     _core->clearScreen(ICore::Color::black);
+    for (int i = 0, y = 0, z = 0; i < _map.size(); i++, z++) {
+        if (_map[i] == '#')
+            _core->renderSprite({{_sprite[2].pixelPosition.x + z, _sprite[2].pixelPosition.y + y}, _sprite[2].texture});
+        if (_map[i] == ' ')
+            _core->renderSprite({{_sprite[0].pixelPosition.x + z, _sprite[0].pixelPosition.y + y}, _sprite[0].texture});
+        //if (_map[i] == ' ')
+            //_core->renderSprite({_sprite[0].pixelPosition.x + i, _sprite[0].texture});
+        if (_map[i] == '\n') {
+            y++;
+            z = -1;
+        }
+    }
     for (int i = 0; i < _snake.size(); i++) {
         _core->renderSprite(_snake[i]);
     }
