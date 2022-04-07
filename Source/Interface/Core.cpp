@@ -151,7 +151,6 @@ void Core::gameLoop()
     //time->tv_nsec = 0;
     //time->tv_sec = 0;
 
-    std::cout << "gameloop" << std::endl;
     clock_gettime(CLOCK_MONOTONIC, &time);
     while (_disp->isClosing() == false) {
         time.tv_nsec += (1000000000 / getFrameRate());
@@ -166,7 +165,6 @@ void Core::gameLoop()
         ChooseLib();
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &time, NULL);
     }
-    std::cout << "After gameloop" << std::endl;
 }
 
 IGameModule *Core::getGame() const

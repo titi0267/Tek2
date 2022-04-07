@@ -6,13 +6,13 @@
 */
 
 #include "Nibbler.hpp"
-#include <SFML/Config.hpp>
 
 Nibbler::Nibbler()
 {
     _gum = true;
     _snakeSize = 4;
     setDirection((int)Direction::right);
+    constructMap();
 }
 
 Nibbler::~Nibbler()
@@ -30,27 +30,37 @@ void Nibbler::init(ICore *coreHandle)
     ICore::Vector2u tail{7, 5};
 
     coreHandle->openWindow(windowSize);
-    _sprite.push_back({grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::blue, ICore::Color::blue, 612, 437)});
-    _sprite.push_back({gums, coreHandle->loadTexture("./Assets/Nibbler/Gums.png", 'O', ICore::Color::red, ICore::Color::black, 612, 437)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::red, ICore::Color::black, 612, 437)});
-    _sprite.push_back({head, coreHandle->loadTexture("./Assets/Nibbler/HeadUp.png", ' ', ICore::Color::red, ICore::Color::red, 612, 437)});
-    _sprite.push_back({head, coreHandle->loadTexture("./Assets/Nibbler/HeadDown.png", ' ', ICore::Color::red, ICore::Color::red, 612, 437)});
-    _sprite.push_back({head, coreHandle->loadTexture("./Assets/Nibbler/HeadRight.png", ' ', ICore::Color::red, ICore::Color::red, 612, 437)});
-    _sprite.push_back({head, coreHandle->loadTexture("./Assets/Nibbler/HeadLeft.png", ' ', ICore::Color::red, ICore::Color::red, 612, 437)});
-    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 612, 437)});
-    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 612, 437)});
-    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 612, 437)});
-    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 612, 437)});
-    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 612, 437)});
-    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 612, 437)});
-    _sprite.push_back({tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 612, 437)});
-    _sprite.push_back({tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 612, 437)});
-    _sprite.push_back({tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 612, 437)});
-    _sprite.push_back({tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 612, 437)});
+    _sprite.push_back({grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::blue, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({gums, coreHandle->loadTexture("./Assets/Nibbler/Gums.png", 'O', ICore::Color::red, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::red, ICore::Color::black, 16, 16)});
+    _sprite.push_back({head, coreHandle->loadTexture("./Assets/Nibbler/HeadUp.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)});
+    _sprite.push_back({head, coreHandle->loadTexture("./Assets/Nibbler/HeadDown.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)});
+    _sprite.push_back({head, coreHandle->loadTexture("./Assets/Nibbler/HeadRight.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)});
+    _sprite.push_back({head, coreHandle->loadTexture("./Assets/Nibbler/HeadLeft.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)});
+    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)});
+    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)});
+    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)});
+    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)});
+    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)});
+    _sprite.push_back({body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)});
+    _sprite.push_back({tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)});
+    _sprite.push_back({tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)});
+    _sprite.push_back({tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)});
+    _sprite.push_back({tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)});
     constructSnake();
     coreHandle->setFramerate(10);
     coreHandle->setPixelsPerCell(8);
     _core = coreHandle;
+}
+
+void Nibbler::constructMap()
+{
+    std::ifstream map("./Maps/nibbler_map.txt", std::ios::in);
+    char byte = 0;
+
+    while (map.get(byte)) {
+        _map.push_back(byte);
+    }
 }
 
 void Nibbler::constructSnake()
@@ -160,30 +170,23 @@ void Nibbler::setDirection(int direction)
     switch (_direction)
     {
         case (int)Direction::up:
-            std::cout << "up" << std::endl;
             _snake[0].texture = _sprite[3].texture;
-            std::cout << "after up" << std::endl;
             break;
         case (int)Direction::down:
-            std::cout << "down" << std::endl;
             _snake[0].texture = _sprite[4].texture;
-            std::cout << "after down" << std::endl;
             break;
         case (int)Direction::right:
-            std::cout << "right" << std::endl;
             _snake[0].texture = _sprite[5].texture;
-            std::cout << "after right" << std::endl;
             break;
         case (int)Direction::left:
-            std::cout << "left" << std::endl;
             _snake[0].texture = _sprite[6].texture;
-            std::cout << "after left" << std::endl;
             break;
     }
 }
 
 void Nibbler::draw()
 {
+    _core->clearScreen(ICore::Color::black);
     for (int i = 0; i < _snake.size(); i++) {
         _core->renderSprite(_snake[i]);
     }
@@ -193,6 +196,7 @@ void Nibbler::draw()
 void Nibbler::update()
 {
     if (_core->isButtonPressed(IDisplayModule::Button::Left) == true) {
+        std::cout << "Left" << std::endl;
         switch (getDirection()) {
             case (int)Direction::left:
                 setDirection((int)Direction::down);
@@ -204,6 +208,7 @@ void Nibbler::update()
         }
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Right) == true) {
+        std::cout << "Right" << std::endl;
         switch (getDirection())
         {
             case (int)Direction::left:
@@ -217,7 +222,7 @@ void Nibbler::update()
                 break;
         }
     }
-    //setGum();
+    setGum();
 }
 
 std::unique_ptr<IGameModule> gEpitechArcadeGetGameModuleHandle()

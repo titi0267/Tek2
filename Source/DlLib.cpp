@@ -23,7 +23,6 @@ void DlLib::openLib(char *str)
 {
     std::string error = "ERROR: couldn't open library";
 
-    std::cout << str << std::endl;
     _openLib = dlopen(str, RTLD_LAZY);
     if (!_openLib) {
         _setError.setReason(error);

@@ -12,6 +12,8 @@
 #include "../../../arcade-interface-master/ICore.hpp"
 #include <deque>
 #include <iostream>
+#include <fstream>
+#include <vector>
 
 class Nibbler : public IGameModule {
     public:
@@ -30,6 +32,7 @@ class Nibbler : public IGameModule {
         int getDirection() const;
         void setDirection(int direction);
         void constructSnake();
+        void constructMap();
 
     protected:
         ICore *_core;
@@ -45,6 +48,7 @@ class Nibbler : public IGameModule {
             right = 2,
             left = 3,
         };
+        std::vector<char> _map;
 
         //std::deque<ICore::Vector2u> _snakePos;
 };
