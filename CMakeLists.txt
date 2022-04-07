@@ -101,6 +101,7 @@ set(HEADERS_MENU
     add_library(arcade_sfml SHARED ${SRCS_SFML} ${HEADERS_SFML})
     set_target_properties(arcade_sfml PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
     SET_TARGET_PROPERTIES(arcade_sfml PROPERTIES PREFIX "")
+    target_link_libraries(arcade_sfml sfml-window sfml-system sfml-graphics)
     add_library(arcade_sdl2 SHARED ${SRCS_SDL2} ${HEADERS_SDL2})
     set_target_properties(arcade_sdl2 PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
     SET_TARGET_PROPERTIES(arcade_sdl2 PROPERTIES PREFIX "")

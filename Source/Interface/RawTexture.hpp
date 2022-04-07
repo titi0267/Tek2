@@ -30,6 +30,7 @@ class RawTextureNCurses : public IRawTexture {
         RawTextureNCurses(char character, ICore::Color characterColor, ICore::Color backgroundColor, std::size_t width, std::size_t height);
         ~RawTextureNCurses();
 
+    const std::string getFilename() const;
     char getChar() const;
     ICore::Color getCharColor() const;
     ICore::Color getBackColor() const;
@@ -50,6 +51,9 @@ class RawTextureSfml : public IRawTexture {
         ~RawTextureSfml();
 
     const std::string getFilename() const;
+    char getChar() const;
+    ICore::Color getCharColor() const;
+    ICore::Color getBackColor() const;
     std::size_t getWidth() const;
     std::size_t getHeight() const;
 

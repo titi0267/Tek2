@@ -11,6 +11,7 @@
 #include "../../../arcade-interface-master/IGameModule.hpp"
 #include "../../../arcade-interface-master/ICore.hpp"
 #include <deque>
+#include <iostream>
 
 class Nibbler : public IGameModule {
     public:
@@ -20,17 +21,31 @@ class Nibbler : public IGameModule {
         void init(ICore *coreHandle);
         void update();
         void draw();
-        void setGum(int headDirection);
+        void setGum();
         bool checkSnakePosX(unsigned random);
         bool checkSnakePosY(unsigned random);
-        bool checkSnakeHeadPosX(unsigned random, int whichHead);
-        bool checkSnakeHeadPosY(unsigned random, int whichHead);
+        bool checkSnakeHeadPosX(unsigned random);
+        bool checkSnakeHeadPosY(unsigned random);
+        void gumEated();
+        int getDirection() const;
+        void setDirection(int direction);
+        void constructSnake();
 
     protected:
         ICore *_core;
         std::deque<ICore::Sprite> _sprite;
         bool _gum;
         int _snakeSize;
+        std::deque<ICore::Sprite> _snake;
+        bool _addNewBody; //if true do not move last & before last element of snake
+        int _direction;
+        enum class Direction {
+            up = 0,
+            down = 1,
+            right = 2,
+            left = 3,
+        };
+
         //std::deque<ICore::Vector2u> _snakePos;
 };
 

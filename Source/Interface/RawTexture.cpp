@@ -45,7 +45,10 @@ std::size_t RawTextureNCurses::getHeight() const
     return _height;
 }
 
-
+const std::string RawTextureNCurses::getFilename() const
+{
+    return "";
+}
 
 RawTextureSfml::RawTextureSfml(const std::string &filename, std::size_t width, std::size_t height)
 {
@@ -56,6 +59,21 @@ RawTextureSfml::RawTextureSfml(const std::string &filename, std::size_t width, s
 
 RawTextureSfml::~RawTextureSfml()
 {
+}
+
+char RawTextureSfml::getChar() const
+{
+    return 'a';
+}
+
+IDisplayModule::Color RawTextureSfml::getCharColor() const
+{
+    return IDisplayModule::Color::black;
+}
+
+IDisplayModule::Color RawTextureSfml::getBackColor() const
+{
+    return IDisplayModule::Color::black;
 }
 
 const std::string RawTextureSfml::getFilename() const

@@ -88,7 +88,7 @@ class Sfml : public IDisplayModule {
 
     protected:
         std::uint32_t _pixelsPerCell;
-        sf::RenderWindow _window;
+        std::unique_ptr<sf::RenderWindow> _window;
         sf::Event _event;
         Error _setError;
 };

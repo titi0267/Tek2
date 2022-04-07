@@ -43,6 +43,7 @@ class Core : public ICore {
         void gameLoop();
         void ChooseLib();
         IGameModule *getGame() const;
+        int getFrameRate() const;
 
     protected:
         Error _setError;
@@ -52,5 +53,6 @@ class Core : public ICore {
         std::deque<Texture> textureMap;
         std::deque<char *> _chooseLib;
         int _chooseLibIterator;
+        int _frameRate;
         DlLib _dl;
 };

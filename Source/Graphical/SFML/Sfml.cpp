@@ -13,7 +13,7 @@ Sfml::Sfml()
 
 Sfml::~Sfml()
 {
-    _window.close();
+    _window->close();
 }
 
 void Sfml::setPixelsPerCell(std::uint32_t pixelsPerCell)
@@ -36,12 +36,13 @@ std::unique_ptr<IDisplayModule::RawTexture> Sfml::loadTexture(const std::string 
 
 void Sfml::openWindow(IDisplayModule::Vector2u pixelsWantedWindowSize)
 {
-    sf::Window _window(sf::VideoMode(pixelsWantedWindowSize.x, pixelsWantedWindowSize.y), "Arcade");
+    _window = std::make_unique<sf::RenderWindow>(sf::VideoMode(pixelsWantedWindowSize.x, pixelsWantedWindowSize.y), "Arcade");
+
 }
 
 bool Sfml::isButtonPressed(IDisplayModule::Button button)
 {
-    while (_window.pollEvent(_event)) {
+    while (_window->pollEvent(_event)) {
         if (_event.type == sf::Event::KeyPressed) {
             if (button == IDisplayModule::Button::Left && _event.key.code == sf::Keyboard::Q) return true;
             if (button == IDisplayModule::Button::Right && _event.key.code == sf::Keyboard::D) return true;
@@ -72,8 +73,8 @@ IDisplayModule::MouseButtonReleaseEvent Sfml::getMouseButtonReleaseEvent()
     IDisplayModule::MouseButtonReleaseEvent mouse;
 
     mouse.type = IDisplayModule::MouseButtonReleaseEvent::Type::None;
-    mouse.cellPosition.x = sf::Mouse::getPosition(_window).x;
-    mouse.cellPosition.y = sf::Mouse::getPosition(_window).y;
+    mouse.cellPosition.x = sf::Mouse::getPosition(*_window).x;
+    mouse.cellPosition.y = sf::Mouse::getPosition(*_window).y;
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) mouse.type = IDisplayModule::MouseButtonReleaseEvent::Type::Left;
     else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) mouse.type = IDisplayModule::MouseButtonReleaseEvent::Type::Right;
     return mouse;
@@ -81,7 +82,8 @@ IDisplayModule::MouseButtonReleaseEvent Sfml::getMouseButtonReleaseEvent()
 
 bool Sfml::isClosing()
 {
-    return !_window.isOpen();
+    if (_window->isOpen()) return false;
+    return true;
 }
 
 void Sfml::startTextInput()
@@ -102,14 +104,14 @@ void Sfml::endTextInput()
 
 void Sfml::clearScreen(IDisplayModule::Color color)
 {
-    if (color == IDisplayModule::Color::black) _window.clear(sf::Color::Black);
-    if (color == IDisplayModule::Color::red) _window.clear(sf::Color::Red);
-    if (color == IDisplayModule::Color::blue) _window.clear(sf::Color::Blue);
-    if (color == IDisplayModule::Color::cyan) _window.clear(sf::Color::Cyan);
-    if (color == IDisplayModule::Color::green) _window.clear(sf::Color::Green);
-    if (color == IDisplayModule::Color::magenta) _window.clear(sf::Color::Magenta);
-    if (color == IDisplayModule::Color::white) _window.clear(sf::Color::White);
-    if (color == IDisplayModule::Color::yellow) _window.clear(sf::Color::Yellow);
+    if (color == IDisplayModule::Color::black) _window->clear(sf::Color::Black);
+    if (color == IDisplayModule::Color::red) _window->clear(sf::Color::Red);
+    if (color == IDisplayModule::Color::blue) _window->clear(sf::Color::Blue);
+    if (color == IDisplayModule::Color::cyan) _window->clear(sf::Color::Cyan);
+    if (color == IDisplayModule::Color::green) _window->clear(sf::Color::Green);
+    if (color == IDisplayModule::Color::magenta) _window->clear(sf::Color::Magenta);
+    if (color == IDisplayModule::Color::white) _window->clear(sf::Color::White);
+    if (color == IDisplayModule::Color::yellow) _window->clear(sf::Color::Yellow);
 }
 
 void Sfml::renderSprite(IDisplayModule::Sprite sprite)
@@ -121,12 +123,12 @@ void Sfml::renderSprite(IDisplayModule::Sprite sprite)
     txtr.loadFromFile(raw->getFilename());
     sprt.setTexture(txtr);
     sprt.setPosition(sf::Vector2f(sprite.rawPixelPosition.x, sprite.rawPixelPosition.y));
-    _window.draw(sprt);
+    _window->draw(sprt);
 }
 
 void Sfml::display()
 {
-    _window.display();
+    _window->display();
 }
 
 void Sfml::update()

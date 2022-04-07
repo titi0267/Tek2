@@ -8,7 +8,7 @@
 #include "Core.hpp"
 #include "../define.hpp"
 
-Core::Core(std::deque<char *> chooseLib, int chooseLibIterator) : _dl(chooseLib[chooseLibIterator], (char *)("./lib/arcade_menu.so"))
+Core::Core(std::deque<char *> chooseLib, int chooseLibIterator) : _dl(chooseLib[chooseLibIterator], (char *)("./lib/arcade_nibbler.so"))
 {
     _chooseLib = chooseLib;
     _chooseLibIterator = chooseLibIterator;
@@ -33,10 +33,14 @@ void Core::setPixelsPerCell(std::uint32_t pixelsPerCell)
     _disp->setPixelsPerCell(pixelsPerCell);
 }
 
+int Core::getFrameRate() const
+{
+    return _frameRate;
+}
+
 void Core::setFramerate(unsigned framerate)
 {
     std::string error = "ERROR: framerate set to 0";
-    //timespec *time;
 
     if (framerate == 0) {
         _setError.setReason(error);
@@ -48,8 +52,7 @@ void Core::setFramerate(unsigned framerate)
         _setError.setReason(error);
         _setError.displayReason();
     }
-    //time->tv_sec = framerate;
-    //clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, time, NULL);
+    _frameRate = framerate;
 }
 
 Core::Texture *Core::loadTexture(const std::string &filename, char character, Color characterColor, Color backgroundColor, std::size_t width, std::size_t height)
@@ -143,13 +146,24 @@ void Core::ChooseLib()
 
 void Core::gameLoop()
 {
+    timespec *time;
+    clock_gettime(CLOCK_MONOTONIC, time);
+
+    std::cout << "gameloop" << std::endl;
     while (_disp->isClosing() == false) {
+        time->tv_nsec += (1000000000 / getFrameRate());
+        if (time->tv_nsec >= 1000000000) {
+            time->tv_sec += 1;
+            time->tv_nsec -= 1000000000;
+        }
         _game->update();
         _disp->update();
         _game->draw();
         _disp->display();
         ChooseLib();
+        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, time, NULL);
     }
+    std::cout << "After gameloop" << std::endl;
 }
 
 IGameModule *Core::getGame() const
