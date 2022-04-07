@@ -9,6 +9,7 @@
 
 Sfml::Sfml()
 {
+    for (int i = 0; i < 19; i++) _butt.push_back(false);
 }
 
 Sfml::~Sfml()
@@ -118,7 +119,8 @@ void Sfml::renderSprite(IDisplayModule::Sprite sprite)
 
     txtr.loadFromFile(raw->getFilename());
     sprt.setTexture(txtr);
-    sprt.setPosition(sf::Vector2f(sprite.rawPixelPosition.x, sprite.rawPixelPosition.y));
+    sprt.setPosition(sf::Vector2f(sprite.rawPixelPosition.x*48, sprite.rawPixelPosition.y*48));
+    sprt.setScale(sf::Vector2f(3, 3));
     _window->draw(sprt);
 }
 
@@ -129,8 +131,7 @@ void Sfml::display()
 
 void Sfml::update()
 {
-    _butt.clear();
-    for (int i = 0; i < 19; i++) _butt.push_back(false);
+    for (int i = 0; i < 19; i++) _butt[i] = false;
     while (_window->pollEvent(_event)) {
         if (_event.type == sf::Event::Closed) _window->close();
         if (_event.key.code == sf::Keyboard::Q) _butt[0] = true;
