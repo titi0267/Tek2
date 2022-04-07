@@ -13,6 +13,7 @@ Ncurses::Ncurses()
 
 Ncurses::~Ncurses()
 {
+    endwin();
 }
 
 void Ncurses::setPixelsPerCell(std::uint32_t pixelsPerCell)
@@ -38,14 +39,14 @@ void Ncurses::openWindow(IDisplayModule::Vector2u pixelsWantedWindowSize)
     getmaxyx(stdscr, pixelsWantedWindowSize.y, pixelsWantedWindowSize.x);
     start_color();
     createPairs();
+    curs_set(0);
 }
 
 bool Ncurses::isButtonPressed(IDisplayModule::Button button)
 {
     int key;
 
-    if ((key = getch()) == -1)
-        _setError.exitError(ERROR, "ERROR: getch() for keyboard didn't work");
+    if ((key = getch()) == -1) _setError.exitError(ERROR, "ERROR: getch() for keyboard didn't work (nCurses)");
     if (button == IDisplayModule::Button::Left && key == 'q') return true;
     if (button == IDisplayModule::Button::Right && key == 'd') return true;
     if (button == IDisplayModule::Button::Up && key == 'z') return true;

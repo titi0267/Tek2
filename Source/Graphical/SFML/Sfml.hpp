@@ -9,6 +9,11 @@
 #define SFML_HPP_
 
 #include "../../../arcade-interface-master/IDisplayModule.hpp"
+#include "../../Error/Error.hpp"
+#include "../../define.hpp"
+#include "../../Interface/RawTexture.hpp"
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
 class Sfml : public IDisplayModule {
     public:
@@ -83,6 +88,9 @@ class Sfml : public IDisplayModule {
 
     protected:
         std::uint32_t _pixelsPerCell;
+        sf::RenderWindow _window;
+        sf::Event _event;
+        Error _setError;
 };
 
 #endif /* !SFML_HPP_ */

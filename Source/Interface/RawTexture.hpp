@@ -7,8 +7,8 @@
 
 #pragma once
 
-#include "../../../arcade-interface-master/IDisplayModule.hpp"
-#include "../../Interface/Texture.hpp"
+#include "../../arcade-interface-master/IDisplayModule.hpp"
+#include "Texture.hpp"
 #include <iostream>
 #include <memory>
 
@@ -17,6 +17,7 @@ class IRawTexture : public IDisplayModule::RawTexture
     public:
         virtual ~IRawTexture() = default;
 
+    virtual const std::string getFilename() const = 0;
     virtual char getChar() const = 0;
     virtual ICore::Color getCharColor() const = 0;
     virtual ICore::Color getBackColor() const = 0;
@@ -24,8 +25,7 @@ class IRawTexture : public IDisplayModule::RawTexture
     virtual std::size_t getHeight() const = 0;
 };
 
-class RawTextureNCurses : public IRawTexture
-{
+class RawTextureNCurses : public IRawTexture {
     public:
         RawTextureNCurses(char character, ICore::Color characterColor, ICore::Color backgroundColor, std::size_t width, std::size_t height);
         ~RawTextureNCurses();
@@ -40,6 +40,21 @@ class RawTextureNCurses : public IRawTexture
         char _character;
         IDisplayModule::Color _characterColor;
         IDisplayModule::Color _backgroudColor;
+        std::size_t _width;
+        std::size_t _height;
+};
+
+class RawTextureSfml : public IRawTexture {
+    public:
+        RawTextureSfml(const std::string &filename, std::size_t width, std::size_t height);
+        ~RawTextureSfml();
+
+    const std::string getFilename() const;
+    std::size_t getWidth() const;
+    std::size_t getHeight() const;
+
+    protected:
+        std::string _filename;
         std::size_t _width;
         std::size_t _height;
 };

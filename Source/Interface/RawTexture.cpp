@@ -5,7 +5,7 @@
 ** RawTexture
 */
 
-#include "RawTextureNCurses.hpp"
+#include "RawTexture.hpp"
 
 RawTextureNCurses::RawTextureNCurses(char character, ICore::Color characterColor, ICore::Color backgroundColor, std::size_t width, std::size_t height)
 {
@@ -41,6 +41,34 @@ std::size_t RawTextureNCurses::getWidth() const
 }
 
 std::size_t RawTextureNCurses::getHeight() const
+{
+    return _height;
+}
+
+
+
+RawTextureSfml::RawTextureSfml(const std::string &filename, std::size_t width, std::size_t height)
+{
+    _filename = filename;
+    _width = width;
+    _height = height;
+}
+
+RawTextureSfml::~RawTextureSfml()
+{
+}
+
+const std::string RawTextureSfml::getFilename() const
+{
+    return _filename;
+}
+
+std::size_t RawTextureSfml::getWidth() const
+{
+    return _width;
+}
+
+std::size_t RawTextureSfml::getHeight() const
 {
     return _height;
 }
