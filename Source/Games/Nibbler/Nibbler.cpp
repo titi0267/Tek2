@@ -13,6 +13,7 @@ Nibbler::Nibbler()
     _snakeSize = 4;
     setDirection((int)Direction::right);
     constructMap();
+    _frameRate = 1;
 }
 
 Nibbler::~Nibbler()
@@ -30,9 +31,9 @@ void Nibbler::init(ICore *coreHandle)
     ICore::Vector2u tail{7, 5};
 
     coreHandle->openWindow(windowSize);
-    _sprite.push_back({grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::blue, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::black, ICore::Color::black, 16, 16)});
     _sprite.push_back({gums, coreHandle->loadTexture("./Assets/Nibbler/Gums.png", 'O', ICore::Color::red, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::red, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
     _sprite.push_back({head, coreHandle->loadTexture("./Assets/Nibbler/HeadUp.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)});
     _sprite.push_back({head, coreHandle->loadTexture("./Assets/Nibbler/HeadDown.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)});
     _sprite.push_back({head, coreHandle->loadTexture("./Assets/Nibbler/HeadRight.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)});
@@ -48,7 +49,7 @@ void Nibbler::init(ICore *coreHandle)
     _sprite.push_back({tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)});
     _sprite.push_back({tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)});
     constructSnake();
-    coreHandle->setFramerate(10);
+    coreHandle->setFramerate(30);
     coreHandle->setPixelsPerCell(8);
     _core = coreHandle;
 }
@@ -81,8 +82,8 @@ void Nibbler::constructSnake()
 /*   check all snake's position compared with gum position in X   */
 bool Nibbler::checkSnakePosX(unsigned random)
 {
-    for (int d = 3; d < _snakeSize + 3; d++) {
-        if (_sprite[d].pixelPosition.x == random) //pas les bonnes sprites
+    for (int d = 0; d < _snake.size(); d++) {
+        if (_snake[d].pixelPosition.x == random) //pas les bonnes sprites
             return true;
     }
     return false;
@@ -91,8 +92,8 @@ bool Nibbler::checkSnakePosX(unsigned random)
 /*   check all snake's position compared with gum position in Y  */
 bool Nibbler::checkSnakePosY(unsigned random)
 {
-    for (int d = 3; d < _snakeSize + 3; d++) {
-        if (_sprite[d].pixelPosition.y == random)//pas les bonnes sprites ?
+    for (int d = 0; d < _snake.size(); d++) {
+        if (_snake[d].pixelPosition.y == random)//pas les bonnes sprites ?
             return true;
     }
     return false;
@@ -197,8 +198,6 @@ void Nibbler::draw()
             _core->renderSprite({{_sprite[2].pixelPosition.x + z, _sprite[2].pixelPosition.y + y}, _sprite[2].texture});
         if (_map[i] == ' ')
             _core->renderSprite({{_sprite[0].pixelPosition.x + z, _sprite[0].pixelPosition.y + y}, _sprite[0].texture});
-        //if (_map[i] == ' ')
-            //_core->renderSprite({_sprite[0].pixelPosition.x + i, _sprite[0].texture});
         if (_map[i] == '\n') {
             y++;
             z = -1;
@@ -210,36 +209,86 @@ void Nibbler::draw()
     _core->renderSprite(_sprite[1]);
 }
 
+void Nibbler::updateSnakePos()
+{
+    for (int i = 0; i < _snake.size(); i++) {
+        switch (getDirection()) {
+            case (int)Direction::up:
+                if (i == 0)
+                    _snake[0].pixelPosition.y--;
+                break;
+            case (int)Direction::down:
+                if (i == 0)
+                    _snake[0].pixelPosition.y++;
+                break;
+            case (int)Direction::left:
+                if (i == 0)
+                    _snake[0].pixelPosition.x--;
+                break;
+            case (int)Direction::right:
+                if (i == 0)
+                    _snake[0].pixelPosition.x++;
+                break;
+        }
+    }
+    _frameRate = 1;
+}
+
 void Nibbler::update()
 {
-    if (_core->isButtonPressed(IDisplayModule::Button::Left) == true) {
-        std::cout << "Left" << std::endl;
+        if (_core->isButtonPressed(IDisplayModule::Button::Up) == true) {
+        switch (getDirection()) {
+            case (int)Direction::left:
+                setDirection((int)Direction::up);
+                break;
+            case (int)Direction::right:
+                setDirection((int)Direction::up);
+                break;
+            default:
+                break;
+        }
+    }
+    if (_core->isButtonPressed(IDisplayModule::Button::Down) == true) {
         switch (getDirection()) {
             case (int)Direction::left:
                 setDirection((int)Direction::down);
+                break;
             case (int)Direction::right:
-                setDirection((int)Direction::up);
+                setDirection((int)Direction::down);
+                break;
             default:
+                break;
+        }
+    }
+    if (_core->isButtonPressed(IDisplayModule::Button::Left) == true) {
+        switch (getDirection()) {
+            case (int)Direction::up:
                 setDirection((int)Direction::left);
+                break;
+            case (int)Direction::down:
+                setDirection((int)Direction::left);
+                break;
+            default:
                 break;
         }
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Right) == true) {
-        std::cout << "Right" << std::endl;
         switch (getDirection())
         {
-            case (int)Direction::left:
-                setDirection((int)Direction::up);
+            case (int)Direction::up:
+                setDirection((int)Direction::right);
                 break;
-            case (int)Direction::right:
-                setDirection((int)Direction::down);
+            case (int)Direction::down:
+                setDirection((int)Direction::right);
                 break;
             default:
-                setDirection((int)Direction::right);
                 break;
         }
     }
     setGum();
+    if (_frameRate % 20 == 0)
+        updateSnakePos();
+    _frameRate++;
 }
 
 std::unique_ptr<IGameModule> gEpitechArcadeGetGameModuleHandle()

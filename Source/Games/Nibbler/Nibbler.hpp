@@ -33,6 +33,7 @@ class Nibbler : public IGameModule {
         void setDirection(int direction);
         void constructSnake();
         void constructMap();
+        void updateSnakePos();
 
     protected:
         ICore *_core;
@@ -49,6 +50,7 @@ class Nibbler : public IGameModule {
             left = 3,
         };
         std::vector<char> _map;
+        int _frameRate;
 
         //std::deque<ICore::Vector2u> _snakePos;
 };
