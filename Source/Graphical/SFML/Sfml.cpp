@@ -134,25 +134,27 @@ void Sfml::update()
     for (int i = 0; i < 19; i++) _butt[i] = false;
     while (_window->pollEvent(_event)) {
         if (_event.type == sf::Event::Closed) _window->close();
-        if (_event.key.code == sf::Keyboard::Q) _butt[0] = true;
-        if (_event.key.code == sf::Keyboard::D) _butt[1] = true;
-        if (_event.key.code == sf::Keyboard::Z) _butt[2] = true;
-        if (_event.key.code == sf::Keyboard::S) _butt[3] = true;
-        if (_event.key.code == sf::Keyboard::F) _butt[4] = true;
-        if (_event.key.code == sf::Keyboard::V) _butt[5] = true;
-        if (_event.key.code == sf::Keyboard::H) _butt[6] = true;
-        if (_event.key.code == sf::Keyboard::B) _butt[7] = true;
-        if (_event.key.code == sf::Keyboard::T) _butt[8] = true;
-        if (_event.key.code == sf::Keyboard::Y) _butt[9] = true;
-        if (_event.key.code == sf::Keyboard::Return) _butt[10] = true;
-        if (_event.key.code == sf::Keyboard::Space) _butt[11] = true;
-        if (_event.key.code == sf::Keyboard::F1) _butt[12] = true;
-        if (_event.key.code == sf::Keyboard::F2) _butt[13] = true;
-        if (_event.key.code == sf::Keyboard::F3) _butt[14] = true;
-        if (_event.key.code == sf::Keyboard::F4) _butt[15] = true;
-        if (_event.key.code == sf::Keyboard::F5) _butt[16] = true;
-        if (_event.key.code == sf::Keyboard::F6) _butt[17] = true;
-        if (_event.key.code == sf::Keyboard::F7) _butt[18] = true;
+        if (_event.type == sf::Event::KeyReleased) {
+            if (_event.key.code == sf::Keyboard::Q) _butt[0] = true;
+            if (_event.key.code == sf::Keyboard::D) _butt[1] = true;
+            if (_event.key.code == sf::Keyboard::Z) _butt[2] = true;
+            if (_event.key.code == sf::Keyboard::S) _butt[3] = true;
+            if (_event.key.code == sf::Keyboard::F) _butt[4] = true;
+            if (_event.key.code == sf::Keyboard::V) _butt[5] = true;
+            if (_event.key.code == sf::Keyboard::H) _butt[6] = true;
+            if (_event.key.code == sf::Keyboard::B) _butt[7] = true;
+            if (_event.key.code == sf::Keyboard::T) _butt[8] = true;
+            if (_event.key.code == sf::Keyboard::Y) _butt[9] = true;
+            if (_event.key.code == sf::Keyboard::Return) _butt[10] = true;
+            if (_event.key.code == sf::Keyboard::Space) _butt[11] = true;
+            if (_event.key.code == sf::Keyboard::F1) _butt[12] = true;
+            if (_event.key.code == sf::Keyboard::F2) _butt[13] = true;
+            if (_event.key.code == sf::Keyboard::F3) _butt[14] = true;
+            if (_event.key.code == sf::Keyboard::F4) _butt[15] = true;
+            if (_event.key.code == sf::Keyboard::F5) _butt[16] = true;
+            if (_event.key.code == sf::Keyboard::F6) _butt[17] = true;
+            if (_event.key.code == sf::Keyboard::F7) _butt[18] = true;
+        }
     }
 }
 
