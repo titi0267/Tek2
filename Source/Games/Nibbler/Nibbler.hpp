@@ -29,18 +29,22 @@ class Nibbler : public IGameModule {
         bool checkSnakeHeadPosX(unsigned random);
         bool checkSnakeHeadPosY(unsigned random);
         void gumEated();
-        int getDirection() const;
-        void setDirection(int direction);
+        int getDirection(int i) const;
+        void setDirection(int direction, int i);
         void constructSnake();
         void constructMap();
         void updateSnakePos();
 
     protected:
+        struct Snake {
+            ICore::Sprite _sprt;
+            int _direction;
+        };
         ICore *_core;
-        std::deque<ICore::Sprite> _sprite;
+        std::deque<Snake> _sprite;
         bool _gum;
         int _snakeSize;
-        std::deque<ICore::Sprite> _snake;
+        std::deque<Snake> _snake;
         bool _addNewBody; //if true do not move last & before last element of snake
         int _direction;
         enum class Direction {
