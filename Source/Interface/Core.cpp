@@ -146,22 +146,25 @@ void Core::ChooseLib()
 
 void Core::gameLoop()
 {
-    timespec *time;
-    clock_gettime(CLOCK_MONOTONIC, time);
+    timespec time;
+
+    //time->tv_nsec = 0;
+    //time->tv_sec = 0;
 
     std::cout << "gameloop" << std::endl;
+    clock_gettime(CLOCK_MONOTONIC, &time);
     while (_disp->isClosing() == false) {
-        time->tv_nsec += (1000000000 / getFrameRate());
-        if (time->tv_nsec >= 1000000000) {
-            time->tv_sec += 1;
-            time->tv_nsec -= 1000000000;
+        time.tv_nsec += (1000000000 / getFrameRate());
+        if (time.tv_nsec >= 1000000000) {
+            time.tv_sec += 1;
+            time.tv_nsec -= 1000000000;
         }
         _game->update();
         _disp->update();
         _game->draw();
         _disp->display();
         ChooseLib();
-        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, time, NULL);
+        clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &time, NULL);
     }
     std::cout << "After gameloop" << std::endl;
 }
