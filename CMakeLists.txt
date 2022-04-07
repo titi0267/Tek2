@@ -44,7 +44,7 @@ set(HEADERS_NIBBLER
 set(SRCS_NCURSES
     Source/Graphical/nCurses/Ncurses.cpp
     Source/Error/Error.cpp
-    Source/Graphical/nCurses/RawTextureNCurses.cpp
+    Source/Interface/RawTexture.cpp
 )
 
 set(HEADERS_NCURSES
@@ -52,7 +52,8 @@ set(HEADERS_NCURSES
     arcade-interface-master/IDisplayModule.hpp
     Source/Error/Error.hpp
     Source/Graphical/nCurses/Ncurses.hpp
-    Source/Graphical/nCurses/RawTextureNCurses.hpp
+    Source/Interface/RawTexture.hpp
+    Source/define.hpp
 )
 
 set(HEADERS_SFML
@@ -61,6 +62,8 @@ set(HEADERS_SFML
     arcade-interface-master/IGameModule.hpp
     Source/Error/Error.hpp
     Source/Graphical/SFML/Sfml.hpp
+    Source/Interface/RawTexture.hpp
+    Source/define.hpp
 )
 
 set(HEADERS_SDL2
@@ -77,6 +80,8 @@ set(SRCS_SDL2
 
 set(SRCS_SFML
     Source/Graphical/SFML/Sfml.cpp
+    Source/Interface/RawTexture.cpp
+    Source/Error/Error.cpp
 )
 
 set(SRCS_MENU
