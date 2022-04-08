@@ -10,6 +10,7 @@
 Sfml::Sfml()
 {
     for (int i = 0; i < 19; i++) _butt.push_back(false);
+    _scale = 3;
 }
 
 Sfml::~Sfml()
@@ -37,8 +38,7 @@ std::unique_ptr<IDisplayModule::RawTexture> Sfml::loadTexture(const std::string 
 
 void Sfml::openWindow(IDisplayModule::Vector2u pixelsWantedWindowSize)
 {
-    _window = std::make_unique<sf::RenderWindow>(sf::VideoMode(pixelsWantedWindowSize.x*16*3, pixelsWantedWindowSize.y*16*3), "Arcade");
-
+    _window = std::make_unique<sf::RenderWindow>(sf::VideoMode(pixelsWantedWindowSize.x*8*_scale, pixelsWantedWindowSize.y*8*_scale), "Arcade");
 }
 
 bool Sfml::isButtonPressed(IDisplayModule::Button button)
@@ -119,8 +119,8 @@ void Sfml::renderSprite(IDisplayModule::Sprite sprite)
 
     txtr.loadFromFile(raw->getFilename());
     sprt.setTexture(txtr);
-    sprt.setPosition(sf::Vector2f(sprite.rawPixelPosition.x*raw->getWidth()*3, sprite.rawPixelPosition.y*raw->getHeight()*3));
-    sprt.setScale(sf::Vector2f(((float)raw->getWidth()/16)*3, ((float)raw->getHeight()/16)*3));
+    sprt.setPosition(sf::Vector2f(sprite.rawPixelPosition.x*raw->getWidth()*_scale, sprite.rawPixelPosition.y*raw->getHeight()*_scale));
+    sprt.setScale(sf::Vector2f(((float)raw->getWidth()/16)*_scale, ((float)raw->getHeight()/16)*_scale));
     _window->draw(sprt);
 }
 
