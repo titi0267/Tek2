@@ -22,7 +22,8 @@ Nibbler::~Nibbler()
 
 void Nibbler::init(ICore *coreHandle)
 {
-    ICore::Vector2u windowSize{20, 11};
+    ICore::Vector2u windowSize{40, 22};
+    //ICore::Vector2u windowSize{20, 11};
     ICore::Vector2u border{0, 0};
     ICore::Vector2u grass{0, 0};
     ICore::Vector2u gums{9, 3};
@@ -216,10 +217,16 @@ void Nibbler::setDirection(int direction, int i)
                 switch (_snake[i]._direction)
                 {
                 case (int)Direction::up:
-                    _snake[i]._sprt.texture = _sprite[7]._sprt.texture;
+                    if (_snake[i - 1]._sprt.pixelPosition.y != _snake[i]._sprt.pixelPosition.y && _snake[i + 1]._sprt.pixelPosition.x != _snake[i]._sprt.pixelPosition.x)
+                        _snake[i]._sprt.texture = _sprite[9]._sprt.texture;
+                    else
+                        _snake[i]._sprt.texture = _sprite[7]._sprt.texture;
                     break;
                 case (int)Direction::down:
-                    _snake[i]._sprt.texture = _sprite[7]._sprt.texture;
+                    if (_snake[i - 1]._sprt.pixelPosition.y != _snake[i]._sprt.pixelPosition.y)
+                        _snake[i]._sprt.texture = _sprite[10]._sprt.texture;
+                    else
+                        _snake[i]._sprt.texture = _sprite[7]._sprt.texture;
                     break;
                 default:
                     _snake[i]._sprt.texture = _sprite[8]._sprt.texture;
@@ -265,6 +272,7 @@ void Nibbler::updateSnakePos()
                         _snake[i]._direction = _snake[i - 1]._direction;
                         _snake[i]._sprt.texture = _snake[i - 1]._sprt.texture;
                     } else {
+                        setDirection(_snake[i - 1]._direction, i);
                         _snake[i]._sprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
                         _snake[i]._direction = _snake[i - 1]._direction;
                     }
@@ -279,6 +287,7 @@ void Nibbler::updateSnakePos()
                         _snake[i]._direction = _snake[i - 1]._direction;
                         _snake[i]._sprt.texture = _snake[i - 1]._sprt.texture;
                     } else {
+                        setDirection(_snake[i - 1]._direction, i);
                         _snake[i]._sprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
                         _snake[i]._direction = _snake[i - 1]._direction;
                     }
@@ -295,6 +304,7 @@ void Nibbler::updateSnakePos()
                         _snake[i]._direction = _snake[i - 1]._direction;
                         _snake[i]._sprt.texture = _snake[i - 1]._sprt.texture;
                     } else {
+                        setDirection(_snake[i - 1]._direction, i);
                         _snake[i]._sprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
                         _snake[i]._direction = _snake[i - 1]._direction;
                     }
@@ -311,6 +321,7 @@ void Nibbler::updateSnakePos()
                         _snake[i]._direction = _snake[i - 1]._direction;
                         _snake[i]._sprt.texture = _snake[i - 1]._sprt.texture;
                     } else {
+                        setDirection(_snake[i - 1]._direction, i);
                         _snake[i]._sprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
                         _snake[i]._direction = _snake[i - 1]._direction;
                     }
@@ -326,18 +337,6 @@ void Nibbler::update()
     if (_frameRate > 20)
         updateSnakePos();
     _frameRate++;
-        if (_core->isButtonPressed(IDisplayModule::Button::Up) == true) {
-        switch (getDirection(0)) {
-            case (int)Direction::left:
-                setDirection((int)Direction::up, 0);
-                break;
-            case (int)Direction::right:
-                setDirection((int)Direction::up, 0);
-                break;
-            default:
-                break;
-        }
-    }
     if (_core->isButtonPressed(IDisplayModule::Button::Down) == true) {
         switch (getDirection(0)) {
             case (int)Direction::left:
@@ -345,6 +344,18 @@ void Nibbler::update()
                 break;
             case (int)Direction::right:
                 setDirection((int)Direction::down, 0);
+                break;
+            default:
+                break;
+        }
+    }
+    if (_core->isButtonPressed(IDisplayModule::Button::Up) == true) {
+        switch (getDirection(0)) {
+            case (int)Direction::left:
+                setDirection((int)Direction::up, 0);
+                break;
+            case (int)Direction::right:
+                setDirection((int)Direction::up, 0);
                 break;
             default:
                 break;

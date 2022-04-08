@@ -46,6 +46,7 @@ class Ncurses : public IDisplayModule {
 
     protected:
         std::uint32_t _pixelsPerCell;
+        int _key;
         Error _setError;
 };
 
