@@ -23,11 +23,20 @@ class Pacman : public IGameModule {
         void update();
         void draw();
         void constructMap();
+        bool movePacman(int i);
+        void moveGhost();
+        void updatePosition();
+        int chooseDirection(int pos);
+        bool checkWallGhost(int i);
 
     protected:
         ICore *_core;
         std::deque<ICore::Sprite> _sprite;
         int _direction;
+        int _ghost1Direction;
+        int _ghost2Direction;
+        int _ghost3Direction;
+        int _ghost4Direction;
         enum class Direction {
             up = 0,
             down = 1,
@@ -35,6 +44,14 @@ class Pacman : public IGameModule {
             left = 3,
         };
         std::vector<char> _map;
+        int _frameRate;
+        int _ghostFrameRate;
+        int _pacmanHead;
+        int _pacGumEat;
+        int _score;
+        int _ghostOut;
+        int _timer;
+        std::vector<std::string> _ghostInHouse;
 };
 
 #endif /* !PACMAN_HPP_ */

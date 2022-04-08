@@ -1,16 +1,16 @@
 1ttttttttktttttttttktttttttttktttttttt2
 r........u.........u.........u........r
-r.1t2..h..cf.c2.p.p.p.p.1f.cf..h..1t2.r
+r.1t2..h..cf.c2.p...p.p.1f.cf..h..1t2.r
 r.rou.cg2.....4f.p.p.p.c3.....1gf.uor.r
 r.r.....u.ct2.............1tf.u.....r.r
 r.4ttt2.....4f.h.ctktf.h.c3.....1ttt3.r
 r.....4ttt2....r...r...r....1ttt3.....r
 4ttt2.....r.h.cbtf u ctbf...r.....1ttt3
-    r.1tf.r.r..r   A   r..h.r.ct2.r
+0000r.1tf.r.r..r   A   r..h.r.ct2.r0000
 tttt3.r...r.4f.u 1f-c2 u.c3.r...r.4tttt
 ......ltttm..... rXYZr .....ltttm......
 tttt2.r...r.1f.h 4ttt3 h.c2.r...r.1tttt
-    r.4tf.r.u..r   C   r..u.r.ct3.r
+0000r.4tf.r.u..r   C   r..u.r.ct3.r0000
 1ttt3.....r...c3.ctttf.4f...r.....4ttt2
 r.....1tkt3.h.............h.4tkt2.....r
 r.1tttm.u...u.cktf.h.ctkf.u...u.lttt2.r
