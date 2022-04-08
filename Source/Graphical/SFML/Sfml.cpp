@@ -37,7 +37,7 @@ std::unique_ptr<IDisplayModule::RawTexture> Sfml::loadTexture(const std::string 
 
 void Sfml::openWindow(IDisplayModule::Vector2u pixelsWantedWindowSize)
 {
-    _window = std::make_unique<sf::RenderWindow>(sf::VideoMode(pixelsWantedWindowSize.x*4, pixelsWantedWindowSize.y*4), "Arcade");
+    _window = std::make_unique<sf::RenderWindow>(sf::VideoMode(pixelsWantedWindowSize.x*16*3, pixelsWantedWindowSize.y*16*3), "Arcade");
 
 }
 
@@ -119,8 +119,8 @@ void Sfml::renderSprite(IDisplayModule::Sprite sprite)
 
     txtr.loadFromFile(raw->getFilename());
     sprt.setTexture(txtr);
-    sprt.setPosition(sf::Vector2f(sprite.rawPixelPosition.x*48, sprite.rawPixelPosition.y*48));
-    sprt.setScale(sf::Vector2f((raw->getWidth()/16)*3, (raw->getHeight()/16)*3));
+    sprt.setPosition(sf::Vector2f(sprite.rawPixelPosition.x*raw->getWidth()*3, sprite.rawPixelPosition.y*raw->getHeight()*3));
+    sprt.setScale(sf::Vector2f(((float)raw->getWidth()/16)*3, ((float)raw->getHeight()/16)*3));
     _window->draw(sprt);
 }
 
