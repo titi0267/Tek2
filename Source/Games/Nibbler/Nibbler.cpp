@@ -59,7 +59,7 @@ void Nibbler::init(ICore *coreHandle)
     _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::left,(int)Direction::left, true, 21, false});
     _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::right,(int)Direction::right, true, 22, false});
     constructSnake();
-    coreHandle->setFramerate(30);
+    coreHandle->setFramerate(60);
     coreHandle->setPixelsPerCell(16);
     _core = coreHandle;
 }
@@ -96,7 +96,6 @@ bool Nibbler::checkSnakePosX(unsigned gumPos)
         if (_snake[d]._sprt.pixelPosition.x == gumPos)
             return true;
     }
-    std::cout << "GumPos.x = " << gumPos/16 << std::endl;
     return false;
 }
 
@@ -581,7 +580,7 @@ void Nibbler::draw()
             _core->renderSprite(_snake[i]._sprt);
             _snake[i]._sprt.pixelPosition = _snake[i]._nextSprt.pixelPosition;
         }
-        if (_frameNext > 7 && _end == false) {
+        if (_frameNext > 10 && _end == false) {
             for (int i = _snake.size() - 1; i != -1; i--) {
                 _snake[i]._sprt = _snake[i]._nextSprt;
                 _snake[i]._direction = _snake[i]._nextDirection;
@@ -594,7 +593,7 @@ void Nibbler::draw()
 void Nibbler::update()
 {
     if (_core->isButtonPressed(IDisplayModule::Button::Down) == true) {
-        if (_frameKey > 7) {
+        if (_frameKey > 5) {
             if (_snake[0]._nextDirection != (int)Direction::up && _snake[0]._nextDirection != (int)Direction::down) {
                 _snake[0]._nextDirection = (int)Direction::down;
                 _frameKey = 1;
@@ -602,7 +601,7 @@ void Nibbler::update()
         }
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Up) == true) {
-        if (_frameKey > 7) {
+        if (_frameKey > 5) {
             if (_snake[0]._nextDirection != (int)Direction::up && _snake[0]._nextDirection != (int)Direction::down) {
                 _snake[0]._nextDirection = (int)Direction::up;
                 _frameKey = 1;
@@ -610,7 +609,7 @@ void Nibbler::update()
         }
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Left) == true) {
-        if (_frameKey > 7) {
+        if (_frameKey > 5) {
             if (_snake[0]._nextDirection != (int)Direction::right && _snake[0]._nextDirection != (int)Direction::left) {
                 _snake[0]._nextDirection = (int)Direction::left;
                 _frameKey = 1;
@@ -618,7 +617,7 @@ void Nibbler::update()
         }
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Right) == true) {
-        if (_frameKey > 7) {
+        if (_frameKey > 5) {
             if (_snake[0]._nextDirection != (int)Direction::right && _snake[0]._nextDirection != (int)Direction::left) {
                 _snake[0]._nextDirection = (int)Direction::right;
                 _frameKey = 1;
@@ -629,7 +628,7 @@ void Nibbler::update()
         _end = false;
     }
     setGum(); //takes way too long
-    if (_frameRate > 7 && _end == false) {
+    if (_frameRate > 10 && _end == false) {
         headMoves();
         for (int i = _snake.size() - 2; i > 0; i--)
             bodyMoves(i);
