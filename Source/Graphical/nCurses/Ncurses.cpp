@@ -63,7 +63,10 @@ bool Ncurses::isButtonPressed(IDisplayModule::Button button)
     if (button == IDisplayModule::Button::F4 && _key == 268) return true;
     if (button == IDisplayModule::Button::F5 && _key == 269) return true;
     if (button == IDisplayModule::Button::F6 && _key == 270) return true;
-    if (button == IDisplayModule::Button::F7 && _key == 271) return true;
+    if (button == IDisplayModule::Button::F7 && _key == 271) {
+        endwin();
+        return true;
+    }
     return false;
 }
 
@@ -132,7 +135,7 @@ void Ncurses::renderSprite(IDisplayModule::Sprite sprite)
     int color1;
     int color2;
     IRawTexture *raw = dynamic_cast<IRawTexture *>(sprite.texture);
-    move(sprite.rawPixelPosition.y, sprite.rawPixelPosition.x);
+    move(sprite.rawPixelPosition.y/_pixelsPerCell, sprite.rawPixelPosition.x/_pixelsPerCell);
 
     attron(COLOR_PAIR(getPair(raw->getCharColor(), raw->getBackColor())));
     addch(raw->getChar());

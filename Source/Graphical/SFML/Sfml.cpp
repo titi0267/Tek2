@@ -10,7 +10,6 @@
 Sfml::Sfml()
 {
     for (int i = 0; i < 19; i++) _butt.push_back(false);
-    _scale = 3;
 }
 
 Sfml::~Sfml()
@@ -38,30 +37,30 @@ std::unique_ptr<IDisplayModule::RawTexture> Sfml::loadTexture(const std::string 
 
 void Sfml::openWindow(IDisplayModule::Vector2u pixelsWantedWindowSize)
 {
-    _window = std::make_unique<sf::RenderWindow>(sf::VideoMode(pixelsWantedWindowSize.x*8*_scale, pixelsWantedWindowSize.y*8*_scale), "Arcade");
+    _window = std::make_unique<sf::RenderWindow>(sf::VideoMode(pixelsWantedWindowSize.x, pixelsWantedWindowSize.y), "Arcade");
 }
 
 bool Sfml::isButtonPressed(IDisplayModule::Button button)
 {
-    if (button == IDisplayModule::Button::Left && _butt[0] == true) return true;
-    if (button == IDisplayModule::Button::Right && _butt[1] == true) return true;
-    if (button == IDisplayModule::Button::Up && _butt[2] == true) return true;
-    if (button == IDisplayModule::Button::Down && _butt[3] == true) return true;
-    if (button == IDisplayModule::Button::A && _butt[4] == true) return true;
-    if (button == IDisplayModule::Button::B && _butt[5] == true) return true;
-    if (button == IDisplayModule::Button::X && _butt[6] == true) return true;
-    if (button == IDisplayModule::Button::Y && _butt[7] == true) return true;
-    if (button == IDisplayModule::Button::L && _butt[8] == true) return true;
-    if (button == IDisplayModule::Button::R && _butt[9] == true) return true;
-    if (button == IDisplayModule::Button::Start && _butt[10] == true) return true;
-    if (button == IDisplayModule::Button::Select && _butt[11] == true) return true;
-    if (button == IDisplayModule::Button::F1 && _butt[12] == true) return true;
-    if (button == IDisplayModule::Button::F2 && _butt[13] == true) return true;
-    if (button == IDisplayModule::Button::F3 && _butt[14] == true) return true;
-    if (button == IDisplayModule::Button::F4 && _butt[15] == true) return true;
-    if (button == IDisplayModule::Button::F5 && _butt[16] == true) return true;
-    if (button == IDisplayModule::Button::F6 && _butt[17] == true) return true;
-    if (button == IDisplayModule::Button::F7 && _butt[18] == true) return true;
+    if (button == IDisplayModule::Button::Left) return _butt[0];
+    if (button == IDisplayModule::Button::Right) return _butt[1];
+    if (button == IDisplayModule::Button::Up) return _butt[2];
+    if (button == IDisplayModule::Button::Down) return _butt[3];
+    if (button == IDisplayModule::Button::A) return _butt[4];
+    if (button == IDisplayModule::Button::B) return _butt[5];
+    if (button == IDisplayModule::Button::X) return _butt[6];
+    if (button == IDisplayModule::Button::Y) return _butt[7];
+    if (button == IDisplayModule::Button::L) return _butt[8];
+    if (button == IDisplayModule::Button::R) return _butt[9];
+    if (button == IDisplayModule::Button::Start) return _butt[10];
+    if (button == IDisplayModule::Button::Select) return _butt[11];
+    if (button == IDisplayModule::Button::F1) return _butt[12];
+    if (button == IDisplayModule::Button::F2) return _butt[13];
+    if (button == IDisplayModule::Button::F3) return _butt[14];
+    if (button == IDisplayModule::Button::F4) return _butt[15];
+    if (button == IDisplayModule::Button::F5) return _butt[16];
+    if (button == IDisplayModule::Button::F6) return _butt[17];
+    if (button == IDisplayModule::Button::F7) return _butt[18];
     return false;
 }
 
@@ -119,8 +118,7 @@ void Sfml::renderSprite(IDisplayModule::Sprite sprite)
 
     txtr.loadFromFile(raw->getFilename());
     sprt.setTexture(txtr);
-    sprt.setPosition(sf::Vector2f(sprite.rawPixelPosition.x*raw->getWidth()*_scale, sprite.rawPixelPosition.y*raw->getHeight()*_scale));
-    sprt.setScale(sf::Vector2f(((float)raw->getWidth()/16)*_scale, ((float)raw->getHeight()/16)*_scale));
+    sprt.setPosition(sf::Vector2f(sprite.rawPixelPosition.x, sprite.rawPixelPosition.y));
     _window->draw(sprt);
 }
 
@@ -153,7 +151,10 @@ void Sfml::update()
             if (_event.key.code == sf::Keyboard::F4) _butt[15] = true;
             if (_event.key.code == sf::Keyboard::F5) _butt[16] = true;
             if (_event.key.code == sf::Keyboard::F6) _butt[17] = true;
-            if (_event.key.code == sf::Keyboard::F7) _butt[18] = true;
+            if (_event.key.code == sf::Keyboard::F7) {
+                _butt[18] = true;
+                _window->close();
+            }
         }
     }
 }

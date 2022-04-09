@@ -93,7 +93,6 @@ class Sfml : public IDisplayModule {
         sf::Event _event;
         Error _setError;
         std::deque<bool> _butt;
-        std::size_t _scale;
 };
 
 #endif /* !SFML_HPP_ */
