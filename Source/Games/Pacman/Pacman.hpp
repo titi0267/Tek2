@@ -27,7 +27,8 @@ class Pacman : public IGameModule {
         void moveGhost();
         void updatePosition();
         int chooseDirection(int pos);
-        bool checkWallGhost(int i);
+        bool checkWallGhost(int i, int nb);
+        void freeGhost();
 
     protected:
         ICore *_core;
@@ -52,6 +53,7 @@ class Pacman : public IGameModule {
         int _ghostOut;
         int _timer;
         std::vector<std::string> _ghostInHouse;
+        std::vector<std::string> _ghostOutHouse;
 };
 
 #endif /* !PACMAN_HPP_ */
