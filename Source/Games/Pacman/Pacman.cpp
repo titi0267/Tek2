@@ -68,7 +68,7 @@ void Pacman::init(ICore *coreHandle)
     _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/bigPacGum.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
 
     coreHandle->setFramerate(60);
-    coreHandle->setPixelsPerCell(8);
+    coreHandle->setPixelsPerCell(16);
     _core = coreHandle;
 }
 
@@ -192,6 +192,8 @@ void Pacman::moveGhost()
 {
     int coord1 = (_sprite[25].pixelPosition.y * 40) + _sprite[25].pixelPosition.x;
     int coord2 = (_sprite[20].pixelPosition.y * 40) + _sprite[20].pixelPosition.x;
+    int coord3 = (_sprite[19].pixelPosition.y * 40) + _sprite[19].pixelPosition.x;
+    int coord4 = (_sprite[21].pixelPosition.y * 40) + _sprite[21].pixelPosition.x;
     int tmp = 0;
 
     if (_ghostFrameRate > 6) {
@@ -199,24 +201,36 @@ void Pacman::moveGhost()
             _ghost1Direction = tmp;
         if ((tmp = chooseDirection(coord2)) != -1)
             _ghost2Direction = tmp;
+        if ((tmp = chooseDirection(coord3)) != -1)
+            _ghost3Direction = tmp;
+        if ((tmp = chooseDirection(coord4)) != -1)
+            _ghost4Direction = tmp;
         _ghostFrameRate = 0;
         if (std::find(_ghostOutHouse.begin(), _ghostOutHouse.end(), "orange") != _ghostOutHouse.end()) {
             switch(_ghost1Direction) {
                 case (int)Direction::left:
-                    if (checkWallGhost(-1, 25))
+                    if (checkWallGhost(-1, 25)) {
+                        _map[coord1 - 1] = 'A';
                         _sprite[25].pixelPosition.x--;
+                    }
                     break;
                 case (int)Direction::right:
-                    if (checkWallGhost(1, 25))
+                    if (checkWallGhost(1, 25)) {
+                        _map[coord1 + 1] = 'A';
                         _sprite[25].pixelPosition.x++;
+                    }
                     break;
                 case (int)Direction::up:
-                    if (checkWallGhost(-40, 25))
+                    if (checkWallGhost(-40, 25)) {
+                        _map[coord1 - 40] = 'A';
                         _sprite[25].pixelPosition.y--;
+                    }
                     break;
                 case (int)Direction::down:
-                    if (checkWallGhost(40, 25))
+                    if (checkWallGhost(40, 25)) {
+                        _map[coord1 + 40] = 'A';
                         _sprite[25].pixelPosition.y++;
+                    }
                     break;
             }
         }
@@ -227,20 +241,28 @@ void Pacman::moveGhost()
             }
             switch(_ghost1Direction) {
                 case (int)Direction::left:
-                    if (checkWallGhost(-1, 20))
+                    if (checkWallGhost(-1, 20)) {
+                        _map[coord2 - 1] = 'Y';
                         _sprite[20].pixelPosition.x--;
+                    }
                     break;
                 case (int)Direction::right:
-                    if (checkWallGhost(1, 20))
+                    if (checkWallGhost(1, 20)) {
+                        _map[coord2 + 1] = 'Y';
                         _sprite[20].pixelPosition.x++;
+                    }
                     break;
                 case (int)Direction::up:
-                    if (checkWallGhost(-40, 20))
+                    if (checkWallGhost(-40, 20)) {
+                        _map[coord2 - 40] = 'Y';
                         _sprite[20].pixelPosition.y--;
+                    }
                     break;
                 case (int)Direction::down:
-                    if (checkWallGhost(40, 20))
+                    if (checkWallGhost(40, 20)) {
+                        _map[coord2 + 40] = 'Y';
                         _sprite[20].pixelPosition.y++;
+                    }
                     break;
             }
         }
@@ -251,20 +273,28 @@ void Pacman::moveGhost()
             }
             switch(_ghost1Direction) {
                 case (int)Direction::left:
-                    if (checkWallGhost(-1, 19))
+                    if (checkWallGhost(-1, 19)) {
+                        _map[coord3 - 1] = 'X';
                         _sprite[19].pixelPosition.x--;
+                    }
                     break;
                 case (int)Direction::right:
-                    if (checkWallGhost(1, 19))
+                    if (checkWallGhost(1, 19)) {
+                        _map[coord3 + 1] = 'X';
                         _sprite[19].pixelPosition.x++;
+                    }
                     break;
                 case (int)Direction::up:
-                    if (checkWallGhost(-40, 19))
+                    if (checkWallGhost(-40, 19)) {
+                        _map[coord3 - 40] = 'X';
                         _sprite[19].pixelPosition.y--;
+                    }
                     break;
                 case (int)Direction::down:
-                    if (checkWallGhost(40, 19))
+                    if (checkWallGhost(40, 19)) {
+                        _map[coord3 + 40] = 'X';
                         _sprite[19].pixelPosition.y++;
+                    }
                     break;
             }
         }
@@ -275,20 +305,28 @@ void Pacman::moveGhost()
             }
             switch(_ghost1Direction) {
                 case (int)Direction::left:
-                    if (checkWallGhost(-1, 21))
+                    if (checkWallGhost(-1, 21)) {
+                        _map[coord4 - 1] = 'Z';
                         _sprite[21].pixelPosition.x--;
+                    }
                     break;
                 case (int)Direction::right:
-                    if (checkWallGhost(1, 21))
+                    if (checkWallGhost(1, 21)) {
+                        _map[coord4 + 1] = 'Z';
                         _sprite[21].pixelPosition.x++;
+                    }
                     break;
                 case (int)Direction::up:
-                    if (checkWallGhost(-40, 21))
+                    if (checkWallGhost(-40, 21)) {
+                        _map[coord4 - 40] = 'Z';
                         _sprite[21].pixelPosition.y--;
+                    }
                     break;
                 case (int)Direction::down:
-                    if (checkWallGhost(40, 21))
+                    if (checkWallGhost(40, 21)) {
+                        _map[coord4 + 40] = 'Z';
                         _sprite[21].pixelPosition.y++;
+                    }
                     break;
             }
         }
@@ -298,10 +336,12 @@ void Pacman::moveGhost()
 
 void Pacman::updatePosition()
 {
+    int index = (_sprite[18].pixelPosition.y * 40) + _sprite[18].pixelPosition.x;
     _frameRate = 0;
     switch(_direction) {
         case (int)Direction::left:
             if (movePacman(-1)) {
+                _map[index - 1] = 'C';
                 _sprite[18].pixelPosition.x--;
                 _sprite[22].pixelPosition.x--;
                 _sprite[23].pixelPosition.x--;
@@ -310,6 +350,7 @@ void Pacman::updatePosition()
             break;
         case (int)Direction::right:
             if (movePacman(1)) {
+                _map[index + 1] = 'C';
                 _sprite[18].pixelPosition.x++;
                 _sprite[22].pixelPosition.x++;
                 _sprite[23].pixelPosition.x++;
@@ -318,6 +359,7 @@ void Pacman::updatePosition()
             break;
         case (int)Direction::up:
             if (movePacman(-40)) {
+                _map[index - 40] = 'C';
                 _sprite[18].pixelPosition.y--;
                 _sprite[22].pixelPosition.y--;
                 _sprite[23].pixelPosition.y--;
@@ -326,6 +368,7 @@ void Pacman::updatePosition()
             break;
         case (int)Direction::down:
             if (movePacman(40)) {
+                _map[index + 40] = 'C';
                 _sprite[18].pixelPosition.y++;
                 _sprite[22].pixelPosition.y++;
                 _sprite[23].pixelPosition.y++;
@@ -400,67 +443,67 @@ void Pacman::draw()
     _core->clearScreen(ICore::Color::black);
     for (int i = 0, y = 0, z = 0; i < _map.size(); i++, z++) {
         if (_map[i] == '1')
-            _core->renderSprite({{_sprite[2].pixelPosition.x + z, _sprite[2].pixelPosition.y + y}, _sprite[2].texture});
+            _core->renderSprite({{(_sprite[2].pixelPosition.x + z) * 16, (_sprite[2].pixelPosition.y + y) * 16}, _sprite[2].texture});
         if (_map[i] == '2')
-            _core->renderSprite({{_sprite[3].pixelPosition.x + z, _sprite[3].pixelPosition.y + y}, _sprite[3].texture});
+            _core->renderSprite({{(_sprite[3].pixelPosition.x + z) * 16, (_sprite[3].pixelPosition.y + y) * 16}, _sprite[3].texture});
         if (_map[i] == '3')
-            _core->renderSprite({{_sprite[1].pixelPosition.x + z, _sprite[1].pixelPosition.y + y}, _sprite[1].texture});
+            _core->renderSprite({{(_sprite[1].pixelPosition.x + z) * 16, (_sprite[1].pixelPosition.y + y) * 16}, _sprite[1].texture});
         if (_map[i] == '4')
-            _core->renderSprite({{_sprite[0].pixelPosition.x + z, _sprite[0].pixelPosition.y + y}, _sprite[0].texture});
+            _core->renderSprite({{(_sprite[0].pixelPosition.x + z) * 16, (_sprite[0].pixelPosition.y + y) * 16}, _sprite[0].texture});
         if (_map[i] == 'r')
-            _core->renderSprite({{_sprite[4].pixelPosition.x + z, _sprite[4].pixelPosition.y + y}, _sprite[4].texture});
+            _core->renderSprite({{(_sprite[4].pixelPosition.x + z) * 16, (_sprite[4].pixelPosition.y + y) * 16}, _sprite[4].texture});
         if (_map[i] == 't')
-            _core->renderSprite({{_sprite[5].pixelPosition.x + z, _sprite[5].pixelPosition.y + y}, _sprite[5].texture});
+            _core->renderSprite({{(_sprite[5].pixelPosition.x + z) * 16, (_sprite[5].pixelPosition.y + y) * 16}, _sprite[5].texture});
         if (_map[i] == '.')
-            _core->renderSprite({{_sprite[6].pixelPosition.x + z, _sprite[6].pixelPosition.y + y}, _sprite[6].texture});
+            _core->renderSprite({{(_sprite[6].pixelPosition.x + z) * 16, (_sprite[6].pixelPosition.y + y) * 16}, _sprite[6].texture});
         if (_map[i] == 'u')
-            _core->renderSprite({{_sprite[7].pixelPosition.x + z, _sprite[7].pixelPosition.y + y}, _sprite[7].texture});
+            _core->renderSprite({{(_sprite[7].pixelPosition.x + z) * 16, (_sprite[7].pixelPosition.y + y) * 16}, _sprite[7].texture});
         if (_map[i] == 'h')
-            _core->renderSprite({{_sprite[8].pixelPosition.x + z, _sprite[8].pixelPosition.y + y}, _sprite[8].texture});
+            _core->renderSprite({{(_sprite[8].pixelPosition.x + z) * 16, (_sprite[8].pixelPosition.y + y) * 16}, _sprite[8].texture});
         if (_map[i] == 'c')
-            _core->renderSprite({{_sprite[9].pixelPosition.x + z, _sprite[9].pixelPosition.y + y}, _sprite[9].texture});
+            _core->renderSprite({{(_sprite[9].pixelPosition.x + z) * 16, (_sprite[9].pixelPosition.y + y) * 16}, _sprite[9].texture});
         if (_map[i] == 'f')
-            _core->renderSprite({{_sprite[10].pixelPosition.x + z, _sprite[10].pixelPosition.y + y}, _sprite[10].texture});
+            _core->renderSprite({{(_sprite[10].pixelPosition.x + z) * 16, (_sprite[10].pixelPosition.y + y) * 16}, _sprite[10].texture});
         if (_map[i] == 'g')
-            _core->renderSprite({{_sprite[11].pixelPosition.x + z, _sprite[11].pixelPosition.y + y}, _sprite[11].texture});
+            _core->renderSprite({{(_sprite[11].pixelPosition.x + z) * 16, (_sprite[11].pixelPosition.y + y) * 16}, _sprite[11].texture});
         if (_map[i] == 'k')
-            _core->renderSprite({{_sprite[12].pixelPosition.x + z, _sprite[12].pixelPosition.y + y}, _sprite[12].texture});
+            _core->renderSprite({{(_sprite[12].pixelPosition.x + z) * 16, (_sprite[12].pixelPosition.y + y) * 16}, _sprite[12].texture});
         if (_map[i] == 'l')
-            _core->renderSprite({{_sprite[13].pixelPosition.x + z, _sprite[13].pixelPosition.y + y}, _sprite[13].texture});
+            _core->renderSprite({{(_sprite[13].pixelPosition.x + z) * 16, (_sprite[13].pixelPosition.y + y) * 16}, _sprite[13].texture});
         if (_map[i] == 'm')
-            _core->renderSprite({{_sprite[14].pixelPosition.x + z, _sprite[14].pixelPosition.y + y}, _sprite[14].texture});
+            _core->renderSprite({{(_sprite[14].pixelPosition.x + z) * 16, (_sprite[14].pixelPosition.y + y) * 16}, _sprite[14].texture});
         if (_map[i] == 'b')
-            _core->renderSprite({{_sprite[15].pixelPosition.x + z, _sprite[15].pixelPosition.y + y}, _sprite[15].texture});
+            _core->renderSprite({{(_sprite[15].pixelPosition.x + z) * 16, (_sprite[15].pixelPosition.y + y) * 16}, _sprite[15].texture});
         if (_map[i] == 'p')
-            _core->renderSprite({{_sprite[16].pixelPosition.x + z, _sprite[16].pixelPosition.y + y}, _sprite[16].texture});
+            _core->renderSprite({{(_sprite[16].pixelPosition.x + z) * 16, (_sprite[16].pixelPosition.y + y) * 16}, _sprite[16].texture});
         if (_map[i] == '-')
-            _core->renderSprite({{_sprite[17].pixelPosition.x + z, _sprite[17].pixelPosition.y + y}, _sprite[17].texture});
+            _core->renderSprite({{(_sprite[17].pixelPosition.x + z) * 16, (_sprite[17].pixelPosition.y + y) * 16}, _sprite[17].texture});
         if (_map[i] == 'C') {
             switch (_pacmanHead) {
                 case 18:
-                    _core->renderSprite({{_sprite[18].pixelPosition.x, _sprite[18].pixelPosition.y}, _sprite[18].texture});
+                    _core->renderSprite({{(_sprite[18].pixelPosition.x) * 16, (_sprite[18].pixelPosition.y) * 16}, _sprite[18].texture});
                     break;
                 case 22:
-                    _core->renderSprite({{_sprite[22].pixelPosition.x, _sprite[22].pixelPosition.y}, _sprite[22].texture});
+                    _core->renderSprite({{(_sprite[22].pixelPosition.x) * 16, (_sprite[22].pixelPosition.y) * 16}, _sprite[22].texture});
                     break;
                 case 23:
-                    _core->renderSprite({{_sprite[23].pixelPosition.x, _sprite[23].pixelPosition.y}, _sprite[23].texture});
+                    _core->renderSprite({{(_sprite[23].pixelPosition.x) * 16, (_sprite[23].pixelPosition.y) * 16}, _sprite[23].texture});
                     break;
                 case 24:
-                    _core->renderSprite({{_sprite[24].pixelPosition.x, _sprite[24].pixelPosition.y}, _sprite[24].texture});
+                    _core->renderSprite({{(_sprite[24].pixelPosition.x) * 16, (_sprite[24].pixelPosition.y) * 16}, _sprite[24].texture});
                     break;
             }
         }
         if (_map[i] == 'X')
-            _core->renderSprite({{_sprite[19].pixelPosition.x, _sprite[19].pixelPosition.y}, _sprite[19].texture});
+            _core->renderSprite({{(_sprite[19].pixelPosition.x) * 16, (_sprite[19].pixelPosition.y) * 16}, _sprite[19].texture});
         if (_map[i] == 'Y')
-            _core->renderSprite({{_sprite[20].pixelPosition.x, _sprite[20].pixelPosition.y}, _sprite[20].texture});
+            _core->renderSprite({{(_sprite[20].pixelPosition.x) * 16, (_sprite[20].pixelPosition.y) * 16}, _sprite[20].texture});
         if (_map[i] == 'Z')
-            _core->renderSprite({{_sprite[21].pixelPosition.x, _sprite[21].pixelPosition.y}, _sprite[21].texture});
+            _core->renderSprite({{(_sprite[21].pixelPosition.x) * 16, (_sprite[21].pixelPosition.y) * 16}, _sprite[21].texture});
         if (_map[i] == 'A')
-            _core->renderSprite({{_sprite[25].pixelPosition.x, _sprite[25].pixelPosition.y}, _sprite[25].texture});
+            _core->renderSprite({{(_sprite[25].pixelPosition.x) * 16, (_sprite[25].pixelPosition.y) * 16}, _sprite[25].texture});
         if (_map[i] == 'o')
-            _core->renderSprite({{_sprite[26].pixelPosition.x + z, _sprite[26].pixelPosition.y + y}, _sprite[26].texture});
+            _core->renderSprite({{(_sprite[26].pixelPosition.x + z) * 16, (_sprite[26].pixelPosition.y + y) * 16}, _sprite[26].texture});
         if (_map[i] == '\n') {
             y++;
             z = -1;
