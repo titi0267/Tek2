@@ -36,8 +36,8 @@ std::unique_ptr<IDisplayModule::RawTexture> Ncurses::loadTexture(const std::stri
 void Ncurses::openWindow(IDisplayModule::Vector2u pixelsWantedWindowSize)
 {
     initscr();
-    noecho();
     nodelay(stdscr, true);
+    noecho();
     curs_set(0);
     keypad(stdscr, TRUE);
     start_color();
@@ -159,7 +159,7 @@ void Ncurses::update()
     if (_key == 'b') _butt[7] = true;
     if (_key == 't') _butt[8] = true;
     if (_key == 'y') _butt[9] = true;
-    if (_key == KEY_ENTER) _butt[10] = true;
+    if (_key == 10) _butt[10] = true;
     if (_key == ' ') _butt[11] = true;
     if (_key == 265) _butt[12] = true;
     if (_key == 266) _butt[13] = true;
