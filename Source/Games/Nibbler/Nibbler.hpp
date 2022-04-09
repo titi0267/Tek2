@@ -34,24 +34,39 @@ class Nibbler : public IGameModule {
         void constructSnake();
         void constructMap();
         void updateSnakePos();
+        void setNextDirection(int direction, int i);
+        void rightCorner(int i);
+        void headMoves();
+        void bodyMoves(int i);
+        void chooseCorner(int i);
+        void upCorner(int i);
+        void leftCorner(int i);
+        void downCorner(int i);
 
     protected:
         struct Snake {
             ICore::Sprite _sprt;
+            ICore::Sprite _nextSprt;
             int _direction;
+            int _nextDirection;
+            int isCorner;
         };
         ICore *_core;
         std::deque<Snake> _sprite;
         bool _gum;
+        int _frameNext;
         int _snakeSize;
         std::deque<Snake> _snake;
         bool _addNewBody; //if true do not move last & before last element of snake
         int _direction;
+        int _counter;
+        int _frameKey;
         enum class Direction {
             up = 0,
             down = 1,
             right = 2,
             left = 3,
+            corner = 4,
         };
         std::vector<char> _map;
         int _frameRate;
