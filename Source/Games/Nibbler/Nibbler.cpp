@@ -95,7 +95,6 @@ bool Nibbler::checkSnakePosX(unsigned gumPos)
 {
     for (int d = 0; d < _snake.size(); d++) {
         if (_snake[d]._sprt.pixelPosition.x == gumPos) {
-            std::cerr << "s :" << _snake[d]._sprt.pixelPosition.x << " gum :" << gumPos << std::endl;
             return true;
         }
     }
@@ -240,7 +239,6 @@ void Nibbler::headMoves()
         _snake[0]._nextSprt.texture = _sprite[4]._sprt.texture;
         break;
     case (int)Direction::right:
-        std::cerr << "Move right :" << _snake[0]._nextSprt.pixelPosition.x << std::endl;
         _snake[0]._nextSprt.pixelPosition.x += _pixelPerCell;
         _snake[0]._nextSprt.texture = _sprite[5]._sprt.texture;
         break;
@@ -628,9 +626,7 @@ void Nibbler::update()
             }
         }
     }
-    //std::cerr << "print" << std::endl;
     if (_core->isButtonPressed(IDisplayModule::Button::Start) == true) {
-        //std::cerr << "start" << std::endl;
         _end = false;
     }
     setGum();
