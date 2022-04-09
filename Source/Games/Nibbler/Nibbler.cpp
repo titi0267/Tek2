@@ -26,7 +26,6 @@ Nibbler::~Nibbler()
 void Nibbler::init(ICore *coreHandle)
 {
     ICore::Vector2u windowSize{40, 22};
-    //ICore::Vector2u windowSize{20, 11};
     ICore::Vector2u border{0, 0};
     ICore::Vector2u grass{0, 0};
     ICore::Vector2u gums{9, 3};
@@ -80,14 +79,10 @@ void Nibbler::constructMap()
 void Nibbler::constructSnake()
 {
     ICore::Vector2u bodyPos{_sprite[9]._sprt.pixelPosition.x - 1, _sprite[9]._sprt.pixelPosition.y};
-    ICore::Vector2u bodyPosSec{_sprite[9]._sprt.pixelPosition.x - 2, _sprite[9]._sprt.pixelPosition.y};
-    ICore::Vector2u bodyPosTec{_sprite[9]._sprt.pixelPosition.x - 3, _sprite[9]._sprt.pixelPosition.y};
 
     _snake.push_back({{_sprite[5]._sprt.pixelPosition , _sprite[5]._sprt.texture}, {_sprite[5]._sprt.pixelPosition , _sprite[5]._sprt.texture}, _sprite[5]._direction, _sprite[5]._direction, false});
     _snake.push_back({{_sprite[9]._sprt.pixelPosition, _sprite[9]._sprt.texture}, {_sprite[9]._sprt.pixelPosition, _sprite[9]._sprt.texture}, _sprite[9]._direction,_sprite[9]._direction, false});
     _snake.push_back({{bodyPos, _sprite[9]._sprt.texture}, {bodyPos, _sprite[9]._sprt.texture}, _sprite[9]._direction,_sprite[9]._direction, false});
-    //_snake.push_back({{bodyPosSec, _sprite[9]._sprt.texture}, {bodyPos, _sprite[9]._sprt.texture}, _sprite[9]._direction,_sprite[9]._direction, false});
-    //_snake.push_back({{bodyPosTec, _sprite[9]._sprt.texture}, {bodyPos, _sprite[9]._sprt.texture}, _sprite[9]._direction,_sprite[9]._direction, false});
     _snake.push_back({{_sprite[22]._sprt.pixelPosition, _sprite[18]._sprt.texture}, {_sprite[22]._sprt.pixelPosition, _sprite[22]._sprt.texture}, _sprite[22]._direction,_sprite[22]._direction, false});
 }
 
@@ -177,15 +172,6 @@ void Nibbler::setGum()
 /*        - Left  : 3                 */
 /*                                    */
 /**************************************/
-int Nibbler::getDirection(int i) const
-{
-    return _snake[i]._direction;
-}
-
-void Nibbler::setNextDirection(int direction, int i)
-{
-    _snake[i]._direction = direction;
-}
 
 void Nibbler::headMoves()
 {
@@ -194,32 +180,19 @@ void Nibbler::headMoves()
     case (int)Direction::up:
         _snake[0]._sprt.texture = _sprite[3]._sprt.texture;
         _snake[0]._direction = (int)Direction::up;
-        std::cout << "Set head at up" << std::endl;
-        //_snake[1]._nextDirection = _sprite[3]._direction;
-        //_snake[1]._direction = _sprite[3]._nextDirection;
-        //chooseCorner(1);
         break;
     case (int)Direction::down:
         _snake[0]._sprt.texture = _sprite[4]._sprt.texture;
         _snake[0]._direction = (int)Direction::down;
         _snake[1]._nextDirection = _sprite[4]._direction;
-        //_snake[1]._direction = _sprite[4]._nextDirection;
-        //chooseCorner(1);
         break;
     case (int)Direction::right:
         _snake[0]._sprt.texture = _sprite[5]._sprt.texture;
         _snake[0]._direction = (int)Direction::right;
-        std::cout << "Set head at right" << std::endl;
-        //_snake[1]._nextDirection = _sprite[5]._direction;
-        //_snake[1]._direction = _sprite[5]._nextDirection;
-        //chooseCorner(1);
         break;
     case (int)Direction::left:
         _snake[0]._sprt.texture = _sprite[6]._sprt.texture;
         _snake[0]._direction = (int)Direction::left;
-        //_snake[1]._nextDirection = _sprite[6]._direction;
-        //_snake[1]._direction = _sprite[6]._nextDirection;
-        //chooseCorner(1);
         break;
     default:
         break;
@@ -228,34 +201,20 @@ void Nibbler::headMoves()
     switch (_snake[0]._nextDirection)
     {
     case (int)Direction::up:
-        std::cout << "next head move up" << std::endl;
         _snake[0]._nextSprt.pixelPosition.y--;
         _snake[0]._nextSprt.texture = _sprite[3]._sprt.texture;
-        //_snake[0]._nextDirection = _snake[0]._direction;
-        //chooseCorner(1);
-        //_snake[0]._direction = (int)Direction::up;
         break;
     case (int)Direction::down:
         _snake[0]._nextSprt.pixelPosition.y++;
         _snake[0]._nextSprt.texture = _sprite[4]._sprt.texture;
-        //_snake[1]._nextDirection = _sprite[4]._direction;
-        //chooseCorner(1);
-        //_snake[0]._direction = (int)Direction::down;
         break;
     case (int)Direction::right:
-        std::cout << "next head move right" << std::endl;
         _snake[0]._nextSprt.pixelPosition.x++;
         _snake[0]._nextSprt.texture = _sprite[5]._sprt.texture;
-        //_snake[1]._nextDirection = _sprite[5]._direction;
-        //chooseCorner(1);
-        //_snake[0]._direction = (int)Direction::right;
         break;
     case (int)Direction::left:
         _snake[0]._nextSprt.pixelPosition.x--;
         _snake[0]._nextSprt.texture = _sprite[6]._sprt.texture;
-        //_snake[1]._nextDirection = _sprite[6]._direction;
-        //chooseCorner(1);
-        //_snake[0]._direction = (int)Direction::left;
         break;
     default:
         break;
@@ -265,28 +224,23 @@ void Nibbler::headMoves()
 
 void Nibbler::bodyMoves(int i)
 {
-    //_snake[i]._direction = _snake[i - 1]._direction;
     _snake[i]._nextDirection = _snake[i - 1]._nextDirection;
     switch (_snake[i]._direction)
     {
     case (int)Direction::up:
         _snake[i]._nextSprt.pixelPosition.y--;
-        //_snake[i]._nextDirection = _snake[i - 1]._direction;
         chooseCorner(i);
         break;
     case (int)Direction::down:
         _snake[i]._nextSprt.pixelPosition.y++;
-        //_snake[i]._nextDirection = _snake[i - 1]._direction;
         chooseCorner(i);
         break;
     case (int)Direction::left:
         _snake[i]._nextSprt.pixelPosition.x--;
-        //_snake[i]._nextDirection = _snake[i - 1]._direction;
         chooseCorner(i);
         break;
     case (int)Direction::right:
         _snake[i]._nextSprt.pixelPosition.x++;
-        //_snake[i]._nextDirection = _snake[i - 1]._direction;
         chooseCorner(i);
         break;
     }
@@ -301,7 +255,6 @@ void Nibbler::chooseCorner(int i)
             else if (_snake[i]._nextDirection == (int)Direction::left) {
                 leftCorner(i);
             } else {
-                std::cout << "body up with " << _snake[i]._nextDirection << std::endl;
                 _snake[i]._nextSprt.texture = _sprite[7]._sprt.texture;
                 _snake[i]._nextDirection = _sprite[7]._nextDirection;
             }
@@ -416,114 +369,6 @@ void Nibbler::leftCorner(int i)
     }
 }
 
-void Nibbler::setDirection(int direction, int i)
-{
-    int len = _snake.size() - 1;
-
-    _snake[i]._direction = direction;
-    switch (i) {
-        case 0:
-            switch (_snake[0]._direction)
-            {
-                case (int)Direction::up:
-                    _snake[0]._nextSprt.texture = _sprite[3]._sprt.texture;
-                    if (_snake[i+2]._sprt.pixelPosition.x != _snake[0]._nextSprt.pixelPosition.x) {
-                        _snake[i+1]._nextSprt.texture = _sprite[9]._sprt.texture;
-                        _snake[i+1].isCorner = _sprite[9].isCorner;
-                    }
-                    break;
-                case (int)Direction::down:
-                    _snake[0]._nextSprt.texture = _sprite[4]._sprt.texture;
-                    break;
-                case (int)Direction::right:
-                    std::cout << "Turn right head" << std::endl;
-                        std::cout << _snake[2]._direction << " & " << _snake[0]._direction << " reset right" << std::endl;
-                    _snake[0]._nextSprt.texture = _sprite[5]._sprt.texture;
-                    std::cout << _snake[i+2]._direction << " != " << _snake[0]._direction << std::endl;
-                    if (_snake[i+2]._direction != _snake[0]._direction && _snake[i+1].isCorner == false) {
-                        std::cout << "Turned" << std::endl;
-                        std::cout << _snake[2]._direction << " & " << _snake[0]._direction << std::endl;
-                        _snake[i+1]._nextSprt.texture = _sprite[12]._nextSprt.texture;
-                        _snake[i+1]._direction = (int)Direction::up;
-                        _snake[i+1].isCorner = _sprite[12].isCorner;
-                    }
-                    break;
-                case (int)Direction::left:
-                    _snake[0]._nextSprt.texture = _sprite[6]._sprt.texture;
-                    //_snake[1]._sprt.texture = _sprite[10]._sprt.texture;
-                    break;
-            }
-            break;
-        default:
-            if (i == len) {
-                switch (_snake[i]._direction)
-                {
-                    case (int)Direction::up:
-                        _snake[i]._sprt.texture = _sprite[13]._sprt.texture;
-                        _snake[i]._nextSprt.texture = _sprite[13]._sprt.texture;
-                        _snake[i].isCorner = _sprite[13].isCorner;
-                        /*if (_snake[i-2]._sprt.pixelPosition.x != _snake[i]._nextSprt.pixelPosition.x) {
-                            _snake[i-1]._nextSprt.texture = _sprite[9]._sprt.texture;
-                            _snake[i - 1]._direction = (int)Direction::up;
-                            _snake[i-1].isCorner = _sprite[9].isCorner;
-                            std::cout << "direction up" << std::endl;
-                        } else {
-                            _snake[i-1]._nextSprt.texture = _sprite[7]._sprt.texture;
-                            _snake[i-1].isCorner = _sprite[7].isCorner;
-                        }*/
-                        break;
-                    case (int)Direction::down:
-                        _snake[i]._sprt.texture = _sprite[14]._sprt.texture;
-                        break;
-                    case (int)Direction::left:
-                        _snake[i]._sprt.texture = _sprite[15]._sprt.texture;
-                        break;
-                    case (int)Direction::right:
-                        _snake[i]._sprt.texture = _sprite[16]._sprt.texture;
-                        if (_snake[i-2]._direction != _snake[i]._direction && _snake[i-1].isCorner == false && _snake[i-1]._direction != (int)Direction::up) {
-                            _snake[i-1]._nextSprt.texture = _sprite[9]._sprt.texture;
-                            _snake[i-1]._sprt.texture = _sprite[9]._sprt.texture;
-                            _snake[i-1].isCorner = _sprite[9].isCorner;
-                            std::cout << "go up" << std::endl;
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            } else {
-                switch (_snake[i]._direction)
-                {
-                case (int)Direction::up:
-
-                    if (i - 1 == 0 && _snake[2]._nextSprt.pixelPosition.x == _snake[0]._nextSprt.pixelPosition.x) {
-                        _snake[1]._nextSprt.texture = _sprite[7]._sprt.texture;
-                        _snake[1].isCorner = _sprite[7].isCorner;
-                    }
-                    if (i + 1 == len && _snake[i + 1]._direction == (int)Direction::up) {
-                        _snake[i]._nextSprt.texture = _sprite[7]._sprt.texture;
-                        _snake[i].isCorner = _sprite[7].isCorner;
-                        _snake[i + 1]._nextSprt.texture = _sprite[13]._sprt.texture;
-                    }
-                    _snake[i].isCorner = false;
-                    break;
-                case (int)Direction::down:
-                        _snake[i]._nextSprt.texture = _sprite[7]._sprt.texture;
-                        _snake[i + 1].isCorner = false;
-                    break;
-                default:
-                    if (i - 1 == 0 && _snake[2]._direction == _snake[0]._direction && _snake[2].isCorner == false) {
-                        std::cout << _snake[2]._direction << " & " << _snake[0]._direction << " reset right" << std::endl;
-                        _snake[i]._nextSprt.texture = _sprite[8]._sprt.texture;
-                    }
-                    _snake[i].isCorner = false;
-                    break;
-                }
-                //changer textu[0re i -1
-            }
-            break;
-    }
-}
-
 void Nibbler::draw()
 {
         _core->clearScreen(ICore::Color::black);
@@ -542,7 +387,7 @@ void Nibbler::draw()
             _core->renderSprite(_snake[i]._sprt);
             _snake[i]._sprt.pixelPosition = _snake[i]._nextSprt.pixelPosition;
         }
-        if (_frameNext > 30) {
+        if (_frameNext > 6) {
             for (int i = _snake.size() - 1; i != -1; i--) {
                 _snake[i]._sprt = _snake[i]._nextSprt;
                 _snake[i]._direction = _snake[i]._nextDirection;
@@ -555,160 +400,45 @@ void Nibbler::draw()
         _frameNext++;
 }
 
-void Nibbler::updateSnakePos()
-{
-    int len = _snake.size() - 1;
-
-    for (int i = _snake.size() - 1; i >= 0; i--) {
-        switch (getDirection(i)) {
-            case (int)Direction::up:
-                if (i == 0) {
-                    _snake[0]._nextSprt.pixelPosition.y--;
-                } else {
-                    if (i - 1 != 0 && i != len) {
-                        setDirection((int)Direction::up, i);
-                        _snake[i]._nextSprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
-                        _snake[i]._direction = _snake[i - 1]._direction;
-                    } else {
-                        setDirection((int)Direction::up, i);
-                        _snake[i]._nextSprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
-                        _snake[i]._direction = _snake[i - 1]._direction;
-                    }
-                }
-                break;
-            case (int)Direction::down:
-                if (i == 0)
-                    _snake[0]._nextSprt.pixelPosition.y++;
-                else {
-                    if (i - 1 != 0 && i != len) {
-                        setDirection((int)Direction::down, i);
-                        _snake[i]._nextSprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
-                        _snake[i]._direction = _snake[i - 1]._direction;
-                    } else {
-                        setDirection((int)Direction::down, i);
-                        _snake[i]._nextSprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
-                        _snake[i]._direction = _snake[i - 1]._direction;
-                    }
-                }
-                break;
-            case (int)Direction::left:
-                if (i == 0)
-                    _snake[0]._nextSprt.pixelPosition.x--;
-                else {
-                    if (i - 1 != 0 && i != len) {
-                        setDirection((int)Direction::left, i);
-                        _snake[i]._nextSprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
-                        _snake[i]._direction = _snake[i - 1]._direction;
-                    } else {
-                        setDirection((int)Direction::left, i);
-                        _snake[i]._nextSprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
-                        _snake[i]._direction = _snake[i - 1]._direction;
-                    }
-                }
-                break;
-            case (int)Direction::right:
-                if (i == 0)
-                    _snake[0]._nextSprt.pixelPosition.x++;
-                else {
-                    if (i - 1 != 0 && i != len) {
-                        setDirection((int)Direction::right, i);
-                        _snake[i]._nextSprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
-                        _snake[i]._direction = _snake[i - 1]._direction;
-                    } else {
-                        setDirection((int)Direction::right, i);
-                        _snake[i]._nextSprt.pixelPosition = _snake[i - 1]._sprt.pixelPosition;
-                        _snake[i]._direction = _snake[i - 1]._direction;
-                    }
-                }
-                break;
-        }
-    }
-    _frameRate = 1;
-    _counter++;
-    std::cout << _counter << std::endl;
-}
-
 void Nibbler::update()
 {
     if (_core->isButtonPressed(IDisplayModule::Button::Down) == true) {
-        if (_frameKey > 30) {
+        if (_frameKey > 6) {
             if (_snake[0]._nextDirection != (int)Direction::up && _snake[0]._nextDirection != (int)Direction::down) {
                 _snake[0]._nextDirection = (int)Direction::down;
                 _frameKey = 1;
             }
         }
-        /*switch (getDirection(0)) {
-            case (int)Direction::left:
-                setDirection((int)Direction::down, 0);
-                break;
-            case (int)Direction::right:
-                setDirection((int)Direction::down, 0);
-                break;
-            default:
-                break;
-        }*/
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Up) == true) {
-        if (_frameKey > 30) {
+        if (_frameKey > 6) {
             if (_snake[0]._nextDirection != (int)Direction::up && _snake[0]._nextDirection != (int)Direction::down) {
                 _snake[0]._nextDirection = (int)Direction::up;
                 _frameKey = 1;
             }
         }
-        /*switch (getDirection(0)) {
-            case (int)Direction::left:
-                setDirection((int)Direction::up, 0);
-                break;
-            case (int)Direction::right:
-                setDirection((int)Direction::up, 0);
-                break;
-            default:
-                break;
-        }*/
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Left) == true) {
-        if (_frameKey > 30) {
+        if (_frameKey > 6) {
             if (_snake[0]._nextDirection != (int)Direction::right && _snake[0]._nextDirection != (int)Direction::left) {
                 _snake[0]._nextDirection = (int)Direction::left;
                 _frameKey = 1;
             }
         }
-        /*switch (getDirection(0)) {
-            case (int)Direction::up:
-                setDirection((int)Direction::left, 0);
-                break;
-            case (int)Direction::down:
-                setDirection((int)Direction::left, 0);
-                break;
-            default:
-                break;
-        }*/
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Right) == true) {
-        if (_frameKey > 30) {
+        if (_frameKey > 6) {
             if (_snake[0]._nextDirection != (int)Direction::right && _snake[0]._nextDirection != (int)Direction::left) {
                 _snake[0]._nextDirection = (int)Direction::right;
                 _frameKey = 1;
             }
         }
-        /*switch (getDirection(0))
-        {
-            case (int)Direction::up:
-                setDirection((int)Direction::right, 0);
-                break;
-            case (int)Direction::down:
-                setDirection((int)Direction::right, 0);
-                break;
-            default:
-                break;
-        }*/
     }
-    if (_frameRate > 30) {
+    if (_frameRate > 6) {
         headMoves();
         for (int i = _snake.size() - 2; i > 0; i--)
             bodyMoves(i);
     }
-        //updateSnakePos();
     _frameRate++;
     _frameKey++;
     //setGum(); //takes way too long
