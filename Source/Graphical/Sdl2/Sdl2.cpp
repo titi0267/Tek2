@@ -9,7 +9,10 @@
 
 Sdl2::Sdl2()
 {
-    if(SDL_Init(SDL_INIT_VIDEO) < 0) _setError.exitError(ERROR, "ERROR: couldn't open Sdl2.");
+    int flag = IMG_INIT_JPG | IMG_INIT_PNG;
+
+    if (IMG_Init(flag) == -1) _setError.exitError(ERROR, "ERROR: couldn't open Sdl2 image.");
+    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) < 0) _setError.exitError(ERROR, "ERROR: couldn't open Sdl2.");
     for (int i = 0; i < 19; i++) _butt.push_back(false);
     _isClosing = false;
 }
@@ -17,6 +20,7 @@ Sdl2::Sdl2()
 Sdl2::~Sdl2()
 {
     SDL_DestroyWindow(_window);
+    SDL_DestroyRenderer(_renderer);
     SDL_Quit();
     _isClosing = true;
 }
@@ -123,8 +127,9 @@ void Sdl2::renderSprite(IDisplayModule::Sprite sprite)
     IRawTexture *raw = dynamic_cast<IRawTexture *>(sprite.texture);
     SDL_Surface *sprt = IMG_Load(raw->getFilename().c_str());
     SDL_Texture *txtr = SDL_CreateTextureFromSurface(_renderer, sprt);
+    SDL_Rect rect = {(int)sprite.rawPixelPosition.x, (int)sprite.rawPixelPosition.y, (int)raw->getWidth(), (int)raw->getHeight()};
 
-    SDL_RenderCopy(_renderer, txtr, NULL, NULL);
+    SDL_RenderCopy(_renderer, txtr, NULL, &rect);
 }
 
 void Sdl2::display()
