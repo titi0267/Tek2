@@ -14,6 +14,7 @@ Core::Core(std::deque<char *> chooseLib, int chooseLibIterator) : _dl(chooseLib[
     _chooseLibIterator = chooseLibIterator;
     loadLibs(_dl.getLib());
     loadGames(_dl.getGame());
+    _getPlayerName = "Player One";
 }
 
 Core::~Core()
@@ -96,6 +97,11 @@ void Core::endTextInput()
 void Core::clearScreen(Core::Color color)
 {
     _disp->clearScreen(color);
+}
+
+const std::string &Core::getPlayerName()
+{
+    return _getPlayerName;
 }
 
 void Core::renderSprite(ICore::Sprite sprite)

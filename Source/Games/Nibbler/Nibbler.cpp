@@ -106,7 +106,6 @@ bool Nibbler::checkSnakePosY(unsigned gumPos)
         if (_snake[d]._sprt.pixelPosition.y == gumPos)
             return true;
     }
-    std::cout << "GumPos.y = " << gumPos/16 << std::endl;
     return false;
 }
 
@@ -158,10 +157,10 @@ void Nibbler::setGum()
             gumEated();
     }
     if (_gum == false) {
-        randomX = rand() % 19 + 1;
-        randomY = rand() % 10 + 1;
+        randomX = rand() % 18 + 1;
+        randomY = rand() % 9 + 1;
         while ((checkSnakePosX(randomX * _pixelPerCell) == true || checkSnakePosY(randomY * _pixelPerCell) == true)) {
-            randomX = rand() % 19 + 1;
+            randomX = rand() % 18 + 1;
             randomY = rand() % 9 + 1;
         }
         _sprite[1]._sprt.pixelPosition.x = randomX * _pixelPerCell;
@@ -561,6 +560,7 @@ void Nibbler::leftCorner(int i)
 
 void Nibbler::draw()
 {
+    if (_frameRate > 10)
         _core->clearScreen(ICore::Color::black);
         for (int i = 0, y = 0, z = 0; i < _map.size(); i++, z++) {
             if (_map[i] == '#') {
@@ -594,7 +594,7 @@ void Nibbler::update()
 {
     if (_core->isButtonPressed(IDisplayModule::Button::Down) == true) {
         if (_frameKey > 5) {
-            if (_snake[0]._nextDirection != (int)Direction::up && _snake[0]._nextDirection != (int)Direction::down) {
+            if (_snake[0]._nextDirection != (int)Direction::up && _snake[0]._nextDirection != (int)Direction::down && _end == false) {
                 _snake[0]._nextDirection = (int)Direction::down;
                 _frameKey = 1;
             }
@@ -602,7 +602,7 @@ void Nibbler::update()
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Up) == true) {
         if (_frameKey > 5) {
-            if (_snake[0]._nextDirection != (int)Direction::up && _snake[0]._nextDirection != (int)Direction::down) {
+            if (_snake[0]._nextDirection != (int)Direction::up && _snake[0]._nextDirection != (int)Direction::down && _end == false) {
                 _snake[0]._nextDirection = (int)Direction::up;
                 _frameKey = 1;
             }
@@ -610,7 +610,7 @@ void Nibbler::update()
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Left) == true) {
         if (_frameKey > 5) {
-            if (_snake[0]._nextDirection != (int)Direction::right && _snake[0]._nextDirection != (int)Direction::left) {
+            if (_snake[0]._nextDirection != (int)Direction::right && _snake[0]._nextDirection != (int)Direction::left && _end == false) {
                 _snake[0]._nextDirection = (int)Direction::left;
                 _frameKey = 1;
             }
@@ -618,7 +618,7 @@ void Nibbler::update()
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Right) == true) {
         if (_frameKey > 5) {
-            if (_snake[0]._nextDirection != (int)Direction::right && _snake[0]._nextDirection != (int)Direction::left) {
+            if (_snake[0]._nextDirection != (int)Direction::right && _snake[0]._nextDirection != (int)Direction::left && _end == false) {
                 _snake[0]._nextDirection = (int)Direction::right;
                 _frameKey = 1;
             }
