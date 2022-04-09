@@ -90,37 +90,39 @@ void Nibbler::constructSnake()
 }
 
 /*   check all snake's position compared with gum position in X   */
-bool Nibbler::checkSnakePosX(unsigned random)
+bool Nibbler::checkSnakePosX(unsigned gumPos)
 {
     for (int d = 0; d < _snake.size(); d++) {
-        if (_snake[d]._sprt.pixelPosition.x == random) //pas les bonnes sprites
+        if (_snake[d]._sprt.pixelPosition.x == gumPos)
             return true;
     }
+    std::cout << "GumPos.x = " << gumPos/16 << std::endl;
     return false;
 }
 
 /*   check all snake's position compared with gum position in Y  */
-bool Nibbler::checkSnakePosY(unsigned random)
+bool Nibbler::checkSnakePosY(unsigned gumPos)
 {
     for (int d = 0; d < _snake.size(); d++) {
-        if (_snake[d]._sprt.pixelPosition.y == random) //pas les bonnes sprites ?
+        if (_snake[d]._sprt.pixelPosition.y == gumPos)
             return true;
     }
+    std::cout << "GumPos.y = " << gumPos/16 << std::endl;
     return false;
 }
 
 /*   check snake's head position compared with gum position in X  */
-bool Nibbler::checkSnakeHeadPosX(unsigned random)
+bool Nibbler::checkSnakeHeadPosX(unsigned gumPos)
 {
-    if (_snake[0]._sprt.pixelPosition.x == random)
+    if (_snake[0]._sprt.pixelPosition.x == gumPos)
         return true;
     return false;
 }
 
 /*   check snake's head position compared with gum position in Y  */
-bool Nibbler::checkSnakeHeadPosY(unsigned random)
+bool Nibbler::checkSnakeHeadPosY(unsigned gumPos)
 {
-    if (_snake[0]._sprt.pixelPosition.y == random)
+    if (_snake[0]._sprt.pixelPosition.y == gumPos)
         return true;
     return false;
 }
@@ -149,26 +151,24 @@ void Nibbler::gumEated()
 /*******************************************************/
 void Nibbler::setGum()
 {
-    /*int randomX;
+    int randomX;
     int randomY;
-*/
+
     if (_gum == true) {
         if (checkSnakeHeadPosX(_sprite[1]._sprt.pixelPosition.x) == true && checkSnakeHeadPosY(_sprite[1]._sprt.pixelPosition.y) == true)
             gumEated();
     }
-    /*if (_gum == false) {
+    if (_gum == false) {
         randomX = rand() % 19 + 1;
         randomY = rand() % 10 + 1;
-        while (1) {
-            if (checkSnakePosX(randomX) == false && checkSnakePosY(randomY) == false)// && (randomY != 0 && randomY != 10) && (randomX != 0 && randomX != 20))
-                break;
+        while ((checkSnakePosX(randomX * _pixelPerCell) == true || checkSnakePosY(randomY * _pixelPerCell) == true)) {
             randomX = rand() % 19 + 1;
-            randomY = rand() % 10 + 1;
+            randomY = rand() % 9 + 1;
         }
-        _sprite[1]._sprt.pixelPosition.x = randomX;
-        _sprite[1]._sprt.pixelPosition.y = randomY;
-        _gum == true;
-    }*/
+        _sprite[1]._sprt.pixelPosition.x = randomX * _pixelPerCell;
+        _sprite[1]._sprt.pixelPosition.y = randomY * _pixelPerCell;
+        _gum = true;
+    }
 }
 
 void Nibbler::collisionHimself()
