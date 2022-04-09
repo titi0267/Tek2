@@ -12,6 +12,7 @@
 #include "../../Error/Error.hpp"
 #include "../../define.hpp"
 #include "../../Interface/RawTexture.hpp"
+#include <deque>
 
 extern "C" {
     #include <curses.h>
@@ -48,6 +49,7 @@ class Ncurses : public IDisplayModule {
         std::uint32_t _pixelsPerCell;
         int _key;
         Error _setError;
+        std::deque<bool> _butt;
 };
 
 #endif /* !NCURSES_HPP_ */
