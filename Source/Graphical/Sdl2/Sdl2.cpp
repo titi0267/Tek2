@@ -128,7 +128,7 @@ void Sdl2::renderSprite(IDisplayModule::Sprite sprite)
     SDL_Surface *sprt = IMG_Load(raw->getFilename().c_str());
     SDL_Texture *txtr = SDL_CreateTextureFromSurface(_renderer, sprt);
     SDL_Rect rect = {(int)sprite.rawPixelPosition.x, (int)sprite.rawPixelPosition.y, (int)raw->getWidth(), (int)raw->getHeight()};
-
+    if (!sprt) std::cout << "Help!" << std::endl;
     SDL_RenderCopy(_renderer, txtr, NULL, &rect);
 }
 
