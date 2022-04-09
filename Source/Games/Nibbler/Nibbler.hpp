@@ -60,6 +60,7 @@ class Nibbler : public IGameModule {
         int tailStop;
         std::vector<Snake> _sprite;
         bool _gum;
+        int _pixelPerCell;
         int _frameNext;
         int _snakeSize;
         std::vector<Snake> _snake;
