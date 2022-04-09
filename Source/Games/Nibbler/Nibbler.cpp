@@ -16,7 +16,6 @@ Nibbler::Nibbler()
     _counter = 0;
     _frameKey = 1;
     _frameNext = 1;
-    std::cout << "nibbler builded" << std::endl;
 }
 
 Nibbler::~Nibbler()
@@ -45,18 +44,22 @@ void Nibbler::init(ICore *coreHandle)
     /*down*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::down, (int)Direction::down, false});
     /*right*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::right,(int)Direction::right, false});
     /*left*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left,(int)Direction::left, false});
-    /*rightup11*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::right,(int)Direction::up, true});
-    /*downleft12*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::down,(int)Direction::left, true});
-    /*leftup13*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left, (int)Direction::up, true});
-    /*downright14*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::down, (int)Direction::right, true});
-    /*upleft15*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::up,(int)Direction::left, true});
-    /*rightdown16*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::right,(int)Direction::down, true});
-    /*upright17*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::up,(int)Direction::right ,true});
-    /*leftdown18*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left,(int)Direction::down ,true});
-    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::up,(int)Direction::up, false});
-    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::down,(int)Direction::down, false});
-    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::left,(int)Direction::left, false});
-    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::right,(int)Direction::right, false});
+    /*rightup11*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::right,(int)Direction::up, false});
+    /*downleft12*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::down,(int)Direction::left, false});
+    /*leftup13*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left, (int)Direction::up, false});
+    /*downright14*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::down, (int)Direction::right, false});
+    /*upleft15*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::up,(int)Direction::left, false});
+    /*rightdown16*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::right,(int)Direction::down, false});
+    /*upright17*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::up,(int)Direction::right ,false});
+    /*leftdown18*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left,(int)Direction::down ,false});
+    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::up,(int)Direction::up, true});
+    //_sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::up,(int)Direction::left, true});
+    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::down,(int)Direction::down, true});
+    //_sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::down,(int)Direction::left, true});
+    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::left,(int)Direction::left, true});
+    //_sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::left,(int)Direction::down, true});
+    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::right,(int)Direction::right, true});
+    //_sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::right,(int)Direction::down, true});
     constructSnake();
     coreHandle->setFramerate(30);
     coreHandle->setPixelsPerCell(8);
@@ -83,7 +86,7 @@ void Nibbler::constructSnake()
     _snake.push_back({{_sprite[5]._sprt.pixelPosition , _sprite[5]._sprt.texture}, {_sprite[5]._sprt.pixelPosition , _sprite[5]._sprt.texture}, _sprite[5]._direction, _sprite[5]._direction, false});
     _snake.push_back({{_sprite[9]._sprt.pixelPosition, _sprite[9]._sprt.texture}, {_sprite[9]._sprt.pixelPosition, _sprite[9]._sprt.texture}, _sprite[9]._direction,_sprite[9]._direction, false});
     _snake.push_back({{bodyPos, _sprite[9]._sprt.texture}, {bodyPos, _sprite[9]._sprt.texture}, _sprite[9]._direction,_sprite[9]._direction, false});
-    _snake.push_back({{_sprite[22]._sprt.pixelPosition, _sprite[18]._sprt.texture}, {_sprite[22]._sprt.pixelPosition, _sprite[22]._sprt.texture}, _sprite[22]._direction,_sprite[22]._direction, false});
+    _snake.push_back({{_sprite[22]._sprt.pixelPosition, _sprite[22]._sprt.texture}, {_sprite[22]._sprt.pixelPosition, _sprite[22]._sprt.texture}, _sprite[22]._direction,_sprite[22]._direction, true});
 }
 
 /*   check all snake's position compared with gum position in X   */
@@ -184,7 +187,6 @@ void Nibbler::headMoves()
     case (int)Direction::down:
         _snake[0]._sprt.texture = _sprite[4]._sprt.texture;
         _snake[0]._direction = (int)Direction::down;
-        _snake[1]._nextDirection = _sprite[4]._direction;
         break;
     case (int)Direction::right:
         _snake[0]._sprt.texture = _sprite[5]._sprt.texture;
@@ -222,6 +224,58 @@ void Nibbler::headMoves()
     _frameRate = 1;
 }
 
+void Nibbler::tailMoves()
+{
+    int i = _snake.size() - 1;
+
+    switch(_snake[i]._direction)
+    {
+        case (int)Direction::up:
+            _snake[i]._sprt.texture = _sprite[19]._sprt.texture;
+            _snake[i]._direction = (int)Direction::up;
+            break;
+        case (int)Direction::down:
+            _snake[i]._sprt.texture = _sprite[10]._sprt.texture;
+            _snake[i]._direction = (int)Direction::down;
+            break;
+        case (int)Direction::left:
+            _snake[i]._sprt.texture = _sprite[21]._sprt.texture;
+            _snake[i]._direction = (int)Direction::left;
+            break;
+        case (int)Direction::right:
+            _snake[i]._sprt.texture = _sprite[22]._sprt.texture;
+            _snake[i]._direction = (int)Direction::right;
+            break;
+        default:
+            break;
+    }
+        switch (_snake[i]._nextDirection)
+    {
+    case (int)Direction::up:
+        _snake[i]._nextSprt.pixelPosition.y--;
+        _snake[i]._nextSprt.texture = _sprite[19]._sprt.texture;
+        chooseCorner(i);
+        break;
+    case (int)Direction::down:
+        _snake[i]._nextSprt.pixelPosition.y++;
+        _snake[i]._nextSprt.texture = _sprite[20]._sprt.texture;
+        chooseCorner(i);
+        break;
+    case (int)Direction::left:
+        _snake[i]._nextSprt.pixelPosition.x--;
+        _snake[i]._nextSprt.texture = _sprite[21]._sprt.texture;
+        chooseCorner(i);
+        break;
+    case (int)Direction::right:
+        _snake[i]._nextSprt.pixelPosition.x++;
+        _snake[i]._nextSprt.texture = _sprite[22]._sprt.texture;
+        chooseCorner(i);
+        break;
+    default:
+        break;
+    }
+}
+
 void Nibbler::bodyMoves(int i)
 {
     _snake[i]._nextDirection = _snake[i - 1]._nextDirection;
@@ -250,7 +304,11 @@ void Nibbler::chooseCorner(int i)
 {
     switch (_snake[i]._direction) {
         case (int)Direction::up:
-            if (_snake[i]._nextDirection == (int)Direction::right)
+            if (_snake[i].isTail == true) {
+                _snake[i]._direction = _snake[i - 1]._direction;
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[19]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::right)
                 rightCorner(i);
             else if (_snake[i]._nextDirection == (int)Direction::left) {
                 leftCorner(i);
@@ -258,9 +316,13 @@ void Nibbler::chooseCorner(int i)
                 _snake[i]._nextSprt.texture = _sprite[7]._sprt.texture;
                 _snake[i]._nextDirection = _sprite[7]._nextDirection;
             }
-        break;
+            break;
         case (int)Direction::down:
-            if (_snake[i]._nextDirection == (int)Direction::right)
+            if (_snake[i].isTail == true) {
+                _snake[i]._direction = _snake[i - 1]._direction;
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[20]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::right)
                 rightCorner(i);
             else if (_snake[i]._nextDirection == (int)Direction::left) {
                 leftCorner(i);
@@ -268,9 +330,13 @@ void Nibbler::chooseCorner(int i)
                 _snake[i]._nextSprt.texture = _sprite[8]._sprt.texture;
                 _snake[i]._nextDirection = _sprite[8]._nextDirection;
             }
-        break;
+            break;
         case (int)Direction::left:
-            if (_snake[i]._nextDirection == (int)Direction::up) {
+            if (_snake[i].isTail == true) {
+                _snake[i]._direction = _snake[i - 1]._direction;
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[21]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::up) {
                 upCorner(i);
             } else if (_snake[i]._nextDirection == (int)Direction::down) {
                 downCorner(i);
@@ -278,9 +344,13 @@ void Nibbler::chooseCorner(int i)
                 _snake[i]._nextSprt.texture = _sprite[10]._sprt.texture;
                 _snake[i]._nextDirection = _sprite[10]._nextDirection;
             }
-        break;
+            break;
         case (int)Direction::right:
-            if (_snake[i]._nextDirection == (int)Direction::up) {
+            if (_snake[i].isTail == true) {
+                _snake[i]._direction = _snake[i - 1]._direction;
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[22]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::up) {
                 upCorner(i);
             } else if (_snake[i]._nextDirection == (int)Direction::down) {
                 downCorner(i);
@@ -288,7 +358,7 @@ void Nibbler::chooseCorner(int i)
                 _snake[i]._nextSprt.texture = _sprite[9]._sprt.texture;
                 _snake[i]._nextDirection = _sprite[9]._nextDirection;
             }
-        break;
+            break;
     }
 }
 
@@ -321,8 +391,13 @@ void Nibbler::upCorner(int i)
         break;
         case (int)Direction::left:
             if (_snake[i - 1]._nextDirection == (int)Direction::up) {
-                _snake[i]._nextSprt.texture = _sprite[13]._sprt.texture;
-                _snake[i]._nextDirection = _sprite[13]._nextDirection;
+                if (_snake[i].isTail == false) {
+                    _snake[i]._nextSprt.texture = _sprite[13]._sprt.texture;
+                    _snake[i]._nextDirection = _sprite[13]._nextDirection;
+                } else {
+                    _snake[i]._nextSprt.texture = _sprite[18]._sprt.texture;
+                    _snake[i]._nextDirection = (int)Direction::up;
+                }
             }
         break;
     }
@@ -334,18 +409,33 @@ void Nibbler::rightCorner(int i)
     {
     case (int)Direction::up:
         if (_snake[i - 1]._nextDirection == (int)Direction::right) {
-            _snake[i]._nextSprt.texture = _sprite[17]._sprt.texture;
-            _snake[i]._nextDirection = _sprite[17]._nextDirection;
+            if (_snake[i].isTail == false) {
+                _snake[i]._nextSprt.texture = _sprite[17]._sprt.texture;
+                _snake[i]._nextDirection = _sprite[17]._nextDirection;
+            } else {
+                _snake[i]._nextSprt.texture = _sprite[24]._sprt.texture;
+                _snake[i]._nextDirection = (int)Direction::right;
+            }
         }
         else if (_snake[i - 1]._nextDirection == (int)Direction::left) {
-            _snake[i]._nextSprt.texture = _sprite[13]._sprt.texture;
-            _snake[i]._nextDirection = _sprite[13]._nextDirection;
+            if (_snake[i].isTail == false) {
+                _snake[i]._nextSprt.texture = _sprite[13]._sprt.texture;
+                _snake[i]._nextDirection = _sprite[13]._nextDirection;
+            } else {
+                _snake[i]._nextSprt.texture = _sprite[22]._sprt.texture;
+                _snake[i]._nextDirection = (int)Direction::left;
+            }
         }
         break;
     case (int)Direction::down:
         if (_snake[i - 1]._nextDirection == (int)Direction::right) {
-            _snake[i]._nextSprt.texture = _sprite[14]._sprt.texture;
-            _snake[i]._nextDirection = _sprite[14]._nextDirection;
+            if (_snake[i].isTail == false) {
+                _snake[i]._nextSprt.texture = _sprite[14]._sprt.texture;
+                _snake[i]._nextDirection = _sprite[14]._nextDirection;
+            } else {
+                _snake[i]._nextSprt.texture = _sprite[25]._sprt.texture;
+                _snake[i]._nextDirection = (int)Direction::right;
+            }
         }
     }
 }
@@ -392,9 +482,6 @@ void Nibbler::draw()
                 _snake[i]._sprt = _snake[i]._nextSprt;
                 _snake[i]._direction = _snake[i]._nextDirection;
             }
-            std::cout << "print snake x:";
-            std::cout << _snake[0]._nextSprt.pixelPosition.x << " & y:"<< std::endl;
-            std::cout << _snake[0]._nextSprt.pixelPosition.y << std::endl;
             _frameNext = 1;
         }
         _frameNext++;
@@ -438,6 +525,7 @@ void Nibbler::update()
         headMoves();
         for (int i = _snake.size() - 2; i > 0; i--)
             bodyMoves(i);
+        tailMoves();
     }
     _frameRate++;
     _frameKey++;

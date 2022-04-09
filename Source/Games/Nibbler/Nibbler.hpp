@@ -42,6 +42,7 @@ class Nibbler : public IGameModule {
         void upCorner(int i);
         void leftCorner(int i);
         void downCorner(int i);
+        void tailMoves();
 
     protected:
         struct Snake {
@@ -49,7 +50,7 @@ class Nibbler : public IGameModule {
             ICore::Sprite _nextSprt;
             int _direction;
             int _nextDirection;
-            int isCorner;
+            int isTail;
         };
         ICore *_core;
         std::deque<Snake> _sprite;
