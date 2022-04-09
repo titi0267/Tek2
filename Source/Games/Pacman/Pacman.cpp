@@ -30,7 +30,7 @@ Pacman::~Pacman()
 
 void Pacman::init(ICore *coreHandle)
 {
-    ICore::Vector2u windowsSize{39, 20};
+    ICore::Vector2u windowsSize{624, 320};
     ICore::Vector2u border{0, 0};
     ICore::Vector2u pacman{19, 12};
     ICore::Vector2u ghost1{18, 10};
@@ -39,33 +39,33 @@ void Pacman::init(ICore *coreHandle)
     ICore::Vector2u ghost4{19, 8};
 
     coreHandle->openWindow(windowsSize);
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotLeft.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotRight.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopLeft.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopRight.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/wallVertical.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/wallHorizon.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/littlePacGum.png", '.', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleBot.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleTop.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleLeft.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleRight.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneBotWall.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneTopWall.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneLeftWall.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneRightWall.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/blackWall.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/ballWall.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/door.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanLeft.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({ghost1, coreHandle->loadTexture("./Assets/Pacman/Other/pinkBot.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({ghost2, coreHandle->loadTexture("./Assets/Pacman/Other/blueBot.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({ghost3, coreHandle->loadTexture("./Assets/Pacman/Other/redBot.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanRight.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanTop.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanBot.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({ghost4, coreHandle->loadTexture("./Assets/Pacman/Other/orangeBot.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/bigPacGum.png", '#', ICore::Color::black, ICore::Color::black, 8, 8)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotLeft.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotRight.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopLeft.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopRight.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/wallVertical.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/wallHorizon.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/littlePacGum.png", '.', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleTop.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleLeft.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleRight.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneBotWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneTopWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneLeftWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneRightWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/blackWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/ballWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/door.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanLeft.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({ghost1, coreHandle->loadTexture("./Assets/Pacman/Other/pinkBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({ghost2, coreHandle->loadTexture("./Assets/Pacman/Other/blueBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({ghost3, coreHandle->loadTexture("./Assets/Pacman/Other/redBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanRight.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanTop.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({ghost4, coreHandle->loadTexture("./Assets/Pacman/Other/orangeBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/bigPacGum.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
 
     coreHandle->setFramerate(60);
     coreHandle->setPixelsPerCell(8);

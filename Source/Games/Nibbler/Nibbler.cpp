@@ -23,7 +23,7 @@ Nibbler::~Nibbler()
 
 void Nibbler::init(ICore *coreHandle)
 {
-    ICore::Vector2u windowSize{40, 22};
+    ICore::Vector2u windowSize{640, 352};
     ICore::Vector2u border{0, 0};
     ICore::Vector2u grass{0, 0};
     ICore::Vector2u gums{9, 3};

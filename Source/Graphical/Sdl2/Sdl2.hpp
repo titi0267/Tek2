@@ -9,6 +9,15 @@
 #define SDL2_HPP_
 
 #include "../../../arcade-interface-master/IDisplayModule.hpp"
+#include "../../Error/Error.hpp"
+#include "../../define.hpp"
+#include "../../Interface/RawTexture.hpp"
+#include <deque>
+
+extern "C" {
+    #include <SDL2/SDL.h>
+    #include <SDL2/SDL_image.h>
+}
 
 class Sdl2 : public IDisplayModule {
     public:
@@ -83,6 +92,13 @@ class Sdl2 : public IDisplayModule {
 
     protected:
         std::uint32_t _pixelsPerCell;
+        Error _setError;
+        SDL_Window *_window;
+        SDL_Event _event;
+        std::deque<bool> _butt;
+        SDL_Renderer *_renderer;
+        bool _isClosing;
+        SDL_MouseButtonEvent _mouse;
 };
 
 #endif /* !SDL2_HPP_ */
