@@ -72,10 +72,14 @@ set(HEADERS_SDL2
     arcade-interface-master/IGameModule.hpp
     Source/Error/Error.hpp
     Source/Graphical/Sdl2/Sdl2.hpp
+    Source/Interface/RawTexture.hpp
+    Source/define.hpp
 )
 
 set(SRCS_SDL2
     Source/Graphical/Sdl2/Sdl2.cpp
+    Source/Interface/RawTexture.cpp
+    Source/Error/Error.cpp
 )
 
 set(SRCS_SFML
@@ -105,6 +109,7 @@ set(HEADERS_MENU
     add_library(arcade_sdl2 SHARED ${SRCS_SDL2} ${HEADERS_SDL2})
     set_target_properties(arcade_sdl2 PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
     SET_TARGET_PROPERTIES(arcade_sdl2 PROPERTIES PREFIX "")
+    target_link_libraries(arcade_sdl2 SDL2 SDL_image)
     add_library(arcade_pacman SHARED ${SRCS_PACMAN} ${HEADERS_PACMAN})
     set_target_properties(arcade_pacman PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
     SET_TARGET_PROPERTIES(arcade_pacman PROPERTIES PREFIX "")
