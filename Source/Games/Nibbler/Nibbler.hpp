@@ -15,6 +15,8 @@
 #include <fstream>
 #include <vector>
 #include <list>
+#include <ctime>
+#include <cstdlib>
 
 class Nibbler : public IGameModule {
     public:
