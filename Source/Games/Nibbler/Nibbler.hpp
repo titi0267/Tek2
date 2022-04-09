@@ -14,6 +14,7 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <list>
 
 class Nibbler : public IGameModule {
     public:
@@ -42,6 +43,7 @@ class Nibbler : public IGameModule {
         void chooseTailRotation(int i);
         void collisionHimself();
         void collisionWall(int x, int y);
+        void handleNew();
 
     protected:
         struct Snake {
@@ -50,13 +52,17 @@ class Nibbler : public IGameModule {
             int _direction;
             int _nextDirection;
             int isTail;
+            int index;
+            bool newly;
         };
         ICore *_core;
-        std::deque<Snake> _sprite;
+        bool _end;
+        int tailStop;
+        std::vector<Snake> _sprite;
         bool _gum;
         int _frameNext;
         int _snakeSize;
-        std::deque<Snake> _snake;
+        std::vector<Snake> _snake;
         bool _addNewBody; //if true do not move last & before last element of snake
         int _direction;
         int _counter;
