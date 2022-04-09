@@ -29,12 +29,8 @@ class Nibbler : public IGameModule {
         bool checkSnakeHeadPosX(unsigned random);
         bool checkSnakeHeadPosY(unsigned random);
         void gumEated();
-        int getDirection(int i) const;
-        void setDirection(int direction, int i);
         void constructSnake();
         void constructMap();
-        void updateSnakePos();
-        void setNextDirection(int direction, int i);
         void rightCorner(int i);
         void headMoves();
         void bodyMoves(int i);
@@ -43,6 +39,9 @@ class Nibbler : public IGameModule {
         void leftCorner(int i);
         void downCorner(int i);
         void tailMoves();
+        void chooseTailRotation(int i);
+        void collisionHimself();
+        void collisionWall(int x, int y);
 
     protected:
         struct Snake {
