@@ -10,7 +10,6 @@
 Nibbler::Nibbler()
 {
     _gum = true;
-    _snakeSize = 4;
     constructMap();
     _frameRate = 1;
     _counter = 0;
@@ -53,13 +52,9 @@ void Nibbler::init(ICore *coreHandle)
     /*upright17*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::up,(int)Direction::right ,false});
     /*leftdown18*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left,(int)Direction::down ,false});
     _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::up,(int)Direction::up, true});
-    //_sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::up,(int)Direction::left, true});
     _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::down,(int)Direction::down, true});
-    //_sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::down,(int)Direction::left, true});
     _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::left,(int)Direction::left, true});
-    //_sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::left,(int)Direction::down, true});
     _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::right,(int)Direction::right, true});
-    //_sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::right,(int)Direction::down, true});
     constructSnake();
     coreHandle->setFramerate(30);
     coreHandle->setPixelsPerCell(8);
@@ -112,7 +107,7 @@ bool Nibbler::checkSnakePosY(unsigned random)
 /*   check snake's head position compared with gum position in X  */
 bool Nibbler::checkSnakeHeadPosX(unsigned random)
 {
-    if (_sprite[getDirection(0) + 3]._sprt.pixelPosition.x == random)
+    if (_sprite[_snake[0]._direction + 3]._sprt.pixelPosition.x == random)
         return true;
     return false;
 }
@@ -120,7 +115,7 @@ bool Nibbler::checkSnakeHeadPosX(unsigned random)
 /*   check snake's head position compared with gum position in Y  */
 bool Nibbler::checkSnakeHeadPosY(unsigned random)
 {
-    if (_sprite[getDirection(0) + 3]._sprt.pixelPosition.x == random)
+    if (_sprite[_snake[0]._direction + 3]._sprt.pixelPosition.x == random)
         return true;
     return false;
 }
@@ -130,7 +125,7 @@ void Nibbler::gumEated()
 {
     std::deque<Snake>::iterator it = (_snake.end() - 1);
 
-    _snakeSize++;
+    //_snakeSize++;
     _snake.insert(it, {_snake[_snake.size() - 1]._sprt.pixelPosition, _snake[_snake.size() - 1]._sprt.texture});
     _addNewBody = true;
 }
@@ -166,13 +161,28 @@ void Nibbler::setGum()
     }
 }
 
+void Nibbler::collisionHimself()
+{
+    for (int i = 1; i < _snake.size(); i++) {
+        if (_snake[0]._sprt.pixelPosition.x == _snake[i]._sprt.pixelPosition.x && _snake[0]._sprt.pixelPosition.y == _snake[i]._sprt.pixelPosition.y) {
+        //    std::cout << "Snake in himself" << std::endl;
+            break;
+        }
+    }
+}
+
+void Nibbler::collisionWall(int x, int y)
+{
+    if (x == _snake[0]._sprt.pixelPosition.x && y == _snake[0]._sprt.pixelPosition.y) {
+ //       std::cout << "WAAAAAALLLL" << std::endl;
+    }
+}
+
+
 /**************************************/
 /*                                    */
-/*    Get snake's head direction :    */
-/*        - Up    : 0                 */
-/*        - Down  : 1                 */
-/*        - Right : 2                 */
-/*        - Left  : 3                 */
+/*   Separate move functions for      */
+/*         head, body & tail          */
 /*                                    */
 /**************************************/
 
@@ -228,48 +238,48 @@ void Nibbler::tailMoves()
 {
     int i = _snake.size() - 1;
 
-    switch(_snake[i]._direction)
+    switch(_snake[i - 1]._direction)
     {
         case (int)Direction::up:
-            _snake[i]._sprt.texture = _sprite[19]._sprt.texture;
-            _snake[i]._direction = (int)Direction::up;
+            _snake[i]._nextSprt.texture = _sprite[19]._sprt.texture;
+            _snake[i]._nextDirection = (int)Direction::up;
             break;
         case (int)Direction::down:
-            _snake[i]._sprt.texture = _sprite[10]._sprt.texture;
-            _snake[i]._direction = (int)Direction::down;
+            _snake[i]._nextSprt.texture = _sprite[20]._sprt.texture;
+            _snake[i]._nextDirection = (int)Direction::down;
             break;
         case (int)Direction::left:
-            _snake[i]._sprt.texture = _sprite[21]._sprt.texture;
-            _snake[i]._direction = (int)Direction::left;
+            _snake[i]._nextSprt.texture = _sprite[21]._sprt.texture;
+            _snake[i]._nextDirection = (int)Direction::left;
             break;
         case (int)Direction::right:
-            _snake[i]._sprt.texture = _sprite[22]._sprt.texture;
-            _snake[i]._direction = (int)Direction::right;
+            _snake[i]._nextSprt.texture = _sprite[22]._sprt.texture;
+            _snake[i]._nextDirection = (int)Direction::right;
             break;
         default:
             break;
     }
-        switch (_snake[i]._nextDirection)
+    switch (_snake[i]._direction)
     {
     case (int)Direction::up:
         _snake[i]._nextSprt.pixelPosition.y--;
         _snake[i]._nextSprt.texture = _sprite[19]._sprt.texture;
-        chooseCorner(i);
+        chooseTailRotation(i);
         break;
     case (int)Direction::down:
         _snake[i]._nextSprt.pixelPosition.y++;
         _snake[i]._nextSprt.texture = _sprite[20]._sprt.texture;
-        chooseCorner(i);
+        chooseTailRotation(i);
         break;
     case (int)Direction::left:
         _snake[i]._nextSprt.pixelPosition.x--;
         _snake[i]._nextSprt.texture = _sprite[21]._sprt.texture;
-        chooseCorner(i);
+        chooseTailRotation(i);
         break;
     case (int)Direction::right:
         _snake[i]._nextSprt.pixelPosition.x++;
         _snake[i]._nextSprt.texture = _sprite[22]._sprt.texture;
-        chooseCorner(i);
+        chooseTailRotation(i);
         break;
     default:
         break;
@@ -304,61 +314,122 @@ void Nibbler::chooseCorner(int i)
 {
     switch (_snake[i]._direction) {
         case (int)Direction::up:
-            if (_snake[i].isTail == true) {
-                _snake[i]._direction = _snake[i - 1]._direction;
-                _snake[i]._nextDirection = _snake[i - 1]._direction;
-                _snake[i]._nextSprt.texture = _sprite[19]._sprt.texture;
-            } else if (_snake[i]._nextDirection == (int)Direction::right)
+            if (_snake[i]._nextDirection == (int)Direction::right)
                 rightCorner(i);
             else if (_snake[i]._nextDirection == (int)Direction::left) {
                 leftCorner(i);
             } else {
-                _snake[i]._nextSprt.texture = _sprite[7]._sprt.texture;
-                _snake[i]._nextDirection = _sprite[7]._nextDirection;
+                if (_snake[i].isTail == false) {
+                    _snake[i]._nextSprt.texture = _sprite[7]._sprt.texture;
+                    _snake[i]._nextDirection = _sprite[7]._nextDirection;
+                }
             }
             break;
         case (int)Direction::down:
-            if (_snake[i].isTail == true) {
-                _snake[i]._direction = _snake[i - 1]._direction;
-                _snake[i]._nextDirection = _snake[i - 1]._direction;
-                _snake[i]._nextSprt.texture = _sprite[20]._sprt.texture;
-            } else if (_snake[i]._nextDirection == (int)Direction::right)
+            if (_snake[i]._nextDirection == (int)Direction::right)
                 rightCorner(i);
             else if (_snake[i]._nextDirection == (int)Direction::left) {
                 leftCorner(i);
             } else {
-                _snake[i]._nextSprt.texture = _sprite[8]._sprt.texture;
-                _snake[i]._nextDirection = _sprite[8]._nextDirection;
+                if (_snake[i].isTail == false) {
+                    _snake[i]._nextSprt.texture = _sprite[8]._sprt.texture;
+                    _snake[i]._nextDirection = _sprite[8]._nextDirection;
+                }
             }
             break;
         case (int)Direction::left:
-            if (_snake[i].isTail == true) {
-                _snake[i]._direction = _snake[i - 1]._direction;
-                _snake[i]._nextDirection = _snake[i - 1]._direction;
-                _snake[i]._nextSprt.texture = _sprite[21]._sprt.texture;
-            } else if (_snake[i]._nextDirection == (int)Direction::up) {
+            if (_snake[i]._nextDirection == (int)Direction::up) {
                 upCorner(i);
             } else if (_snake[i]._nextDirection == (int)Direction::down) {
                 downCorner(i);
             } else {
-                _snake[i]._nextSprt.texture = _sprite[10]._sprt.texture;
-                _snake[i]._nextDirection = _sprite[10]._nextDirection;
+                if (_snake[i].isTail == false) {
+                    _snake[i]._nextSprt.texture = _sprite[10]._sprt.texture;
+                    _snake[i]._nextDirection = _sprite[10]._nextDirection;
+                }
             }
             break;
         case (int)Direction::right:
-            if (_snake[i].isTail == true) {
-                _snake[i]._direction = _snake[i - 1]._direction;
-                _snake[i]._nextDirection = _snake[i - 1]._direction;
-                _snake[i]._nextSprt.texture = _sprite[22]._sprt.texture;
-            } else if (_snake[i]._nextDirection == (int)Direction::up) {
+            if (_snake[i]._nextDirection == (int)Direction::up) {
                 upCorner(i);
             } else if (_snake[i]._nextDirection == (int)Direction::down) {
                 downCorner(i);
             } else {
-                _snake[i]._nextSprt.texture = _sprite[9]._sprt.texture;
-                _snake[i]._nextDirection = _sprite[9]._nextDirection;
+                if (_snake[i].isTail == false) {
+                    _snake[i]._nextSprt.texture = _sprite[9]._sprt.texture;
+                    _snake[i]._nextDirection = _sprite[9]._nextDirection;
+                }
             }
             break;
+    }
+}
+
+void Nibbler::chooseTailRotation(int i)
+{
+    if (_snake[i].isTail == true) {
+        switch (_snake[i]._direction)
+        {
+        case (int)Direction::up:
+            if (_snake[i]._nextDirection == (int)Direction::down) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[20]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::right) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[22]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::left) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[21]._sprt.texture;
+            } else {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[19]._sprt.texture;
+            }
+            break;
+        case (int)Direction::down:
+            if (_snake[i]._nextDirection == (int)Direction::up) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[19]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::right) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[22]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::left) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[21]._sprt.texture;
+            } else {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[20]._sprt.texture;
+            }
+            break;
+        case (int)Direction::right:
+            if (_snake[i]._nextDirection == (int)Direction::down) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[20]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::up) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[19]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::left) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[21]._sprt.texture;
+            } else {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[22]._sprt.texture;
+            }
+            break;
+        case (int)Direction::left:
+            if (_snake[i]._nextDirection == (int)Direction::down) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[20]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::right) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[22]._sprt.texture;
+            } else if (_snake[i]._nextDirection == (int)Direction::up) {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[19]._sprt.texture;
+            } else {
+                _snake[i]._nextDirection = _snake[i - 1]._direction;
+                _snake[i]._nextSprt.texture = _sprite[21]._sprt.texture;
+            }
+            break;
+        }
     }
 }
 
@@ -463,8 +534,10 @@ void Nibbler::draw()
 {
         _core->clearScreen(ICore::Color::black);
         for (int i = 0, y = 0, z = 0; i < _map.size(); i++, z++) {
-            if (_map[i] == '#')
+            if (_map[i] == '#') {
                 _core->renderSprite({{_sprite[2]._sprt.pixelPosition.x + z, _sprite[2]._sprt.pixelPosition.y + y}, _sprite[2]._sprt.texture});
+                collisionWall(_sprite[2]._sprt.pixelPosition.x + z, _sprite[2]._sprt.pixelPosition.y + y);
+            }
             if (_map[i] == ' ')
                 _core->renderSprite({{_sprite[0]._sprt.pixelPosition.x + z, _sprite[0]._sprt.pixelPosition.y + y}, _sprite[0]._sprt.texture});
             if (_map[i] == '\n') {
@@ -477,7 +550,7 @@ void Nibbler::draw()
             _core->renderSprite(_snake[i]._sprt);
             _snake[i]._sprt.pixelPosition = _snake[i]._nextSprt.pixelPosition;
         }
-        if (_frameNext > 6) {
+        if (_frameNext > 7) {
             for (int i = _snake.size() - 1; i != -1; i--) {
                 _snake[i]._sprt = _snake[i]._nextSprt;
                 _snake[i]._direction = _snake[i]._nextDirection;
@@ -490,7 +563,7 @@ void Nibbler::draw()
 void Nibbler::update()
 {
     if (_core->isButtonPressed(IDisplayModule::Button::Down) == true) {
-        if (_frameKey > 6) {
+        if (_frameKey > 7) {
             if (_snake[0]._nextDirection != (int)Direction::up && _snake[0]._nextDirection != (int)Direction::down) {
                 _snake[0]._nextDirection = (int)Direction::down;
                 _frameKey = 1;
@@ -498,7 +571,7 @@ void Nibbler::update()
         }
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Up) == true) {
-        if (_frameKey > 6) {
+        if (_frameKey > 7) {
             if (_snake[0]._nextDirection != (int)Direction::up && _snake[0]._nextDirection != (int)Direction::down) {
                 _snake[0]._nextDirection = (int)Direction::up;
                 _frameKey = 1;
@@ -506,7 +579,7 @@ void Nibbler::update()
         }
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Left) == true) {
-        if (_frameKey > 6) {
+        if (_frameKey > 7) {
             if (_snake[0]._nextDirection != (int)Direction::right && _snake[0]._nextDirection != (int)Direction::left) {
                 _snake[0]._nextDirection = (int)Direction::left;
                 _frameKey = 1;
@@ -514,18 +587,19 @@ void Nibbler::update()
         }
     }
     if (_core->isButtonPressed(IDisplayModule::Button::Right) == true) {
-        if (_frameKey > 6) {
+        if (_frameKey > 7) {
             if (_snake[0]._nextDirection != (int)Direction::right && _snake[0]._nextDirection != (int)Direction::left) {
                 _snake[0]._nextDirection = (int)Direction::right;
                 _frameKey = 1;
             }
         }
     }
-    if (_frameRate > 6) {
+    if (_frameRate > 7) {
         headMoves();
         for (int i = _snake.size() - 2; i > 0; i--)
             bodyMoves(i);
         tailMoves();
+        collisionHimself();
     }
     _frameRate++;
     _frameKey++;
