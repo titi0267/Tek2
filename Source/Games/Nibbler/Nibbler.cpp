@@ -15,6 +15,8 @@ Nibbler::Nibbler()
     _counter = 0;
     _frameKey = 1;
     _frameNext = 1;
+    _end = true;
+    tailStop = 2;
 }
 
 Nibbler::~Nibbler()
@@ -32,32 +34,32 @@ void Nibbler::init(ICore *coreHandle)
     ICore::Vector2u tail{7, 5};
 
     coreHandle->openWindow(windowSize);
-    _sprite.push_back({{grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::black, ICore::Color::black, 16, 16)}, {grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::black, ICore::Color::black, 16, 16)}, (int)Direction::up, (int)Direction::up, false});
-    _sprite.push_back({{gums, coreHandle->loadTexture("./Assets/Nibbler/Gums.png", 'O', ICore::Color::red, ICore::Color::black, 16, 16)}, {gums, coreHandle->loadTexture("./Assets/Nibbler/Gums.png", 'O', ICore::Color::red, ICore::Color::black, 16, 16)}, (int)Direction::up, (int)Direction::up, false});
-    _sprite.push_back({{border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)}, {border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)}, (int)Direction::up,(int)Direction::up, false});
-    _sprite.push_back({{head, coreHandle->loadTexture("./Assets/Nibbler/HeadUp.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, {head, coreHandle->loadTexture("./Assets/Nibbler/HeadUp.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, (int)Direction::up,(int)Direction::up, false});
-    _sprite.push_back({{head, coreHandle->loadTexture("./Assets/Nibbler/HeadDown.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, {head, coreHandle->loadTexture("./Assets/Nibbler/HeadDown.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, (int)Direction::down,(int)Direction::down, false});
-    _sprite.push_back({{head, coreHandle->loadTexture("./Assets/Nibbler/HeadRight.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, {head, coreHandle->loadTexture("./Assets/Nibbler/HeadRight.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, (int)Direction::right,(int)Direction::right, false});
-    _sprite.push_back({{head, coreHandle->loadTexture("./Assets/Nibbler/HeadLeft.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, {head, coreHandle->loadTexture("./Assets/Nibbler/HeadLeft.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, (int)Direction::left, (int)Direction::left, false});
-    /*up*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::up, (int)Direction::up, false});
-    /*down*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::down, (int)Direction::down, false});
-    /*right*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::right,(int)Direction::right, false});
-    /*left*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left,(int)Direction::left, false});
-    /*rightup11*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::right,(int)Direction::up, false});
-    /*downleft12*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::down,(int)Direction::left, false});
-    /*leftup13*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left, (int)Direction::up, false});
-    /*downright14*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::down, (int)Direction::right, false});
-    /*upleft15*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::up,(int)Direction::left, false});
-    /*rightdown16*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::right,(int)Direction::down, false});
-    /*upright17*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::up,(int)Direction::right ,false});
-    /*leftdown18*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left,(int)Direction::down ,false});
-    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::up,(int)Direction::up, true});
-    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::down,(int)Direction::down, true});
-    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::left,(int)Direction::left, true});
-    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::right,(int)Direction::right, true});
+    _sprite.push_back({{grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::black, ICore::Color::black, 16, 16)}, {grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::black, ICore::Color::black, 16, 16)}, (int)Direction::up, (int)Direction::up, false, 0, false});
+    _sprite.push_back({{gums, coreHandle->loadTexture("./Assets/Nibbler/Gums.png", 'O', ICore::Color::red, ICore::Color::black, 16, 16)}, {gums, coreHandle->loadTexture("./Assets/Nibbler/Gums.png", 'O', ICore::Color::red, ICore::Color::black, 16, 16)}, (int)Direction::up, (int)Direction::up, false, 1, false});
+    _sprite.push_back({{border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)}, {border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)}, (int)Direction::up,(int)Direction::up, false, 2, false});
+    _sprite.push_back({{head, coreHandle->loadTexture("./Assets/Nibbler/HeadUp.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, {head, coreHandle->loadTexture("./Assets/Nibbler/HeadUp.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, (int)Direction::up,(int)Direction::up, false, 3, false});
+    _sprite.push_back({{head, coreHandle->loadTexture("./Assets/Nibbler/HeadDown.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, {head, coreHandle->loadTexture("./Assets/Nibbler/HeadDown.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, (int)Direction::down,(int)Direction::down, false, 4, false});
+    _sprite.push_back({{head, coreHandle->loadTexture("./Assets/Nibbler/HeadRight.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, {head, coreHandle->loadTexture("./Assets/Nibbler/HeadRight.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, (int)Direction::right,(int)Direction::right, false, 5, false});
+    _sprite.push_back({{head, coreHandle->loadTexture("./Assets/Nibbler/HeadLeft.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, {head, coreHandle->loadTexture("./Assets/Nibbler/HeadLeft.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, (int)Direction::left, (int)Direction::left, false, 6, false});
+    /*up*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::up, (int)Direction::up, false, 7, false});
+    /*down*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyVertical.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::down, (int)Direction::down, false, 8, false});
+    /*right*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::right,(int)Direction::right, false, 9, false});
+    /*left*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyHorizontal.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left,(int)Direction::left, false, 10, false});
+    /*rightup11*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::right,(int)Direction::up, false, 11, false});
+    /*downleft12*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::down,(int)Direction::left, false, 12, false});
+    /*leftup13*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left, (int)Direction::up, false, 13, false});
+    /*downright14*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightUp.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::down, (int)Direction::right, false, 14, false});
+    /*upleft15*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::up,(int)Direction::left, false, 15, false});
+    /*rightdown16*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerLeftDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::right,(int)Direction::down, false, 16, false});
+    /*upright17*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::up,(int)Direction::right ,false, 17, false});
+    /*leftdown18*/_sprite.push_back({{body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, {body, coreHandle->loadTexture("./Assets/Nibbler/BodyCornerRightDown.png", ' ', ICore::Color::magenta, ICore::Color::magenta, 16, 16)}, (int)Direction::left,(int)Direction::down ,false, 18, false});
+    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailUp.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::up,(int)Direction::up, true, 19, false});
+    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailDown.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::down,(int)Direction::down, true, 20, false});
+    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailLeft.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::left,(int)Direction::left, true, 21, false});
+    _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::right,(int)Direction::right, true, 22, false});
     constructSnake();
     coreHandle->setFramerate(30);
-    coreHandle->setPixelsPerCell(8);
+    coreHandle->setPixelsPerCell(16);
     _core = coreHandle;
 }
 
@@ -78,10 +80,12 @@ void Nibbler::constructSnake()
 {
     ICore::Vector2u bodyPos{_sprite[9]._sprt.pixelPosition.x - 1, _sprite[9]._sprt.pixelPosition.y};
 
-    _snake.push_back({{_sprite[5]._sprt.pixelPosition , _sprite[5]._sprt.texture}, {_sprite[5]._sprt.pixelPosition , _sprite[5]._sprt.texture}, _sprite[5]._direction, _sprite[5]._direction, false});
-    _snake.push_back({{_sprite[9]._sprt.pixelPosition, _sprite[9]._sprt.texture}, {_sprite[9]._sprt.pixelPosition, _sprite[9]._sprt.texture}, _sprite[9]._direction,_sprite[9]._direction, false});
-    _snake.push_back({{bodyPos, _sprite[9]._sprt.texture}, {bodyPos, _sprite[9]._sprt.texture}, _sprite[9]._direction,_sprite[9]._direction, false});
-    _snake.push_back({{_sprite[22]._sprt.pixelPosition, _sprite[22]._sprt.texture}, {_sprite[22]._sprt.pixelPosition, _sprite[22]._sprt.texture}, _sprite[22]._direction,_sprite[22]._direction, true});
+    _sprite[1]._sprt.pixelPosition.x = 9;
+    _sprite[1]._sprt.pixelPosition.y = 3;
+    _snake.push_back({{_sprite[5]._sprt.pixelPosition , _sprite[5]._sprt.texture}, {_sprite[5]._sprt.pixelPosition , _sprite[5]._sprt.texture}, _sprite[5]._direction, _sprite[5]._direction, false, 5, false});
+    _snake.push_back({{_sprite[9]._sprt.pixelPosition, _sprite[9]._sprt.texture}, {_sprite[9]._sprt.pixelPosition, _sprite[9]._sprt.texture}, _sprite[9]._direction,_sprite[9]._direction, false, 9, false});
+    _snake.push_back({{bodyPos, _sprite[9]._sprt.texture}, {bodyPos, _sprite[9]._sprt.texture}, _sprite[9]._direction,_sprite[9]._direction, false, 9, false});
+    _snake.push_back({{_sprite[22]._sprt.pixelPosition, _sprite[22]._sprt.texture}, {_sprite[22]._sprt.pixelPosition, _sprite[22]._sprt.texture}, _sprite[22]._direction,_sprite[22]._direction, true, 22, false});
 }
 
 /*   check all snake's position compared with gum position in X   */
@@ -107,7 +111,7 @@ bool Nibbler::checkSnakePosY(unsigned random)
 /*   check snake's head position compared with gum position in X  */
 bool Nibbler::checkSnakeHeadPosX(unsigned random)
 {
-    if (_sprite[_snake[0]._direction + 3]._sprt.pixelPosition.x == random)
+    if (_snake[0]._sprt.pixelPosition.x == random)
         return true;
     return false;
 }
@@ -115,7 +119,7 @@ bool Nibbler::checkSnakeHeadPosX(unsigned random)
 /*   check snake's head position compared with gum position in Y  */
 bool Nibbler::checkSnakeHeadPosY(unsigned random)
 {
-    if (_sprite[_snake[0]._direction + 3]._sprt.pixelPosition.x == random)
+    if (_snake[0]._sprt.pixelPosition.y == random)
         return true;
     return false;
 }
@@ -123,11 +127,30 @@ bool Nibbler::checkSnakeHeadPosY(unsigned random)
 /*  Add new body section when gum position matches with snake's head position  */
 void Nibbler::gumEated()
 {
-    std::deque<Snake>::iterator it = (_snake.end() - 1);
+    auto itr = _snake.end() - 1;
+    int size = _snake.size() - 2;
+    auto last = _snake[_snake.size()-1];
 
-    //_snakeSize++;
-    _snake.insert(it, {_snake[_snake.size() - 1]._sprt.pixelPosition, _snake[_snake.size() - 1]._sprt.texture});
+    //_snake.pop_back();
+    // if (_snake[size]._direction == (int)Direction::up) {
+    //     _snake[size]._sprt.pixelPosition.y++;
+    // }
+    // if (_snake[size]._direction == (int)Direction::down) {
+    //     _snake[size]._sprt.pixelPosition.y--;
+    // }
+    // if (_snake[size]._direction == (int)Direction::left) {
+    //     _snake[size]._sprt.pixelPosition.x++;
+    // }
+    // if (_snake[size]._direction == (int)Direction::right) {
+    //     _snake[size]._sprt.pixelPosition.x--;
+    // }
+    _snake.insert(itr, {{_snake[size]._sprt.pixelPosition, _snake[size]._sprt.texture}, {_snake[size]._nextSprt.pixelPosition, _snake[size]._nextSprt.texture}, _snake[size]._direction, _snake[size]._nextDirection, _snake[size].isTail, _snake[size].index, _snake[size].newly});
+    size = _snake.size() - 2;
+    _snake[size].newly = true;
+//    _snake.push_back(last);
+    tailStop = 0;
     _addNewBody = true;
+    _gum = false;
 }
 
 /*******************************************************/
@@ -139,14 +162,14 @@ void Nibbler::gumEated()
 /*******************************************************/
 void Nibbler::setGum()
 {
-    int randomX;
+    /*int randomX;
     int randomY;
-
+*/
     if (_gum == true) {
-        if (checkSnakeHeadPosX(_sprite[1]._sprt.pixelPosition.x) == false && checkSnakeHeadPosY(_sprite[1]._sprt.pixelPosition.y) == false)
+        if (checkSnakeHeadPosX(_sprite[1]._sprt.pixelPosition.x) == true && checkSnakeHeadPosY(_sprite[1]._sprt.pixelPosition.y) == true)
             gumEated();
     }
-    if (_gum == false) {
+    /*if (_gum == false) {
         randomX = rand() % 19 + 1;
         randomY = rand() % 10 + 1;
         while (1) {
@@ -158,7 +181,7 @@ void Nibbler::setGum()
         _sprite[1]._sprt.pixelPosition.x = randomX;
         _sprite[1]._sprt.pixelPosition.y = randomY;
         _gum == true;
-    }
+    }*/
 }
 
 void Nibbler::collisionHimself()
@@ -166,6 +189,11 @@ void Nibbler::collisionHimself()
     for (int i = 1; i < _snake.size(); i++) {
         if (_snake[0]._sprt.pixelPosition.x == _snake[i]._sprt.pixelPosition.x && _snake[0]._sprt.pixelPosition.y == _snake[i]._sprt.pixelPosition.y) {
         //    std::cout << "Snake in himself" << std::endl;
+            _end = true;
+            for (int d = 0; _snake.size() != 0; d++) {
+                _snake.pop_back();
+            }
+            constructSnake();
             break;
         }
     }
@@ -174,7 +202,11 @@ void Nibbler::collisionHimself()
 void Nibbler::collisionWall(int x, int y)
 {
     if (x == _snake[0]._sprt.pixelPosition.x && y == _snake[0]._sprt.pixelPosition.y) {
- //       std::cout << "WAAAAAALLLL" << std::endl;
+        _end = true;
+        for (int d = 0; _snake.size() != 0; d++) {
+            _snake.pop_back();
+        }
+        constructSnake();
     }
 }
 
@@ -238,6 +270,15 @@ void Nibbler::tailMoves()
 {
     int i = _snake.size() - 1;
 
+   // if (tailStop != 2) {
+    if (_snake[i - 1].newly == true)
+        return;
+    /*    }
+        else if (tailStop == 1) {
+           tailStop = 2;
+            return;
+        }
+    }*/
     switch(_snake[i - 1]._direction)
     {
         case (int)Direction::up:
@@ -288,6 +329,8 @@ void Nibbler::tailMoves()
 
 void Nibbler::bodyMoves(int i)
 {
+    if (_snake[i].newly == true)
+        return;
     _snake[i]._nextDirection = _snake[i - 1]._nextDirection;
     switch (_snake[i]._direction)
     {
@@ -307,6 +350,14 @@ void Nibbler::bodyMoves(int i)
         _snake[i]._nextSprt.pixelPosition.x++;
         chooseCorner(i);
         break;
+    }
+}
+
+void Nibbler::handleNew()
+{
+    for (int i = 0; i < _snake.size(); i++) {
+        if (_snake[i].newly == true)
+            _snake[i].newly = false;
     }
 }
 
@@ -536,7 +587,8 @@ void Nibbler::draw()
         for (int i = 0, y = 0, z = 0; i < _map.size(); i++, z++) {
             if (_map[i] == '#') {
                 _core->renderSprite({{_sprite[2]._sprt.pixelPosition.x + z, _sprite[2]._sprt.pixelPosition.y + y}, _sprite[2]._sprt.texture});
-                collisionWall(_sprite[2]._sprt.pixelPosition.x + z, _sprite[2]._sprt.pixelPosition.y + y);
+                if (_end == false)
+                    collisionWall(_sprite[2]._sprt.pixelPosition.x + z, _sprite[2]._sprt.pixelPosition.y + y);
             }
             if (_map[i] == ' ')
                 _core->renderSprite({{_sprite[0]._sprt.pixelPosition.x + z, _sprite[0]._sprt.pixelPosition.y + y}, _sprite[0]._sprt.texture});
@@ -550,7 +602,7 @@ void Nibbler::draw()
             _core->renderSprite(_snake[i]._sprt);
             _snake[i]._sprt.pixelPosition = _snake[i]._nextSprt.pixelPosition;
         }
-        if (_frameNext > 7) {
+        if (_frameNext > 7 && _end == false) {
             for (int i = _snake.size() - 1; i != -1; i--) {
                 _snake[i]._sprt = _snake[i]._nextSprt;
                 _snake[i]._direction = _snake[i]._nextDirection;
@@ -594,16 +646,20 @@ void Nibbler::update()
             }
         }
     }
-    if (_frameRate > 7) {
+    if (_core->isButtonPressed(IDisplayModule::Button::Start) == true) {
+        _end = false;
+    }
+    setGum(); //takes way too long
+    if (_frameRate > 7 && _end == false) {
         headMoves();
         for (int i = _snake.size() - 2; i > 0; i--)
             bodyMoves(i);
         tailMoves();
+        handleNew();
         collisionHimself();
     }
     _frameRate++;
     _frameKey++;
-    //setGum(); //takes way too long
 }
 
 std::unique_ptr<IGameModule> gEpitechArcadeGetGameModuleHandle()
