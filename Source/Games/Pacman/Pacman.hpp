@@ -29,6 +29,8 @@ class Pacman : public IGameModule {
         int chooseDirection(int pos);
         bool checkWallGhost(int i, int nb);
         void freeGhost();
+        bool checkCollision();
+        void restartGame();
 
     protected:
         ICore *_core;
@@ -38,6 +40,10 @@ class Pacman : public IGameModule {
         int _ghost2Direction;
         int _ghost3Direction;
         int _ghost4Direction;
+        bool _ghost1Status;
+        bool _ghost2Status;
+        bool _ghost3Status;
+        bool _ghost4Status;
         enum class Direction {
             up = 0,
             down = 1,
@@ -52,6 +58,8 @@ class Pacman : public IGameModule {
         int _score;
         int _ghostOut;
         int _timer;
+        bool _status;
+        int _tmp;
         std::vector<std::string> _ghostInHouse;
         std::vector<std::string> _ghostOutHouse;
 };
