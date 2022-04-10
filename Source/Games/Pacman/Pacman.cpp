@@ -109,6 +109,8 @@ bool Pacman::movePacman(int i)
 {
     int coord = (_sprite[18].pixelPosition.y * 40) + _sprite[18].pixelPosition.x;
 
+    if (_sprite[18].pixelPosition.x == 38 || _sprite[18].pixelPosition.x == 0)
+        return (true);
     if (_map[coord + i] == '.' || _map[coord + i] == 'o' || _map[coord + i] == 'X' || _map[coord + i] == 'Y' || _map[coord + i] == 'Z' || _map[coord + i] == 'A' || _map[coord + i] == ' ' ||
         _map[coord + i] == 'C') {
         if (_map[coord + i] == '.') {
@@ -202,6 +204,8 @@ bool Pacman::checkWallGhost(int i, int nb)
 {
     int coord = (_sprite[nb].pixelPosition.y * 40) + _sprite[nb].pixelPosition.x;
 
+    if (_sprite[nb].pixelPosition.x == 39)
+        return (false);
     if (_map[coord + i] == '.' || _map[coord + i] == 'o' || _map[coord + i] == 'X' || _map[coord + i] == 'Y' || _map[coord + i] == 'Z' || _map[coord + i] == 'A' || _map[coord + i] == ' ' ||
         _map[coord + i] == 'C') {
         return (true);
@@ -364,10 +368,23 @@ void Pacman::moveGhost()
 void Pacman::updatePosition()
 {
     int index = (_sprite[18].pixelPosition.y * 40) + _sprite[18].pixelPosition.x;
+    int tmp = 0;
     _frameRate = 0;
     switch(_direction) {
         case (int)Direction::left:
             if (movePacman(-1)) {
+                if (_sprite[18].pixelPosition.x == 0) {
+                    _sprite[18].pixelPosition.x = 38;
+                    _sprite[18].pixelPosition.y = 10;
+                    _sprite[22].pixelPosition.x = 38;
+                    _sprite[22].pixelPosition.y = 10;
+                    _sprite[23].pixelPosition.x = 38;
+                    _sprite[23].pixelPosition.y = 10;
+                    _sprite[24].pixelPosition.x = 38;
+                    _sprite[24].pixelPosition.y = 10;
+                    _map[index + 38] = 'C';
+                    return;
+                }
                 if (_map[index - 1] != 'A')
                     _map[index - 1] = 'C';
                 _sprite[18].pixelPosition.x--;
@@ -378,6 +395,23 @@ void Pacman::updatePosition()
             break;
         case (int)Direction::right:
             if (movePacman(1)) {
+                if (_sprite[18].pixelPosition.x == 38) {
+                    tmp = (10 * 40) + 38;
+                    if (_map[tmp] == '.') {
+                        _pacGumEat++;
+                        _map[tmp] = ' ';
+                    }
+                    _sprite[18].pixelPosition.x = 0;
+                    _sprite[18].pixelPosition.y = 10;
+                    _sprite[22].pixelPosition.x = 0;
+                    _sprite[22].pixelPosition.y = 10;
+                    _sprite[23].pixelPosition.x = 0;
+                    _sprite[23].pixelPosition.y = 10;
+                    _sprite[24].pixelPosition.x = 0;
+                    _sprite[24].pixelPosition.y = 10;
+                    _map[index - 38] = 'C';
+                    return;
+                }
                 if (_map[index + 1] != 'A')
                     _map[index + 1] = 'C';
                 _sprite[18].pixelPosition.x++;
@@ -494,7 +528,6 @@ void Pacman::eatGhost()
 {
     if (_sprite[18].pixelPosition.x == _sprite[27].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[27].pixelPosition.y &&
         _runner == true) {
-        std::cout << "Pink was eat" << std::endl;
         _pinkStatus = false;
         _sprite[27].pixelPosition.x = 20;
         _sprite[27].pixelPosition.y = 10;
@@ -504,7 +537,6 @@ void Pacman::eatGhost()
     }
     if (_sprite[18].pixelPosition.x == _sprite[28].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[28].pixelPosition.y &&
         _runner == true) {
-        std::cout << "Blue was eat" << std::endl;
         _blueStatus = false;
         _sprite[28].pixelPosition.x = 19;
         _sprite[28].pixelPosition.y = 10;
@@ -514,7 +546,6 @@ void Pacman::eatGhost()
     }
     if (_sprite[18].pixelPosition.x == _sprite[29].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[29].pixelPosition.y &&
         _runner == true) {
-        std::cout << "Red was eat" << std::endl;
         _redStatus = false;
         _sprite[29].pixelPosition.x = 18;
         _sprite[29].pixelPosition.y = 10;
@@ -524,7 +555,6 @@ void Pacman::eatGhost()
     }
     if (_sprite[18].pixelPosition.x == _sprite[30].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[30].pixelPosition.y &&
         _runner == true) {
-        std::cout << "Orange was eat" << std::endl;
         _orangeStatus = false;
         _sprite[30].pixelPosition.x = 19;
         _sprite[30].pixelPosition.y = 8;
@@ -536,11 +566,7 @@ void Pacman::eatGhost()
 
 void Pacman::update()
 {
-    std::cout << "orange = " << _orangeStatus << std::endl;
-    std::cout << "red = " << _redStatus  << std::endl;
-    std::cout << "pink = " << _pinkStatus << std::endl;
-    std::cout << "blue = " << _blueStatus << std::endl;
-    std::cout << "nb ghost out: " << _ghostOut << std::endl << std::endl;
+    //std::cout << _sprite[18].pixelPosition.y << std::endl;
     if (_runner != true && (!checkCollision() && _tmp == 0) || (_core->isButtonPressed(IDisplayModule::Button::Start) && _tmp == 0)) {
         _tmp = 1;
         _status = false;
@@ -550,7 +576,7 @@ void Pacman::update()
     if (_status) {
         if (_tmp == 1)
             _tmp = 0;
-        if (_pacGumEat != 346) {
+        if (_pacGumEat != 347) {
             if (_runner == true)
                 eatGhost();
             if (_timer > 125 && _ghostOut < 4) {
@@ -594,6 +620,8 @@ void Pacman::update()
                 _timer++;
             if (_runner == true)
                 _runnerCounter++;
+        } else {
+            restartGame();
         }
     }
 }
