@@ -6,20 +6,54 @@
 */
 
 #pragma once
-#include "../../../arcade-interface-master/IGameModule.hpp"
-#include "../../../arcade-interface-master/ICore.hpp"
+#include "../../Interface/Core.hpp"
+#include "../../DlLib.hpp"
+#include "../../Error/Error.hpp"
 #include <deque>
 #include <iostream>
+#include <vector>
+#include <fstream>
+#include <filesystem>
+#include <string>
 
-class Menu : public IGameModule {
+extern "C" {
+    #include <string.h>
+    #include <dlfcn.h>
+}
+
+class Core;
+class Menu {
     public:
         Menu();
         ~Menu();
-        void init(ICore *coreHandle);
+        void init(Core *coreHandle, char *av);
         void draw();
         void update();
+        void readDir();
+        void sortLibsGames();
+        void manageSelected();
+        void chooseFirstLib(Core *coreHandle, const char *av);
+        void chooseGame(Core *coreHandle);
+        //void constructMap();
+        enum class Selected {
+            Graphical, Games, Score
+        };
 
     protected:
-        ICore *_core;
+        Menu::Selected _selected;
+        Core *_core;
+        DlLib _dl;
         std::deque<ICore::Sprite> _sprite;
+        std::vector<char>_map;
+        std::deque<std::string> _files;
+        std::deque<std::string> _libs;
+        std::deque<std::string> _games;
+        int _pixelPerCell;
+        void *_openLib;
+        void *_openGame;
+        int _indexLib;
+        int _indexGame;
+        int _maxLib;
+        int _maxGame;
+        bool _menuMode;
 };

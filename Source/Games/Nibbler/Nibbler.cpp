@@ -34,6 +34,7 @@ void Nibbler::init(ICore *coreHandle)
     ICore::Vector2u body{9 * (uint32_t)_pixelPerCell, 5 * (uint32_t)_pixelPerCell};
     ICore::Vector2u tail{7 * (uint32_t)_pixelPerCell, 5 * (uint32_t)_pixelPerCell};
 
+    std::cout << "start nibbler" << std::endl;
     coreHandle->openWindow(windowSize);
     _sprite.push_back({{grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::black, ICore::Color::black, 16, 16)}, {grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::black, ICore::Color::black, 16, 16)}, (int)Direction::up, (int)Direction::up, false, 0, false});
     _sprite.push_back({{gums, coreHandle->loadTexture("./Assets/Nibbler/Gums.png", 'O', ICore::Color::red, ICore::Color::black, 16, 16)}, {gums, coreHandle->loadTexture("./Assets/Nibbler/Gums.png", 'O', ICore::Color::red, ICore::Color::black, 16, 16)}, (int)Direction::up, (int)Direction::up, false, 1, false});
@@ -60,7 +61,8 @@ void Nibbler::init(ICore *coreHandle)
     _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::right,(int)Direction::right, true, 22, false});
     constructSnake();
     coreHandle->setFramerate(60);
-    coreHandle->setPixelsPerCell(16);
+    coreHandle->setPixelsPerCell(_pixelPerCell);
+    std::cout << "end load" << std::endl;
     _core = coreHandle;
 }
 

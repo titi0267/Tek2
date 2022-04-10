@@ -14,17 +14,20 @@
 
 class Error {
     public:
-        Error();
+        Error(char *error);
         ~Error();
 
         // Checking
         void checkArgs(int ac, char **av);
 
         // Setter
+        void setError(const char *reason);
+        void getError(const char *reason);
         void setReason(const std::string reason);
         void setReturnValue(int returnValue);
 
-        // Guetter
+        const char *what();
+        // Getter
         std::string getReason() const;
         int getReturnValue() const;
 
@@ -38,6 +41,7 @@ class Error {
     protected:
         std::string _reason;
         int _returnValue;
+        std::string _error;
 };
 
 #endif /* !ERROR_HPP_ */

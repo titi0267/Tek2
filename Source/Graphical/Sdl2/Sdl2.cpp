@@ -7,7 +7,7 @@
 
 #include "Sdl2.hpp"
 
-Sdl2::Sdl2()
+Sdl2::Sdl2() : _setError("alexandre")
 {
     int flag = IMG_INIT_JPG | IMG_INIT_PNG;
 
@@ -20,9 +20,11 @@ Sdl2::Sdl2()
 
 Sdl2::~Sdl2()
 {
-    SDL_DestroyWindow(_window);
-    SDL_DestroyRenderer(_renderer);
-    TTF_Quit();
+    if (!_window) {
+        SDL_DestroyWindow(_window);
+    }
+    if (!_renderer)
+        SDL_DestroyRenderer(_renderer);
     SDL_Quit();
     _isClosing = true;
 }

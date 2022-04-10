@@ -7,14 +7,15 @@
 
 #include "Sfml.hpp"
 
-Sfml::Sfml()
+Sfml::Sfml() : _setError("alexandre")
 {
     for (int i = 0; i < 19; i++) _butt.push_back(false);
 }
 
 Sfml::~Sfml()
 {
-    _window->close();
+    if (_window)
+        _window->close();
 }
 
 void Sfml::setPixelsPerCell(std::uint32_t pixelsPerCell)
@@ -136,7 +137,7 @@ void Sfml::renderSprite(IDisplayModule::Sprite sprite)
         text.setFillColor(convertColor(raw->getCharColor()));
         text.setPosition(sf::Vector2f((float)(sprite.rawPixelPosition.x), (float)(sprite.rawPixelPosition.y)));
         _window->draw(text);
-    } else _setError.exitError(ERROR, "Error: texture isn't png or ttf");
+    }
 }
 
 void Sfml::display()

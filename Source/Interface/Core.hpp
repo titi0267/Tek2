@@ -13,13 +13,15 @@
 #include "../Error/Error.hpp"
 #include "Texture.hpp"
 #include "../DlLib.hpp"
+#include "../Games/Menu/Menu.hpp"
 #include <deque>
 #include <chrono>
 #include <list>
 
+class Menu;
 class Core : public ICore {
     public:
-        Core(std::deque<char *> chooseLib, int chooseLibIterator);
+        Core();
         ~Core();
         void setPixelsPerCell(std::uint32_t pixelsPerCell);
         void setFramerate(unsigned framerate);
@@ -41,10 +43,11 @@ class Core : public ICore {
         void loadLibs(std::unique_ptr<IDisplayModule> disp);
         void loadGames(std::unique_ptr<IGameModule> game);
         const std::string &getPlayerName();
-        void gameLoop();
+        void gameLoop(Menu *menu);
         void ChooseLib();
         IGameModule *getGame() const;
         int getFrameRate() const;
+        IDisplayModule *getLib() const;
 
     protected:
         Error _setError;

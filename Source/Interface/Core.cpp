@@ -8,12 +8,8 @@
 #include "Core.hpp"
 #include "../define.hpp"
 
-Core::Core(std::deque<char *> chooseLib, int chooseLibIterator) : _dl(chooseLib[chooseLibIterator], (char *)("./lib/arcade_nibbler.so"))
+Core::Core() : _setError("error")
 {
-    _chooseLib = chooseLib;
-    _chooseLibIterator = chooseLibIterator;
-    loadLibs(_dl.getLib());
-    loadGames(_dl.getGame());
     _getPlayerName = "Player One";
 }
 
@@ -150,13 +146,13 @@ void Core::ChooseLib()
     }
 }
 
-void Core::gameLoop()
+void Core::gameLoop(Menu *menu)
 {
     timespec time;
 
+    int i = 0;
     //time->tv_nsec = 0;
     //time->tv_sec = 0;
-
     while (_disp->isClosing() == false) {
         clock_gettime(CLOCK_MONOTONIC, &time);
         time.tv_nsec += (1000000000 / getFrameRate());
@@ -164,16 +160,20 @@ void Core::gameLoop()
             time.tv_sec += 1;
             time.tv_nsec -= 1000000000;
         }
-        _game->update();
-        _disp->update();
-        _game->draw();
-        _disp->display();
-        ChooseLib();
+        i++;
+        menu->update();
+        menu->draw();
+        //ChooseLib();
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &time, NULL);
     }
 }
 
 IGameModule *Core::getGame() const
 {
-    return (_game.get());
+    return _game.get();
+}
+
+IDisplayModule *Core::getLib() const
+{
+    return (_disp.get());
 }

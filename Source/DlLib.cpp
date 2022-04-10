@@ -9,62 +9,61 @@
 #include "define.hpp"
 #include <iostream>
 
-DlLib::DlLib(char *libName, char *gameName)
+DlLib::DlLib()
 {
-    openLib(libName);
-    openGame(gameName);
 }
 
 DlLib::~DlLib()
 {
 }
 
-void DlLib::openLib(char *str)
+void *DlLib::openLib(const char *str)
 {
-    std::string error = "ERROR: couldn't open library";
-
     _openLib = dlopen(str, RTLD_LAZY);
-    if (!_openLib) {
-        _setError.setReason(error);
-        _setError.displayReason();
-        _setError.setReturnValue(ERROR);
-        _setError.exitProgram();
-    }
+    return _openLib;
+}
+
+char *DlLib::tryDownloadLib()
+{
+    char *error;
+
+    _lib = (std::unique_ptr<IDisplayModule> (*)(void))dlsym(_openLib, "gEpitechArcadeGetDisplayModuleHandle");
+
+    error = dlerror();
+    return error;
 }
 
 std::unique_ptr<IDisplayModule> DlLib::getLib()
 {
-    _lib = (std::unique_ptr<IDisplayModule> (*)(void))dlsym(_openLib, "gEpitechArcadeGetDisplayModuleHandle");
-
     return (_lib());
 }
 
-void DlLib::closeLib()
+int DlLib::closeLib()
 {
-    dlclose(_openLib);
+    return dlclose(_openLib);
 }
 
-void DlLib::openGame(char *str)
+void *DlLib::openGame(const char *str)
 {
-    std::string error = "ERROR: couldn't open game";
-
     _openGame = dlopen(str, RTLD_LAZY);
-    if (!_openGame) {
-        _setError.setReason(error);
-        _setError.displayReason();
-        _setError.setReturnValue(ERROR);
-        _setError.exitProgram();
-    }
+    return (_openGame);
+}
+
+char *DlLib::tryDownloadGame()
+{
+    char *error;
+    _game = (std::unique_ptr<IGameModule> (*)(void))dlsym(_openGame, "gEpitechArcadeGetGameModuleHandle");
+
+    error = dlerror();
+    return error;
 }
 
 std::unique_ptr<IGameModule> DlLib::getGame()
 {
-    _game = (std::unique_ptr<IGameModule> (*)(void))dlsym(_openGame, "gEpitechArcadeGetGameModuleHandle");
-
     return (_game());
 }
 
-void DlLib::closeGame()
+int DlLib::closeGame()
 {
-    dlclose(_openGame);
+    return dlclose(_openGame);
 }
