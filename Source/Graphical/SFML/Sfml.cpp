@@ -149,7 +149,7 @@ void Sfml::update()
     for (int i = 0; i < 19; i++) _butt[i] = false;
     while (_window->pollEvent(_event)) {
         if (_event.type == sf::Event::Closed) _window->close();
-        if (_event.type == sf::Event::KeyReleased) {
+        if (_event.type == sf::Event::KeyPressed) {
             if (_event.key.code == sf::Keyboard::Q) _butt[0] = true;
             if (_event.key.code == sf::Keyboard::D) _butt[1] = true;
             if (_event.key.code == sf::Keyboard::Z) _butt[2] = true;

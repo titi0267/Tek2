@@ -109,27 +109,51 @@ void Sdl2::endTextInput()
     ;
 }
 
+SDL_Color Sdl2::convertColor(IDisplayModule::Color color)
+{
+    if (color == IDisplayModule::Color::black) return {0, 0, 0, 255};
+    if (color == IDisplayModule::Color::red) return {255, 0, 0, 255};
+    if (color == IDisplayModule::Color::blue) return {0, 0, 255, 255};
+    if (color == IDisplayModule::Color::cyan) return {0, 255, 255, 255};
+    if (color == IDisplayModule::Color::green) return {0, 255, 0, 255};
+    if (color == IDisplayModule::Color::magenta) return {255, 0, 255, 255};
+    if (color == IDisplayModule::Color::white) return {255, 255, 255, 255};
+    if (color == IDisplayModule::Color::yellow) return {255, 255, 0, 255};
+    return {0, 0, 0, 255};
+}
+
 void Sdl2::clearScreen(IDisplayModule::Color color)
 {
-    if (color == IDisplayModule::Color::black) SDL_SetRenderDrawColor(_renderer, 0, 0, 0, 255);
-    if (color == IDisplayModule::Color::red) SDL_SetRenderDrawColor(_renderer, 255, 0, 0, 255);
-    if (color == IDisplayModule::Color::blue) SDL_SetRenderDrawColor(_renderer, 0, 0, 255, 255);
-    if (color == IDisplayModule::Color::cyan) SDL_SetRenderDrawColor(_renderer, 0, 255, 255, 255);
-    if (color == IDisplayModule::Color::green) SDL_SetRenderDrawColor(_renderer, 0, 255, 0, 255);
-    if (color == IDisplayModule::Color::magenta) SDL_SetRenderDrawColor(_renderer, 255, 0, 255, 255);
-    if (color == IDisplayModule::Color::white) SDL_SetRenderDrawColor(_renderer, 255, 255, 255, 255);
-    if (color == IDisplayModule::Color::yellow) SDL_SetRenderDrawColor(_renderer, 255, 255, 0, 255);
+    Uint8 r = convertColor(color).r;
+    Uint8 g = convertColor(color).g;
+    Uint8 b = convertColor(color).b;
+    Uint8 a = convertColor(color).a;
+
+    SDL_GetRenderDrawColor(_renderer, &r, &g, &b, &a);
     SDL_RenderClear(_renderer);
 }
 
 void Sdl2::renderSprite(IDisplayModule::Sprite sprite)
 {
     IRawTexture *raw = dynamic_cast<IRawTexture *>(sprite.texture);
-    SDL_Surface *sprt = IMG_Load(raw->getFilename().c_str());
-    SDL_Texture *txtr = SDL_CreateTextureFromSurface(_renderer, sprt);
-    SDL_Rect rect = {(int)sprite.rawPixelPosition.x, (int)sprite.rawPixelPosition.y, (int)raw->getWidth(), (int)raw->getHeight()};
-    if (!sprt) std::cout << "Help!" << std::endl;
+    std::string png(".png");
+    std::string ttf(".ttf");
+    SDL_Surface *sprt;
+    SDL_Texture *txtr;
+    SDL_Rect rect;
+    TTF_Font *font;
+
+    if (raw->getFilename().compare(raw->getFilename().size() - png.size(), png.size(), png) == 0) {
+        sprt = IMG_Load(raw->getFilename().c_str());
+        txtr = SDL_CreateTextureFromSurface(_renderer, sprt);
+    } else if (raw->getFilename().compare(raw->getFilename().size() - ttf.size(), ttf.size(), ttf) == 0) {
+        font = TTF_OpenFont(raw->getFilename().c_str(), (int)raw->getWidth());
+        sprt = TTF_RenderText_Solid(font, std::string{1, (raw->getChar())}.c_str(), convertColor(raw->getCharColor()));
+        txtr = SDL_CreateTextureFromSurface(_renderer, sprt);
+    } else _setError.exitError(ERROR, "Error: texture isn't png or ttf");
+    rect = {(int)sprite.rawPixelPosition.x, (int)sprite.rawPixelPosition.y, (int)raw->getWidth(), (int)raw->getHeight()};
     SDL_RenderCopy(_renderer, txtr, NULL, &rect);
+    SDL_DestroyTexture(txtr);
 }
 
 void Sdl2::display()
@@ -146,31 +170,33 @@ void Sdl2::update()
             SDL_Quit();
             _isClosing = true;
         }
-        if (_event.type == SDL_SCANCODE_Q) _butt[0] = true;
-        if (_event.type == SDL_SCANCODE_D) _butt[1] = true;
-        if (_event.type == SDL_SCANCODE_Z) _butt[2] = true;
-        if (_event.type == SDL_SCANCODE_S) _butt[3] = true;
-        if (_event.type == SDL_SCANCODE_F) _butt[4] = true;
-        if (_event.type == SDL_SCANCODE_V) _butt[5] = true;
-        if (_event.type == SDL_SCANCODE_H) _butt[6] = true;
-        if (_event.type == SDL_SCANCODE_B) _butt[7] = true;
-        if (_event.type == SDL_SCANCODE_T) _butt[8] = true;
-        if (_event.type == SDL_SCANCODE_Y) _butt[9] = true;
-        if (_event.type == SDL_SCANCODE_RETURN) _butt[10] = true;
-        if (_event.type == SDL_SCANCODE_SPACE) _butt[11] = true;
-        if (_event.type == SDL_SCANCODE_F1) _butt[12] = true;
-        if (_event.type == SDL_SCANCODE_F2) _butt[13] = true;
-        if (_event.type == SDL_SCANCODE_F3) _butt[14] = true;
-        if (_event.type == SDL_SCANCODE_F4) _butt[15] = true;
-        if (_event.type == SDL_SCANCODE_F5) _butt[16] = true;
-        if (_event.type == SDL_SCANCODE_F6) _butt[17] = true;
-        if (_event.type == SDL_SCANCODE_F7) {
-            _butt[18] = true;
-            SDL_DestroyWindow(_window);
-            SDL_Quit();
-            _isClosing = true;
+        if (_event.type == SDL_KEYDOWN) {
+            if (_event.key.keysym.sym == SDLK_q) _butt[0] = true;
+            if (_event.key.keysym.sym == SDLK_d) _butt[1] = true;
+            if (_event.key.keysym.sym == SDLK_z) _butt[2] = true;
+            if (_event.key.keysym.sym == SDLK_s) _butt[3] = true;
+            if (_event.key.keysym.sym == SDLK_f) _butt[4] = true;
+            if (_event.key.keysym.sym == SDLK_v) _butt[5] = true;
+            if (_event.key.keysym.sym == SDLK_h) _butt[6] = true;
+            if (_event.key.keysym.sym == SDLK_b) _butt[7] = true;
+            if (_event.key.keysym.sym == SDLK_t) _butt[8] = true;
+            if (_event.key.keysym.sym == SDLK_y) _butt[9] = true;
+            if (_event.key.keysym.sym == SDLK_RETURN) _butt[10] = true;
+            if (_event.key.keysym.sym == SDLK_SPACE) _butt[11] = true;
+            if (_event.key.keysym.sym == SDLK_F1) _butt[12] = true;
+            if (_event.key.keysym.sym == SDLK_F2) _butt[13] = true;
+            if (_event.key.keysym.sym == SDLK_F3) _butt[14] = true;
+            if (_event.key.keysym.sym == SDLK_F4) _butt[15] = true;
+            if (_event.key.keysym.sym == SDLK_F5) _butt[16] = true;
+            if (_event.key.keysym.sym == SDLK_F6) _butt[17] = true;
+            if (_event.key.keysym.sym == SDLK_F7) {
+                _butt[18] = true;
+                SDL_DestroyWindow(_window);
+                SDL_Quit();
+                _isClosing = true;
+            }
+            if (_event.type == SDL_MOUSEBUTTONUP && _event.button.state == SDL_RELEASED) _mouse = _event.button;
         }
-        if (_event.type == SDL_MOUSEBUTTONUP && _event.button.state == SDL_RELEASED) _mouse = _event.button;
     }
 }
 
