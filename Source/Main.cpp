@@ -9,6 +9,7 @@
 #include "Error/Error.hpp"
 #include "DlLib.hpp"
 #include "Interface/Core.hpp"
+#include "Games/Menu/Menu.hpp"
 
 int main(int ac, char **av)
 {
@@ -16,15 +17,17 @@ int main(int ac, char **av)
         std::cout << "You need to specify the graphic library to use" << std::endl;
         return (ERROR);
     }
-    std::deque<char *> libNames;
+    Menu menu;
+    /*std::deque<char *> libNames;
     libNames.push_back(av[1]);
     libNames.push_back((char *)("./lib/arcade_sfml.so"));
-    libNames.push_back((char *)("./lib/arcade_sdl2.so"));
+    libNames.push_back((char *)("./lib/arcade_sdl2.so"));*/
     Error error;
-    Core core(libNames, 0);
+    Core core;
+    menu.init(&core, av[1]);
 
     error.checkArgs(ac, av);
-    core.getGame()->init(&core);
-    core.gameLoop();
+    //core.getGame()->init(&core);
+    //core.gameLoop();
     return (SUCCESS);
 }
