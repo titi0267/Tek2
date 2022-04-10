@@ -38,7 +38,7 @@ void Nibbler::init(ICore *coreHandle)
     coreHandle->openWindow(windowSize);
     _sprite.push_back({{grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::black, ICore::Color::black, 16, 16)}, {grass, coreHandle->loadTexture("./Assets/Nibbler/Grass.png", ' ', ICore::Color::black, ICore::Color::black, 16, 16)}, (int)Direction::up, (int)Direction::up, false, 0, false});
     _sprite.push_back({{gums, coreHandle->loadTexture("./Assets/Nibbler/Gums.png", 'O', ICore::Color::red, ICore::Color::black, 16, 16)}, {gums, coreHandle->loadTexture("./Assets/Nibbler/Gums.png", 'O', ICore::Color::red, ICore::Color::black, 16, 16)}, (int)Direction::up, (int)Direction::up, false, 1, false});
-    _sprite.push_back({{border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::black, ICore::Color::blue, 16, 16)}, {border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)}, (int)Direction::up,(int)Direction::up, false, 2, false});
+    _sprite.push_back({{border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::blue, ICore::Color::blue, 16, 16)}, {border, coreHandle->loadTexture("./Assets/Nibbler/Border.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)}, (int)Direction::up,(int)Direction::up, false, 2, false});
     _sprite.push_back({{head, coreHandle->loadTexture("./Assets/Nibbler/HeadUp.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, {head, coreHandle->loadTexture("./Assets/Nibbler/HeadUp.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, (int)Direction::up,(int)Direction::up, false, 3, false});
     _sprite.push_back({{head, coreHandle->loadTexture("./Assets/Nibbler/HeadDown.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, {head, coreHandle->loadTexture("./Assets/Nibbler/HeadDown.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, (int)Direction::down,(int)Direction::down, false, 4, false});
     _sprite.push_back({{head, coreHandle->loadTexture("./Assets/Nibbler/HeadRight.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, {head, coreHandle->loadTexture("./Assets/Nibbler/HeadRight.png", ' ', ICore::Color::red, ICore::Color::red, 16, 16)}, (int)Direction::right,(int)Direction::right, false, 5, false});
@@ -596,6 +596,15 @@ void Nibbler::draw()
 
 void Nibbler::update()
 {
+    if (_core->isButtonPressed(IDisplayModule::Button::F5) == true) {
+        _end = true;
+        for (int d = 0; _snake.size() != 0; d++) {
+            _snake.pop_back();
+        }
+        constructSnake();
+    }
+    /* if (_core->isButtonPressed(IDisplayModule::Button::F6) == true)
+         */
     if (_core->isButtonPressed(IDisplayModule::Button::Down) == true) {
         if (_frameKey > 5) {
             if (_snake[0]._nextDirection != (int)Direction::up && _snake[0]._nextDirection != (int)Direction::down && _end == false) {

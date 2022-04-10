@@ -17,7 +17,7 @@ Pacman::Pacman()
     _ghost1Direction = 3;
     _ghostOut = 0;
     _timer = 0;
-    _direction = 3;
+    _direction = 4;
     _map.clear();
     _ghostOutHouse.clear();
     _ghostInHouse.clear();
@@ -50,40 +50,53 @@ void Pacman::init(ICore *coreHandle)
     ICore::Vector2u ghost2{19, 10};
     ICore::Vector2u ghost3{20, 10};
     ICore::Vector2u ghost4{19, 8};
+    ICore::Vector2u mainText{13, 0};
+    ICore::Vector2u score{0, 0};
 
     coreHandle->openWindow(windowsSize);
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotLeft.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotRight.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopLeft.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopRight.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/wallVertical.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/wallHorizon.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/littlePacGum.png", '.', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleTop.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleLeft.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleRight.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneBotWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneTopWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneLeftWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneRightWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/blackWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/ballWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/door.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanLeft.png", 'C', ICore::Color::yellow, ICore::Color::yellow, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotLeft.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerBotRight.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopLeft.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/cornerTopRight.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/wallVertical.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/wallHorizon.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/littlePacGum.png", '.', ICore::Color::white, ICore::Color::black, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleBot.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleTop.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleLeft.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/doubleAngleRight.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneBotWall.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneTopWall.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneLeftWall.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/oneRightWall.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/blackWall.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/ballWall.png", ' ', ICore::Color::black, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/door.png", ' ', ICore::Color::white, ICore::Color::white, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanLeft.png", 'C', ICore::Color::white, ICore::Color::cyan, 16, 16)});
     _sprite.push_back({ghost1, coreHandle->loadTexture("./Assets/Pacman/Other/pinkBot.png", 'X', ICore::Color::magenta, ICore::Color::magenta, 16, 16)});
-    _sprite.push_back({ghost2, coreHandle->loadTexture("./Assets/Pacman/Other/blueBot.png", 'Y', ICore::Color::blue, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({ghost2, coreHandle->loadTexture("./Assets/Pacman/Other/blueBot.png", 'Y', ICore::Color::white, ICore::Color::yellow, 16, 16)});
     _sprite.push_back({ghost3, coreHandle->loadTexture("./Assets/Pacman/Other/redBot.png", 'Z', ICore::Color::red, ICore::Color::red, 16, 16)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanRight.png", 'C', ICore::Color::yellow, ICore::Color::yellow, 16, 16)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanTop.png", 'C', ICore::Color::yellow, ICore::Color::yellow, 16, 16)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanBot.png", 'C', ICore::Color::yellow, ICore::Color::yellow, 16, 16)});
-    _sprite.push_back({ghost4, coreHandle->loadTexture("./Assets/Pacman/Other/orangeBot.png", 'A', ICore::Color::white, ICore::Color::white, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/bigPacGum.png", 'o', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanRight.png", 'C', ICore::Color::white, ICore::Color::cyan, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanTop.png", 'C', ICore::Color::white, ICore::Color::cyan, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanBot.png", 'C', ICore::Color::white, ICore::Color::cyan, 16, 16)});
+    _sprite.push_back({ghost4, coreHandle->loadTexture("./Assets/Pacman/Other/orangeBot.png", 'A', ICore::Color::white, ICore::Color::green, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/bigPacGum.png", 'o', ICore::Color::white, ICore::Color::black, 16, 16)});
     // Runner
     _sprite.push_back({ghost1, coreHandle->loadTexture("./Assets/Pacman/Other/runner.png", 'R', ICore::Color::black, ICore::Color::black, 16, 16)});
     _sprite.push_back({ghost2, coreHandle->loadTexture("./Assets/Pacman/Other/runner.png", 'R', ICore::Color::black, ICore::Color::black, 16, 16)});
     _sprite.push_back({ghost3, coreHandle->loadTexture("./Assets/Pacman/Other/runner.png", 'R', ICore::Color::black, ICore::Color::black, 16, 16)});
     _sprite.push_back({ghost4, coreHandle->loadTexture("./Assets/Pacman/Other/runner.png", 'R', ICore::Color::black, ICore::Color::black, 16, 16)});
+    //Text to launch game
+    _sprite.push_back({mainText, coreHandle->loadTexture("./Assets/Pacman/Font/Univers.ttf", 'P', ICore::Color::white, ICore::Color::white, 16, 16)});
+    _sprite.push_back({mainText, coreHandle->loadTexture("./Assets/Pacman/Font/Univers.ttf", 'R', ICore::Color::white, ICore::Color::white, 16, 16)});
+    _sprite.push_back({mainText, coreHandle->loadTexture("./Assets/Pacman/Font/Univers.ttf", 'E', ICore::Color::white, ICore::Color::white, 16, 16)});
+    _sprite.push_back({mainText, coreHandle->loadTexture("./Assets/Pacman/Font/Univers.ttf", 'S', ICore::Color::white, ICore::Color::white, 16, 16)});
+    _sprite.push_back({mainText, coreHandle->loadTexture("./Assets/Pacman/Font/Univers.ttf", 'S', ICore::Color::white, ICore::Color::white, 16, 16)});
+    _sprite.push_back({mainText, coreHandle->loadTexture("./Assets/Pacman/Font/Univers.ttf", 'E', ICore::Color::white, ICore::Color::white, 16, 16)});
+    _sprite.push_back({mainText, coreHandle->loadTexture("./Assets/Pacman/Font/Univers.ttf", 'N', ICore::Color::white, ICore::Color::white, 16, 16)});
+    _sprite.push_back({mainText, coreHandle->loadTexture("./Assets/Pacman/Font/Univers.ttf", 'T', ICore::Color::white, ICore::Color::white, 16, 16)});
+    _sprite.push_back({mainText, coreHandle->loadTexture("./Assets/Pacman/Font/Univers.ttf", 'E', ICore::Color::white, ICore::Color::white, 16, 16)});
+    _sprite.push_back({mainText, coreHandle->loadTexture("./Assets/Pacman/Font/Univers.ttf", 'R', ICore::Color::white, ICore::Color::white, 16, 16)});
 
     coreHandle->setFramerate(60);
     coreHandle->setPixelsPerCell(16);
@@ -98,10 +111,8 @@ void Pacman::constructMap()
     if (!map.fail()) {
         while (map.get(element))
             _map.push_back(element);
-        std::cout << "map here:" << std::endl;
     } else {
         //error
-        std::cout << "fail here:" << std::endl;
     }
 }
 
@@ -234,34 +245,29 @@ void Pacman::moveGhost()
             _ghost4Direction = tmp;
         _ghostFrameRate = 0;
         if (_orangeStatus == true) {
-                _map[coord1] = ' ';
             switch(_ghost1Direction) {
                 case (int)Direction::left:
                     if (checkWallGhost(-1, 25)) {
                         _sprite[25].pixelPosition.x--;
                         _sprite[30].pixelPosition.x--;
-                        _map[coord1 - 1] = 'A';
                     }
                     break;
                 case (int)Direction::right:
                     if (checkWallGhost(1, 25)) {
                         _sprite[25].pixelPosition.x++;
                         _sprite[30].pixelPosition.x++;
-                        _map[coord1 + 1] = 'A';
                     }
                     break;
                 case (int)Direction::up:
                     if (checkWallGhost(-40, 25)) {
                         _sprite[25].pixelPosition.y--;
                         _sprite[30].pixelPosition.y--;
-                        _map[coord1 - 40] = 'A';
                     }
                     break;
                 case (int)Direction::down:
                     if (checkWallGhost(40, 25)) {
                         _sprite[25].pixelPosition.y++;
                         _sprite[30].pixelPosition.y++;
-                        _map[coord1 + 40] = 'A';
                     }
                     break;
             }
@@ -273,34 +279,29 @@ void Pacman::moveGhost()
                 _sprite[28].pixelPosition.x = 19;
                 _sprite[28].pixelPosition.y = 8;
             }
-                _map[coord2] = ' ';
             switch(_ghost2Direction) {
                 case (int)Direction::left:
                     if (checkWallGhost(-1, 20)) {
                         _sprite[20].pixelPosition.x--;
                         _sprite[28].pixelPosition.x--;
-                        _map[coord2 - 1] = 'Y';
                     }
                     break;
                 case (int)Direction::right:
                     if (checkWallGhost(1, 20)) {
                         _sprite[20].pixelPosition.x++;
                         _sprite[28].pixelPosition.x++;
-                        _map[coord2 + 1] = 'Y';
                     }
                     break;
                 case (int)Direction::up:
                     if (checkWallGhost(-40, 20)) {
                         _sprite[20].pixelPosition.y--;
                         _sprite[28].pixelPosition.y--;
-                        _map[coord2 - 40] = 'Y';
                     }
                     break;
                 case (int)Direction::down:
                     if (checkWallGhost(40, 20)) {
                         _sprite[20].pixelPosition.y++;
                         _sprite[28].pixelPosition.y++;
-                        _map[coord2 - 40] = 'Y';
                     }
                     break;
             }
@@ -312,34 +313,29 @@ void Pacman::moveGhost()
                 _sprite[27].pixelPosition.x = 19;
                 _sprite[27].pixelPosition.y = 8;
             }
-                _map[coord3] = ' ';
             switch(_ghost3Direction) {
                 case (int)Direction::left:
                     if (checkWallGhost(-1, 19)) {
                         _sprite[19].pixelPosition.x--;
                         _sprite[27].pixelPosition.x--;
-                        _map[coord3 - 1] = 'X';
                     }
                     break;
                 case (int)Direction::right:
                     if (checkWallGhost(1, 19)) {
                         _sprite[19].pixelPosition.x++;
                         _sprite[27].pixelPosition.x++;
-                        _map[coord3 + 1] = 'X';
                     }
                     break;
                 case (int)Direction::up:
                     if (checkWallGhost(-40, 19)) {
                         _sprite[19].pixelPosition.y--;
                         _sprite[27].pixelPosition.y--;
-                        _map[coord3 - 40] = 'X';
                     }
                     break;
                 case (int)Direction::down:
                     if (checkWallGhost(40, 19)) {
                         _sprite[19].pixelPosition.y++;
                         _sprite[27].pixelPosition.y++;
-                        _map[coord3 + 40] = 'X';
                     }
                     break;
             }
@@ -351,34 +347,29 @@ void Pacman::moveGhost()
                 _sprite[29].pixelPosition.x = 19;
                 _sprite[29].pixelPosition.y = 8;
             }
-                _map[coord4] = ' ';
             switch(_ghost4Direction) {
                 case (int)Direction::left:
                     if (checkWallGhost(-1, 21)) {
                         _sprite[21].pixelPosition.x--;
                         _sprite[29].pixelPosition.x--;
-                        _map[coord4 - 1] = 'Z';
                     }
                     break;
                 case (int)Direction::right:
                     if (checkWallGhost(1, 21)) {
                         _sprite[21].pixelPosition.x++;
                         _sprite[29].pixelPosition.x++;
-                        _map[coord4 + 1] = 'Z';
                     }
                     break;
                 case (int)Direction::up:
                     if (checkWallGhost(-40, 21)) {
                         _sprite[21].pixelPosition.y--;
                         _sprite[29].pixelPosition.y--;
-                        _map[coord4 - 40] = 'Z';
                     }
                     break;
                 case (int)Direction::down:
                     if (checkWallGhost(40, 21)) {
                         _sprite[21].pixelPosition.y++;
                         _sprite[29].pixelPosition.y++;
-                        _map[coord4 + 40] = 'Z';
                     }
                     break;
             }
@@ -404,11 +395,8 @@ void Pacman::updatePosition()
                     _sprite[23].pixelPosition.y = 10;
                     _sprite[24].pixelPosition.x = 38;
                     _sprite[24].pixelPosition.y = 10;
-                    _map[index + 38] = 'C';
                     return;
                 }
-                if (_map[index - 1] != 'A')
-                    _map[index - 1] = 'C';
                 _sprite[18].pixelPosition.x--;
                 _sprite[22].pixelPosition.x--;
                 _sprite[23].pixelPosition.x--;
@@ -431,11 +419,8 @@ void Pacman::updatePosition()
                     _sprite[23].pixelPosition.y = 10;
                     _sprite[24].pixelPosition.x = 0;
                     _sprite[24].pixelPosition.y = 10;
-                    _map[index - 38] = 'C';
                     return;
                 }
-                if (_map[index + 1] != 'A')
-                    _map[index + 1] = 'C';
                 _sprite[18].pixelPosition.x++;
                 _sprite[22].pixelPosition.x++;
                 _sprite[23].pixelPosition.x++;
@@ -444,8 +429,6 @@ void Pacman::updatePosition()
             break;
         case (int)Direction::up:
             if (movePacman(-40)) {
-                if (_map[index - 40] != 'A')
-                    _map[index - 40] = 'C';
                 _sprite[18].pixelPosition.y--;
                 _sprite[22].pixelPosition.y--;
                 _sprite[23].pixelPosition.y--;
@@ -454,8 +437,6 @@ void Pacman::updatePosition()
             break;
         case (int)Direction::down:
             if (movePacman(40)) {
-                if (_map[index + 40] != 'A')
-                    _map[index + 40] = 'C';
                 _sprite[18].pixelPosition.y++;
                 _sprite[22].pixelPosition.y++;
                 _sprite[23].pixelPosition.y++;
@@ -501,7 +482,7 @@ void Pacman::restartGame()
     _ghost1Direction = 3;
     _ghostOut = 0;
     _timer = 0;
-    _direction = 3;
+    _direction = 4;
     _map.clear();
     _ghostOutHouse.clear();
     _ghostInHouse.clear();
@@ -589,7 +570,7 @@ void Pacman::eatGhost()
 void Pacman::update()
 {
     //std::cout << _sprite[18].pixelPosition.y << std::endl;
-    if (_runner != true && (!checkCollision() && _tmp == 0) || (_core->isButtonPressed(IDisplayModule::Button::Start) && _tmp == 0)) {
+    if (_runner != true && (!checkCollision() && _tmp == 0) || (_core->isButtonPressed(IDisplayModule::Button::F5) && _tmp == 0 && _status == true)) {
         _tmp = 1;
         _status = false;
         restartGame();
@@ -734,6 +715,22 @@ void Pacman::draw()
             y++;
             z = -1;
         }
+    }
+
+    // Text: "Press Enter"
+    if (_status == false) {
+        _core->renderSprite({{(_sprite[31].pixelPosition.x + 1) * 16, (_sprite[31].pixelPosition.y) * 16}, _sprite[31].texture});
+        _core->renderSprite({{(_sprite[32].pixelPosition.x + 2) * 16, (_sprite[32].pixelPosition.y) * 16}, _sprite[32].texture});
+        _core->renderSprite({{(_sprite[33].pixelPosition.x + 3) * 16, (_sprite[33].pixelPosition.y) * 16}, _sprite[33].texture});
+        _core->renderSprite({{(_sprite[34].pixelPosition.x + 4) * 16, (_sprite[34].pixelPosition.y) * 16}, _sprite[34].texture});
+        _core->renderSprite({{(_sprite[35].pixelPosition.x + 5) * 16, (_sprite[35].pixelPosition.y) * 16}, _sprite[35].texture});
+        _core->renderSprite({{(_sprite[36].pixelPosition.x + 7) * 16, (_sprite[36].pixelPosition.y) * 16}, _sprite[36].texture});
+        _core->renderSprite({{(_sprite[37].pixelPosition.x + 8) * 16, (_sprite[37].pixelPosition.y) * 16}, _sprite[37].texture});
+        _core->renderSprite({{(_sprite[38].pixelPosition.x + 9) * 16, (_sprite[38].pixelPosition.y) * 16}, _sprite[38].texture});
+        _core->renderSprite({{(_sprite[39].pixelPosition.x + 10) * 16, (_sprite[39].pixelPosition.y) * 16}, _sprite[39].texture});
+        _core->renderSprite({{(_sprite[40].pixelPosition.x + 11) * 16, (_sprite[40].pixelPosition.y) * 16}, _sprite[40].texture});
+    } else {
+
     }
     //_core->renderSprite(_sprite[1]);
 }

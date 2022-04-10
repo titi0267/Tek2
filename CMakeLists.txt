@@ -101,7 +101,7 @@ set(SRCS_SFML
     add_library(arcade_sdl2 SHARED ${SRCS_SDL2} ${HEADERS_SDL2})
     set_target_properties(arcade_sdl2 PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
     SET_TARGET_PROPERTIES(arcade_sdl2 PROPERTIES PREFIX "")
-    target_link_libraries(arcade_sdl2 SDL2 SDL2_image)
+    target_link_libraries(arcade_sdl2 SDL2 SDL2_image SDL2_ttf)
     add_library(arcade_pacman SHARED ${SRCS_PACMAN} ${HEADERS_PACMAN})
     set_target_properties(arcade_pacman PROPERTIES LIBRARY_OUTPUT_DIRECTORY "${CMAKE_SOURCE_DIR}/lib")
     SET_TARGET_PROPERTIES(arcade_pacman PROPERTIES PREFIX "")
