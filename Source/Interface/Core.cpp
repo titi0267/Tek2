@@ -8,12 +8,13 @@
 #include "Core.hpp"
 #include "../define.hpp"
 
-Core::Core(std::deque<char *> chooseLib, int chooseLibIterator) : _dl(chooseLib[chooseLibIterator], (char *)("./lib/arcade_pacman.so"))
+Core::Core(std::deque<char *> chooseLib, int chooseLibIterator) : _dl(chooseLib[chooseLibIterator], (char *)("./lib/arcade_nibbler.so"))
 {
     _chooseLib = chooseLib;
     _chooseLibIterator = chooseLibIterator;
     loadLibs(_dl.getLib());
     loadGames(_dl.getGame());
+    _getPlayerName = "Player One";
 }
 
 Core::~Core()
@@ -98,6 +99,11 @@ void Core::clearScreen(Core::Color color)
     _disp->clearScreen(color);
 }
 
+const std::string &Core::getPlayerName()
+{
+    return _getPlayerName;
+}
+
 void Core::renderSprite(ICore::Sprite sprite)
 {
     IDisplayModule::Sprite sprt;
@@ -151,8 +157,8 @@ void Core::gameLoop()
     //time->tv_nsec = 0;
     //time->tv_sec = 0;
 
-    clock_gettime(CLOCK_MONOTONIC, &time);
     while (_disp->isClosing() == false) {
+        clock_gettime(CLOCK_MONOTONIC, &time);
         time.tv_nsec += (1000000000 / getFrameRate());
         if (time.tv_nsec >= 1000000000) {
             time.tv_sec += 1;

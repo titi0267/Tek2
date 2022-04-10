@@ -40,6 +40,7 @@ class Core : public ICore {
         void addNewScore(std::uint32_t score);
         void loadLibs(std::unique_ptr<IDisplayModule> disp);
         void loadGames(std::unique_ptr<IGameModule> game);
+        const std::string &getPlayerName();
         void gameLoop();
         void ChooseLib();
         IGameModule *getGame() const;
@@ -55,4 +56,5 @@ class Core : public ICore {
         int _chooseLibIterator;
         int _frameRate;
         DlLib _dl;
+        std::string _getPlayerName;
 };

@@ -86,6 +86,7 @@ class Sfml : public IDisplayModule {
         void renderSprite(IDisplayModule::Sprite sprite);
         void display();
         void update();
+        sf::Color convertColor(IDisplayModule::Color color);
 
     protected:
         std::uint32_t _pixelsPerCell;
