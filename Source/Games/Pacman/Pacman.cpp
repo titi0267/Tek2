@@ -26,12 +26,14 @@ Pacman::Pacman()
     _ghostInHouse.push_back("blue");
     _ghostInHouse.push_back("red");
     _status = false;
-    _ghost1Status = true;
-    _ghost2Status = true;
-    _ghost3Status = true;
+    _orangeStatus = false;
+    _redStatus = false;
+    _pinkStatus = false;
     _score = 0;
-    _ghost4Status = true;
-    _tmp = 0;
+    _blueStatus = false;
+    _tmp = 1;
+    _runner = false;
+    _runnerCounter = 0;
     constructMap();
 }
 
@@ -68,15 +70,20 @@ void Pacman::init(ICore *coreHandle)
     _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/blackWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
     _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/ballWall.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
     _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Border/door.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanLeft.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({ghost1, coreHandle->loadTexture("./Assets/Pacman/Other/pinkBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({ghost2, coreHandle->loadTexture("./Assets/Pacman/Other/blueBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({ghost3, coreHandle->loadTexture("./Assets/Pacman/Other/redBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanRight.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanTop.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({ghost4, coreHandle->loadTexture("./Assets/Pacman/Other/orangeBot.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
-    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/bigPacGum.png", '#', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanLeft.png", 'C', ICore::Color::yellow, ICore::Color::yellow, 16, 16)});
+    _sprite.push_back({ghost1, coreHandle->loadTexture("./Assets/Pacman/Other/pinkBot.png", 'X', ICore::Color::magenta, ICore::Color::magenta, 16, 16)});
+    _sprite.push_back({ghost2, coreHandle->loadTexture("./Assets/Pacman/Other/blueBot.png", 'Y', ICore::Color::blue, ICore::Color::blue, 16, 16)});
+    _sprite.push_back({ghost3, coreHandle->loadTexture("./Assets/Pacman/Other/redBot.png", 'Z', ICore::Color::red, ICore::Color::red, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanRight.png", 'C', ICore::Color::yellow, ICore::Color::yellow, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanTop.png", 'C', ICore::Color::yellow, ICore::Color::yellow, 16, 16)});
+    _sprite.push_back({pacman, coreHandle->loadTexture("./Assets/Pacman/Other/pacmanBot.png", 'C', ICore::Color::yellow, ICore::Color::yellow, 16, 16)});
+    _sprite.push_back({ghost4, coreHandle->loadTexture("./Assets/Pacman/Other/orangeBot.png", 'A', ICore::Color::white, ICore::Color::white, 16, 16)});
+    _sprite.push_back({border, coreHandle->loadTexture("./Assets/Pacman/Other/bigPacGum.png", 'o', ICore::Color::black, ICore::Color::black, 16, 16)});
+    // Runner
+    _sprite.push_back({ghost1, coreHandle->loadTexture("./Assets/Pacman/Other/runner.png", 'R', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({ghost2, coreHandle->loadTexture("./Assets/Pacman/Other/runner.png", 'R', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({ghost3, coreHandle->loadTexture("./Assets/Pacman/Other/runner.png", 'R', ICore::Color::black, ICore::Color::black, 16, 16)});
+    _sprite.push_back({ghost4, coreHandle->loadTexture("./Assets/Pacman/Other/runner.png", 'R', ICore::Color::black, ICore::Color::black, 16, 16)});
 
     coreHandle->setFramerate(60);
     coreHandle->setPixelsPerCell(16);
@@ -102,6 +109,8 @@ bool Pacman::movePacman(int i)
 {
     int coord = (_sprite[18].pixelPosition.y * 40) + _sprite[18].pixelPosition.x;
 
+    if (_sprite[18].pixelPosition.x == 38 || _sprite[18].pixelPosition.x == 0)
+        return (true);
     if (_map[coord + i] == '.' || _map[coord + i] == 'o' || _map[coord + i] == 'X' || _map[coord + i] == 'Y' || _map[coord + i] == 'Z' || _map[coord + i] == 'A' || _map[coord + i] == ' ' ||
         _map[coord + i] == 'C') {
         if (_map[coord + i] == '.') {
@@ -111,6 +120,7 @@ bool Pacman::movePacman(int i)
         }
         if (_map[coord + i] == 'o') {
             _score += 100;
+            _runner = true;
             _map[coord + i] = ' ';
         }
         return (true);
@@ -194,6 +204,10 @@ bool Pacman::checkWallGhost(int i, int nb)
 {
     int coord = (_sprite[nb].pixelPosition.y * 40) + _sprite[nb].pixelPosition.x;
 
+    if (_sprite[nb].pixelPosition.x == 39)
+        return (false);
+    if (_sprite[nb].pixelPosition.y == 1 && i == (-40))
+        return (false);
     if (_map[coord + i] == '.' || _map[coord + i] == 'o' || _map[coord + i] == 'X' || _map[coord + i] == 'Y' || _map[coord + i] == 'Z' || _map[coord + i] == 'A' || _map[coord + i] == ' ' ||
         _map[coord + i] == 'C') {
         return (true);
@@ -219,110 +233,152 @@ void Pacman::moveGhost()
         if ((tmp = chooseDirection(coord4)) != -1)
             _ghost4Direction = tmp;
         _ghostFrameRate = 0;
-        if (std::find(_ghostOutHouse.begin(), _ghostOutHouse.end(), "orange") != _ghostOutHouse.end()) {
+        if (_orangeStatus == true) {
+                _map[coord1] = ' ';
             switch(_ghost1Direction) {
                 case (int)Direction::left:
                     if (checkWallGhost(-1, 25)) {
                         _sprite[25].pixelPosition.x--;
+                        _sprite[30].pixelPosition.x--;
+                        _map[coord1 - 1] = 'A';
                     }
                     break;
                 case (int)Direction::right:
                     if (checkWallGhost(1, 25)) {
                         _sprite[25].pixelPosition.x++;
+                        _sprite[30].pixelPosition.x++;
+                        _map[coord1 + 1] = 'A';
                     }
                     break;
                 case (int)Direction::up:
                     if (checkWallGhost(-40, 25)) {
                         _sprite[25].pixelPosition.y--;
+                        _sprite[30].pixelPosition.y--;
+                        _map[coord1 - 40] = 'A';
                     }
                     break;
                 case (int)Direction::down:
                     if (checkWallGhost(40, 25)) {
                         _sprite[25].pixelPosition.y++;
+                        _sprite[30].pixelPosition.y++;
+                        _map[coord1 + 40] = 'A';
                     }
                     break;
             }
         }
-        if (std::find(_ghostOutHouse.begin(), _ghostOutHouse.end(), "blue") != _ghostOutHouse.end()) {
+        if (_blueStatus == true) {
             if (_sprite[20].pixelPosition.x == 19 && _sprite[20].pixelPosition.y == 10) {
                 _sprite[20].pixelPosition.x = 19;
                 _sprite[20].pixelPosition.y = 8;
+                _sprite[28].pixelPosition.x = 19;
+                _sprite[28].pixelPosition.y = 8;
             }
-            switch(_ghost1Direction) {
+                _map[coord2] = ' ';
+            switch(_ghost2Direction) {
                 case (int)Direction::left:
                     if (checkWallGhost(-1, 20)) {
                         _sprite[20].pixelPosition.x--;
+                        _sprite[28].pixelPosition.x--;
+                        _map[coord2 - 1] = 'Y';
                     }
                     break;
                 case (int)Direction::right:
                     if (checkWallGhost(1, 20)) {
                         _sprite[20].pixelPosition.x++;
+                        _sprite[28].pixelPosition.x++;
+                        _map[coord2 + 1] = 'Y';
                     }
                     break;
                 case (int)Direction::up:
                     if (checkWallGhost(-40, 20)) {
                         _sprite[20].pixelPosition.y--;
+                        _sprite[28].pixelPosition.y--;
+                        _map[coord2 - 40] = 'Y';
                     }
                     break;
                 case (int)Direction::down:
                     if (checkWallGhost(40, 20)) {
                         _sprite[20].pixelPosition.y++;
+                        _sprite[28].pixelPosition.y++;
+                        _map[coord2 - 40] = 'Y';
                     }
                     break;
             }
         }
-        if (std::find(_ghostOutHouse.begin(), _ghostOutHouse.end(), "pink") != _ghostOutHouse.end()) {
-            if (_sprite[19].pixelPosition.x == 18 && _sprite[19].pixelPosition.y == 10) {
+        if (_pinkStatus == true) {
+            if (_sprite[19].pixelPosition.x == 20 && _sprite[19].pixelPosition.y == 10) {
                 _sprite[19].pixelPosition.x = 19;
                 _sprite[19].pixelPosition.y = 8;
+                _sprite[27].pixelPosition.x = 19;
+                _sprite[27].pixelPosition.y = 8;
             }
-            switch(_ghost1Direction) {
+                _map[coord3] = ' ';
+            switch(_ghost3Direction) {
                 case (int)Direction::left:
                     if (checkWallGhost(-1, 19)) {
                         _sprite[19].pixelPosition.x--;
+                        _sprite[27].pixelPosition.x--;
+                        _map[coord3 - 1] = 'X';
                     }
                     break;
                 case (int)Direction::right:
                     if (checkWallGhost(1, 19)) {
                         _sprite[19].pixelPosition.x++;
+                        _sprite[27].pixelPosition.x++;
+                        _map[coord3 + 1] = 'X';
                     }
                     break;
                 case (int)Direction::up:
                     if (checkWallGhost(-40, 19)) {
                         _sprite[19].pixelPosition.y--;
+                        _sprite[27].pixelPosition.y--;
+                        _map[coord3 - 40] = 'X';
                     }
                     break;
                 case (int)Direction::down:
                     if (checkWallGhost(40, 19)) {
                         _sprite[19].pixelPosition.y++;
+                        _sprite[27].pixelPosition.y++;
+                        _map[coord3 + 40] = 'X';
                     }
                     break;
             }
         }
-        if (std::find(_ghostOutHouse.begin(), _ghostOutHouse.end(), "red") != _ghostOutHouse.end()) {
+        if (_redStatus) {
             if (_sprite[21].pixelPosition.x == 20 && _sprite[21].pixelPosition.y == 10) {
                 _sprite[21].pixelPosition.x = 19;
                 _sprite[21].pixelPosition.y = 8;
+                _sprite[29].pixelPosition.x = 19;
+                _sprite[29].pixelPosition.y = 8;
             }
-            switch(_ghost1Direction) {
+                _map[coord4] = ' ';
+            switch(_ghost4Direction) {
                 case (int)Direction::left:
                     if (checkWallGhost(-1, 21)) {
                         _sprite[21].pixelPosition.x--;
+                        _sprite[29].pixelPosition.x--;
+                        _map[coord4 - 1] = 'Z';
                     }
                     break;
                 case (int)Direction::right:
                     if (checkWallGhost(1, 21)) {
                         _sprite[21].pixelPosition.x++;
+                        _sprite[29].pixelPosition.x++;
+                        _map[coord4 + 1] = 'Z';
                     }
                     break;
                 case (int)Direction::up:
                     if (checkWallGhost(-40, 21)) {
                         _sprite[21].pixelPosition.y--;
+                        _sprite[29].pixelPosition.y--;
+                        _map[coord4 - 40] = 'Z';
                     }
                     break;
                 case (int)Direction::down:
                     if (checkWallGhost(40, 21)) {
                         _sprite[21].pixelPosition.y++;
+                        _sprite[29].pixelPosition.y++;
+                        _map[coord4 + 40] = 'Z';
                     }
                     break;
             }
@@ -334,10 +390,23 @@ void Pacman::moveGhost()
 void Pacman::updatePosition()
 {
     int index = (_sprite[18].pixelPosition.y * 40) + _sprite[18].pixelPosition.x;
+    int tmp = 0;
     _frameRate = 0;
     switch(_direction) {
         case (int)Direction::left:
             if (movePacman(-1)) {
+                if (_sprite[18].pixelPosition.x == 0) {
+                    _sprite[18].pixelPosition.x = 38;
+                    _sprite[18].pixelPosition.y = 10;
+                    _sprite[22].pixelPosition.x = 38;
+                    _sprite[22].pixelPosition.y = 10;
+                    _sprite[23].pixelPosition.x = 38;
+                    _sprite[23].pixelPosition.y = 10;
+                    _sprite[24].pixelPosition.x = 38;
+                    _sprite[24].pixelPosition.y = 10;
+                    _map[index + 38] = 'C';
+                    return;
+                }
                 if (_map[index - 1] != 'A')
                     _map[index - 1] = 'C';
                 _sprite[18].pixelPosition.x--;
@@ -348,6 +417,23 @@ void Pacman::updatePosition()
             break;
         case (int)Direction::right:
             if (movePacman(1)) {
+                if (_sprite[18].pixelPosition.x == 38) {
+                    tmp = (10 * 40) + 38;
+                    if (_map[tmp] == '.') {
+                        _pacGumEat++;
+                        _map[tmp] = ' ';
+                    }
+                    _sprite[18].pixelPosition.x = 0;
+                    _sprite[18].pixelPosition.y = 10;
+                    _sprite[22].pixelPosition.x = 0;
+                    _sprite[22].pixelPosition.y = 10;
+                    _sprite[23].pixelPosition.x = 0;
+                    _sprite[23].pixelPosition.y = 10;
+                    _sprite[24].pixelPosition.x = 0;
+                    _sprite[24].pixelPosition.y = 10;
+                    _map[index - 38] = 'C';
+                    return;
+                }
                 if (_map[index + 1] != 'A')
                     _map[index + 1] = 'C';
                 _sprite[18].pixelPosition.x++;
@@ -381,30 +467,26 @@ void Pacman::updatePosition()
 
 void Pacman::freeGhost()
 {
-    if (std::find(_ghostInHouse.begin(), _ghostInHouse.end(), "orange") != _ghostInHouse.end()) {
-        std::remove(_ghostInHouse.begin(), _ghostInHouse.end(), "orange");
-        _ghostOutHouse.push_back("orange");
+    if (_orangeStatus == false) {
+        _orangeStatus = true;
     }
-    else if (std::find(_ghostInHouse.begin(), _ghostInHouse.end(), "blue") != _ghostInHouse.end()) {
-        std::remove(_ghostInHouse.begin(), _ghostInHouse.end(), "blue");
-        _ghostOutHouse.push_back("blue");
+    else if (_blueStatus == false) {
+        _blueStatus = true;
     }
-    else if (std::find(_ghostInHouse.begin(), _ghostInHouse.end(), "pink") != _ghostInHouse.end()) {
-        std::remove(_ghostInHouse.begin(), _ghostInHouse.end(), "pink");
-        _ghostOutHouse.push_back("pink");
+    else if (_pinkStatus == false) {
+        _pinkStatus = true;
     }
-    else if (std::find(_ghostInHouse.begin(), _ghostInHouse.end(), "red") != _ghostInHouse.end()) {
-        std::remove(_ghostInHouse.begin(), _ghostInHouse.end(), "red");
-        _ghostOutHouse.push_back("red");
+    else if (_redStatus == false) {
+        _redStatus = true;
     }
 }
 
 bool Pacman::checkCollision()
 {
-    if ((_sprite[18].pixelPosition.x == _sprite[19].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[19].pixelPosition.y && _ghost1Status == true) ||
-        (_sprite[18].pixelPosition.x == _sprite[20].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[20].pixelPosition.y && _ghost2Status == true) ||
-        (_sprite[18].pixelPosition.x == _sprite[21].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[21].pixelPosition.y && _ghost3Status == true) ||
-        (_sprite[18].pixelPosition.x == _sprite[25].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[25].pixelPosition.y && _ghost4Status == true))
+    if ((_sprite[18].pixelPosition.x == _sprite[19].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[19].pixelPosition.y && _runner == false) ||
+        (_sprite[18].pixelPosition.x == _sprite[20].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[20].pixelPosition.y && _runner == false) ||
+        (_sprite[18].pixelPosition.x == _sprite[21].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[21].pixelPosition.y && _runner == false) ||
+        (_sprite[18].pixelPosition.x == _sprite[25].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[25].pixelPosition.y && _runner == false))
         return (false);
     return (true);
 }
@@ -428,11 +510,14 @@ void Pacman::restartGame()
     _ghostInHouse.push_back("blue");
     _ghostInHouse.push_back("red");
     _status = false;
-    _ghost1Status = true;
-    _ghost2Status = true;
-    _ghost3Status = true;
+    _orangeStatus = false;
+    _redStatus = false;
+    _pinkStatus = false;
     _score = 0;
-    _ghost4Status = true;
+    _blueStatus = false;
+    _runner = false;
+    _runnerCounter = 0;
+    // Pacman
     _sprite[18].pixelPosition.x = 19;
     _sprite[18].pixelPosition.y = 12;
     _sprite[22].pixelPosition.x = 19;
@@ -441,35 +526,89 @@ void Pacman::restartGame()
     _sprite[23].pixelPosition.y = 12;
     _sprite[24].pixelPosition.x = 19;
     _sprite[24].pixelPosition.y = 12;
-
+    // Ghost
     _sprite[19].pixelPosition.x = 20;
     _sprite[19].pixelPosition.y = 10;
+    _sprite[27].pixelPosition.x = 20;
+    _sprite[27].pixelPosition.y = 10;
     _sprite[20].pixelPosition.x = 19;
     _sprite[20].pixelPosition.y = 10;
+    _sprite[28].pixelPosition.x = 19;
+    _sprite[28].pixelPosition.y = 10;
     _sprite[21].pixelPosition.x = 18;
     _sprite[21].pixelPosition.y = 10;
+    _sprite[29].pixelPosition.x = 18;
+    _sprite[29].pixelPosition.y = 10;
     _sprite[25].pixelPosition.x = 19;
     _sprite[25].pixelPosition.y = 8;
+    _sprite[30].pixelPosition.x = 19;
+    _sprite[30].pixelPosition.y = 8;
     constructMap();
+}
+
+void Pacman::eatGhost()
+{
+    if (_sprite[18].pixelPosition.x == _sprite[27].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[27].pixelPosition.y &&
+        _runner == true) {
+        _pinkStatus = false;
+        _sprite[27].pixelPosition.x = 20;
+        _sprite[27].pixelPosition.y = 10;
+        _sprite[19].pixelPosition.x = 20;
+        _sprite[19].pixelPosition.y = 10;
+        _ghostOut--;
+    }
+    if (_sprite[18].pixelPosition.x == _sprite[28].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[28].pixelPosition.y &&
+        _runner == true) {
+        _blueStatus = false;
+        _sprite[28].pixelPosition.x = 19;
+        _sprite[28].pixelPosition.y = 10;
+        _sprite[20].pixelPosition.x = 19;
+        _sprite[20].pixelPosition.y = 10;
+        _ghostOut--;
+    }
+    if (_sprite[18].pixelPosition.x == _sprite[29].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[29].pixelPosition.y &&
+        _runner == true) {
+        _redStatus = false;
+        _sprite[29].pixelPosition.x = 18;
+        _sprite[29].pixelPosition.y = 10;
+        _sprite[21].pixelPosition.x = 18;
+        _sprite[21].pixelPosition.y = 10;
+        _ghostOut--;
+    }
+    if (_sprite[18].pixelPosition.x == _sprite[30].pixelPosition.x && _sprite[18].pixelPosition.y == _sprite[30].pixelPosition.y &&
+        _runner == true) {
+        _orangeStatus = false;
+        _sprite[30].pixelPosition.x = 19;
+        _sprite[30].pixelPosition.y = 8;
+        _sprite[25].pixelPosition.x = 19;
+        _sprite[25].pixelPosition.y = 8;
+        _ghostOut--;
+    }
 }
 
 void Pacman::update()
 {
-    if (!checkCollision() && _tmp == 0) {
+    //std::cout << _sprite[18].pixelPosition.y << std::endl;
+    if (_runner != true && (!checkCollision() && _tmp == 0) || (_core->isButtonPressed(IDisplayModule::Button::Start) && _tmp == 0)) {
         _tmp = 1;
         _status = false;
         restartGame();
-    }
-    if (_core->isButtonPressed(IDisplayModule::Button::Start))
+    } else if (_core->isButtonPressed(IDisplayModule::Button::Start))
         _status = true;
     if (_status) {
         if (_tmp == 1)
             _tmp = 0;
-        if (_pacGumEat != 346) {
+        if (_pacGumEat != 347) {
+            if (_runner == true)
+                eatGhost();
             if (_timer > 125 && _ghostOut < 4) {
                 _timer = 0;
                 _ghostOut++;
                 freeGhost();
+            }
+            if (_runner == true && _runnerCounter > 250) {
+                _runnerCounter = 0;
+                _runner = false;
             }
             moveGhost();
             if (_frameRate > 3)
@@ -499,7 +638,12 @@ void Pacman::update()
                     _pacmanHead = 24;
                 }
             }
-            _timer++;
+            if (_ghostOut < 4)
+                _timer++;
+            if (_runner == true)
+                _runnerCounter++;
+        } else {
+            restartGame();
         }
     }
 }
@@ -560,14 +704,30 @@ void Pacman::draw()
                     break;
             }
         }
-        if (_map[i] == 'X')
-            _core->renderSprite({{(_sprite[19].pixelPosition.x) * 16, (_sprite[19].pixelPosition.y) * 16}, _sprite[19].texture});
-        if (_map[i] == 'Y')
-            _core->renderSprite({{(_sprite[20].pixelPosition.x) * 16, (_sprite[20].pixelPosition.y) * 16}, _sprite[20].texture});
-        if (_map[i] == 'Z')
-            _core->renderSprite({{(_sprite[21].pixelPosition.x) * 16, (_sprite[21].pixelPosition.y) * 16}, _sprite[21].texture});
-        if (_map[i] == 'A')
-            _core->renderSprite({{(_sprite[25].pixelPosition.x) * 16, (_sprite[25].pixelPosition.y) * 16}, _sprite[25].texture});
+        if (_map[i] == 'X') {
+            if (_runner == true)
+                _core->renderSprite({{(_sprite[27].pixelPosition.x) * 16, (_sprite[27].pixelPosition.y) * 16}, _sprite[27].texture});
+            else
+                _core->renderSprite({{(_sprite[19].pixelPosition.x) * 16, (_sprite[19].pixelPosition.y) * 16}, _sprite[19].texture});
+        }
+        if (_map[i] == 'Y') {
+            if (_runner == true)
+                _core->renderSprite({{(_sprite[28].pixelPosition.x) * 16, (_sprite[28].pixelPosition.y) * 16}, _sprite[28].texture});
+            else
+                _core->renderSprite({{(_sprite[20].pixelPosition.x) * 16, (_sprite[20].pixelPosition.y) * 16}, _sprite[20].texture});
+        }
+        if (_map[i] == 'Z') {
+            if (_runner == true)
+                _core->renderSprite({{(_sprite[29].pixelPosition.x) * 16, (_sprite[29].pixelPosition.y) * 16}, _sprite[29].texture});
+            else
+                _core->renderSprite({{(_sprite[21].pixelPosition.x) * 16, (_sprite[21].pixelPosition.y) * 16}, _sprite[21].texture});
+        }
+        if (_map[i] == 'A') {
+            if (_runner == true)
+                _core->renderSprite({{(_sprite[30].pixelPosition.x) * 16, (_sprite[30].pixelPosition.y) * 16}, _sprite[30].texture});
+            else
+                _core->renderSprite({{(_sprite[25].pixelPosition.x) * 16, (_sprite[25].pixelPosition.y) * 16}, _sprite[25].texture});
+        }
         if (_map[i] == 'o')
             _core->renderSprite({{(_sprite[26].pixelPosition.x + z) * 16, (_sprite[26].pixelPosition.y + y) * 16}, _sprite[26].texture});
         if (_map[i] == '\n') {

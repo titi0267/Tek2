@@ -17,6 +17,7 @@
 extern "C" {
     #include <SDL2/SDL.h>
     #include <SDL2/SDL_image.h>
+    #include <SDL2/SDL_ttf.h>
 }
 
 class Sdl2 : public IDisplayModule {
@@ -89,6 +90,7 @@ class Sdl2 : public IDisplayModule {
         void renderSprite(IDisplayModule::Sprite sprite);
         void display();
         void update();
+        SDL_Color convertColor(IDisplayModule::Color color);
 
     protected:
         std::uint32_t _pixelsPerCell;
