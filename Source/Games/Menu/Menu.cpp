@@ -61,7 +61,9 @@ void Menu::sortLibsGames()
 
 void Menu::chooseFirstLib(Core *coreHandle, const char *av)
 {
-    for (int i = 0; i < _libs.size(); i++) {
+    int i = 0;
+
+    for (; i < _libs.size(); i++) {
         if (strcmp(_libs[i].c_str(), av) == 0) {
                 _dl.openLib(_libs[i].c_str());
                 _dl.tryDownloadLib();
@@ -69,6 +71,9 @@ void Menu::chooseFirstLib(Core *coreHandle, const char *av)
                 _indexLib = i;
             break;
         }
+    }
+    if (i == _libs.size()) {
+        exit(ERROR);
     }
 }
 
