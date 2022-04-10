@@ -51,14 +51,19 @@ void Menu::sortLibsGames()
 
 bool Menu::chooseFirstLib(char *av)
 {
-    for (int i = 0; i < _libs.size(); i++) {
+    int i = 0;
+
+    for (; i < _libs.size(); i++) {
         std::cout << "libs are : "<< _libs[i] << std::endl;
         if (_libs[i] == av) {
             _dl.openLib(av);
             _dl.tryDownloadLib();
             _dl.getLib();
+            break;
         }
     }
+    if (i == _libs.size())
+        std::cerr << dlerror() << std::endl;
     for (int i = 0; i < _games.size(); i++) {
         std::cout << "games are : "<< _games[i] << std::endl;
         //if (_libs[i] == av)
