@@ -68,7 +68,7 @@ class RawTextureSfml : public IRawTexture {
 
 class RawTextureSdl2 : public IRawTexture {
     public:
-        RawTextureSdl2(const std::string &filename, std::size_t width, std::size_t height);
+        RawTextureSdl2(const std::string &filename, char character, ICore::Color characterColor, ICore::Color backgroundColor, std::size_t width, std::size_t height);
         ~RawTextureSdl2();
 
     const std::string getFilename() const;
@@ -80,6 +80,9 @@ class RawTextureSdl2 : public IRawTexture {
 
     protected:
         std::string _filename;
+        char _character;
+        ICore::Color _charColor;
+        ICore::Color _bckColor;
         std::size_t _width;
         std::size_t _height;
 };

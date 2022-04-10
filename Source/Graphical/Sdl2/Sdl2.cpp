@@ -39,10 +39,7 @@ std::uint32_t Sdl2::getPixelsPerCell()
 
 std::unique_ptr<IDisplayModule::RawTexture> Sdl2::loadTexture(const std::string &filename, char character, IDisplayModule::Color characterColor, IDisplayModule::Color backgroundColor, std::size_t width, std::size_t height)
 {
-    (void)filename;
-    (void)width;
-    (void)height;
-    return std::make_unique<RawTextureSdl2>(filename, width, height);
+    return std::make_unique<RawTextureSdl2>(filename, character, characterColor, backgroundColor, width, height);
 }
 
 void Sdl2::openWindow(IDisplayModule::Vector2u pixelsWantedWindowSize)
@@ -144,18 +141,27 @@ void Sdl2::renderSprite(IDisplayModule::Sprite sprite)
     SDL_Texture *txtr;
     SDL_Rect rect;
     TTF_Font *font;
+    char str[2];
 
     if (raw->getFilename().compare(raw->getFilename().size() - png.size(), png.size(), png) == 0) {
         sprt = IMG_Load(raw->getFilename().c_str());
         txtr = SDL_CreateTextureFromSurface(_renderer, sprt);
+        rect = {(int)sprite.rawPixelPosition.x, (int)sprite.rawPixelPosition.y, (int)raw->getWidth(), (int)raw->getHeight()};
+        SDL_RenderCopy(_renderer, txtr, NULL, &rect);
+        SDL_DestroyTexture(txtr);
+        SDL_FreeSurface(sprt);
     } else if (raw->getFilename().compare(raw->getFilename().size() - ttf.size(), ttf.size(), ttf) == 0) {
-        font = TTF_OpenFont(raw->getFilename().c_str(), (int)raw->getWidth());
-        sprt = TTF_RenderText_Solid(font, std::string{1, (raw->getChar())}.c_str(), convertColor(raw->getCharColor()));
+        font = TTF_OpenFont(raw->getFilename().c_str(), (int)raw->getWidth()*12);
+        str[0] = raw->getChar();
+        str[1] = '\0';
+        sprt = TTF_RenderText_Solid(font, str, convertColor(raw->getCharColor()));
         txtr = SDL_CreateTextureFromSurface(_renderer, sprt);
+        rect = {(int)sprite.rawPixelPosition.x, (int)sprite.rawPixelPosition.y, (int)raw->getWidth(), (int)raw->getHeight()};
+        SDL_RenderCopy(_renderer, txtr, NULL, &rect);
+        SDL_DestroyTexture(txtr);
+        TTF_CloseFont(font);
+        SDL_FreeSurface(sprt);
     } else _setError.exitError(ERROR, "Error: texture isn't png or ttf");
-    rect = {(int)sprite.rawPixelPosition.x, (int)sprite.rawPixelPosition.y, (int)raw->getWidth(), (int)raw->getHeight()};
-    SDL_RenderCopy(_renderer, txtr, NULL, &rect);
-    SDL_DestroyTexture(txtr);
 }
 
 void Sdl2::display()
