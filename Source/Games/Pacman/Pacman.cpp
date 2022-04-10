@@ -17,7 +17,7 @@ Pacman::Pacman()
     _ghost1Direction = 3;
     _ghostOut = 0;
     _timer = 0;
-    _direction = 3;
+    _direction = 4;
     _map.clear();
     _ghostOutHouse.clear();
     _ghostInHouse.clear();
@@ -111,10 +111,8 @@ void Pacman::constructMap()
     if (!map.fail()) {
         while (map.get(element))
             _map.push_back(element);
-        std::cout << "map here:" << std::endl;
     } else {
         //error
-        std::cout << "fail here:" << std::endl;
     }
 }
 
@@ -484,7 +482,7 @@ void Pacman::restartGame()
     _ghost1Direction = 3;
     _ghostOut = 0;
     _timer = 0;
-    _direction = 3;
+    _direction = 4;
     _map.clear();
     _ghostOutHouse.clear();
     _ghostInHouse.clear();
