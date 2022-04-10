@@ -7,7 +7,7 @@
 
 #include "Sfml.hpp"
 
-Sfml::Sfml()
+Sfml::Sfml() : _setError("alexandre")
 {
     std::cout << "Construct SFML" << std::endl;
     for (int i = 0; i < 19; i++) _butt.push_back(false);
@@ -15,9 +15,9 @@ Sfml::Sfml()
 
 Sfml::~Sfml()
 {
+    std::cout << "Quit window" << std::endl;
     if (_window)
         _window->close();
-    std::cout << "Quit window" << std::endl;
     /*if (_window->isOpen() == true) {
         std::cout << "Window open" << std::endl;
     }*/
@@ -146,7 +146,7 @@ void Sfml::renderSprite(IDisplayModule::Sprite sprite)
         text.setFillColor(convertColor(raw->getCharColor()));
         text.setPosition(sf::Vector2f((float)(sprite.rawPixelPosition.x), (float)(sprite.rawPixelPosition.y)));
         _window->draw(text);
-    } else _setError.exitError(ERROR, "Error: texture isn't png or ttf");
+    }
 }
 
 void Sfml::display()

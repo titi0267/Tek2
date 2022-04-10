@@ -8,8 +8,9 @@
 #include "Core.hpp"
 #include "../define.hpp"
 
-Core::Core()
+Core::Core() : _setError("error")
 {
+    std::cout << "construct core" << std::endl;
     _getPlayerName = "Player One";
 }
 
@@ -117,6 +118,7 @@ void Core::addNewScore(std::uint32_t score)
 
 void Core::loadLibs(std::unique_ptr<IDisplayModule> disp)
 {
+    std::cout << "move disp" << std::endl;
     _disp = std::move(disp);
 }
 
@@ -146,7 +148,7 @@ void Core::ChooseLib()
     }
 }
 
-void Core::gameLoop()
+void Core::gameLoop(Menu *menu)
 {
     timespec time;
 
@@ -160,9 +162,10 @@ void Core::gameLoop()
             time.tv_sec += 1;
             time.tv_nsec -= 1000000000;
         }
-        _game->update();
+        menu->draw();
+        //_game->update();
         _disp->update();
-        _game->draw();
+        //_game->draw();
         _disp->display();
         ChooseLib();
         clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &time, NULL);

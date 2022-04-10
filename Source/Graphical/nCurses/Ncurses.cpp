@@ -7,7 +7,7 @@
 
 #include "Ncurses.hpp"
 
-Ncurses::Ncurses()
+Ncurses::Ncurses() : _setError("alexandre")
 {
     for (int i = 0; i < 19; i++) _butt.push_back(false);
 }

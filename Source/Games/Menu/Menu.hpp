@@ -8,12 +8,20 @@
 #pragma once
 #include "../../Interface/Core.hpp"
 #include "../../DlLib.hpp"
+#include "../../Error/Error.hpp"
 #include <deque>
 #include <iostream>
 #include <vector>
 #include <fstream>
 #include <filesystem>
+#include <string>
 
+extern "C" {
+    #include <string.h>
+    #include <dlfcn.h>
+}
+
+class Core;
 class Menu {
     public:
         Menu();
@@ -23,10 +31,15 @@ class Menu {
         void update();
         void readDir();
         void sortLibsGames();
-        bool chooseFirstLib(char *av);
+        void manageSelected();
+        void chooseFirstLib(Core *coreHandle, const char *av);
         //void constructMap();
+        enum class Selected {
+            Graphical, Games, Score
+        };
 
     protected:
+        Menu::Selected _selected;
         Core *_core;
         DlLib _dl;
         std::deque<ICore::Sprite> _sprite;
@@ -35,4 +48,8 @@ class Menu {
         std::deque<std::string> _libs;
         std::deque<std::string> _games;
         int _pixelPerCell;
+        std::unique_ptr<IDisplayModule> (*_lib)(void);
+        std::unique_ptr<IGameModule> (*_game)(void);
+        void *_openLib;
+        void *_openGame;
 };

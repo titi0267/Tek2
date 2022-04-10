@@ -7,7 +7,7 @@
 
 #include "Sdl2.hpp"
 
-Sdl2::Sdl2()
+Sdl2::Sdl2() : _setError("alexandre")
 {
     int flag = IMG_INIT_JPG | IMG_INIT_PNG;
 
@@ -149,14 +149,17 @@ void Sdl2::renderSprite(IDisplayModule::Sprite sprite)
     if (raw->getFilename().compare(raw->getFilename().size() - png.size(), png.size(), png) == 0) {
         sprt = IMG_Load(raw->getFilename().c_str());
         txtr = SDL_CreateTextureFromSurface(_renderer, sprt);
+        rect = {(int)sprite.rawPixelPosition.x, (int)sprite.rawPixelPosition.y, (int)raw->getWidth(), (int)raw->getHeight()};
+        SDL_RenderCopy(_renderer, txtr, NULL, &rect);
+        SDL_DestroyTexture(txtr);
     } else if (raw->getFilename().compare(raw->getFilename().size() - ttf.size(), ttf.size(), ttf) == 0) {
         font = TTF_OpenFont(raw->getFilename().c_str(), (int)raw->getWidth());
         sprt = TTF_RenderText_Solid(font, std::string{1, (raw->getChar())}.c_str(), convertColor(raw->getCharColor()));
         txtr = SDL_CreateTextureFromSurface(_renderer, sprt);
-    } else _setError.exitError(ERROR, "Error: texture isn't png or ttf");
-    rect = {(int)sprite.rawPixelPosition.x, (int)sprite.rawPixelPosition.y, (int)raw->getWidth(), (int)raw->getHeight()};
-    SDL_RenderCopy(_renderer, txtr, NULL, &rect);
-    SDL_DestroyTexture(txtr);
+        rect = {(int)sprite.rawPixelPosition.x, (int)sprite.rawPixelPosition.y, (int)raw->getWidth(), (int)raw->getHeight()};
+        SDL_RenderCopy(_renderer, txtr, NULL, &rect);
+        SDL_DestroyTexture(txtr);
+    }
 }
 
 void Sdl2::display()

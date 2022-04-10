@@ -11,41 +11,63 @@
 
 DlLib::DlLib()
 {
-    ;
+    std::cout << "construct dl" << std::endl;
 }
 
 DlLib::~DlLib()
 {
+    std::cout << "destroy dl" << std::endl;
 }
 
-void DlLib::openLib(const char *str)
+void *DlLib::openLib(const char *str)
 {
+    std::cout << "open " << str << std::endl;
     _openLib = dlopen(str, RTLD_LAZY);
+    return _openLib;
 }
 
-void DlLib::tryDownloadLib()
+char *DlLib::tryDownloadLib()
 {
+    char *error;
+
     _lib = (std::unique_ptr<IDisplayModule> (*)(void))dlsym(_openLib, "gEpitechArcadeGetDisplayModuleHandle");
+
+    error = dlerror();
+    if (error == NULL) {
+        std::cout << "test lib" << std::endl;
+        _lib()->startTextInput();
+        std::cout << "test passe" << std::endl;
+    }
+    return error;
 }
 
 std::unique_ptr<IDisplayModule> DlLib::getLib()
 {
+    std::cout << "get lib" << std::endl;
+    _lib()->startTextInput();
+    std::cout << "lib work" << std::endl;
     return (_lib());
 }
 
-void DlLib::closeLib()
+int DlLib::closeLib()
 {
-    dlclose(_openLib);
+    std::cout << "close at "<< _openLib << std::endl;
+    return dlclose(_openLib);
 }
 
-void DlLib::openGame(const char *str)
+void *DlLib::openGame(const char *str)
 {
     _openGame = dlopen(str, RTLD_LAZY);
+    return (_openGame);
 }
 
-void DlLib::tryDownloadGame()
+char *DlLib::tryDownloadGame()
 {
+    char *error;
     _game = (std::unique_ptr<IGameModule> (*)(void))dlsym(_openGame, "gEpitechArcadeGetGameModuleHandle");
+
+    error = dlerror();
+    return error;
 }
 
 std::unique_ptr<IGameModule> DlLib::getGame()
@@ -53,7 +75,7 @@ std::unique_ptr<IGameModule> DlLib::getGame()
     return (_game());
 }
 
-void DlLib::closeGame()
+int DlLib::closeGame()
 {
-    dlclose(_openGame);
+    return dlclose(_openGame);
 }

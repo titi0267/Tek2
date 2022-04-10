@@ -7,8 +7,9 @@
 
 #include "Error.hpp"
 
-Error::Error()
+Error::Error(char *error)
 {
+    _error = error;
 }
 
 Error::~Error()
@@ -30,6 +31,15 @@ void Error::setReturnValue(int returnValue)
     _returnValue = returnValue;
 }
 
+void Error::setError(const char *error)
+{
+    _error = error;
+}
+void Error::getError(const char *error)
+{
+    _error = error;
+}
+
 void Error::setReason(const std::string reason)
 {
     _reason = reason;
@@ -43,6 +53,11 @@ void Error::displayReason() const
 void Error::exitProgram() const
 {
     exit(_returnValue);
+}
+
+const char *Error::what()
+{
+    return _error.c_str();
 }
 
 void Error::checkArgs(int ac, char **av)

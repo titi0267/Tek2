@@ -22,15 +22,15 @@ int main(int ac, char **av)
     libNames.push_back(av[1]);
     libNames.push_back((char *)("./lib/arcade_sfml.so"));
     libNames.push_back((char *)("./lib/arcade_sdl2.so"));*/
-    Error error;
+    Error error("error");
     Core core;
     menu.readDir();
     menu.sortLibsGames();
-    menu.chooseFirstLib(av[1]);
-    //menu.init(&core, av[1]);
+    menu.chooseFirstLib(&core, av[1]);
+    menu.init(&core, av[1]);
 
     error.checkArgs(ac, av);
     //core.getGame()->init(&core);
-    //core.gameLoop();
+    core.gameLoop(&menu);
     return (SUCCESS);
 }
