@@ -11,8 +11,9 @@ Sdl2::Sdl2()
 {
     int flag = IMG_INIT_JPG | IMG_INIT_PNG;
 
-    if (IMG_Init(flag) == -1) _setError.exitError(ERROR, "ERROR: couldn't open Sdl2 image.");
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) < 0) _setError.exitError(ERROR, "ERROR: couldn't open Sdl2.");
+    if (IMG_Init(flag) == -1) _setError.exitError(ERROR, "ERROR: couldn't open Sdl2 image.");
+    if (TTF_Init() == -1) _setError.exitError(ERROR, "ERROR: couldn't open Sdl2 ttf.");
     for (int i = 0; i < 19; i++) _butt.push_back(false);
     _isClosing = false;
 }
@@ -21,6 +22,7 @@ Sdl2::~Sdl2()
 {
     SDL_DestroyWindow(_window);
     SDL_DestroyRenderer(_renderer);
+    TTF_Quit();
     SDL_Quit();
     _isClosing = true;
 }
