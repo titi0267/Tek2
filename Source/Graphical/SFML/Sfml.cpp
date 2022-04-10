@@ -9,11 +9,13 @@
 
 Sfml::Sfml()
 {
+    std::cout << "Construct SFML" << std::endl;
     for (int i = 0; i < 19; i++) _butt.push_back(false);
 }
 
 Sfml::~Sfml()
 {
+    std::cout << "Quit window" << std::endl;
     _window->close();
 }
 

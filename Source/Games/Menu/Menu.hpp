@@ -6,20 +6,32 @@
 */
 
 #pragma once
-#include "../../../arcade-interface-master/IGameModule.hpp"
-#include "../../../arcade-interface-master/ICore.hpp"
+#include "../../Interface/Core.hpp"
+#include "../../DlLib.hpp"
 #include <deque>
 #include <iostream>
+#include <vector>
+#include <fstream>
+#include <filesystem>
 
-class Menu : public IGameModule {
+class Menu {
     public:
         Menu();
         ~Menu();
-        void init(ICore *coreHandle);
+        void init(Core *coreHandle, char *av);
         void draw();
         void update();
+        void readDir();
+        void sortLibsGames();
+        bool chooseFirstLib(char *av);
+        //void constructMap();
 
     protected:
-        ICore *_core;
+        Core *_core;
+        DlLib _dl;
         std::deque<ICore::Sprite> _sprite;
+        std::vector<char>_map;
+        std::deque<std::string> _files;
+        std::deque<std::string> _libs;
+        std::deque<std::string> _games;
 };

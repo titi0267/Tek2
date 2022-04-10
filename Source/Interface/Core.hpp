@@ -19,7 +19,7 @@
 
 class Core : public ICore {
     public:
-        Core(std::deque<char *> chooseLib, int chooseLibIterator);
+        Core();
         ~Core();
         void setPixelsPerCell(std::uint32_t pixelsPerCell);
         void setFramerate(unsigned framerate);
