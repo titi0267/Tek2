@@ -9,22 +9,13 @@
 
 Sfml::Sfml() : _setError("alexandre")
 {
-    std::cout << "Construct SFML" << std::endl;
     for (int i = 0; i < 19; i++) _butt.push_back(false);
 }
 
 Sfml::~Sfml()
 {
-    std::cout << "Quit window" << std::endl;
     if (_window)
         _window->close();
-    /*if (_window->isOpen() == true) {
-        std::cout << "Window open" << std::endl;
-    }*/
-    //ahhh mais il peut pas acceder a _window vu qu'il est pas encore construit le rendeerwindow
-    //si
-    
-    std::cout << "seg?" << std::endl;
 }
 
 void Sfml::setPixelsPerCell(std::uint32_t pixelsPerCell)

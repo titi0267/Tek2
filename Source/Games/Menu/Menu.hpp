@@ -33,6 +33,7 @@ class Menu {
         void sortLibsGames();
         void manageSelected();
         void chooseFirstLib(Core *coreHandle, const char *av);
+        void chooseGame(Core *coreHandle);
         //void constructMap();
         enum class Selected {
             Graphical, Games, Score
@@ -48,8 +49,11 @@ class Menu {
         std::deque<std::string> _libs;
         std::deque<std::string> _games;
         int _pixelPerCell;
-        std::unique_ptr<IDisplayModule> (*_lib)(void);
-        std::unique_ptr<IGameModule> (*_game)(void);
         void *_openLib;
         void *_openGame;
+        int _indexLib;
+        int _indexGame;
+        int _maxLib;
+        int _maxGame;
+        bool _menuMode;
 };

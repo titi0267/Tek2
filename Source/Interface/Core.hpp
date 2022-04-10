@@ -47,6 +47,7 @@ class Core : public ICore {
         void ChooseLib();
         IGameModule *getGame() const;
         int getFrameRate() const;
+        IDisplayModule *getLib() const;
 
     protected:
         Error _setError;

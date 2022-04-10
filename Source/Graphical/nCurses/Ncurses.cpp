@@ -7,14 +7,13 @@
 
 #include "Ncurses.hpp"
 
-Ncurses::Ncurses() : _setError("alexandre")
+Ncurses::Ncurses() : _setError("error")
 {
     for (int i = 0; i < 19; i++) _butt.push_back(false);
 }
 
 Ncurses::~Ncurses()
 {
-    std::cout << "llo" << std::endl;
     endwin();
 }
 
