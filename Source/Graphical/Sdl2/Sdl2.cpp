@@ -19,8 +19,11 @@ Sdl2::Sdl2()
 
 Sdl2::~Sdl2()
 {
-    SDL_DestroyWindow(_window);
-    SDL_DestroyRenderer(_renderer);
+    if (!_window) {
+        SDL_DestroyWindow(_window);
+    }
+    if (!_renderer)
+        SDL_DestroyRenderer(_renderer);
     SDL_Quit();
     _isClosing = true;
 }

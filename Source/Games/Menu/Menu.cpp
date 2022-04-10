@@ -9,7 +9,7 @@
 
 Menu::Menu()
 {
-    ;
+    //_pixelPerCell = 16;
 }
 
 Menu::~Menu()
@@ -51,29 +51,36 @@ void Menu::sortLibsGames()
 
 bool Menu::chooseFirstLib(char *av)
 {
-    int i = 0;
-
-    for (; i < _libs.size(); i++) {
+    for (int i = 0; i < _libs.size(); i++) {
         std::cout << "libs are : "<< _libs[i] << std::endl;
-        if (_libs[i] == av) {
+        if (_libs[i].c_str() == av) {
+            std::cout << "open " << _libs[i] << std::endl;
             _dl.openLib(av);
+            if (dlerror() != NULL) {
+                std::cerr << dlerror() << std::endl;
+                exit(ERROR);
+            }
             _dl.tryDownloadLib();
-            _dl.getLib();
+            if (dlerror() != NULL) {
+                std::cerr << dlerror() << std::endl;
+                exit(ERROR);
+            }
+            _core->loadLibs(_dl.getLib());
+            std::cout << "load " << _libs[i];
             break;
         }
     }
-    if (i == _libs.size())
-        std::cerr << dlerror() << std::endl;
+
     for (int i = 0; i < _games.size(); i++) {
         std::cout << "games are : "<< _games[i] << std::endl;
         //if (_libs[i] == av)
     }
-    std::cout << "Finished" << std::endl;
     return false;
 }
 
 void Menu::init(Core *coreHandle, char *av)
 {
+    int i = 0;
     ICore::Vector2u windowSize{1920, 1080};
     ICore::Vector2u windowSize2{11, 11};
     ICore::Vector2u windowSize3{10, 11};
@@ -82,15 +89,15 @@ void Menu::init(Core *coreHandle, char *av)
 
     readDir(); //list dir
     sortLibsGames(); //sort in _games & _libs
-    chooseFirstLib(av);
-    /*coreHandle->openWindow(windowSize);
-    _sprite.push_back({windowSize2, coreHandle->loadTexture("./Assets/Menu/Background.jpg", '*', ICore::Color::black, ICore::Color::red, 612, 437)});
+    //coreHandle->openWindow(windowSize);
+    /*_sprite.push_back({windowSize2, coreHandle->loadTexture("./Assets/Menu/Background.jpg", '*', ICore::Color::black, ICore::Color::red, 612, 437)});
     _sprite.push_back({windowSize3, coreHandle->loadTexture("./Assets/Menu/Background.jpg", '|', ICore::Color::black, ICore::Color::magenta, 612, 437)});
     _sprite.push_back({windowSize4, coreHandle->loadTexture("./Assets/Menu/Background.jpg", '/', ICore::Color::black, ICore::Color::magenta, 612, 437)});
     _sprite.push_back({windowSize5, coreHandle->loadTexture("./Assets/Menu/Background.jpg", '*', ICore::Color::black, ICore::Color::cyan, 612, 437)});
-    coreHandle->setFramerate(20);
-    coreHandle->setPixelsPerCell(8);*/
-    //_core = coreHandle;
+    
+    coreHandle->setFramerate(60);
+    coreHandle->setPixelsPerCell(16);*/
+    _core = coreHandle;
 }
 
 void Menu::draw()

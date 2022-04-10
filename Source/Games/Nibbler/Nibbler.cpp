@@ -60,7 +60,7 @@ void Nibbler::init(ICore *coreHandle)
     _sprite.push_back({{tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, {tail, coreHandle->loadTexture("./Assets/Nibbler/TailRight.png", ' ', ICore::Color::cyan, ICore::Color::cyan, 16, 16)}, (int)Direction::right,(int)Direction::right, true, 22, false});
     constructSnake();
     coreHandle->setFramerate(60);
-    coreHandle->setPixelsPerCell(16);
+    coreHandle->setPixelsPerCell(_pixelPerCell);
     _core = coreHandle;
 }
 

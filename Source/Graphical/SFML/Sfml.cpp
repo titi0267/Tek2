@@ -15,8 +15,16 @@ Sfml::Sfml()
 
 Sfml::~Sfml()
 {
+    if (_window)
+        _window->close();
     std::cout << "Quit window" << std::endl;
-    _window->close();
+    /*if (_window->isOpen() == true) {
+        std::cout << "Window open" << std::endl;
+    }*/
+    //ahhh mais il peut pas acceder a _window vu qu'il est pas encore construit le rendeerwindow
+    //si
+    
+    std::cout << "seg?" << std::endl;
 }
 
 void Sfml::setPixelsPerCell(std::uint32_t pixelsPerCell)

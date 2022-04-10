@@ -14,6 +14,7 @@ Ncurses::Ncurses()
 
 Ncurses::~Ncurses()
 {
+    std::cout << "llo" << std::endl;
     endwin();
 }
 

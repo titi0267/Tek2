@@ -34,4 +34,5 @@ class Menu {
         std::deque<std::string> _files;
         std::deque<std::string> _libs;
         std::deque<std::string> _games;
+        int _pixelPerCell;
 };
