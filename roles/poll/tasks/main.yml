@@ -1,0 +1,7 @@
+- name: Copy poll.tar
+  ansible.builtin.copy:
+    src: poll.tar
+    dest: /home/user/
+    owner: user
+    group: user
+    mode: '0755'

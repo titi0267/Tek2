@@ -1,0 +1,7 @@
+- name: Copy worker.tar
+  ansible.builtin.copy:
+    src: worker.tar
+    dest: /home/user/
+    owner: user
+    group: user
+    mode: '0755'
