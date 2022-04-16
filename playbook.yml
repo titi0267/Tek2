@@ -14,3 +14,11 @@
 - hosts: poll
   roles:
     - poll
+
+- hosts: worker
+  roles:
+    - worker
+
+- hosts: result
+  roles:
+    - result
