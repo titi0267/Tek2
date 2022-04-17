@@ -1,12 +1,3 @@
-- name: Copy poll.tar
-  become: yes
-  ansible.builtin.copy:
-    src: poll.tar
-    dest: /home/user/
-    owner: user
-    group: user
-    mode: '0755'
-
 - name: Install python
   become: yes
   apt:
@@ -16,15 +7,31 @@
 
 - name: Untar poll.tar
   become: yes
-  ansible.builtin.command: tar -zxvf /home/user/poll.tar
+  ansible.builtin.unarchive:
+    src: poll.tar
+    dest: /home/user
 
 - name: Install requirements
   become: yes
-  ansible.builtin.command: pip3 install -r /home/user/poll/requirements.txt
+  pip:
+    name: pip
+    extra_args: -r /home/user/poll/requirements.txt
+    executable: pip3
   ignore_errors: yes
 
-- name:
+- name: copy poll.service
   become: yes
-  ansible.builtin.command: python3 /home/user/poll/wsgi.py disown
-  ignore_errors: yes
+  ansible.builtin.copy:
+    src: roles/poll/files/poll.service
+    dest: /etc/systemd/system/
+    owner: user
+    group: user
+    mode: '0755'
 
+- name: Reload dameon
+  become: yes
+  ansible.builtin.command: systemctl daemon-reload
+
+- name: start new poll service
+  become: yes
+  ansible.builtin.command: systemctl start poll
