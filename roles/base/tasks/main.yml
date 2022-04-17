@@ -17,3 +17,9 @@
       - gnupg
       - vim
     state: latest
+
+- name: Install tar command
+  become: yes
+  apt:
+    name: tar
+    state: latest

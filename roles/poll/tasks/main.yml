@@ -1,7 +1,30 @@
 - name: Copy poll.tar
+  become: yes
   ansible.builtin.copy:
     src: poll.tar
     dest: /home/user/
     owner: user
     group: user
     mode: '0755'
+
+- name: Install python
+  become: yes
+  apt:
+    name:
+      - python3
+      - python3-pip
+
+- name: Untar poll.tar
+  become: yes
+  ansible.builtin.command: tar -zxvf /home/user/poll.tar
+
+- name: Install requirements
+  become: yes
+  ansible.builtin.command: pip3 install -r /home/user/poll/requirements.txt
+  ignore_errors: yes
+
+- name:
+  become: yes
+  ansible.builtin.command: python3 /home/user/poll/wsgi.py disown
+  ignore_errors: yes
+
