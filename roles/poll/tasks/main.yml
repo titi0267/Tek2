@@ -28,10 +28,20 @@
     group: user
     mode: '0755'
 
-- name: Reload dameon
+- name: Reload daemon
   become: yes
   ansible.builtin.command: systemctl daemon-reload
 
 - name: start new poll service
   become: yes
-  ansible.builtin.command: systemctl start poll
+  service:
+    name: poll
+    state: started
+    enabled: yes
+
+- name: Ensure we have our own comment added to /etc/services
+  become: yes
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/system/poll.service
+    regexp: '(\w*Environment\w*)'
+    line: Environment = 'REDIS_HOST=192.168.1.48'

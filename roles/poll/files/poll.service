@@ -3,5 +3,6 @@ Description=Poll service file
 
 [Service]
 User=root
+Environment=REDIS_HOST
 ExecStart=python3 /home/user/poll/app.py
 Restart=always

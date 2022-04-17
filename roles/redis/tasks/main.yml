@@ -3,3 +3,19 @@
   apt:
     name: redis-server
     state: present
+
+- name: Copy redis.conf
+  become: yes
+  ansible.builtin.copy:
+    src: roles/redis/files/redis.conf
+    dest: /redis/etc/
+    owner: user
+    group: user
+    mode: '0755'
+
+- name: start redis service
+  become: yes
+  service:
+    name: redis
+    state: started
+    enabled: yes
