@@ -14,6 +14,22 @@ sub usage {
     print "    IQ2  maximum IQ\n";
 }
 
+sub iq {
+    my ($first, $second, $third, $fourth) = @ARGV;
+    my $summary = 0;
+    if (defined $fourth) {
+        for (my $i = $third; $i < $fourth; $i += 0.001) {
+            $summary += (1/($second * sqrt(2 * pi()))) * exp(-1 * (($i - $first) ** 2)/(2 * ($second ** 2)));
+        }
+        printf("%.1f%% of people have an IQ between %i and %i\n", $summary/10, $third, $fourth);
+    }
+    else {
+        for (my $i = 0; $i < $third; $i += 0.001) {
+            $summary += (1/($second * sqrt(2 * pi()))) * exp(-1 * (($i - $first) ** 2)/(2 * ($second ** 2)));
+        }
+        printf("%.1f%% of people have an IQ inferior to %i\n", $summary/10, $third);
+    }
+}
 
 sub calcFirst {
     my ($first, $second) = @ARGV;
@@ -42,12 +58,22 @@ sub error {
     if (not $first =~ m|^\d+| or not $second =~ m|^\d+|) {
         exit (84);
     }
+    if (defined $third and not $third =~ m|^\d+|) {
+        exit (84);
+    }
+    if (defined $fourth and not $fourth =~ m|^\d+|) {
+        exit (84);
+    }
 }
 
 
 sub main {
     error;
-    calcFirst;
+    if (not defined $ARGV[2]) {
+        calcFirst;
+    } else {
+        iq;
+    }
 }
 
 main;
