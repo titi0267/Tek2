@@ -2,9 +2,30 @@
 
 use warnings;
 use strict;
+use Math::Trig;
+
+sub usage {
+    print "USAGE\n";
+    print "    ./205IQ u s [IQ1] [IQ2]\n\n";
+    print "DESCRIPTION\n";
+    print "    u    mean\n";
+    print "    s    standard deviation\n";
+    print "    IQ1  minimum IQ\n";
+    print "    IQ2  maximum IQ\n";
+}
+
+
+sub calcFirst {
+    my ($first, $second) = @ARGV;
+    for (my $i = 0; $i < 201; $i++) {
+        print "$i ";
+        printf("%.5f", (1/($second * sqrt(2 * pi()))) * exp(-1 * (($i - $first) ** 2)/(2 * ($second ** 2))));
+        print "\n";
+    }
+}
 
 sub error {
-    my $first = $_[0][0]
+    my ($first, $second, $third, $fourth) = @ARGV;
     if (not defined $second) {
         if (defined $first and $first eq "-h") {
             usage;
@@ -18,20 +39,15 @@ sub error {
         print STDERR "205: Need a least two Args\n";
         exit (84);
     }
+    if (not $first =~ m|^\d+| or not $second =~ m|^\d+|) {
+        exit (84);
+    }
 }
 
-sub usage {
-    print "USAGE\n";
-    print "    ./205IQ u s [IQ1] [IQ2]\n\n";
-    print "DESCRIPTION\n";
-    print "    u    mean\n";
-    print "    s    standard deviation\n";
-    print "    IQ1  minimum IQ\n";
-    print "    IQ2  maximum IQ\n";
-}
 
 sub main {
     error;
+    calcFirst;
 }
 
 main;
