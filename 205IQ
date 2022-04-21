@@ -42,6 +42,10 @@ sub calcFirst {
 
 sub error {
     my ($first, $second, $third, $fourth) = @ARGV;
+    my $length = @ARGV;
+    if ($length > 4) {
+        exit (84);
+    }
     if (not defined $second) {
         if (defined $first and $first eq "-h") {
             usage;
@@ -58,10 +62,10 @@ sub error {
     if (not $first =~ m|^\d+| or not $second =~ m|^\d+|) {
         exit (84);
     }
-    if (defined $third and not $third =~ m|^\d+|) {
+    if (defined $third and (not $third =~ m|^\d+| or $third > 200)) {
         exit (84);
     }
-    if (defined $fourth and not $fourth =~ m|^\d+|) {
+    if (defined $fourth and (not $fourth =~ m|^\d+| or $third > $fourth or $fourth > 200)) {
         exit (84);
     }
 }
