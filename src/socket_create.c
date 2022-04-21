@@ -9,23 +9,6 @@
 
 fd_set read_fd_set;
 
-int socket_create(char *av)
-{
-    int sck;
-    struct sockaddr_in my_socket;
-
-    sck = socket(PF_INET, SOCK_STREAM, 0);
-    my_socket.sin_family = AF_INET;
-    my_socket.sin_port = htons(atoi(av));
-    my_socket.sin_addr.s_addr = INADDR_ANY;
-    if (bind(sck, (struct sockaddr *)&my_socket, sizeof(my_socket)) == -1) {
-        printf("Error: Bind failed\n");
-        exit(84);
-    }
-    listen(sck, 5);
-    return (sck);
-}
-
 int create_list(node_t *front, int connection)
 {
     node_t new_node = malloc(sizeof(*new_node));
@@ -107,27 +90,27 @@ int check_client_connection(node_t *list, int socket_fd)
 int socket_run(char *av)
 {
     struct sockaddr_in new_adrr;
-    int socket = socket_create(av);
-    //fd_set read_fd_set;
+    int socket = socket_create(av); //bind_server
+    fd_set read_fd_set;
     socklen_t adrr_len;
     int new_client;
     node_t client = NULL;
     node_t head = NULL;
     int ret_val;
 
-    for (int i = 0; i < MAX_CLIENT; i++) {
+    /*for (int i = 0; i < MAX_CLIENT; i++) {
         if (i == MAX_CLIENT - 1)
             create_list(&client, socket);
         else
             create_list(&client, -1);
-    }
-    head = client;
+    }*/ //add all clients (need client by client)
+    //head = client;
     while (1) {
-        FD_ZERO(&read_fd_set);
-        through_list(&head);
-        ret_val = select(FD_SETSIZE, &read_fd_set, NULL, NULL, NULL);
-        if (ret_val != 0) {
-            if (FD_ISSET(socket, &read_fd_set)) {
+        //FD_ZERO(&read_fd_set); //res fd
+        //through_list(&head); //set fd
+        //ret_val = select(FD_SETSIZE, &read_fd_set, NULL, NULL, NULL);
+        //if (ret_val != 0) {
+            /*if (FD_ISSET(socket, &read_fd_set)) {
                 printf("Returned fd is %d (server's fd)\n", socket);
                 adrr_len = sizeof(struct sockaddr_in);
                 new_client = accept(socket, (struct sockaddr*)&new_adrr, &adrr_len);
@@ -140,8 +123,8 @@ int socket_run(char *av)
                 ret_val--;
                 if (!ret_val)
                     continue;
-            }
+            }*/
             check_client_connection(&client, socket);
-        }
+        //}
     }
 }
