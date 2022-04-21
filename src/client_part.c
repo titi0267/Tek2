@@ -11,9 +11,10 @@
 
 void parse_recieved(char *buf, node_t client)
 {
-    void (*parse_command[2]) (char *, node_t) = {parse_user, parse_pass};
-    char *command[15] = {"USER", "PASS", "CWD ", "CDUP", "QUIT", "DELE", "PWD ",
-        "PASV", "PORT", "HELP", "NOOP", "RETR", "STOR", "LIST", 0};
+    void (*parse_command[3]) (char *, node_t) = {parse_user, parse_pass, parse_noop};
+    char *command[15] = {"USER", "PASS", "NOOP", "CWD ", "CDUP", "QUIT", "DELE", "PWD ",
+        "PASV", "PORT", "HELP", "RETR", "STOR", "LIST", 0};
+
     for (int i = 0; command[i] != 0; i++) {
         if (strncmp(command[i], buf, 3) == 0) {
             (*parse_command[i]) (buf, client);
@@ -25,12 +26,13 @@ void parse_recieved(char *buf, node_t client)
 void client_value(int read_ret, node_t client, char *buf)
 {
     if (read_ret == 0) {
+        //printf("client quit\n");
         close(client->connection);
-        client->connection = -1;
+        //delete_client_connection();
     }
     if (read_ret > 0) {
         buf[read_ret] = '\0';
-        printf("%s", buf);
+        //printf("%s", buf);
         parse_recieved(buf, client);
     }
 }

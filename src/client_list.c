@@ -37,20 +37,6 @@ int new_fd_in_list_back(node_t *front_ptr, int new_client)
     while (last_node->next != NULL)
         last_node = last_node->next;
     last_node->next = new_node;
-    dprintf(new_node->connection, "220\r\n");
-    return (0);
-}
-
-int add_connection(node_t *list, int new_client)
-{
-    node_t client = (*list);
-
-    for (; client != NULL; client = client->next) {
-        if (client->connection < 0) {
-            client->connection = new_client;
-            dprintf(client->connection, "220\r\n");
-            break;
-        }
-    }
+    dprintf(new_node->connection, "220 Service ready for new user.\r\n");
     return (0);
 }

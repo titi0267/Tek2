@@ -7,7 +7,7 @@
 
 #pragma once
 
-#define USER "USER anonymous\r\n"
+#define USER "USER Anonymous\r\n"
 #define USER_SUCCES
 
 #define PASS "PASS \r\n"

@@ -22,3 +22,4 @@ int new_fd_in_list_back(node_t *front_ptr, int new_client);
 
 void parse_user(char *buf, node_t client);
 void parse_pass(char *buf, node_t client);
+void parse_noop(char *buf, node_t client);
