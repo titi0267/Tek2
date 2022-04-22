@@ -13,12 +13,10 @@ OBJ	=	$(SRC:.c=.o)
 
 NAME	=	panoramix
 
-CFLAGS += -lpthread
-
 all:  $(NAME)
 
 $(NAME):	$(OBJ)
-	gcc $(OBJ) -o $(NAME)
+	gcc $(OBJ) -o $(NAME) -lpthread
 
 clean:
 	rm -f $(OBJ)
