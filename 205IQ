@@ -59,7 +59,7 @@ sub error {
         print STDERR "205: Need a least two Args\n";
         exit (84);
     }
-    if (not $first =~ m|^\d+| or not $second =~ m|^\d+|) {
+    if (not $first =~ m|^\d+| or not $second =~ m|^\d+| or $first > 200 or $second == 0) {
         exit (84);
     }
     if (defined $third and (not $third =~ m|^\d+| or $third > 200)) {
