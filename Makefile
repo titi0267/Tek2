@@ -13,7 +13,7 @@ OBJ	=	$(SRC:.c=.o)
 
 NAME	=	panoramix
 
-CFLAGS += -g
+CFLAGS += -lpthread
 
 all:  $(NAME)
 
