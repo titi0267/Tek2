@@ -21,7 +21,7 @@ int parse_recieved(node_t client, main_t *_main)
 
     for (i = 0; command[i] != 0; i++) {
         if (strncmp("QUIT", _main->buf, 3) == 0) {
-            (*parse_command[i]) (_main->buf, client, _main);
+            (*parse_command[3]) (_main->buf, client, _main);
             return (-1);
         }
         if (strncmp(command[i], _main->buf, 3) == 0) {
@@ -43,7 +43,6 @@ void client_value(int read_ret, node_t client, main_t *_main, node_t *front_ptr)
             read_ret = -1;
     }
     if (read_ret <= 0) {
-        //printf("client quit\n");
         close(client->connection);
         if (delete_fd(front_ptr, client->connection) == 1)
             _main->user_deleted = 1;
