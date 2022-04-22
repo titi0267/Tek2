@@ -8,6 +8,7 @@
 #include "../../include/prototype.h"
 #include "../../include/ftp_code.h"
 
+//TODO: need to fix possibility to reach permission denied location
 void parse_cdup(char *buf, node_t client, main_t *_main)
 {
     char *path;

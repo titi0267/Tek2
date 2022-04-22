@@ -11,8 +11,10 @@
 
 int parse_recieved(node_t client, main_t *_main)
 {
-    void (*parse_command[8]) (char *, node_t, main_t *) = {parse_user, parse_pass,
-        parse_noop, parse_quit, parse_help, parse_path, parse_cdup, parse_cwd};
+    void (*parse_command[14]) (char *, node_t, main_t *) = {parse_user,
+        parse_pass, parse_noop, parse_quit, parse_help, parse_path, parse_cdup,
+        parse_cwd, parse_dele, parse_pasv, parse_port, parse_retr, parse_stor,
+        parse_list};
     char *command[15] = {"USER", "PASS", "NOOP", "QUIT", "HELP", "PWD ",
         "CDUP", "CWD ", "DELE", "PASV", "PORT", "RETR", "STOR", "LIST", 0};
     int i = 0;

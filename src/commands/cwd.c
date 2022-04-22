@@ -53,6 +53,7 @@ void parse_cwd(char *buf, node_t client, main_t *_main)
     char *path = get_path(buf, client);
 
     if (cannot_go_over(path, client, _main) == -1) {
+        printf("failed to move\n");
         return;
     }
     dprintf(client->connection, "250 Requested file action okay,");

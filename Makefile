@@ -19,6 +19,12 @@ SRC =	src/main.c			\
 		src/commands/path.c	\
 		src/commands/cdup.c	\
 		src/commands/cwd.c	\
+		src/commands/dele.c	\
+		src/commands/pasv.c	\
+		src/commands/port.c	\
+		src/commands/retr.c	\
+		src/commands/stor.c	\
+		src/commands/list.c	\
 
 OBJ	=	$(SRC:.c=.o)
 
