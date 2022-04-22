@@ -21,6 +21,7 @@
 typedef struct client_s {
     int connection;
     char *path;
+    int logged_in;
     struct client_s *next;
 } client_t;
 
