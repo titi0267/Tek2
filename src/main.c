@@ -17,18 +17,12 @@ int usage(void)
 int main(int ac, char **av)
 {
     parameters_t *params;
-    int i = 0;
 
-    if (i)
-        printf("i\n");
-    if (!i)
-        printf("!i\n");
     if (ac == 1)
         return (usage());
     params = malloc(sizeof(parameters_t));
     if (params == NULL || parse_args(ac, av, params) == ERROR_CODE)
         return (ERROR_CODE);
     threads(params);
-    printf("test\n");
     return (0);
 }
