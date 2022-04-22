@@ -17,7 +17,6 @@ char *get_path_del(char *buf, node_t client)
     strcpy(path, client->path);
     strncpy(temp, buf + 5, strlen(buf) - 7);
     temp[strlen(buf) - 7] = '\0';
-    printf("temp = %s with len = %i\n", temp, strlen(buf));
     no_slash = malloc(sizeof(char) * strlen(temp) + 3);
     no_slash[0] = '/';
     no_slash[1] = '\0';
@@ -30,18 +29,6 @@ char *get_path_del(char *buf, node_t client)
     free(no_slash);
     return (path);
 }
-
-
-/*char *get_file(char *buf, main_t *_main)
-{
-    char *path = malloc(sizeof(char) * strlen(buf));
-    char *entier_path = malloc(sizeof(char) * strlen(buf) + )
-
-    strncpy(path, buf + 5, strlen(buf) - 7);
-    path[strlen(buf) - 6] = '\0';
-
-    return (realpath(path, NULL));
-}*/
 
 void parse_dele(char *buf, node_t client, main_t *_main)
 {

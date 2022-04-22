@@ -13,14 +13,13 @@ void server_fd(main_t *_main, node_t *list, node_t client)
 {
     socklen_t addr_len;
     struct sockaddr_in new_addr;
-    int new_client;
+    int new_cli;
 
     addr_len = sizeof(struct sockaddr_in);
-    new_client = accept(_main->server_fd, (struct sockaddr*)&new_addr, &addr_len);
-    if (new_client >= 0) {
-        printf("New connection fd: %d\n", new_client);
-        new_fd_in_list_back(list, new_client, _main);
-    } else
+    new_cli = accept(_main->server_fd, (struct sockaddr*)&new_addr, &addr_len);
+    if (new_cli >= 0)
+        new_fd_in_list_back(list, new_cli, _main);
+    else
         fprintf(stderr, "Error: Accept failed: %s\n", strerror(errno));
 }
 
@@ -48,18 +47,13 @@ int server_loop(main_t *_main, node_t *client)
 
     while (1) {
         FD_ZERO(&fd_to_read);
-        for (list = (*client); list != NULL; list = list->next) { //connection cannot by < 0 {
-            printf("fd = %i\n", list->connection);
+        for (list = (*client); list != NULL; list = list->next)
             FD_SET(list->connection, &fd_to_read);
-        }
         select_val = select(FD_SETSIZE, &fd_to_read, NULL, NULL, NULL);
-        printf("select_val = %i\n", select_val);
         if (select_val != -1 && select_val != 0)
             fd_selected(_main, client, fd_to_read);
-        else {
+        else
             fprintf(stderr, "Error: Select failed: %s\n", strerror(errno));
-            //return (ERROR_CODE);
-        }
     }
     return (0);
 }

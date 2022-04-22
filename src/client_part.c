@@ -29,16 +29,14 @@ int parse_recieved(node_t client, main_t *_main)
             break;
         }
     }
-    if (i == 14) {
+    if (i == 14)
         dprintf(client->connection, "502 Command not found.\r\n");
-    }
 }
 
 void client_value(int read_ret, node_t client, main_t *_main, node_t *front_ptr)
 {
     if (read_ret > 0) {
         _main->buf[read_ret] = '\0';
-        printf("%s", _main->buf);
         if (parse_recieved(client, _main) == -1)
             read_ret = -1;
     }
@@ -68,5 +66,4 @@ void client_part(main_t *_main, node_t *list, fd_set fd_to_read)
         }
     }
     memset(_main->buf, 0, 500);
-    //free(_main->buf);
 }
