@@ -27,7 +27,7 @@ int store_args(main_t *_main, char **av)
         }
     }
     _main->port = atoi(av[1]);
-    _main->path = av[2];
+    _main->path = realpath(av[2], NULL);
     return (0);
 }
 
@@ -35,13 +35,14 @@ int parse_args(int ac, char **av)
 {
     main_t *_main;
 
-    if (ac == 2 && strcmp(av[1], "-help") == 0)
+    if (ac == 2 && strcmp(av[1], "--help") == 0)
         return (usage());
     if (ac != 3)
         return (ERROR_CODE);
     _main = malloc(sizeof(main_t));
     if (_main == NULL)
         return (ERROR_CODE);
+    _main->user_deleted = 0;
     if (store_args(_main, av) == ERROR_CODE || init_server(_main) == ERROR_CODE)
         return (ERROR_CODE);
     return (0);

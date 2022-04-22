@@ -18,4 +18,6 @@ typedef struct main_s {
     int port;
     char *path;
     int server_fd;
+    char buf[500];
+    int user_deleted;
 } main_t;

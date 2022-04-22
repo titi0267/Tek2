@@ -2,13 +2,13 @@
 ** EPITECH PROJECT, 2022
 ** ftp
 ** File description:
-** noop
+** path
 */
 
 #include "../../include/prototype.h"
 #include "../../include/ftp_code.h"
 
-void parse_noop(char *buf, node_t client, main_t *_main)
+void parse_path(char *buf, node_t client, main_t *_main)
 {
-    dprintf(client->connection, "200 Command okay.\r\n");
+    dprintf(client->connection, "257 %s created.\r\n", client->path);
 }

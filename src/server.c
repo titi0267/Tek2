@@ -14,7 +14,7 @@ int bind_server(main_t *_main)
     int sck;
     struct sockaddr_in my_socket;
 
-    sck = socket(PF_INET, SOCK_STREAM, 0);
+    sck = socket(AF_INET, SOCK_STREAM, 0);
     if (sck == -1) {
         fprintf(stderr, "Socket failed: %s\n", strerror(errno));
         return (-1);

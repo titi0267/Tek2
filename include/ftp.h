@@ -20,6 +20,7 @@
 
 typedef struct client_s {
     int connection;
+    char *path;
     struct client_s *next;
 } client_t;
 

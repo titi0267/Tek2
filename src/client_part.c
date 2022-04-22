@@ -9,31 +9,42 @@
 #include "../include/prototype.h"
 #include "../include/main_struct.h"
 
-void parse_recieved(char *buf, node_t client)
+int parse_recieved(node_t client, main_t *_main)
 {
-    void (*parse_command[3]) (char *, node_t) = {parse_user, parse_pass, parse_noop};
-    char *command[15] = {"USER", "PASS", "NOOP", "CWD ", "CDUP", "QUIT", "DELE", "PWD ",
-        "PASV", "PORT", "HELP", "RETR", "STOR", "LIST", 0};
+    void (*parse_command[8]) (char *, node_t, main_t *) = {parse_user, parse_pass,
+        parse_noop, parse_quit, parse_help, parse_path, parse_cdup, parse_cwd};
+    char *command[15] = {"USER", "PASS", "NOOP", "QUIT", "HELP", "PWD ",
+        "CDUP", "CWD ", "DELE", "PASV", "PORT", "RETR", "STOR", "LIST", 0};
+    int i = 0;
 
-    for (int i = 0; command[i] != 0; i++) {
-        if (strncmp(command[i], buf, 3) == 0) {
-            (*parse_command[i]) (buf, client);
+    for (i = 0; command[i] != 0; i++) {
+        if (strncmp("QUIT", _main->buf, 3) == 0) {
+            (*parse_command[i]) (_main->buf, client, _main);
+            return (-1);
+        }
+        if (strncmp(command[i], _main->buf, 3) == 0) {
+            (*parse_command[i]) (_main->buf, client, _main);
             break;
         }
     }
+    if (i == 14) {
+        dprintf(client->connection, "502 Command not found.\r\n");
+    }
 }
 
-void client_value(int read_ret, node_t client, char *buf)
+void client_value(int read_ret, node_t client, main_t *_main, node_t *front_ptr)
 {
-    if (read_ret == 0) {
+    if (read_ret > 0) {
+        _main->buf[read_ret] = '\0';
+        printf("%s", _main->buf);
+        if (parse_recieved(client, _main) == -1)
+            read_ret = -1;
+    }
+    if (read_ret <= 0) {
         //printf("client quit\n");
         close(client->connection);
-        //delete_client_connection();
-    }
-    if (read_ret > 0) {
-        buf[read_ret] = '\0';
-        //printf("%s", buf);
-        parse_recieved(buf, client);
+        if (delete_fd(front_ptr, client->connection) == 1)
+            _main->user_deleted = 1;
     }
 }
 
@@ -41,16 +52,20 @@ void client_part(main_t *_main, node_t *list, fd_set fd_to_read)
 {
     node_t client = (*list);
     int read_ret = 0;
-    char *buf = malloc(sizeof(char) * 500);
 
     for (client = client->next; client != NULL; client = client->next) {
         if (FD_ISSET(client->connection, &fd_to_read)) {
-            read_ret = read(client->connection, buf, 500);
-            client_value(read_ret, client, buf);
+            read_ret = read(client->connection, _main->buf, 500);
+            client_value(read_ret, client, _main, list);
+        }
+        if (_main->user_deleted == 1) {
+            break;
         }
         if (read_ret == -1) {
             printf("recieved failed for fd: %d []\n", client->connection);
             break;
         }
     }
+    memset(_main->buf, 0, 500);
+    //free(_main->buf);
 }
