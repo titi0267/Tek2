@@ -28,6 +28,10 @@ int store_args(main_t *_main, char **av)
     }
     _main->port = atoi(av[1]);
     _main->path = realpath(av[2], NULL);
+    if (_main->path == NULL) {
+        fprintf(stderr, "Error: Bad args: %s\n", strerror(errno));
+        return (ERROR_CODE);
+    }
     return (0);
 }
 

@@ -23,7 +23,7 @@ int new_fd_in_list(node_t *front, int connection)
 int new_fd_in_list_back(node_t *front_ptr, int new_client, main_t *_main)
 {
     node_t new_node = malloc(sizeof(*new_node));
-    node_t last_node;
+    node_t last_node = (*front_ptr);
 
     if (new_node == NULL)
         exit(ERROR_CODE);
@@ -34,9 +34,7 @@ int new_fd_in_list_back(node_t *front_ptr, int new_client, main_t *_main)
         (*front_ptr) = new_node;
         return (0);
     }
-    last_node = (*front_ptr);
-    while (last_node->next != NULL)
-        last_node = last_node->next;
+    for (; last_node->next; last_node = last_node->next);
     last_node->next = new_node;
     dprintf(new_node->connection, "220 Service ready for new user.\r\n");
     return (0);
@@ -57,26 +55,3 @@ int delete_fd(node_t *front_ptr, int connection)
     tmp->next = node;
     return (1);
 }
-
-/*int delete_fd(node_t *front_ptr, int connection)
-{
-    node_t tmp = *front_ptr;
-    node_t node;
-
-    if (front_ptr == NULL)
-        return (1);
-    for (; tmp != NULL || tmp->next != NULL; tmp = tmp->next) {
-        if (tmp->next->connection == connection)
-            break;
-    }
-    printf("fd to free == %i\n", tmp->next->connection);
-    free(tmp)
-    //tmp = tmp->next;
-    if (tmp == NULL || tmp->next == NULL) {
-        return (1);
-    }
-    node = tmp->next->next;
-    free(tmp->next);
-    tmp->next = node;
-    return (0);
-}*/
