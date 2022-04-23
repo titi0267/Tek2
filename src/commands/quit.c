@@ -10,6 +10,7 @@
 
 void parse_quit(char *buf, node_t client, main_t *_main)
 {
+    client->pasv = FALSE;
     dprintf(client->connection, "221 Service closing control connection. ");
     dprintf(client->connection, "Logged out if appropriate.\r\n");
 }

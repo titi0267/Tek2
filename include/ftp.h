@@ -25,7 +25,7 @@ typedef struct client_s {
     int pasv;
     int server_fd;
     int fd_client_pasv;
-    fd_set fd_to_read;
+    int port;
     struct client_s *next;
 } client_t;
 

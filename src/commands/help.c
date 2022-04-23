@@ -10,6 +10,7 @@
 
 void parse_help(char *buf, node_t client, main_t *_main)
 {
+    client->pasv = FALSE;
     dprintf(client->connection, "214 Help message. On how to use the server ");
     dprintf(client->connection, "or the meaning of a particular non-standard ");
     dprintf(client->connection, "command. This reply is useful only to the ");

@@ -35,6 +35,7 @@ void parse_dele(char *buf, node_t client, main_t *_main)
     char *file = get_path_del(buf, client);
     char *path = realpath(file, NULL);
 
+    client->pasv = FALSE;
     if (client->logged_in == FALSE) {
         dprintf(client->connection, "530 Not logged in.\r\n");
         return;

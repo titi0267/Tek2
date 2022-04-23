@@ -22,4 +22,5 @@ typedef struct main_s {
     int server_fd;
     char buf[500];
     int user_deleted;
+    int port_pasv;
 } main_t;

@@ -10,6 +10,7 @@
 
 void parse_pass(char *buf, node_t client, main_t *_main)
 {
+    client->pasv = FALSE;
     if (client->logged_in == 0) {
         dprintf(client->connection, "332 Need account for login.\r\n");
     } else if (client->logged_in == 1) {

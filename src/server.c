@@ -13,6 +13,7 @@ int bind_server(main_t *_main, int server_port)
 {
     int sck;
     struct sockaddr_in my_socket;
+    unsigned int socklen;
 
     sck = socket(AF_INET, SOCK_STREAM, 0);
     if (sck == -1) {
@@ -30,6 +31,9 @@ int bind_server(main_t *_main, int server_port)
         fprintf(stderr, "Listen failed: %s\n", strerror(errno));
         return (-1);
     }
+    socklen = sizeof(my_socket);
+    getsockname(sck, (struct sockaddr *)&my_socket, &socklen);
+    _main->port_pasv = htons(my_socket.sin_port);
     return (sck);
 }
 
@@ -38,6 +42,7 @@ int init_server(main_t *_main)
     node_t client = NULL;
 
     _main->server_fd = bind_server(_main, _main->port);
+    _main->port_pasv = 0;
     if (_main->server_fd == -1)
         return (ERROR_CODE);
     new_fd_in_list(&client, _main->server_fd);

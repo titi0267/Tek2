@@ -52,6 +52,7 @@ void parse_cwd(char *buf, node_t client, main_t *_main)
 {
     char *path;
 
+    client->pasv = FALSE;
     if (client->logged_in == FALSE) {
         dprintf(client->connection, "530 Not logged in.\r\n");
         return;
