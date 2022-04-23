@@ -23,8 +23,8 @@ static void free_threads(int *ids, pthread_t *threads)
 
 static int call_panoramix(int ids)
 {
-    printf("Villager %d: I need a drink... ", ids);
-    printf("I see %d servings left.\n", params->pot_size);
+    printf("Villager %d: I need a drink... I see %d servings left.\n", \
+        ids, params->pot_size);
     if (params->pot_size == 0) {
         printf("Villager %d: Hey Pano wake up! We need more potion.\n", ids);
         sem_post(&semaphore_village);
@@ -36,26 +36,22 @@ static int call_panoramix(int ids)
 
 static void *villagers(void *id)
 {
-    int drinked = 0;
     int fights = params->nb_fights;
     int *ids = id;
     int i = 0;
 
     printf("Villager %d: I'm going into the fight.\n", *ids);
     while (fights != 0 || (params->nb_refills == 0 && params->pot_size == 0)) {
-        if (params->pot_size >= 0 && drinked == 0) {
+        if (params->pot_size >= 0) {
             pthread_mutex_lock(&go_fight);
-            drinked = call_panoramix(*ids);
-        }
-        if (drinked == 1) {
-            printf("Villager %d: ", *ids);
-            printf("Take that roman scum! Only %d left.\n", fights);
-            fights--;
-            drinked = 0;
+            call_panoramix(*ids);
             pthread_mutex_unlock(&go_fight);
         }
+        printf("Villager %d: Take that roman scum! " \
+            "Only %d left.\n", *ids, fights);
+        fights--;
     }
-    printf("Villager %i: I'm going to sleep now.", *ids);
+    printf("Villager %i: I'm going to sleep now.\n", *ids);
 }
 
 void *panoramix(void *id)
@@ -66,9 +62,9 @@ void *panoramix(void *id)
     printf("Druid: I'm ready... but sleepy...\n");
     while (params->nb_refills >= 0) {
         sem_wait(&semaphore_village);
-        printf("Druid: Ah! Yes, yes, I'm awake! Working on it! Beware");
-        printf(" I can only make %d more refills ", params->nb_refills);
-        printf("after this one.\n");
+        printf("Druid: Ah! Yes, yes, I'm awake! Working on it! Beware" \
+            " I can only make %d more refills after this one.\n", \
+            params->nb_refills);
         params->pot_size = params->initial_pot_size;
         params->nb_refills--;
         if (params->nb_refills == 0) {
