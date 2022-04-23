@@ -50,12 +50,20 @@ int cannot_go_over(char *path, node_t client, main_t *_main)
 
 void parse_cwd(char *buf, node_t client, main_t *_main)
 {
-    char *path = get_path(buf, client);
+    char *path;
 
-    if (cannot_go_over(path, client, _main) == -1) {
-        printf("failed to move\n");
+    if (client->logged_in == FALSE) {
+        dprintf(client->connection, "530 Not logged in.\r\n");
         return;
     }
+    if (strcmp("CWD\r\n", buf) == 0) {
+        dprintf(client->connection, "550 Requested action not taken. File " \
+        "unavailable (e.g., file not found, no access).\r\n");
+        return;
+    }
+    path = get_path(buf, client);
+    if (cannot_go_over(path, client, _main) == -1)
+        return;
     dprintf(client->connection, "250 Requested file action okay,");
     dprintf(client->connection, " completed.\r\n");
 }

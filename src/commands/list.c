@@ -10,5 +10,9 @@
 
 void parse_list(char *buf, node_t client, main_t *_main)
 {
+    if (client->logged_in == FALSE) {
+        dprintf(client->connection, "530 Not logged in.\r\n");
+        return;
+    }
     dprintf(client->connection, "502 Command not found.\r\n");
 }

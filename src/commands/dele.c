@@ -35,6 +35,10 @@ void parse_dele(char *buf, node_t client, main_t *_main)
     char *file = get_path_del(buf, client);
     char *path = realpath(file, NULL);
 
+    if (client->logged_in == FALSE) {
+        dprintf(client->connection, "530 Not logged in.\r\n");
+        return;
+    }
     if (path == NULL || remove(path) == -1) {
         dprintf(client->connection, "550 Requested action not taken. ");
         dprintf(client->connection, "File unavailable (e.g., file not found, ");

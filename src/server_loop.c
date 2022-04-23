@@ -23,6 +23,7 @@ void server_fd(main_t *_main, node_t *list, node_t client)
         fprintf(stderr, "Error: Accept failed: %s\n", strerror(errno));
 }
 
+
 int fd_selected(main_t *_main, node_t *client, fd_set fd_to_read)
 {
     node_t list = (*client);
@@ -39,6 +40,14 @@ int fd_selected(main_t *_main, node_t *client, fd_set fd_to_read)
     }
 }
 
+void set_pasv_server(node_t list, fd_set fd_to_read)
+{
+    if (list->pasv == TRUE) {
+        FD_SET(list->server_fd, &fd_to_read);
+        list->fd_to_read = fd_to_read;
+    }
+}
+
 int server_loop(main_t *_main, node_t *client)
 {
     node_t list = (*client);
@@ -47,8 +56,10 @@ int server_loop(main_t *_main, node_t *client)
 
     while (1) {
         FD_ZERO(&fd_to_read);
-        for (list = (*client); list != NULL; list = list->next)
+        for (list = (*client); list != NULL; list = list->next) {
             FD_SET(list->connection, &fd_to_read);
+            //set_pasv_server(list, fd_to_read);
+        }
         select_val = select(FD_SETSIZE, &fd_to_read, NULL, NULL, NULL);
         if (select_val != -1 && select_val != 0)
             fd_selected(_main, client, fd_to_read);

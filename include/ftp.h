@@ -22,6 +22,10 @@ typedef struct client_s {
     int connection;
     char *path;
     int logged_in;
+    int pasv;
+    int server_fd;
+    int fd_client_pasv;
+    fd_set fd_to_read;
     struct client_s *next;
 } client_t;
 

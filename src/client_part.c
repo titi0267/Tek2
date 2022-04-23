@@ -15,22 +15,22 @@ int parse_recieved(node_t client, main_t *_main)
         parse_pass, parse_noop, parse_quit, parse_help, parse_path, parse_cdup,
         parse_cwd, parse_dele, parse_pasv, parse_port, parse_retr, parse_stor,
         parse_list};
-    char *command[15] = {"USER", "PASS", "NOOP", "QUIT", "HELP", "PWD ",
+    char *command[15] = {"USER", "PASS", "NOOP", "QUIT", "HELP", "PWD\r",
         "CDUP", "CWD ", "DELE", "PASV", "PORT", "RETR", "STOR", "LIST", 0};
     int i = 0;
 
     for (i = 0; command[i] != 0; i++) {
-        if (strncmp("QUIT", _main->buf, 3) == 0) {
+        if (strncmp("QUIT", _main->buf, 4) == 0) {
             (*parse_command[3]) (_main->buf, client, _main);
             return (-1);
         }
-        if (strncmp(command[i], _main->buf, 3) == 0) {
+        if (strncmp(command[i], _main->buf, 4) == 0) {
             (*parse_command[i]) (_main->buf, client, _main);
             break;
         }
-    }
-    if (i == 14)
-        dprintf(client->connection, "502 Command not found.\r\n");
+    }if (i == 14)
+        dprintf(client->connection, "500 Command not found.\r\n");
+    return (0);
 }
 
 void client_value(int read_ret, node_t client, main_t *_main, node_t *front_ptr)
@@ -42,8 +42,9 @@ void client_value(int read_ret, node_t client, main_t *_main, node_t *front_ptr)
     }
     if (read_ret <= 0) {
         close(client->connection);
-        if (delete_fd(front_ptr, client->connection) == 1)
+        if (delete_fd(front_ptr, client->connection) == 1) {
             _main->user_deleted = 1;
+        }
     }
 }
 
@@ -61,7 +62,6 @@ void client_part(main_t *_main, node_t *list, fd_set fd_to_read)
             break;
         }
         if (read_ret == -1) {
-            printf("recieved failed for fd: %d []\n", client->connection);
             break;
         }
     }

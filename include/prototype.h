@@ -13,6 +13,7 @@
 int parse_args(int ac, char **av);
 
 int init_server(main_t *_main);
+int bind_server(main_t *_main, int server_port);
 int server_loop(main_t *_main, node_t *client);
 
 void client_part(main_t *_main, node_t *list, fd_set fd_to_read);

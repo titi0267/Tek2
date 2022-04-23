@@ -15,6 +15,7 @@ int new_fd_in_list(node_t *front, int connection)
     if (new_node == NULL)
         return (0);
     new_node->connection = connection;
+    new_node->logged_in = 0;
     new_node->next = (*front);
     (*front) = new_node;
     return (1);
@@ -29,6 +30,7 @@ int new_fd_in_list_back(node_t *front_ptr, int new_client, main_t *_main)
         exit(ERROR_CODE);
     new_node->connection = new_client;
     new_node->logged_in = 0;
+    new_node->pasv = FALSE;
     new_node->path = realpath(_main->path, NULL);
     new_node->next = NULL;
     if (*front_ptr == NULL) {
