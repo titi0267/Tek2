@@ -31,7 +31,6 @@ void new_server_fd(main_t *_main, node_t list)
 
     addr_len = sizeof(struct sockaddr_in);
     new_cli = accept(list->server_fd, (struct sockaddr*)&new_addr, &addr_len);
-    printf("accept new: %i\n", new_cli);
     if (new_cli >= 0)
         list->fd_client_pasv = new_cli;
     else
