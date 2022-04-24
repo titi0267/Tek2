@@ -13,11 +13,11 @@ void list_dir(node_t client)
 {
     DIR *d;
     struct dirent *dir;
+
     d = opendir(".");
     if (d) {
-        while ((dir = readdir(d)) != NULL) {
+        while ((dir = readdir(d)) != NULL)
             dprintf(client->fd_client_pasv, "%s\r\n", dir->d_name);
-        }
         closedir(d);
     }
 }
@@ -34,6 +34,13 @@ void parse_list(char *buf, node_t client, main_t *_main)
 {
     if (client->logged_in == FALSE) {
         dprintf(client->connection, "530 Not logged in.\r\n");
+        return;
+    }
+    if (client->pasv == FALSE) {
+        dprintf(client->connection, "500 \r\n");
+        return;
+    }if (client->fd_client_pasv == -1) {
+        dprintf(client->connection, "550 \r\n");
         return;
     }
     dprintf(client->connection, "150 File status okay; about to open data " \

@@ -20,7 +20,7 @@ typedef struct main_s {
     int port;
     char *path;
     int server_fd;
-    char buf[500];
+    char buf[1024];
     int user_deleted;
     int port_pasv;
 } main_t;

@@ -55,7 +55,7 @@ void client_part(main_t *_main, node_t *list, fd_set fd_to_read)
 
     for (client = client->next; client != NULL; client = client->next) {
         if (FD_ISSET(client->connection, &fd_to_read)) {
-            read_ret = read(client->connection, _main->buf, 500);
+            read_ret = read(client->connection, _main->buf, 1024);
             client_value(read_ret, client, _main, list);
         }
         if (_main->user_deleted == 1) {
@@ -65,5 +65,5 @@ void client_part(main_t *_main, node_t *list, fd_set fd_to_read)
             break;
         }
     }
-    memset(_main->buf, 0, 500);
+    memset(_main->buf, 0, 1024);
 }
