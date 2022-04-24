@@ -24,5 +24,6 @@ int main(int ac, char **av)
     if (params == NULL || parse_args(ac, av, params) == ERROR_CODE)
         return (ERROR_CODE);
     threads(params);
+    free(params);
     return (0);
 }

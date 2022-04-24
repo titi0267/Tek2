@@ -8,15 +8,14 @@
 #include "../include/panoramix.h"
 
 static parameters_t *params;
-static pthread_mutex_t make_potion;
 static sem_t semaphore_village;
 static sem_t semaphore;
 static pthread_mutex_t go_fight;
 
-static void free_threads(int *ids, pthread_t *threads)
+static void free_threads(int *ids)
 {
+    pthread_mutex_destroy(&go_fight);
     free(ids);
-    free(threads);
     sem_destroy(&semaphore);
     sem_destroy(&semaphore_village);
 }
@@ -47,9 +46,9 @@ static void *villagers(void *id)
             call_panoramix(*ids);
             pthread_mutex_unlock(&go_fight);
         }
+        fights--;
         printf("Villager %d: Take that roman scum! " \
             "Only %d left.\n", *ids, fights);
-        fights--;
     }
     printf("Villager %i: I'm going to sleep now.\n", *ids);
 }
@@ -81,7 +80,6 @@ int threads(parameters_t *parameter)
     pthread_t* threads;
     int *ids;
 
-    pthread_mutex_init(&make_potion, NULL);
     pthread_mutex_init(&go_fight, NULL);
     sem_init(&semaphore, PTHREAD_PROCESS_SHARED, 0);
     sem_init(&semaphore_village, PTHREAD_PROCESS_SHARED, 0);
@@ -93,8 +91,9 @@ int threads(parameters_t *parameter)
     pthread_create(&threads[params->nb_villager], NULL, panoramix, (void *)0);
     for (int i = params->nb_villager - 1; i >= 0; i--)
         pthread_create(&threads[i], NULL, villagers, (void *)&ids[i]);
-    for (int i = 0; i < params->nb_villager; i++)
+    for (int i = 0; i <= params->nb_villager; i++)
         pthread_join(threads[i], NULL);
-    free_threads(ids, threads);
+    free(threads);
+    free_threads(ids);
     return (0);
 }
