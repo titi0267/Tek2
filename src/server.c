@@ -23,14 +23,9 @@ int bind_server(main_t *_main, int server_port)
     my_socket.sin_family = AF_INET;
     my_socket.sin_port = htons(server_port);
     my_socket.sin_addr.s_addr = INADDR_ANY;
-    if (bind(sck, (struct sockaddr *)&my_socket, sizeof(my_socket)) == -1) {
-        fprintf(stderr, "Bind failed: %s\n", strerror(errno));
+    if (bind(sck, (struct sockaddr *)&my_socket, sizeof(my_socket)) == -1
+        || listen(sck, 5) == -1)
         return (-1);
-    }
-    if (listen(sck, 5) == -1) {
-        fprintf(stderr, "Listen failed: %s\n", strerror(errno));
-        return (-1);
-    }
     socklen = sizeof(my_socket);
     getsockname(sck, (struct sockaddr *)&my_socket, &socklen);
     _main->port_pasv = htons(my_socket.sin_port);
