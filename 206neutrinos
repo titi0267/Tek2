@@ -4,8 +4,21 @@ def argIsInt(args)
     args.to_s.match(/(\d+)/) == nil ? false : true
 end
 
-def main
-    args = ARGV
+def usage
+    puts 'USAGE'
+    puts '    ./206neutrinos n a h sd'
+    puts "\nDESCRIPTION"
+    puts '    n      number of values'
+    puts '    a      arithmetic mean'
+    puts '    h      harmonic mean'
+    puts '    sd     standard deviation'
+end
+
+def errorHandling(args)
+    if (args.length == 1 and args[0] == '-h')
+        usage
+        exit 84
+    end
     if args.length != 4
         exit 84
     end
@@ -15,5 +28,10 @@ def main
         end
         puts arg
     end
+end
+
+def main
+    args = ARGV
+    errorHandling(args)
 end
 main
