@@ -1,0 +1,19 @@
+#!/usr/bin/env ruby
+
+def argIsInt(args)
+    args.to_s.match(/(\d+)/) == nil ? false : true
+end
+
+def main
+    args = ARGV
+    if args.length != 4
+        exit 84
+    end
+    args.each do |arg|
+        if argIsInt(arg) == false
+            exit 84
+        end
+        puts arg
+    end
+end
+main
