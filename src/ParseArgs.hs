@@ -25,15 +25,17 @@ fillData (Just flags) (_:y:xs) = Nothing
 fillData flags [] = flags
 fillData _ _ = Nothing
 
-printStored :: File -> IO ()
+printStored :: [File] -> IO ()
 printStored file = print file
 
 computeCompressor :: Flags -> IO ()
 computeCompressor (Flags nbr_color convergence path) = do
     content <- readFile path
-    case fillFileData [defaultFile] content of
-        [endFile] -> printStored endFile
-        file -> putStrLn "ys"
+    --case fillFileData [defaultFile] content of
+      --  [endFile] -> printStored [endFile]
+        --file -> putStrLn "ys"
+    print content
+    print $ fillFileData [defaultFile] content
 
 launchCompressor :: Flags -> IO ()
 launchCompressor (Flags Nothing _ _) = exitWith (ExitFailure 84)
