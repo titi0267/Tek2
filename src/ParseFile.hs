@@ -1,9 +1,9 @@
 module ParseFile
 (
-    fillFileData, File(..)
+    fillFileData, File(..), defaultFile, endFile
 )where
 
-import Utils (getFileContent, imSureItsAnInt)
+import Utils (imSureItsAnInt)
 import Text.Read (readMaybe)
 
 data File = File {
@@ -14,12 +14,18 @@ data File = File {
     color_b :: Maybe Int
 } deriving (Show)
 
-fillFileData :: Maybe [File] -> String -> Maybe [File]
-fillFileData (Just (file:filex)) ('(':v:',':w:')':' ':'(':x:',':y:',':z:'\n':xs) =
-    fillFileData (Just [file {point_x = readMaybe [v], point_y = readMaybe [w],
+defaultFile :: File
+defaultFile = (File {point_x = Nothing , point_y = Nothing,
+    color_r = Nothing, color_g = Nothing, color_b = Nothing})
+
+endFile :: File
+endFile = (File {point_x = Just (-1) , point_y = Just (-1),
+    color_r = Just (-1), color_g = Just (-1), color_b = Just (-1)})
+
+fillFileData :: [File] -> String -> [File]
+fillFileData file ('(':v:',':w:')':' ':'(':x:',':y:',':z:'\n':xs) =
+    fillFileData (file ++ [File {point_x = readMaybe [v], point_y = readMaybe [w],
     color_r = readMaybe [x], color_g = readMaybe [y],
     color_b = readMaybe [z]}]) xs
-fillFileData (Just file) (x:_) = fillFileData (Just [file {point_x = Nothing,
-    point_y = Nothing, color_r = Nothing, color_g = Nothing, color_b = Nothing}]) xs
-fillFileData file [] = Nothing
-fillFileData Nothing (_:_) = Nothing
+fillFileData file [] = [endFile]
+fillFileData file (_:_) = [defaultFile]

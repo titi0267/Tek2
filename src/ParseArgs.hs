@@ -6,6 +6,7 @@ module ParseArgs
 import Text.Read (readMaybe)
 import System.Exit
 import Utils (imSureItsAnInt, printFile)
+import ParseFile (File(..), fillFileData, defaultFile, endFile)
 
 data Flags = Flags {
     nbr_color :: Maybe Int,
@@ -24,10 +25,18 @@ fillData (Just flags) (_:y:xs) = Nothing
 fillData flags [] = flags
 fillData _ _ = Nothing
 
+printStored :: File -> IO ()
+printStored file = print file
+
+computeCompressor :: Flags -> IO ()
+computeCompressor (Flags nbr_color convergence path) = do
+    content <- readFile path
+    case fillFileData [defaultFile] content of
+        [endFile] -> printStored endFile
+        file -> putStrLn "ys"
+
 launchCompressor :: Flags -> IO ()
 launchCompressor (Flags Nothing _ _) = exitWith (ExitFailure 84)
 launchCompressor (Flags _ Nothing _) = exitWith (ExitFailure 84)
 launchCompressor (Flags _ _ "") = exitWith (ExitFailure 84)
-launchCompressor (Flags nbr_color convergence path) =
-    printFile (imSureItsAnInt nbr_color)
-    (imSureItsAnInt convergence)  path
+launchCompressor flags = computeCompressor flags
