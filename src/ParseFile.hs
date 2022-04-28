@@ -1,12 +1,13 @@
 module ParseFile
 (
-    fillFileData, File(..), defaultFile, endFile
+    fillFileData, Pixel(..), defaultPixel, checkPixelsValid
 )where
 
 import Utils (imSureItsAnInt)
 import Text.Read (readMaybe)
+import System.Exit (exitWith, ExitCode (ExitFailure))
 
-data File = File {
+data Pixel = Pixel {
     point_x :: Maybe Int,
     point_y :: Maybe Int,
     color_r :: Maybe Int,
@@ -14,22 +15,28 @@ data File = File {
     color_b :: Maybe Int
 } deriving (Show)
 
-defaultFile :: File
-defaultFile = (File {point_x = Nothing , point_y = Nothing,
+defaultPixel :: Pixel
+defaultPixel = (Pixel {point_x = Nothing , point_y = Nothing,
     color_r = Nothing, color_g = Nothing, color_b = Nothing})
 
-endFile :: File
-endFile = (File {point_x = Just (-1) , point_y = Just (-1),
-    color_r = Just (-1), color_g = Just (-1), color_b = Just (-1)})
-
-fillFileData :: [File] -> String -> [File]
+fillFileData :: [Pixel] -> String -> [Pixel]
 fillFileData file [] = file
 fillFileData file ['(', v, ',', w, ')', ' ', '(', x, ',', y, ',', z, ')'] =
-    file ++ [File {point_x = readMaybe [v], point_y = readMaybe [w],
+    file ++ [Pixel {point_x = readMaybe [v], point_y = readMaybe [w],
     color_r = readMaybe [x], color_g = readMaybe [y],
     color_b = readMaybe [z]}]
 fillFileData file ('(':v:',':w:')':' ':'(':x:',':y:',':z:')':'\n':xs) =
-    fillFileData (file ++ [File {point_x = readMaybe [v], point_y = readMaybe [w],
+    fillFileData (file ++ [Pixel {point_x = readMaybe [v], point_y = readMaybe [w],
     color_r = readMaybe [x], color_g = readMaybe [y],
     color_b = readMaybe [z]}]) xs
-fillFileData file (_:_) = [defaultFile]
+fillFileData file (_:_) = [defaultPixel]
+
+
+checkPixelsValid :: [Pixel] -> IO()
+checkPixelsValid [] = return ()
+checkPixelsValid ((Pixel Nothing _ _ _ _):nextPixel) = exitWith (ExitFailure 84)
+checkPixelsValid ((Pixel _ Nothing _ _ _):nextPixel) = exitWith (ExitFailure 84)
+checkPixelsValid ((Pixel _ _ Nothing _ _):nextPixel) = exitWith (ExitFailure 84)
+checkPixelsValid ((Pixel _ _ _ Nothing _):nextPixel) = exitWith (ExitFailure 84)
+checkPixelsValid ((Pixel _ _ _ _ Nothing):nextPixel) = exitWith (ExitFailure 84)
+checkPixelsValid (_:nextPixel) = checkPixelsValid nextPixel

@@ -6,7 +6,7 @@ module ParseArgs
 import Text.Read (readMaybe)
 import System.Exit
 import Utils (imSureItsAnInt, printFile)
-import ParseFile (File(..), fillFileData, defaultFile, endFile)
+import ParseFile (Pixel(..), fillFileData, defaultPixel, checkPixelsValid)
 
 data Flags = Flags {
     nbr_color :: Maybe Int,
@@ -30,7 +30,8 @@ fillData _ _ = Nothing
 computeCompressor :: Flags -> IO ()
 computeCompressor (Flags nbr_color convergence path) = do
     content <- readFile path
-    print $ fillFileData [] content
+    let file = fillFileData [] content
+    checkPixelsValid file
 
 launchCompressor :: Flags -> IO ()
 launchCompressor (Flags Nothing _ _) = exitWith (ExitFailure 84)

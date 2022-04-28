@@ -26,6 +26,9 @@ source-repository head
 library
   exposed-modules:
       Lib
+      ParseArgs
+      ParseFile
+      Utils
   other-modules:
       Paths_imageCompressor
   hs-source-dirs:
