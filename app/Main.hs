@@ -16,3 +16,4 @@ main = do
     case fillData (Just defaultFlags) args of
         Nothing -> exitWith (ExitFailure 84)
         Just flags -> launchCompressor flags
+    
