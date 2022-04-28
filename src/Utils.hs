@@ -4,8 +4,6 @@ module Utils
     )where
 import System.Exit
 
-
-
 checkLength :: Int -> IO ()
 checkLength size
     | size == 6 = return ()
@@ -13,13 +11,13 @@ checkLength size
 
 getFileContent :: String -> IO String
 getFileContent file = do
-    readFile file
+    content <- readFile file
+    return content
 
 printFile :: Int -> Int -> String -> IO()
 printFile nbr_color converge file = do
     content <- readFile file
     putStrLn content
-
 
 imSureItsAnInt :: Maybe Int -> Int
 imSureItsAnInt Nothing = -1
