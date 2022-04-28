@@ -23,9 +23,13 @@ endFile = (File {point_x = Just (-1) , point_y = Just (-1),
     color_r = Just (-1), color_g = Just (-1), color_b = Just (-1)})
 
 fillFileData :: [File] -> String -> [File]
-fillFileData file ('(':v:',':w:')':' ':'(':x:',':y:',':z:'\n':xs) =
+fillFileData file [] = file
+fillFileData file ['(', v, ',', w, ')', ' ', '(', x, ',', y, ',', z, ')'] =
+    file ++ [File {point_x = readMaybe [v], point_y = readMaybe [w],
+    color_r = readMaybe [x], color_g = readMaybe [y],
+    color_b = readMaybe [z]}]
+fillFileData file ('(':v:',':w:')':' ':'(':x:',':y:',':z:')':'\n':xs) =
     fillFileData (file ++ [File {point_x = readMaybe [v], point_y = readMaybe [w],
     color_r = readMaybe [x], color_g = readMaybe [y],
     color_b = readMaybe [z]}]) xs
-fillFileData file [] = [endFile]
 fillFileData file (_:_) = [defaultFile]

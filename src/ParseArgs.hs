@@ -18,24 +18,19 @@ defaultFlags :: Flags
 defaultFlags = Flags{nbr_color = Nothing, convergence = Just 0, path = ""}
 
 fillData :: Maybe Flags -> [String] -> Maybe Flags
-fillData (Just flags) ("-n":y:xs) = fillData (Just flags {nbr_color = readMaybe y :: Maybe Int}) xs
-fillData (Just flags) ("-l":y:xs) = fillData (Just flags {convergence = readMaybe y :: Maybe Int}) xs
+fillData (Just flags) ("-n":y:xs) =
+    fillData (Just flags {nbr_color = readMaybe y :: Maybe Int}) xs
+fillData (Just flags) ("-l":y:xs) =
+    fillData (Just flags {convergence = readMaybe y :: Maybe Int}) xs
 fillData (Just flags) ("-f":y:xs) = fillData (Just flags {path = y}) xs
 fillData (Just flags) (_:y:xs) = Nothing
 fillData flags [] = flags
 fillData _ _ = Nothing
 
-printStored :: [File] -> IO ()
-printStored file = print file
-
 computeCompressor :: Flags -> IO ()
 computeCompressor (Flags nbr_color convergence path) = do
     content <- readFile path
-    --case fillFileData [defaultFile] content of
-      --  [endFile] -> printStored [endFile]
-        --file -> putStrLn "ys"
-    print content
-    print $ fillFileData [defaultFile] content
+    print $ fillFileData [] content
 
 launchCompressor :: Flags -> IO ()
 launchCompressor (Flags Nothing _ _) = exitWith (ExitFailure 84)
