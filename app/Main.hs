@@ -1,8 +1,9 @@
 module Main where
 
 import Lib
-import Utils (checkLength, getFileContent, imSureItsAnInt)
+import Utils (checkLength, imSureItsAnInt)
 import ParseArgs (launchCompressor, fillData, defaultFlags, Flags(..))
+import ParseFile (fillFileData, File(..))
 import System.Environment (getArgs)
 import System.Exit
 import System.IO
