@@ -1,12 +1,10 @@
 module Main where
 
 import Utils (checkLength, imSureItsAnInt)
-import ParseArgs (launchCompressor, fillData, defaultFlags, Flags(..))
-import ParseFile (fillFileData, Pixel(..))
+import ParseArgs (launchCompressor, fillData, defaultFlags)
 import System.Environment (getArgs)
 import System.Exit
 import System.IO
-import Control.Exception
 
 main :: IO ()
 main = do

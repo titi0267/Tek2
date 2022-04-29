@@ -1,18 +1,14 @@
 module ParseArgs
     (
-        Flags(..), fillData, defaultFlags, launchCompressor
+        fillData, defaultFlags, launchCompressor
     )where
 
 import Text.Read (readMaybe)
 import System.Exit
+import Algo (prepareAlgo)
+import Structures (Flags(..))
 import Utils (imSureItsAnInt, printFile)
-import ParseFile (Pixel(..), fillFileData, defaultPixel, checkPixelsValid)
-
-data Flags = Flags {
-    nbr_color :: Maybe Int,
-    convergence :: Maybe Float,
-    path :: String
-} deriving (Show)
+import ParseFile (fillFileData, defaultPixel, checkPixelsValid)
 
 defaultFlags :: Flags
 defaultFlags = Flags{nbr_color = Nothing, convergence = Just 0, path = ""}
@@ -35,10 +31,10 @@ fillData _ _ = Nothing
 computeCompressor :: Flags -> IO ()
 computeCompressor (Flags nbr_color convergence path) = do
     content <- readFile path
-    let file = fillFileData [] content
-    checkPixelsValid file
-    checkNbrColorValid  (Flags nbr_color convergence path) (length file)
-    print file
+    let pixels = fillFileData [] content
+    checkPixelsValid pixels
+    checkNbrColorValid  (Flags nbr_color convergence path) (length pixels)
+    prepareAlgo (Flags nbr_color convergence path) pixels
 
 launchCompressor :: Flags -> IO ()
 launchCompressor (Flags Nothing _ _) = exitWith (ExitFailure 84)

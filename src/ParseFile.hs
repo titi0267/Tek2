@@ -1,17 +1,13 @@
 module ParseFile
 (
-    fillFileData, Pixel(..), defaultPixel, checkPixelsValid
+    fillFileData, defaultPixel, checkPixelsValid
 )where
 
 import Utils (imSureItsAnInt)
+import Structures (Pixel(..))
 import Text.Read (readMaybe)
 import Data.Maybe
 import System.Exit (exitWith, ExitCode (ExitFailure))
-
-data Pixel = Pixel {
-    point :: (Int, Int),
-    color :: (Int, Int, Int)
-} deriving (Show)
 
 defaultPixel :: Pixel
 defaultPixel = (Pixel {point = (-1, -1),
