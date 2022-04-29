@@ -5,6 +5,7 @@ module ParseFile
 
 import Utils (imSureItsAnInt)
 import Text.Read (readMaybe)
+import Data.Maybe
 import System.Exit (exitWith, ExitCode (ExitFailure))
 
 data Pixel = Pixel {
@@ -16,14 +17,21 @@ defaultPixel :: Pixel
 defaultPixel = (Pixel {point = (Nothing , Nothing),
     color = (Nothing , Nothing, Nothing)})
 
+readShort :: String -> Maybe Int
+readShort str
+    | isNothing (readMaybe str :: Maybe Int) = Nothing
+    | (read str :: Int) > 255 = Nothing
+    | (read str :: Int) < 0 = Nothing
+    | otherwise = Just (read str :: Int)
+
 fillFileData :: [Pixel] -> String -> [Pixel]
 fillFileData file [] = file
 fillFileData file ['(', v, ',', w, ')', ' ', '(', x, ',', y, ',', z, ')'] =
-    file ++ [Pixel {point = (readMaybe [v], readMaybe [w]),
-    color = (readMaybe [x], readMaybe [y], readMaybe [z])}]
+    file ++ [Pixel {point = (readShort [v], readShort [w]),
+    color = (readShort [x], readShort [y], readShort [z])}]
 fillFileData file ('(':v:',':w:')':' ':'(':x:',':y:',':z:')':'\n':xs) =
-    fillFileData (file ++ [Pixel {point = (readMaybe [v], readMaybe [w]),
-    color = (readMaybe [x], readMaybe [y], readMaybe [z])}]) xs
+    fillFileData (file ++ [Pixel {point = (readShort [v], readShort [w]),
+    color = (readShort [x], readShort [y], readShort [z])}]) xs
 fillFileData file (_:_) = [defaultPixel]
 
 
