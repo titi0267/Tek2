@@ -32,6 +32,7 @@ computeCompressor (Flags nbr_color convergence path) = do
     content <- readFile path
     let file = fillFileData [] content
     checkPixelsValid file
+    print file
 
 launchCompressor :: Flags -> IO ()
 launchCompressor (Flags Nothing _ _) = exitWith (ExitFailure 84)
