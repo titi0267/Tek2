@@ -1,6 +1,5 @@
 module Main where
 
-import Lib
 import Utils (checkLength, imSureItsAnInt)
 import ParseArgs (launchCompressor, fillData, defaultFlags, Flags(..))
 import ParseFile (fillFileData, Pixel(..))
