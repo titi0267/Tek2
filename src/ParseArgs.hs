@@ -17,6 +17,11 @@ data Flags = Flags {
 defaultFlags :: Flags
 defaultFlags = Flags{nbr_color = Nothing, convergence = Just 0, path = ""}
 
+checkNbrColorValid:: Flags -> Int -> IO()
+checkNbrColorValid (Flags color _ _) pixelLen
+    | imSureItsAnInt color > pixelLen = exitWith (ExitFailure 84)
+    | otherwise = return ()
+
 fillData :: Maybe Flags -> [String] -> Maybe Flags
 fillData (Just flags) ("-n":y:xs) =
     fillData (Just flags {nbr_color = readMaybe y :: Maybe Int}) xs
@@ -32,6 +37,7 @@ computeCompressor (Flags nbr_color convergence path) = do
     content <- readFile path
     let file = fillFileData [] content
     checkPixelsValid file
+    checkNbrColorValid  (Flags nbr_color convergence path) (length file)
     print file
 
 launchCompressor :: Flags -> IO ()

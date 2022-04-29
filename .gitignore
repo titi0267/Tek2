@@ -1,4 +1,5 @@
 .stack-work/
 .vscode/
 imageCompressor
+imageCompressor.cabal
 *~
