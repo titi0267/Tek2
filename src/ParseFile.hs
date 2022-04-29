@@ -9,20 +9,20 @@ import Data.Maybe
 import System.Exit (exitWith, ExitCode (ExitFailure))
 
 data Pixel = Pixel {
-    point :: (Maybe Int, Maybe Int),
-    color :: (Maybe Int, Maybe Int, Maybe Int)
+    point :: (Int, Int),
+    color :: (Int, Int, Int)
 } deriving (Show)
 
 defaultPixel :: Pixel
-defaultPixel = (Pixel {point = (Nothing , Nothing),
-    color = (Nothing , Nothing, Nothing)})
+defaultPixel = (Pixel {point = (-1, -1),
+    color = (-1 , -1, -1)})
 
-readShort :: String -> Maybe Int
+readShort :: String -> Int
 readShort str
-    | isNothing (readMaybe str :: Maybe Int) = Nothing
-    | (read str :: Int) > 255 = Nothing
-    | (read str :: Int) < 0 = Nothing
-    | otherwise = Just (read str :: Int)
+    | isNothing (readMaybe str :: Maybe Int) = -1
+    | (read str :: Int) > 255 = -1
+    | (read str :: Int) < 0 = -1
+    | otherwise = read str :: Int
 
 fillFileData :: [Pixel] -> String -> [Pixel]
 fillFileData file [] = file
@@ -37,12 +37,9 @@ fillFileData file (_:_) = [defaultPixel]
 
 checkPixelsValid :: [Pixel] -> IO()
 checkPixelsValid [] = return ()
-checkPixelsValid ((Pixel (Nothing, _) _):nextPixel) = exitWith (ExitFailure 84)
-checkPixelsValid ((Pixel (_, Nothing) _):nextPixel) = exitWith (ExitFailure 84)
-checkPixelsValid ((Pixel _ (Nothing, _, _)):nextPixel) =
-    exitWith (ExitFailure 84)
-checkPixelsValid ((Pixel _ (_, Nothing , _)):nextPixel) =
-    exitWith (ExitFailure 84)
-checkPixelsValid ((Pixel _ (_, _, Nothing )):nextPixel) =
-    exitWith (ExitFailure 84)
+checkPixelsValid ((Pixel (-1, _) _):nextPixel) = exitWith (ExitFailure 84)
+checkPixelsValid ((Pixel (_, -1) _):nextPixel) = exitWith (ExitFailure 84)
+checkPixelsValid ((Pixel _ (-1, _, _)):nextPixel) = exitWith (ExitFailure 84)
+checkPixelsValid ((Pixel _ (_, -1 , _)):nextPixel) = exitWith (ExitFailure 84)
+checkPixelsValid ((Pixel _ (_, _, -1 )):nextPixel) = exitWith (ExitFailure 84)
 checkPixelsValid (_:nextPixel) = checkPixelsValid nextPixel
