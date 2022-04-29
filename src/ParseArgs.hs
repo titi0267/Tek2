@@ -10,7 +10,7 @@ import ParseFile (Pixel(..), fillFileData, defaultPixel, checkPixelsValid)
 
 data Flags = Flags {
     nbr_color :: Maybe Int,
-    convergence :: Maybe Int,
+    convergence :: Maybe Float,
     path :: String
 } deriving (Show)
 
@@ -21,7 +21,7 @@ fillData :: Maybe Flags -> [String] -> Maybe Flags
 fillData (Just flags) ("-n":y:xs) =
     fillData (Just flags {nbr_color = readMaybe y :: Maybe Int}) xs
 fillData (Just flags) ("-l":y:xs) =
-    fillData (Just flags {convergence = readMaybe y :: Maybe Int}) xs
+    fillData (Just flags {convergence = readMaybe y :: Maybe Float}) xs
 fillData (Just flags) ("-f":y:xs) = fillData (Just flags {path = y}) xs
 fillData (Just flags) (_:y:xs) = Nothing
 fillData flags [] = flags
