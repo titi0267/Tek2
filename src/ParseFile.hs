@@ -1,9 +1,9 @@
 module ParseFile
 (
-    fillFileData, Pixel(..), defaultPixel, checkPixelsValid
+    replaceBySpace, Pixel(..), defaultPixel, checkPixelsValid, putPixelInData
 )where
 
-import Utils (imSureItsAnInt)
+import Utils (imSureItsAnInt, splitLines, splitWords)
 import Text.Read (readMaybe)
 import Data.Maybe
 import System.Exit (exitWith, ExitCode (ExitFailure))
@@ -11,7 +11,7 @@ import System.Exit (exitWith, ExitCode (ExitFailure))
 data Pixel = Pixel {
     point :: (Int, Int),
     color :: (Int, Int, Int)
-} deriving (Show)
+} deriving (Read, Show)
 
 defaultPixel :: Pixel
 defaultPixel = (Pixel {point = (-1, -1),
@@ -24,16 +24,21 @@ readShort str
     | (read str :: Int) < 0 = -1
     | otherwise = read str :: Int
 
-fillFileData :: [Pixel] -> String -> [Pixel]
-fillFileData file [] = file
-fillFileData file ['(', v, ',', w, ')', ' ', '(', x, ',', y, ',', z, ')'] =
-    file ++ [Pixel {point = (readShort [v], readShort [w]),
-    color = (readShort [x], readShort [y], readShort [z])}]
-fillFileData file ('(':v:',':w:')':' ':'(':x:',':y:',':z:')':'\n':xs) =
-    fillFileData (file ++ [Pixel {point = (readShort [v], readShort [w]),
-    color = (readShort [x], readShort [y], readShort [z])}]) xs
-fillFileData file (_:_) = [defaultPixel]
+replaceBySpace :: String -> String
+replaceBySpace [] = []
+replaceBySpace (x:xs) = if x == ',' || x == '(' || x == ')'
+    then ' ' : replaceBySpace xs;
+    else x : replaceBySpace xs;
 
+storePixel :: [String] -> [Pixel] -> [Pixel]
+storePixel (v:w:x:y:z:xs) pixel =
+    [Pixel {point = (readShort v, readShort w),
+    color = (readShort x, readShort y, readShort z)}]
+
+putPixelInData :: [Pixel] -> [[String]] -> [Pixel]
+putPixelInData pixel [] = [defaultPixel]
+putPixelInData pixel (x:[]) = pixel ++ (storePixel x pixel)
+putPixelInData pixel (x:xs) = pixel ++ putPixelInData (storePixel x pixel) xs
 
 checkPixelsValid :: [Pixel] -> IO()
 checkPixelsValid [] = return ()

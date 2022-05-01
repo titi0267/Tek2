@@ -3,7 +3,7 @@ module Main where
 import Lib
 import Utils (checkLength, imSureItsAnInt)
 import ParseArgs (launchCompressor, fillData, defaultFlags, Flags(..))
-import ParseFile (fillFileData, Pixel(..))
+import ParseFile (Pixel(..))
 import System.Environment (getArgs)
 import System.Exit
 import System.IO
