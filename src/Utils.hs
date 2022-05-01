@@ -1,6 +1,6 @@
 module Utils
     (
-        checkLength, imSureItsAnInt, printFile
+        checkLength, imSureItsAnInt, printFile, imSureItsAnFloat
     )where
 import System.Exit
 
@@ -17,3 +17,7 @@ printFile nbr_color converge file = do
 imSureItsAnInt :: Maybe Int -> Int
 imSureItsAnInt Nothing = -1
 imSureItsAnInt (Just i) = i
+
+imSureItsAnFloat :: Maybe Float  -> Float
+imSureItsAnFloat Nothing = -1
+imSureItsAnFloat (Just i) = i

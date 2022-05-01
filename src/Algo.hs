@@ -4,7 +4,7 @@ module Algo
     )where
 
 import Structures (Pixel(..), Flags(..))
-import Utils (imSureItsAnInt)
+import Utils (imSureItsAnInt, imSureItsAnFloat)
 
 arePixelsEqual :: Pixel -> Pixel -> Bool
 arePixelsEqual (Pixel (a1, a2) (a3, a4, a5)) (Pixel (b1, b2) (b3, b4, b5)) =
@@ -70,7 +70,41 @@ getLoopArray :: [Pixel] -> [[Pixel]] -> [[Pixel]]
 getLoopArray pixelTab prevSortedArray =
     addInRows pixelTab (getMidsOfAll prevSortedArray []) []
 
+hasConverged :: [Pixel] -> [Pixel] -> Maybe Float -> Bool
+hasConverged [] _ conv = True
+hasConverged _ [] conv = True
+hasConverged (first:firstNext) (second:secondNext) conv
+    | calcDistance first second <= imSureItsAnFloat conv =
+        hasConverged firstNext secondNext conv
+    | otherwise = False
+
+checkConverged :: [[Pixel]] -> [[Pixel]] -> Maybe Float -> Bool
+checkConverged prevTab newTab conv
+    | hasConverged (getMidsOfAll prevTab []) (getMidsOfAll newTab []) conv
+        = True
+    | otherwise = False
+
+printRaw :: [Pixel] -> Bool -> IO()
+printRaw [] _ = return ()
+printRaw ((Pixel _ (r, g, b)):nextPixel) True =
+    putStrLn "--" >> print (round r, round g, round b) >> putStrLn "-"
+    >> printRaw nextPixel False
+printRaw (Pixel (x, y) (r, g, b):nextPixel) isFirst =
+    (putStr . show $ (round x, round y)) >> putStr " "  >>
+    print (round r, round g, round b) >> printRaw nextPixel isFirst
+
+printResult :: [[Pixel]] -> IO()
+printResult
+    = foldr (\ pixelTab -> (>>) (printRaw pixelTab True)) (return ())
+
+algoLoop :: Maybe Float -> [Pixel] -> [[Pixel]] -> IO()
+algoLoop conv basePixels sortedPixels
+    | checkConverged sortedPixels (getLoopArray basePixels sortedPixels) conv
+        = printResult (getLoopArray basePixels sortedPixels)
+    | otherwise =
+        algoLoop conv basePixels (getLoopArray basePixels sortedPixels)
+
 prepareAlgo :: Flags -> [Pixel] -> IO()
-prepareAlgo flags pixelTab = do
-    let firstArray = getFistArray flags pixelTab 0 []
-    print (getLoopArray pixelTab firstArray)
+prepareAlgo (Flags nbr_color conv path) pixelTab = do
+    let firstArray = getFistArray (Flags nbr_color conv path) pixelTab 0 []
+    algoLoop conv pixelTab firstArray
