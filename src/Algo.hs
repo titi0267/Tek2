@@ -12,7 +12,7 @@ arePixelsEqual (Pixel (a1, a2) (a3, a4, a5)) (Pixel (b1, b2) (b3, b4, b5)) =
 
 calcDistance :: Pixel -> Pixel -> Float
 calcDistance (Pixel _ (r1, g1, b1)) (Pixel _ (r2, g2, b2)) =
-    sqrt(fromIntegral ((r1 - r2)^2 + (g1 - g2)^2 + (b1 - b2)^2))
+    sqrt((r1 - r2)^2 + (g1 - g2)^2 + (b1 - b2)^2)
 
 checkPixelInArray :: Pixel -> [Pixel] -> Bool
 checkPixelInArray pixel [] = False
@@ -56,5 +56,21 @@ getFistArray (Flags nbr_color conv path) (pixelTab:nextPixelTab) i acc
     nextPixelTab (i + 1) (acc ++ [pixelTab])
     | otherwise = addInRows (pixelTab:nextPixelTab) acc []
 
+getMidsOfRaw :: [Pixel] -> Pixel -> Float -> Pixel
+getMidsOfRaw [] (Pixel pos (r, g, b)) i = Pixel pos (r / i, g / i, b / i)
+getMidsOfRaw ((Pixel pos1 (r1, g1, b1)):nextPixel)
+    (Pixel pos2 (r2, g2, b2)) i =
+    getMidsOfRaw nextPixel (Pixel pos2 (r1 + r2, g1 + g2, b1 + b2)) (i + 1)
+
+getMidsOfAll :: [[Pixel]] -> [Pixel] -> [Pixel]
+getMidsOfAll pixelTab acc = foldl (\ acc pixelTab ->
+    acc ++ [getMidsOfRaw pixelTab (Pixel (0, 0) (0, 0, 0)) 1]) acc pixelTab
+
+getLoopArray :: [Pixel] -> [[Pixel]] -> [[Pixel]]
+getLoopArray pixelTab prevSortedArray =
+    addInRows pixelTab (getMidsOfAll prevSortedArray []) []
+
 prepareAlgo :: Flags -> [Pixel] -> IO()
-prepareAlgo flags pixelTab = print (getFistArray flags pixelTab 0 [])
+prepareAlgo flags pixelTab = do
+    let firstArray = getFistArray flags pixelTab 0 []
+    print (getLoopArray pixelTab firstArray)

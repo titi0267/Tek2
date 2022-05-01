@@ -13,12 +13,12 @@ defaultPixel :: Pixel
 defaultPixel = (Pixel {point = (-1, -1),
     color = (-1 , -1, -1)})
 
-readShort :: String -> Int
+readShort :: String -> Float
 readShort str
     | isNothing (readMaybe str :: Maybe Int) = -1
     | (read str :: Int) > 255 = -1
     | (read str :: Int) < 0 = -1
-    | otherwise = read str :: Int
+    | otherwise = fromIntegral (read str :: Int)
 
 fillFileData :: [Pixel] -> String -> [Pixel]
 fillFileData file [] = file
