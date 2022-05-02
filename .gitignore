@@ -1,0 +1,3 @@
+*.o
+ftrace
+a.out
