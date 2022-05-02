@@ -1,6 +1,6 @@
 module Utils
     (
-        checkLength, imSureItsAnInt, printFile
+        checkLength, imSureItsAnInt, printFile, splitWords, splitLines
     )where
 import System.Exit
 
@@ -17,3 +17,9 @@ printFile nbr_color converge file = do
 imSureItsAnInt :: Maybe Int -> Int
 imSureItsAnInt Nothing = -1
 imSureItsAnInt (Just i) = i
+
+splitWords :: String -> [String]
+splitWords pixel = words pixel
+
+splitLines :: String -> [String]
+splitLines content = lines content
