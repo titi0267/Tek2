@@ -30,10 +30,11 @@ storePixel :: [String] -> [Pixel] -> [Pixel]
 storePixel (v:w:x:y:z:xs) pixel =
     [Pixel {point = (readShort v, readShort w),
     color = (readShort x, readShort y, readShort z)}]
+storePixel _ _ = []
 
 putPixelInData :: [Pixel] -> [[String]] -> [Pixel]
 putPixelInData pixel [] = [defaultPixel]
-putPixelInData pixel (x:[]) = pixel ++ (storePixel x pixel)
+putPixelInData pixel [x] = pixel ++ storePixel x pixel
 putPixelInData pixel (x:xs) = pixel ++ putPixelInData (storePixel x pixel) xs
 
 checkPixelsValid :: [Pixel] -> IO()
