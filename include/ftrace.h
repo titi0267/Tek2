@@ -19,6 +19,7 @@
 #include <sys/stat.h>
 #include <sys/ptrace.h>
 #include <sys/reg.h>
+#include <fcntl.h>
 #include <sys/user.h>
 #include "syscall.h"
 
@@ -31,6 +32,9 @@ int path_command(char **command, char **env);
 int check_existence(char *command);
 int check_abs(char *command);
 int parent_process_command(pid_t pid);
+int open_proc(pid_t pid);
+char *my_strcat(char *begin, char *end);
+char *my_getchar(int nbr);
 
 #define UNUSED(x) (void)(x)
 

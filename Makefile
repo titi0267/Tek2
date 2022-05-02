@@ -9,7 +9,9 @@ SRC =	src/fork_and_execve.c	\
 		src/ftrace_command.c	\
 		src/path_to_array.c	\
 		src/printer.c	\
-		src/path_command.c
+		src/path_command.c	\
+		src/tools.c		\
+		src/parse_proc.c	\
 
 MAIN =	src/main.c
 

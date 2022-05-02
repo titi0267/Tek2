@@ -27,6 +27,8 @@ int parent_process_command(pid_t pid)
         ptrace(PTRACE_GETREGS, pid, NULL, &regs);
         if ((opcode = ptrace(PTRACE_PEEKTEXT, pid, regs.rip, 0)) == -1)
             return (print_error("Error PTRACE\n"));
+        if ((unsigned int)(opcode | 0x00ffffff) == (unsigned int)0xE8ffffff)
+            open_proc(pid);
         if ((unsigned int)(opcode | 0xffff0000) == (unsigned int)0xffff050f) {
             ptrace(PTRACE_SINGLESTEP, pid, 0, 0);
             waitpid(pid, &status, 0);
