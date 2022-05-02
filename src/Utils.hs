@@ -1,6 +1,7 @@
 module Utils
     (
-        checkLength, imSureItsAnInt, printFile, imSureItsAnFloat
+        checkLength, imSureItsAnInt, printFile, splitWords, splitLines,
+        imSureItsAnFloat
     )where
 import System.Exit
 
@@ -21,3 +22,9 @@ imSureItsAnInt (Just i) = i
 imSureItsAnFloat :: Maybe Float  -> Float
 imSureItsAnFloat Nothing = -1
 imSureItsAnFloat (Just i) = i
+
+splitWords :: String -> [String]
+splitWords = words
+
+splitLines :: String -> [String]
+splitLines = lines

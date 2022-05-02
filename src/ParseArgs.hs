@@ -7,8 +7,13 @@ import Text.Read (readMaybe)
 import System.Exit
 import Algo (prepareAlgo)
 import Structures (Flags(..))
-import Utils (imSureItsAnInt, printFile)
-import ParseFile (fillFileData, defaultPixel, checkPixelsValid)
+import Utils (imSureItsAnInt, printFile, splitLines, splitWords)
+import ParseFile
+    (
+        replaceBySpace, defaultPixel,
+        checkPixelsValid, putPixelInData
+    )
+
 
 defaultFlags :: Flags
 defaultFlags = Flags{nbr_color = Nothing, convergence = Just 0, path = ""}
@@ -31,7 +36,7 @@ fillData _ _ = Nothing
 computeCompressor :: Flags -> IO ()
 computeCompressor (Flags nbr_color convergence path) = do
     content <- readFile path
-    let pixels = fillFileData [] content
+    let pixels = putPixelInData [] $ map (splitWords . replaceBySpace) (splitLines content)
     checkPixelsValid pixels
     checkNbrColorValid  (Flags nbr_color convergence path) (length pixels)
     prepareAlgo (Flags nbr_color convergence path) pixels
