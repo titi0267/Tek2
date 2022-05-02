@@ -10,6 +10,6 @@ data Flags = Flags {
 } deriving (Show)
 
 data Pixel = Pixel {
-    point :: (Float, Float),
-    color :: (Float, Float, Float)
+    point :: (Float ,Float),
+    color :: (Float, Float, Float )
 } deriving (Show)

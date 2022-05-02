@@ -64,7 +64,7 @@ getMidsOfRaw ((Pixel pos1 (r1, g1, b1)):nextPixel)
 
 getMidsOfAll :: [[Pixel]] -> [Pixel] -> [Pixel]
 getMidsOfAll pixelTab acc = foldl (\ acc pixelTab ->
-    acc ++ [getMidsOfRaw pixelTab (Pixel (0, 0) (0, 0, 0)) 1]) acc pixelTab
+    acc ++ [getMidsOfRaw pixelTab (Pixel (0, 0) (0, 0, 0)) 0]) acc pixelTab
 
 getLoopArray :: [Pixel] -> [[Pixel]] -> [[Pixel]]
 getLoopArray pixelTab prevSortedArray =
