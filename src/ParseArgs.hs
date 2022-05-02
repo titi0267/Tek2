@@ -1,25 +1,27 @@
 module ParseArgs
     (
-        Flags(..), fillData, defaultFlags, launchCompressor
+        fillData, defaultFlags, launchCompressor
     )where
 
 import Text.Read (readMaybe)
 import System.Exit
+import Algo (prepareAlgo)
+import Structures (Flags(..))
 import Utils (imSureItsAnInt, printFile, splitLines, splitWords)
 import ParseFile
     (
-        Pixel(..), replaceBySpace, defaultPixel,
+        replaceBySpace, defaultPixel,
         checkPixelsValid, putPixelInData
     )
 
-data Flags = Flags {
-    nbr_color :: Maybe Int,
-    convergence :: Maybe Float,
-    path :: String
-} deriving (Show)
 
 defaultFlags :: Flags
 defaultFlags = Flags{nbr_color = Nothing, convergence = Just 0, path = ""}
+
+checkNbrColorValid:: Flags -> Int -> IO()
+checkNbrColorValid (Flags color _ _) pixelLen
+    | imSureItsAnInt color > pixelLen = exitWith (ExitFailure 84)
+    | otherwise = return ()
 
 fillData :: Maybe Flags -> [String] -> Maybe Flags
 fillData (Just flags) ("-n":y:xs) =
@@ -34,8 +36,10 @@ fillData _ _ = Nothing
 computeCompressor :: Flags -> IO ()
 computeCompressor (Flags nbr_color convergence path) = do
     content <- readFile path
-    print $ putPixelInData [] $ map splitWords
-        $ map replaceBySpace $ splitLines content
+    let pixels = putPixelInData [] $ map (splitWords . replaceBySpace) (splitLines content)
+    checkPixelsValid pixels
+    checkNbrColorValid  (Flags nbr_color convergence path) (length pixels)
+    prepareAlgo (Flags nbr_color convergence path) pixels
 
 launchCompressor :: Flags -> IO ()
 launchCompressor (Flags Nothing _ _) = exitWith (ExitFailure 84)

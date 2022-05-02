@@ -25,9 +25,10 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Algo
       ParseArgs
       ParseFile
+      Structures
       Utils
   other-modules:
       Paths_imageCompressor

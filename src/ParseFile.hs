@@ -1,28 +1,24 @@
 module ParseFile
 (
-    replaceBySpace, Pixel(..), defaultPixel, checkPixelsValid, putPixelInData
+    replaceBySpace, defaultPixel, checkPixelsValid, putPixelInData
 )where
 
+import Structures (Pixel(..))
 import Utils (imSureItsAnInt, splitLines, splitWords)
 import Text.Read (readMaybe)
 import Data.Maybe
 import System.Exit (exitWith, ExitCode (ExitFailure))
 
-data Pixel = Pixel {
-    point :: (Int, Int),
-    color :: (Int, Int, Int)
-} deriving (Read, Show)
-
 defaultPixel :: Pixel
 defaultPixel = (Pixel {point = (-1, -1),
     color = (-1 , -1, -1)})
 
-readShort :: String -> Int
+readShort :: String -> Float
 readShort str
     | isNothing (readMaybe str :: Maybe Int) = -1
     | (read str :: Int) > 255 = -1
     | (read str :: Int) < 0 = -1
-    | otherwise = read str :: Int
+    | otherwise = fromIntegral (read str :: Int)
 
 replaceBySpace :: String -> String
 replaceBySpace [] = []
@@ -34,10 +30,11 @@ storePixel :: [String] -> [Pixel] -> [Pixel]
 storePixel (v:w:x:y:z:xs) pixel =
     [Pixel {point = (readShort v, readShort w),
     color = (readShort x, readShort y, readShort z)}]
+storePixel _ _ = []
 
 putPixelInData :: [Pixel] -> [[String]] -> [Pixel]
 putPixelInData pixel [] = [defaultPixel]
-putPixelInData pixel (x:[]) = pixel ++ (storePixel x pixel)
+putPixelInData pixel [x] = pixel ++ storePixel x pixel
 putPixelInData pixel (x:xs) = pixel ++ putPixelInData (storePixel x pixel) xs
 
 checkPixelsValid :: [Pixel] -> IO()
