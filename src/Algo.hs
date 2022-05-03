@@ -15,20 +15,6 @@ calcDistance :: Pixel -> Pixel -> Float
 calcDistance (Pixel _ (r1, g1, b1)) (Pixel _ (r2, g2, b2)) =
     sqrt((r1 - r2)^2 + (g1 - g2)^2 + (b1 - b2)^2)
 
-checkPixelInArray :: Pixel -> [Pixel] -> Bool
-checkPixelInArray pixel [] = False
-checkPixelInArray pixel (pixelItem: nextPixelItem)
-    | arePixelsEqual pixel pixelItem = True
-    | otherwise = checkPixelInArray pixel nextPixelItem
-
-clearAlreadySortedPixels :: [Pixel] -> [Pixel] -> [Pixel] -> [Pixel]
-clearAlreadySortedPixels [] _ acc = acc
-clearAlreadySortedPixels (pixel:nextPixel) sortedPixels acc
-    | checkPixelInArray pixel sortedPixels =
-        clearAlreadySortedPixels nextPixel sortedPixels acc
-    | otherwise =
-        clearAlreadySortedPixels nextPixel sortedPixels (acc ++ [pixel])
-
 isClosestPixel :: Pixel -> [Pixel] -> Pixel -> Pixel -> Bool
 isClosestPixel _ [] current best = arePixelsEqual current best
 isClosestPixel pixel (head:nextHead) currentHead bestHead
@@ -36,19 +22,18 @@ isClosestPixel pixel (head:nextHead) currentHead bestHead
         isClosestPixel pixel nextHead currentHead head
     | otherwise = isClosestPixel pixel nextHead currentHead bestHead
 
-getRow :: [Pixel] -> [Pixel] -> Pixel -> [Pixel] -> [Pixel]
+getRow :: [Pixel] -> [Pixel] -> Pixel -> ([Pixel], [Pixel]) -> ([Pixel], [Pixel])
 getRow [] _ _ acc = acc
-getRow (pixel:nextPixel) heads currentHead acc
+getRow (pixel:nextPixel) heads currentHead (acc, other)
     | isClosestPixel pixel heads currentHead currentHead =
-        getRow nextPixel heads currentHead (acc ++ [pixel])
-    | otherwise = getRow nextPixel heads currentHead acc
+        getRow nextPixel heads currentHead (acc ++ [pixel], other)
+    | otherwise = getRow nextPixel heads currentHead (acc, other ++ [pixel])
 
 addInRows :: [Pixel] -> [Pixel] -> [[Pixel]] -> [[Pixel]]
 addInRows _ [] acc = acc
-addInRows pixel (head: nextHead) acc = addInRows
-    (clearAlreadySortedPixels pixel (getRow pixel (head : nextHead) head []) [])
-    nextHead
-    (acc ++ [ head : getRow pixel (head : nextHead) head []])
+addInRows pixel (head: nextHead) acc =
+    addInRows second nextHead (acc ++ [ head : first])
+    where (first, second) = getRow pixel (head : nextHead) head ([], [])
 
 getFistArray :: Flags -> [Pixel] -> Int -> [Pixel] -> [[Pixel]]
 getFistArray _ [] _ headArray = [headArray]
@@ -72,10 +57,6 @@ getMidsOfRaw tab =
 getMidsOfAll :: [[Pixel]] -> [Pixel] -> [Pixel]
 getMidsOfAll pixelTab acc = foldl (\ acc pixelTab ->
     acc ++ [getMidsOfRaw pixelTab]) acc pixelTab
-
-getLoopArray :: [Pixel] -> [[Pixel]] -> [[Pixel]]
-getLoopArray pixelTab prevSortedArray =
-    addInRows pixelTab (getMidsOfAll prevSortedArray []) []
 
 hasConverged :: [[Pixel]] -> Maybe Float -> Bool
 hasConverged [] conv = True
@@ -107,7 +88,8 @@ printResult
 
 algoLoop :: Maybe Float -> [Pixel] -> [[Pixel]] -> IO()
 algoLoop conv basePixels sortedPixels =
-    case checkConverged (getLoopArray basePixels sortedPixels) conv of
+    case checkConverged
+        (addInRows basePixels (getMidsOfAll sortedPixels []) []) conv of
         (True, tab) -> printResult tab
         (False, tab) -> algoLoop conv basePixels tab
 
