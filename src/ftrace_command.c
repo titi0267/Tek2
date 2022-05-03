@@ -7,7 +7,7 @@
 
 #include "ftrace.h"
 
-int ftrace_command(char **command, char **env)
+int ftrace_command(char **command, char **env, ftrace_t *ftrace)
 {
     int is_abs = check_abs(command[0]);
 
@@ -18,11 +18,11 @@ int ftrace_command(char **command, char **env)
             "strace: Can't stat '%s': No such file or directory\n", command[0]);
             return (84);
         }
-        if (fork_and_execve(command, env) == -1) {
+        if (fork_and_execve(command, env, ftrace) == -1) {
             fprintf(stderr, "strace: Can't execve '%s'\n", command[0]);
             return (84);
         }
         return (0);
     }
-    return (path_command(command, env));
+    return (path_command(command, env, ftrace));
 }

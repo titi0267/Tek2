@@ -40,7 +40,7 @@ void free_path_command(char **path_command)
     free(path_command);
 }
 
-int path_command(char **command, char **env)
+int path_command(char **command, char **env, ftrace_t *ftrace)
 {
     char *path = getenv("PATH");
     char **path_command;
@@ -56,7 +56,7 @@ int path_command(char **command, char **env)
         free_path_command(path_command);
         return (84);
     }command[0] = (!binary ? command[0] : binary);
-    if (fork_and_execve(command, env) == -1) {
+    if (fork_and_execve(command, env, ftrace) == -1) {
         fprintf(stderr, "strace: Can't execve '%s'\n", command[0]);
         free_path_command(path_command);
         return (84);

@@ -21,10 +21,12 @@ static int usage(void)
 
 int main(int ac, char **av, char **env)
 {
+    ftrace_t *ftrace;
     UNUSED(table);
     if (ac < 2)
         return (print_error("Not enough argument\n"));
     if (ac == 2 && strcmp("--help", av[1]) == 0)
         return (usage());
-    return (ftrace_command(++av, env));
+    ftrace = malloc(sizeof(ftrace_t));
+    return (ftrace_command(++av, env, ftrace));
 }

@@ -21,18 +21,23 @@
 #include <sys/reg.h>
 #include <fcntl.h>
 #include <sys/user.h>
+#include <elf.h>
 #include "syscall.h"
+
+typedef struct ftrace_s {
+    char *bin_name;
+} ftrace_t;
 
 int print_error(char *what);
 char **path_to_array(char *path, char *command);
-int fork_and_execve(char **command, char **env);
-int ftrace_command(char **command, char **env);
+int fork_and_execve(char **command, char **env, ftrace_t *ftrace);
+int ftrace_command(char **command, char **env, ftrace_t *ftrace);
 void print_com(struct user_regs_struct regs, long rax);
-int path_command(char **command, char **env);
+int path_command(char **command, char **env, ftrace_t *ftrace);
 int check_existence(char *command);
 int check_abs(char *command);
-int parent_process_command(pid_t pid);
-int open_proc(pid_t pid);
+int parent_process_command(pid_t pid, ftrace_t *ftrace);
+int open_proc(pid_t pid, ftrace_t *ftrace);
 char *my_strcat(char *begin, char *end);
 char *my_getchar(int nbr);
 
