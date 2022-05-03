@@ -78,11 +78,11 @@ hasConverged (first:firstNext) (second:secondNext) conv
         hasConverged firstNext secondNext conv
     | otherwise = False
 
-checkConverged :: [[Pixel]] -> [[Pixel]] -> Maybe Float -> Bool
+checkConverged :: [[Pixel]] -> [[Pixel]] -> Maybe Float -> (Bool, [[Pixel]])
 checkConverged prevTab newTab conv
     | hasConverged (getMidsOfAll prevTab []) (getMidsOfAll newTab []) conv
-        = True
-    | otherwise = False
+        = (True, newTab)
+    | otherwise = (False, newTab)
 
 printRaw :: [Pixel] -> Bool -> IO()
 printRaw [] _ = return ()
@@ -98,11 +98,11 @@ printResult
     = foldr (\ pixelTab -> (>>) (printRaw pixelTab True)) (return ())
 
 algoLoop :: Maybe Float -> [Pixel] -> [[Pixel]] -> IO()
-algoLoop conv basePixels sortedPixels
-    | checkConverged sortedPixels (getLoopArray basePixels sortedPixels) conv
-        = printResult (getLoopArray basePixels sortedPixels)
-    | otherwise =
-        algoLoop conv basePixels (getLoopArray basePixels sortedPixels)
+algoLoop conv basePixels sortedPixels =
+    case checkConverged sortedPixels
+    (getLoopArray basePixels sortedPixels) conv of
+        (True, tab) -> printResult tab
+        (False, tab) -> algoLoop conv basePixels tab
 
 prepareAlgo :: Flags -> [Pixel] -> IO()
 prepareAlgo (Flags nbr_color conv path) pixelTab = do
