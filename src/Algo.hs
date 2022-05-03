@@ -5,6 +5,7 @@ module Algo
 
 import Structures (Pixel(..), Flags(..))
 import Utils (imSureItsAnInt, imSureItsAnFloat)
+import Data.List (genericLength)
 
 arePixelsEqual :: Pixel -> Pixel -> Bool
 arePixelsEqual (Pixel (a1, a2) (a3, a4, a5)) (Pixel (b1, b2) (b3, b4, b5)) =
@@ -56,15 +57,21 @@ getFistArray (Flags nbr_color conv path) (pixelTab:nextPixelTab) i acc
     nextPixelTab (i + 1) (acc ++ [pixelTab])
     | otherwise = addInRows (pixelTab:nextPixelTab) acc []
 
-getMidsOfRaw :: [Pixel] -> Pixel -> Float -> Pixel
-getMidsOfRaw [] (Pixel pos (r, g, b)) i = Pixel pos (r / i, g / i, b / i)
-getMidsOfRaw ((Pixel pos1 (r1, g1, b1)):nextPixel)
-    (Pixel pos2 (r2, g2, b2)) i =
-    getMidsOfRaw nextPixel (Pixel pos2 (r1 + r2, g1 + g2, b1 + b2)) (i + 1)
+getColor :: Int -> Pixel -> Float
+getColor 1 (Pixel _ (r, g, b)) = r
+getColor 2 (Pixel _ (r, g, b)) = g
+getColor 3 (Pixel _ (r, g, b)) = b
+getColor _ _= 0
+
+getMidsOfRaw :: [Pixel] -> Pixel
+getMidsOfRaw tab =
+    Pixel (0, 0) (sum (map (getColor 1) tab) / fromIntegral (length tab),
+    sum (map (getColor 2) tab) / fromIntegral (length tab),
+    sum (map (getColor 3) tab) / fromIntegral (length tab))
 
 getMidsOfAll :: [[Pixel]] -> [Pixel] -> [Pixel]
 getMidsOfAll pixelTab acc = foldl (\ acc pixelTab ->
-    acc ++ [getMidsOfRaw pixelTab (Pixel (0, 0) (0, 0, 0)) 0]) acc pixelTab
+    acc ++ [getMidsOfRaw pixelTab]) acc pixelTab
 
 getLoopArray :: [Pixel] -> [[Pixel]] -> [[Pixel]]
 getLoopArray pixelTab prevSortedArray =
@@ -73,8 +80,8 @@ getLoopArray pixelTab prevSortedArray =
 hasConverged :: [[Pixel]] -> Maybe Float -> Bool
 hasConverged [] conv = True
 hasConverged ((secondHead:nextHead):secondNext) conv
-    | calcDistance secondHead (getMidsOfRaw (secondHead:nextHead)
-        (Pixel (0, 0) (0, 0, 0)) 0) <= imSureItsAnFloat conv =
+    | calcDistance secondHead (getMidsOfRaw (secondHead:nextHead))
+    <= imSureItsAnFloat conv =
         hasConverged secondNext conv
     | otherwise = False
 hasConverged _ conv = False
