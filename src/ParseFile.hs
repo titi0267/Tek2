@@ -13,6 +13,11 @@ defaultPixel :: Pixel
 defaultPixel = (Pixel {point = (-1, -1),
     color = (-1 , -1, -1)})
 
+readInt :: String -> Float
+readInt str
+    | isNothing (readMaybe str :: Maybe Int) = -1
+    | otherwise = fromIntegral (read str :: Int)
+
 readShort :: String -> Float
 readShort str
     | isNothing (readMaybe str :: Maybe Int) = -1
@@ -28,7 +33,7 @@ replaceBySpace (x:xs) = if x == ',' || x == '(' || x == ')'
 
 storePixel :: [String] -> [Pixel] -> [Pixel]
 storePixel (v:w:x:y:z:xs) pixel =
-    [Pixel {point = (readShort v, readShort w),
+    [Pixel {point = (readInt v, readInt w),
     color = (readShort x, readShort y, readShort z)}]
 storePixel _ _ = []
 

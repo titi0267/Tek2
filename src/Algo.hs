@@ -70,19 +70,20 @@ getLoopArray :: [Pixel] -> [[Pixel]] -> [[Pixel]]
 getLoopArray pixelTab prevSortedArray =
     addInRows pixelTab (getMidsOfAll prevSortedArray []) []
 
-hasConverged :: [Pixel] -> [Pixel] -> Maybe Float -> Bool
-hasConverged [] _ conv = True
-hasConverged _ [] conv = True
-hasConverged (first:firstNext) (second:secondNext) conv
-    | calcDistance first second <= imSureItsAnFloat conv =
-        hasConverged firstNext secondNext conv
+hasConverged :: [[Pixel]] -> Maybe Float -> Bool
+hasConverged [] conv = True
+hasConverged ((secondHead:nextHead):secondNext) conv
+    | calcDistance secondHead (getMidsOfRaw (secondHead:nextHead)
+        (Pixel (0, 0) (0, 0, 0)) 0) <= imSureItsAnFloat conv =
+        hasConverged secondNext conv
     | otherwise = False
+hasConverged _ conv = False
 
-checkConverged :: [[Pixel]] -> [[Pixel]] -> Maybe Float -> Bool
-checkConverged prevTab newTab conv
-    | hasConverged (getMidsOfAll prevTab []) (getMidsOfAll newTab []) conv
-        = True
-    | otherwise = False
+checkConverged :: [[Pixel]] -> Maybe Float -> (Bool, [[Pixel]])
+checkConverged newTab conv
+    | hasConverged newTab conv
+        = (True, newTab)
+    | otherwise = (False, newTab)
 
 printRaw :: [Pixel] -> Bool -> IO()
 printRaw [] _ = return ()
@@ -98,11 +99,10 @@ printResult
     = foldr (\ pixelTab -> (>>) (printRaw pixelTab True)) (return ())
 
 algoLoop :: Maybe Float -> [Pixel] -> [[Pixel]] -> IO()
-algoLoop conv basePixels sortedPixels
-    | checkConverged sortedPixels (getLoopArray basePixels sortedPixels) conv
-        = printResult (getLoopArray basePixels sortedPixels)
-    | otherwise =
-        algoLoop conv basePixels (getLoopArray basePixels sortedPixels)
+algoLoop conv basePixels sortedPixels =
+    case checkConverged (getLoopArray basePixels sortedPixels) conv of
+        (True, tab) -> printResult tab
+        (False, tab) -> algoLoop conv basePixels tab
 
 prepareAlgo :: Flags -> [Pixel] -> IO()
 prepareAlgo (Flags nbr_color conv path) pixelTab = do
