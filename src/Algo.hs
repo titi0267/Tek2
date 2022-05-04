@@ -26,20 +26,20 @@ getRow :: [Pixel] -> [Pixel] -> Pixel -> ([Pixel], [Pixel]) -> ([Pixel], [Pixel]
 getRow [] _ _ acc = acc
 getRow (pixel:nextPixel) heads currentHead (acc, other)
     | isClosestPixel pixel heads currentHead currentHead =
-        getRow nextPixel heads currentHead (acc ++ [pixel], other)
-    | otherwise = getRow nextPixel heads currentHead (acc, other ++ [pixel])
+        getRow nextPixel heads currentHead (pixel : acc, other)
+    | otherwise = getRow nextPixel heads currentHead (acc, pixel : other)
 
 addInRows :: [Pixel] -> [Pixel] -> [[Pixel]] -> [[Pixel]]
 addInRows _ [] acc = acc
 addInRows pixel (head: nextHead) acc =
-    addInRows second nextHead (acc ++ [ head : first])
+    addInRows second nextHead ((head : first) : acc)
     where (first, second) = getRow pixel (head : nextHead) head ([], [])
 
 getFistArray :: Flags -> [Pixel] -> Int -> [Pixel] -> [[Pixel]]
 getFistArray _ [] _ headArray = [headArray]
 getFistArray (Flags nbr_color conv path) (pixelTab:nextPixelTab) i acc
     | i < imSureItsAnInt nbr_color = getFistArray (Flags nbr_color conv path)
-    nextPixelTab (i + 1) (acc ++ [pixelTab])
+    nextPixelTab (i + 1) (pixelTab : acc)
     | otherwise = addInRows (pixelTab:nextPixelTab) acc []
 
 getColor :: Int -> Pixel -> Float
@@ -56,7 +56,7 @@ getMidsOfRaw tab =
 
 getMidsOfAll :: [[Pixel]] -> [Pixel] -> [Pixel]
 getMidsOfAll pixelTab acc = foldl (\ acc pixelTab ->
-    acc ++ [getMidsOfRaw pixelTab]) acc pixelTab
+    getMidsOfRaw pixelTab : acc) acc pixelTab
 
 hasConverged :: [[Pixel]] -> Maybe Float -> Bool
 hasConverged [] conv = True
