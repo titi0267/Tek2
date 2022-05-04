@@ -5,6 +5,7 @@ module Algo
 
 import Structures (Pixel(..), Flags(..))
 import Utils (imSureItsAnInt, imSureItsAnFloat)
+import Data.List (genericLength)
 
 arePixelsEqual :: Pixel -> Pixel -> Bool
 arePixelsEqual (Pixel (a1, a2) (a3, a4, a5)) (Pixel (b1, b2) (b3, b4, b5)) =
@@ -14,20 +15,6 @@ calcDistance :: Pixel -> Pixel -> Float
 calcDistance (Pixel _ (r1, g1, b1)) (Pixel _ (r2, g2, b2)) =
     sqrt((r1 - r2)^2 + (g1 - g2)^2 + (b1 - b2)^2)
 
-checkPixelInArray :: Pixel -> [Pixel] -> Bool
-checkPixelInArray pixel [] = False
-checkPixelInArray pixel (pixelItem: nextPixelItem)
-    | arePixelsEqual pixel pixelItem = True
-    | otherwise = checkPixelInArray pixel nextPixelItem
-
-clearAlreadySortedPixels :: [Pixel] -> [Pixel] -> [Pixel] -> [Pixel]
-clearAlreadySortedPixels [] _ acc = acc
-clearAlreadySortedPixels (pixel:nextPixel) sortedPixels acc
-    | checkPixelInArray pixel sortedPixels =
-        clearAlreadySortedPixels nextPixel sortedPixels acc
-    | otherwise =
-        clearAlreadySortedPixels nextPixel sortedPixels (acc ++ [pixel])
-
 isClosestPixel :: Pixel -> [Pixel] -> Pixel -> Pixel -> Bool
 isClosestPixel _ [] current best = arePixelsEqual current best
 isClosestPixel pixel (head:nextHead) currentHead bestHead
@@ -35,19 +22,18 @@ isClosestPixel pixel (head:nextHead) currentHead bestHead
         isClosestPixel pixel nextHead currentHead head
     | otherwise = isClosestPixel pixel nextHead currentHead bestHead
 
-getRow :: [Pixel] -> [Pixel] -> Pixel -> [Pixel] -> [Pixel]
+getRow :: [Pixel] -> [Pixel] -> Pixel -> ([Pixel], [Pixel]) -> ([Pixel], [Pixel])
 getRow [] _ _ acc = acc
-getRow (pixel:nextPixel) heads currentHead acc
+getRow (pixel:nextPixel) heads currentHead (acc, other)
     | isClosestPixel pixel heads currentHead currentHead =
-        getRow nextPixel heads currentHead (acc ++ [pixel])
-    | otherwise = getRow nextPixel heads currentHead acc
+        getRow nextPixel heads currentHead (acc ++ [pixel], other)
+    | otherwise = getRow nextPixel heads currentHead (acc, other ++ [pixel])
 
 addInRows :: [Pixel] -> [Pixel] -> [[Pixel]] -> [[Pixel]]
 addInRows _ [] acc = acc
-addInRows pixel (head: nextHead) acc = addInRows
-    (clearAlreadySortedPixels pixel (getRow pixel (head : nextHead) head []) [])
-    nextHead
-    (acc ++ [ head : getRow pixel (head : nextHead) head []])
+addInRows pixel (head: nextHead) acc =
+    addInRows second nextHead (acc ++ [ head : first])
+    where (first, second) = getRow pixel (head : nextHead) head ([], [])
 
 getFistArray :: Flags -> [Pixel] -> Int -> [Pixel] -> [[Pixel]]
 getFistArray _ [] _ headArray = [headArray]
@@ -56,25 +42,27 @@ getFistArray (Flags nbr_color conv path) (pixelTab:nextPixelTab) i acc
     nextPixelTab (i + 1) (acc ++ [pixelTab])
     | otherwise = addInRows (pixelTab:nextPixelTab) acc []
 
-getMidsOfRaw :: [Pixel] -> Pixel -> Float -> Pixel
-getMidsOfRaw [] (Pixel pos (r, g, b)) i = Pixel pos (r / i, g / i, b / i)
-getMidsOfRaw ((Pixel pos1 (r1, g1, b1)):nextPixel)
-    (Pixel pos2 (r2, g2, b2)) i =
-    getMidsOfRaw nextPixel (Pixel pos2 (r1 + r2, g1 + g2, b1 + b2)) (i + 1)
+getColor :: Int -> Pixel -> Float
+getColor 1 (Pixel _ (r, g, b)) = r
+getColor 2 (Pixel _ (r, g, b)) = g
+getColor 3 (Pixel _ (r, g, b)) = b
+getColor _ _= 0
+
+getMidsOfRaw :: [Pixel] -> Pixel
+getMidsOfRaw tab =
+    Pixel (0, 0) (sum (map (getColor 1) tab) / fromIntegral (length tab),
+    sum (map (getColor 2) tab) / fromIntegral (length tab),
+    sum (map (getColor 3) tab) / fromIntegral (length tab))
 
 getMidsOfAll :: [[Pixel]] -> [Pixel] -> [Pixel]
 getMidsOfAll pixelTab acc = foldl (\ acc pixelTab ->
-    acc ++ [getMidsOfRaw pixelTab (Pixel (0, 0) (0, 0, 0)) 0]) acc pixelTab
-
-getLoopArray :: [Pixel] -> [[Pixel]] -> [[Pixel]]
-getLoopArray pixelTab prevSortedArray =
-    addInRows pixelTab (getMidsOfAll prevSortedArray []) []
+    acc ++ [getMidsOfRaw pixelTab]) acc pixelTab
 
 hasConverged :: [[Pixel]] -> Maybe Float -> Bool
 hasConverged [] conv = True
 hasConverged ((secondHead:nextHead):secondNext) conv
-    | calcDistance secondHead (getMidsOfRaw (secondHead:nextHead)
-        (Pixel (0, 0) (0, 0, 0)) 0) <= imSureItsAnFloat conv =
+    | calcDistance secondHead (getMidsOfRaw (secondHead:nextHead))
+    <= imSureItsAnFloat conv =
         hasConverged secondNext conv
     | otherwise = False
 hasConverged _ conv = False
@@ -100,7 +88,8 @@ printResult
 
 algoLoop :: Maybe Float -> [Pixel] -> [[Pixel]] -> IO()
 algoLoop conv basePixels sortedPixels =
-    case checkConverged (getLoopArray basePixels sortedPixels) conv of
+    case checkConverged
+        (addInRows basePixels (getMidsOfAll sortedPixels []) []) conv of
         (True, tab) -> printResult tab
         (False, tab) -> algoLoop conv basePixels tab
 
