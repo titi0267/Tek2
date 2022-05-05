@@ -36,10 +36,12 @@ fillData _ _ = Nothing
 computeCompressor :: Flags -> IO ()
 computeCompressor (Flags nbr_color convergence path) = do
     content <- readFile path
-    let pixels = putPixelInData [] $ map (splitWords . replaceBySpace) (splitLines content)
+    let pixels = putPixelInData [] $ map x (splitLines content)
     checkPixelsValid pixels
     checkNbrColorValid  (Flags nbr_color convergence path) (length pixels)
     prepareAlgo (Flags nbr_color convergence path) pixels
+    where
+        x = splitWords . replaceBySpace
 
 launchCompressor :: Flags -> IO ()
 launchCompressor (Flags Nothing _ _) = exitWith (ExitFailure 84)
