@@ -7,62 +7,59 @@
 
 #include "ftrace.h"
 
-int nm_bin(ftrace_t *ftrace)
+int nm_bin(ftrace_t *ftrace, int d)
 {
     Elf *relf;
     nm_t *nm = malloc(sizeof(nm_t));
-    size_t n;
-    GElf_Phdr phdr;
-    int i = 0;
+    int fd = 0;
     GElf_Ehdr ehdr;
 
-    //relf = elf_begin();
-    if ((relf = elf_begin(ftrace->fd, ELF_C_READ, NULL)) == NULL)
-        printf("IT DOESNT BEGIN: %i\n", ftrace->fd);
+    fd = open(ftrace->maps[d].path, O_RDONLY);
+    if (fd == -1) {
+        printf("failed to open %s$\n", ftrace->maps[d].path);
+        return (84);
+    }
+    if ((relf = elf_begin(fd, ELF_C_READ, NULL)) == NULL)
+        printf("IT DOESNT BEGIN: %i\n", fd);
         //printf("o");
     //nm->elf = (void *)elf;
     if (elf_kind(relf) != ELF_K_ELF){}
-    if (elf_getphdrnum(relf, &n) == -1){}
     if (gelf_getehdr(relf, &ehdr) == NULL){}
         //;//printf("FUck help me\n");
-    for (size_t i = 0; i < n; i++) {
-        if(gelf_getphdr(relf, i, &phdr) != &phdr) {
-            printf("failed break\n");
-            break;
-        }
-        printf("vadrr 0x%jx | memsz 0x%jx\n", phdr.p_vaddr, phdr.p_memsz);
-            //;//printf("wtf is happening here\n");
-    }
+    printf("end nm_bin\n");
     //printf("p_vaddr 0x%jx\n" , (uintmax_t)phdr.p_vaddr);
     //printf("p_memsz 0x%jx\n" , (uintmax_t)phdr.p_memsz);
-    if ((i = gelf_getclass(relf)) == ELFCLASSNONE )
+    if (gelf_getclass(relf) == ELFCLASSNONE )
         return (ERROR);
     //printf("elf_type 0x%jx\n", (uintmax_t)ehdr.e_machine);
-    elf_64_nm(relf, nm, phdr);
+    elf_64_nm(relf, nm);
     return (0);
 }
 
-int find_binary(char *buf, ftrace_t *ftrace)
+int find_binary(char *buf, ftrace_t *ftrace, int line_index)
 {
     int i = strlen(buf) - 2;
     int cmd_len = strlen(ftrace->bin_name) - 1;
 
     if (buf == NULL)
         return (84);
-    printf("i = %i | buf = $%c$\n", i, buf[i]);
+    //printf("i = %i | buf = $%c$\n", i, buf[i]);
     for (; buf[i] != '/'; i--, cmd_len--) {
         if (buf[i] != ftrace->bin_name[cmd_len])
             break;
     }
-    if (cmd_len == 0 || ftrace->bin_name[cmd_len] == '/') {
-        printf("it was right bin\n");
-        sscanf(buf, "%jx-%jx %*c%*c%*c%*c %jx %*jx:%*jx %*d %[^\n]", &ftrace->maps->start, &ftrace->maps->end, &ftrace->maps->offset, ftrace->maps->path);
-        printf("start : 0x%jx - 0x%jx | offset 0x%jx | path = %s\n", ftrace->maps->start, ftrace->maps->end, ftrace->maps->offset, ftrace->maps->path);
-        ftrace->fd = open(ftrace->maps->path, O_RDONLY);
-        if (ftrace->fd == -1)
-            printf("failed to open %s$\n", ftrace->maps->path);
+    if ((cmd_len == 0 || ftrace->bin_name[cmd_len] == '/') && line_index < 4) {
+        //printf("it was right bin with %i\n", line_index);
+        //printf("%s", buf);
+        sscanf(buf, "%jx-%jx %*c%*c%*c%*c %jx %*jx:%*jx %*d %[^\n]", &ftrace->maps[line_index].start, &ftrace->maps[line_index].end, &ftrace->maps[line_index].offset, ftrace->maps[line_index].path);
+        printf("0x%jx - 0x%jx | offset 0x%jx | path = %s\n", ftrace->maps[line_index].start, ftrace->maps[line_index].end, ftrace->maps[line_index].offset, ftrace->maps[line_index].path);
+        ftrace->maps[line_index + 1].last_array = -1;
+        ftrace->maps[line_index].last_array = 0;
+        ftrace->maps_init = 1;
+        return (1);
     }
-    return (0);
+    //printf("return 84\n");
+    return (84);
 }
 
 
@@ -72,6 +69,8 @@ int open_proc(pid_t pid, ftrace_t *ftrace)
     char *proc = my_strcat("/proc/", my_getchar((int)pid));
     FILE *fp;
     char buf[1500];
+    int line_index = 0;
+    int find_bin_ret = 1;
 
     UNUSED(table);
     fp = fopen(my_strcat(proc, "/maps"), "r");
@@ -79,9 +78,16 @@ int open_proc(pid_t pid, ftrace_t *ftrace)
         printf("failed to open /proc\n");
         return (84);
     }
-    fgets(buf, 1499, fp);
-    printf("%s\n", buf);
-    find_binary(buf, ftrace);
+    while (find_bin_ret == 1) {
+        if (fgets(buf, 1499, fp) == NULL)
+            break;
+        //printf("%s\n", buf);
+        find_bin_ret = find_binary(buf, ftrace, line_index);
+        if (find_bin_ret == 1)
+            line_index++;
+        memset(buf, 0, 1499);
+    }
+    fclose(fp);
     return (0);
 }
 

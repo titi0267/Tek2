@@ -31,13 +31,14 @@ typedef struct maps_file_s {
     long unsigned int start;
     long unsigned int end;
     long unsigned int offset;
-    char path[1000];
+    char path[200];
+    int last_array;
 } maps_file_t;
 
 typedef struct ftrace_s {
     char *bin_name;
-    int fd;
     maps_file_t *maps;
+    int maps_init;
 } ftrace_t;
 
 
@@ -78,9 +79,9 @@ int check_abs(char *command);
 int parent_process_command(pid_t pid, ftrace_t *ftrace);
 int open_proc(pid_t pid, ftrace_t *ftrace);
 void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front, char *str);
-int elf_64_nm(Elf *elf, nm_t *nm, GElf_Phdr phdr);
+int elf_64_nm(Elf *elf, nm_t *nm);
 int print_list(node_t list);
-int nm_bin(ftrace_t *ftrace);
+int nm_bin(ftrace_t *ftrace, int i);
 char *my_strcat(char *begin, char *end);
 char *my_getchar(int nbr);
 
