@@ -6,6 +6,7 @@ module Algo
 import Structures (Pixel(..), Flags(..))
 import Utils (imSureItsAnInt, imSureItsAnFloat)
 import Data.List (genericLength)
+import System.Random
 
 arePixelsEqual :: Pixel -> Pixel -> Bool
 arePixelsEqual (Pixel (a1, a2) (a3, a4, a5)) (Pixel (b1, b2) (b3, b4, b5)) =
@@ -14,6 +15,19 @@ arePixelsEqual (Pixel (a1, a2) (a3, a4, a5)) (Pixel (b1, b2) (b3, b4, b5)) =
 calcDistance :: Pixel -> Pixel -> Float
 calcDistance (Pixel _ (r1, g1, b1)) (Pixel _ (r2, g2, b2)) =
     sqrt((r1 - r2)^2 + (g1 - g2)^2 + (b1 - b2)^2)
+
+getPixelHead :: [Pixel] -> Int -> Int ->
+    ([Pixel], [Pixel]) -> ([Pixel], [Pixel])
+getPixelHead [] _ _  (front, tab) = (front, tab)
+getPixelHead (pixel:nextPixel) index i (front, tab)
+    | index == i = getPixelHead nextPixel index (i + 1) (pixel : front, tab)
+    | otherwise = getPixelHead nextPixel index (i + 1) (front, pixel : tab)
+
+getRandomHeads :: [Int] -> ([Pixel], [Pixel]) -> ([Pixel], [Pixel])
+getRandomHeads [] (front, tab) = (front, tab)
+getRandomHeads (index:nextIndex) (front, tab) =
+    getRandomHeads nextIndex ((head first) : front, second)
+    where (first, second) = getPixelHead tab index 0 ([], [])
 
 isClosestPixel :: Pixel -> [Pixel] -> Pixel -> Pixel -> Bool
 isClosestPixel _ [] current best = arePixelsEqual current best
@@ -35,12 +49,8 @@ addInRows pixel (head: nextHead) acc =
     addInRows second nextHead ((head : first) : acc)
     where (first, second) = getRow pixel (head : nextHead) head ([], [])
 
-getFistArray :: Flags -> [Pixel] -> Int -> [Pixel] -> [[Pixel]]
-getFistArray _ [] _ headArray = [headArray]
-getFistArray (Flags nbr_color conv path) (pixelTab:nextPixelTab) i acc
-    | i < imSureItsAnInt nbr_color = getFistArray (Flags nbr_color conv path)
-    nextPixelTab (i + 1) (pixelTab : acc)
-    | otherwise = addInRows (pixelTab:nextPixelTab) acc []
+getFistArray :: ([Pixel], [Pixel]) -> [[Pixel]]
+getFistArray (front, tab) = addInRows tab front []
 
 getColor :: Int -> Pixel -> Float
 getColor 1 (Pixel _ (r, g, b)) = r
@@ -86,6 +96,11 @@ printResult :: [[Pixel]] -> IO()
 printResult
     = foldr (\ pixelTab -> (>>) (printRaw pixelTab True)) (return ())
 
+getRandomIndexes :: Int -> Int -> [IO Int] -> IO [Int]
+getRandomIndexes 0 _ acc = sequence (reverse acc)
+getRandomIndexes k len acc =
+    getRandomIndexes (k - 1) (len - 1) (randomRIO(0, len) : acc)
+
 algoLoop :: Maybe Float -> [Pixel] -> [[Pixel]] -> IO()
 algoLoop conv basePixels sortedPixels =
     case checkConverged
@@ -95,5 +110,8 @@ algoLoop conv basePixels sortedPixels =
 
 prepareAlgo :: Flags -> [Pixel] -> IO()
 prepareAlgo (Flags nbr_color conv path) pixelTab = do
-    let firstArray = getFistArray (Flags nbr_color conv path) pixelTab 0 []
-    algoLoop conv pixelTab firstArray
+    randomNbrs <-
+        (getRandomIndexes (imSureItsAnInt nbr_color)
+        ((length pixelTab) - 1) [])
+    algoLoop conv pixelTab
+        (getFistArray (getRandomHeads randomNbrs ([], pixelTab)))
