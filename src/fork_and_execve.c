@@ -7,6 +7,7 @@
 
 #include "ftrace.h"
 
+static int i = 0;
 int child_process_command(char **command, char **env, ftrace_t *ftrace)
 {
     UNUSED(table);
@@ -23,18 +24,37 @@ int parent_process_command(pid_t pid, ftrace_t *ftrace)
     long retval = 0;
 
     waitpid(pid, &status, 0);
+    ftrace->fd = open(ftrace->bin_name, O_RDONLY);
+    //ftrace->maps->path = "OUI Bite\0";
+    if (ftrace->fd == -1)
+        return (84);
     while (WIFSTOPPED(status)) {
         ptrace(PTRACE_GETREGS, pid, NULL, &regs);
         if ((opcode = ptrace(PTRACE_PEEKTEXT, pid, regs.rip, 0)) == -1)
             return (print_error("Error PTRACE\n"));
-        if ((unsigned int)(opcode | 0x00ffffff) == (unsigned int)0xE8ffffff)
-            open_proc(pid, ftrace);
+        //printf("adress = %llx\n", regs.rip);
+        if ((unsigned int)(opcode | 0x00ffffff) == (unsigned int)0xE8ffffff) {
+            if (i != 0) {
+                //printf("table = %s\n", table[regs.rax].name);
+                //printf("rax = %i\n", regs.rax);
+            }
+        }
+        if ((unsigned int)(opcode | 0x00ffffff) == (unsigned int)0xE8ffffff) {
+            nm_bin(ftrace);
+                    //printf("%s\n", table[regs.rax].name);
+        }
+        //if (d > 670 && d < 680)
+            //open_proc(pid, ftrace);
         if ((unsigned int)(opcode | 0xffff0000) == (unsigned int)0xffff050f) {
             ptrace(PTRACE_SINGLESTEP, pid, 0, 0);
             waitpid(pid, &status, 0);
             retval = ptrace(PTRACE_PEEKUSER, pid, sizeof(long)*RAX);
             print_com(regs, retval);
-        }ptrace(PTRACE_SINGLESTEP, pid, 0, 0);
+            if (i == 0 || strcmp(table[regs.rax].name, "execve") == 0 || strcmp(table[regs.rax].name, "brk") == 0 || strcmp(table[regs.rax].name, "mmap") == 0 || strcmp(table[regs.rax].name, "munmap") == 0)
+                open_proc(pid, ftrace);
+            i++;
+        }
+        ptrace(PTRACE_SINGLESTEP, pid, 0, 0);
         waitpid(pid, &status, 0);
     }fprintf(stderr, "+++ exited with %i +++\n", status);
     return (0);
@@ -44,7 +64,7 @@ int fork_and_execve(char **command, char **env, ftrace_t *ftrace)
 {
     pid_t pid;
 
-    ftrace->bin_name = malloc(sizeof(char) * strlen(command[0]));
+    ftrace->bin_name = malloc(sizeof(char) * strlen(command[0]) + 1);
     strcpy(ftrace->bin_name, command[0]);
     if ((pid = fork()) == -1)
         return (print_error("fork() error\n"));

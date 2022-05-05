@@ -22,11 +22,50 @@
 #include <fcntl.h>
 #include <sys/user.h>
 #include <elf.h>
+#include <libelf.h>
+#include <gelf.h>
+#include <sys/mman.h>
 #include "syscall.h"
+
+typedef struct maps_file_s {
+    long unsigned int start;
+    long unsigned int end;
+    long unsigned int offset;
+    char path[1000];
+} maps_file_t;
 
 typedef struct ftrace_s {
     char *bin_name;
+    int fd;
+    maps_file_t *maps;
 } ftrace_t;
+
+
+typedef struct list_s {
+    char *sym;
+    char *sym_clear;
+    int sorted;
+    int position;
+    char type;
+    Elf64_Addr adress;
+    struct list_s *next;
+} list_t;
+
+typedef list_t *node_t;
+
+typedef struct nm_s {
+    char **flags;
+    int file_type;
+    int flag_nbr;
+    void *elf;
+    int error_file;
+    int file_nbr;
+    size_t size;
+    char *str;
+    Elf64_Sym *section_str;
+    int multiple_files;
+    int sym_size;
+} nm_t;
 
 int print_error(char *what);
 char **path_to_array(char *path, char *command);
@@ -38,6 +77,10 @@ int check_existence(char *command);
 int check_abs(char *command);
 int parent_process_command(pid_t pid, ftrace_t *ftrace);
 int open_proc(pid_t pid, ftrace_t *ftrace);
+void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front, char *str);
+int elf_64_nm(Elf *elf, nm_t *nm, GElf_Phdr phdr);
+int print_list(node_t list);
+int nm_bin(ftrace_t *ftrace);
 char *my_strcat(char *begin, char *end);
 char *my_getchar(int nbr);
 

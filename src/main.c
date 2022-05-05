@@ -28,5 +28,9 @@ int main(int ac, char **av, char **env)
     if (ac == 2 && strcmp("--help", av[1]) == 0)
         return (usage());
     ftrace = malloc(sizeof(ftrace_t));
+    if (elf_version(EV_CURRENT) == EV_NONE)
+        printf("failed\n");
+    ftrace->fd = -1;
+    ftrace->maps = malloc(sizeof(maps_file_t));
     return (ftrace_command(++av, env, ftrace));
 }
