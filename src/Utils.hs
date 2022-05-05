@@ -6,9 +6,8 @@ module Utils
 import System.Exit
 
 checkLength :: Int -> IO ()
-checkLength size
-    | size == 6 = return ()
-    | otherwise = exitWith (ExitFailure 84)
+checkLength 6 = return ()
+checkLength _ = exitWith (ExitFailure 84)
 
 printFile :: Int -> Int -> String -> IO()
 printFile nbr_color converge file = do
