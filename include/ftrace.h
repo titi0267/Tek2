@@ -79,9 +79,9 @@ int check_abs(char *command);
 int parent_process_command(pid_t pid, ftrace_t *ftrace);
 int open_proc(pid_t pid, ftrace_t *ftrace);
 void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front, char *str);
-int elf_64_nm(Elf *elf, nm_t *nm);
+int elf_64_nm(Elf *elf, nm_t *nm, ftrace_t *ftrace, int index, unsigned long long rip, GElf_Ehdr ehdr);
 int print_list(node_t list);
-int nm_bin(ftrace_t *ftrace, int i);
+int nm_bin(ftrace_t *ftrace, int i, unsigned long long rip);
 char *my_strcat(char *begin, char *end);
 char *my_getchar(int nbr);
 

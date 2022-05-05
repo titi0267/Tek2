@@ -7,7 +7,7 @@
 
 #include "ftrace.h"
 
-int nm_bin(ftrace_t *ftrace, int d)
+int nm_bin(ftrace_t *ftrace, int d, unsigned long long rip)
 {
     Elf *relf;
     nm_t *nm = malloc(sizeof(nm_t));
@@ -15,6 +15,7 @@ int nm_bin(ftrace_t *ftrace, int d)
     GElf_Ehdr ehdr;
 
     fd = open(ftrace->maps[d].path, O_RDONLY);
+    //printf("open nbr : %i\n", d);
     if (fd == -1) {
         printf("failed to open %s$\n", ftrace->maps[d].path);
         return (84);
@@ -26,13 +27,12 @@ int nm_bin(ftrace_t *ftrace, int d)
     if (elf_kind(relf) != ELF_K_ELF){}
     if (gelf_getehdr(relf, &ehdr) == NULL){}
         //;//printf("FUck help me\n");
-    printf("end nm_bin\n");
     //printf("p_vaddr 0x%jx\n" , (uintmax_t)phdr.p_vaddr);
     //printf("p_memsz 0x%jx\n" , (uintmax_t)phdr.p_memsz);
     if (gelf_getclass(relf) == ELFCLASSNONE )
         return (ERROR);
     //printf("elf_type 0x%jx\n", (uintmax_t)ehdr.e_machine);
-    elf_64_nm(relf, nm);
+    elf_64_nm(relf, nm, ftrace, d, rip, ehdr);
     return (0);
 }
 
@@ -52,7 +52,7 @@ int find_binary(char *buf, ftrace_t *ftrace, int line_index)
         //printf("it was right bin with %i\n", line_index);
         //printf("%s", buf);
         sscanf(buf, "%jx-%jx %*c%*c%*c%*c %jx %*jx:%*jx %*d %[^\n]", &ftrace->maps[line_index].start, &ftrace->maps[line_index].end, &ftrace->maps[line_index].offset, ftrace->maps[line_index].path);
-        printf("0x%jx - 0x%jx | offset 0x%jx | path = %s\n", ftrace->maps[line_index].start, ftrace->maps[line_index].end, ftrace->maps[line_index].offset, ftrace->maps[line_index].path);
+        //printf("0x%jx - 0x%jx | offset 0x%jx | path = %s\n", ftrace->maps[line_index].start, ftrace->maps[line_index].end, ftrace->maps[line_index].offset, ftrace->maps[line_index].path);
         ftrace->maps[line_index + 1].last_array = -1;
         ftrace->maps[line_index].last_array = 0;
         ftrace->maps_init = 1;
@@ -81,7 +81,7 @@ int open_proc(pid_t pid, ftrace_t *ftrace)
     while (find_bin_ret == 1) {
         if (fgets(buf, 1499, fp) == NULL)
             break;
-        //printf("%s\n", buf);
+        printf("%s\n", buf);
         find_bin_ret = find_binary(buf, ftrace, line_index);
         if (find_bin_ret == 1)
             line_index++;

@@ -7,7 +7,7 @@
 
 #include "ftrace.h"
 
-int elf_64_nm(Elf *elf, nm_t *nm)
+int elf_64_nm(Elf *elf, nm_t *nm, ftrace_t *ftrace, int index, unsigned long long rip, GElf_Ehdr ehdr)
 {
     GElf_Sym sym;
     GElf_Shdr shdr;
@@ -31,19 +31,27 @@ int elf_64_nm(Elf *elf, nm_t *nm)
     i_sym = shdr.sh_size / gelf_fsize(elf, ELF_T_SYM, 1, data->d_version);
     /*for (size_t i = 0; i < i_phdr; i++) {
         if(gelf_getphdr(elf, i, &phdr) != &phdr) {
-            printf("failed break\n");
+            printf("failed\n");
             break;
-        }*/
-        //printf("vadrr 0x%jx | memsz 0x%jx\n", phdr.p_vaddr, phdr.p_memsz);
+        }
+    }*/
         for (size_t i = 0; i < i_sym; i++) {
             gelf_getsym(data, i, &sym);
-            //symbole_name = strdup(elf_strptr(elf, shdr.sh_link, sym.st_name));
-            //if (phdr.p_vaddr < sym.st_value && phdr.p_vaddr + phdr.p_memsz > sym.st_value) {
-                printf("Here : %s\n", elf_strptr(elf, shdr.sh_link, sym.st_name));
-            //if (strcmp(elf_strptr(elf, shdr.sh_link, sym.st_name), "main") == 0) {
-            //}
-            //printf("main 0x%jx\n", sym.st_value);
-            //}
+            for (size_t n = 0; n < i_phdr; n++) {
+                if(gelf_getphdr(elf, n, &phdr) != &phdr) {
+                    printf("failed\n");
+                    break;
+                }
+                if (phdr.p_vaddr < sym.st_value && (phdr.p_vaddr + phdr.p_memsz) > sym.st_value) {
+                    //printf("Smybol in program %lx : %s with %jx\n", n, elf_strptr(elf, shdr.sh_link, sym.st_name), sym.st_value + ftrace->maps[index].start);
+                    //sym.st_value -= phdr.p_vaddr;
+                    sym.st_value += (ftrace->maps[index].start - phdr.p_vaddr);
+                    printf("ehdr = %lx | %jx = val | vaddr = %jx\n", (long unsigned int)&ehdr, sym.st_value, phdr.p_vaddr);
+                    if (sym.st_value == rip)
+                        printf("Entering funciton : %s\n", elf_strptr(elf, shdr.sh_link, sym.st_name));
+                }
+            }
+            //printf("Next sym\n");
         }
     //}
           //      printf("sym = %s : %p\n", elf_strptr(elf, shdr.sh_link, sym.st_name), sym.st_value);
