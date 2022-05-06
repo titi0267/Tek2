@@ -28,14 +28,5 @@ int main(int ac, char **av, char **env)
     if (ac == 2 && strcmp("--help", av[1]) == 0)
         return (usage());
     ftrace = malloc(sizeof(ftrace_t));
-    ftrace->maps = malloc(sizeof(maps_file_t) * 20);
-    if (ftrace->maps == NULL)
-        printf("It is NULL omg\n");
-    ftrace->maps_init = 0;
-    for (int i = 0; i < 20; i++) {
-        ftrace->maps[i].last_array = -1;
-    }
-    if (elf_version(EV_CURRENT) == EV_NONE)
-        printf("failed\n");
     return (ftrace_command(++av, env, ftrace));
 }

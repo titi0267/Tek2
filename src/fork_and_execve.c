@@ -21,28 +21,23 @@ int parent_process_command(pid_t pid, ftrace_t *ftrace)
     long opcode = 0;
     struct user_regs_struct regs;
     long retval = 0;
-    int i = 0;
+    int last = 0;
+    nm_t *nm = malloc(sizeof(nm_t));
 
     waitpid(pid, &status, 0);
     while (WIFSTOPPED(status)) {
         ptrace(PTRACE_GETREGS, pid, NULL, &regs);
         if ((opcode = ptrace(PTRACE_PEEKTEXT, pid, regs.rip, 0)) == -1)
             return (print_error("Error PTRACE\n"));
-        //printf("adress = %llx\n", regs.rip);
-        if ((unsigned int)(opcode | 0x00ffffff) == (unsigned int)0xE8ffffff) {
-            /*ptrace(PTRACE_SINGLESTEP, pid, 0, 0);
-            waitpid(pid, &status, 0);*/
-            for (int d = 0; ftrace->maps[d].last_array != -1; d++)
-                nm_bin(ftrace, d, regs.rip);
-        }
         if ((unsigned int)(opcode | 0xffff0000) == (unsigned int)0xffff050f) {
             ptrace(PTRACE_SINGLESTEP, pid, 0, 0);
             waitpid(pid, &status, 0);
             retval = ptrace(PTRACE_PEEKUSER, pid, sizeof(long)*RAX);
             print_com(regs, retval);
-            if (i == 0 || strcmp(table[regs.rax].name, "execve") == 0 || strcmp(table[regs.rax].name, "brk") == 0 || strcmp(table[regs.rax].name, "mmap") == 0 || strcmp(table[regs.rax].name, "munmap") == 0)
-                open_proc(pid, ftrace);
-            i++;
+            if (strcmp(table[regs.rax].name, "mmap") == 0 && last == 0) {
+                nm_bin(ftrace, nm);
+                last++;
+            }
         }
         ptrace(PTRACE_SINGLESTEP, pid, 0, 0);
         waitpid(pid, &status, 0);

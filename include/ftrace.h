@@ -27,26 +27,14 @@
 #include <sys/mman.h>
 #include "syscall.h"
 
-typedef struct maps_file_s {
-    long unsigned int start;
-    long unsigned int end;
-    long unsigned int offset;
-    char path[200];
-    int last_array;
-} maps_file_t;
-
 typedef struct ftrace_s {
     char *bin_name;
-    maps_file_t *maps;
-    int maps_init;
 } ftrace_t;
 
 
 typedef struct list_s {
     char *sym;
     char *sym_clear;
-    int sorted;
-    int position;
     char type;
     Elf64_Addr adress;
     struct list_s *next;
@@ -64,7 +52,6 @@ typedef struct nm_s {
     size_t size;
     char *str;
     Elf64_Sym *section_str;
-    int multiple_files;
     int sym_size;
 } nm_t;
 
@@ -78,10 +65,11 @@ int check_existence(char *command);
 int check_abs(char *command);
 int parent_process_command(pid_t pid, ftrace_t *ftrace);
 int open_proc(pid_t pid, ftrace_t *ftrace);
-void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front, char *str);
-int elf_64_nm(Elf *elf, nm_t *nm, ftrace_t *ftrace, int index, unsigned long long rip, GElf_Ehdr ehdr);
+void print_type(Elf64_Sym sym, Elf64_Shdr *shdr, node_t *front);
+int elf_64_nm(Elf64_Ehdr *elf, nm_t *nm, Elf64_Shdr *shdr);
 int print_list(node_t list);
-int nm_bin(ftrace_t *ftrace, int i, unsigned long long rip);
+int create_list(node_t *front, char *name, Elf64_Addr addr);
+int nm_bin(ftrace_t *ftrace, nm_t *nm);
 char *my_strcat(char *begin, char *end);
 char *my_getchar(int nbr);
 
