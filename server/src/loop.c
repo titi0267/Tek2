@@ -25,7 +25,7 @@ void command_loop(teams_t *teams)
             remove_in_list(teams, fd_node->fd);
             break;
         }
-        printf("%d\n", fd_node->buff->command_id);
+        printf("%d\n", fd_node->buff->command);
         memset(fd_node->buff, 0, sizeof(message_t));
     }
 }

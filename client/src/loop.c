@@ -13,7 +13,7 @@ void loop(client_t *client)
     message_t *msg = malloc(sizeof(message_t));
 
     memset(buff, 0, BUFFER_SIZE);
-    msg->command_id = 16;
+    msg->command = 16;
     while (strcmp(buff, "/logout") != 0) {
         printf("%s > ", client->log_status == LOGGED ? client->pseudo : "");
         if (scanf("%s", buff) == EOF)

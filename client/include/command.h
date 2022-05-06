@@ -7,6 +7,23 @@
 
 #pragma once
 
+enum command_id {
+    HELP,
+    LOGIN,
+    LOGOUT,
+    USERS,
+    USER,
+    SEND,
+    MESSAGES,
+    SUBSCRIBE,
+    SUBSCRIBED,
+    UNSUBSCRIBE,
+    USE,
+    CREATE,
+    LIST,
+    INFO
+};
+
 typedef struct message_s {
-    short command_id;
+    short command;
 } message_t;
