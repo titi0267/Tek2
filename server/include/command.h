@@ -7,10 +7,6 @@
 
 #pragma once
 
-enum command_nbr {
-    LOGIN
-};
-
 typedef struct message_s {
-    enum command_nbr command;
+    short command_id;
 } message_t;

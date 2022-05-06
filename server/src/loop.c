@@ -19,13 +19,14 @@ void command_loop(teams_t *teams)
     for (; fd_node != NULL; fd_node = fd_node->next) {
         if (!FD_ISSET(fd_node->fd, &teams->fds->read))
             continue;
-        read_ret = read(fd_node->fd, fd_node->message, sizeof(message_t));
+        read_ret = read(fd_node->fd, fd_node->buff, sizeof(message_t));
         if (read_ret <= 0) {
             close(fd_node->fd);
             remove_in_list(teams, fd_node->fd);
             break;
         }
-        memset(fd_node->message, 0, sizeof(message_t));
+        printf("%d\n", fd_node->buff->command_id);
+        memset(fd_node->buff, 0, sizeof(message_t));
     }
 }
 

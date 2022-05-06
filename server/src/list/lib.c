@@ -15,7 +15,7 @@ void free_list(teams_t *teams)
     while (teams->head != NULL) {
         tmp = teams->head;
         teams->head = teams->head->next;
-        free(tmp->message);
+        free(tmp->buff);
         free(tmp);
     }
 }
@@ -28,6 +28,7 @@ void remove_in_list(teams_t *teams, int fd)
     if (teams->head->fd == fd) {
         tmp = teams->head;
         teams->head = teams->head->next;
+        free(tmp->buff);
         free(tmp);
         return;
     }
@@ -35,6 +36,7 @@ void remove_in_list(teams_t *teams, int fd)
         if (current->next->fd == fd) {
             tmp = current->next;
             current->next = current->next->next;
+            free(tmp->buff);
             free(tmp);
             break;
         }
@@ -57,7 +59,7 @@ void push_back(teams_t *teams, int fd)
     if (!new_node)
         return;
     new_node->fd = fd;
-    new_node->message = malloc(sizeof(message_t));
+    new_node->buff = malloc(sizeof(message_t));
     new_node->next = NULL;
     if (teams->head == NULL) {
         teams->head = new_node;

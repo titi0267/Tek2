@@ -36,7 +36,7 @@ enum user_status {
 
 typedef struct client_list_s {
     struct client_list_s *next;
-    message_t *message;
+    message_t *buff;
     int fd;
 } client_list_t;
 
