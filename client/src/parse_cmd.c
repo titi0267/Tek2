@@ -14,7 +14,7 @@ int parse_cmd(char *buff)
         "/send", "/messages", "/subscribe", "/subscribed", "/unsubscribe",
         "/use", "/create", "/list", "/info", 0};
     int (*command[14]) (char *) = {c_help, c_login, c_logout, c_users, c_user,
-        c_send, c_messages, c_subscribe, c_subscribed, c_unsubscribed, c_use,
+        c_send, c_messages, c_subscribe, c_subscribed, c_unsubscribe, c_use,
         c_create, c_list, c_info};
     int len;
 

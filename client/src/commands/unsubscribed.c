@@ -7,8 +7,8 @@
 
 #include "../../include/command.h"
 
-int c_unsubscribed(char *buff)
+int c_unsubscribe(char *buff)
 {
-    printf("unsubscribed\n");
-    return (0);
+    printf("unsubscribe\n");
+    return (UNSUBSCRIBE);
 }

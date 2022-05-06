@@ -10,5 +10,5 @@
 int c_list(char *buff)
 {
     printf("list\n");
-    return (0);
+    return (LIST);
 }

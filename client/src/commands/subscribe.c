@@ -10,5 +10,5 @@
 int c_subscribe(char *buff)
 {
     printf("subscribe\n");
-    return (0);
+    return (SUBSCRIBE);
 }
