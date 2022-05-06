@@ -20,7 +20,7 @@ int check_args(int ac, char **av)
 {
     if (ac == 2) {
         if (strcmp(av[1], "-help") == 0)
-            return (usage());
+            exit(usage());
         return (ERROR);
     }
     if (ac != 3)
