@@ -10,5 +10,5 @@
 int c_send(char *buff)
 {
     printf("send\n");
-    return (0);
+    return (SEND);
 }

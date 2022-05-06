@@ -10,5 +10,5 @@
 int c_help(char *buff)
 {
     printf("help\n");
-    return (0);
+    return (HELP);
 }

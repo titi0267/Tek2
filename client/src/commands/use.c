@@ -10,5 +10,5 @@
 int c_use(char *buff)
 {
     printf("use\n");
-    return (0);
+    return (USE);
 }

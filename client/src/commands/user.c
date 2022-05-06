@@ -10,5 +10,5 @@
 int c_user(char *buff)
 {
     printf("user\n");
-    return (0);
+    return (USER);
 }

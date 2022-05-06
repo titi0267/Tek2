@@ -38,7 +38,7 @@ int c_send(char *);
 int c_messages(char *);
 int c_subscribe(char *);
 int c_subscribed(char *);
-int c_unsubscribed(char *);
+int c_unsubscribe(char *);
 int c_use(char *);
 int c_create(char *);
 int c_list(char *);

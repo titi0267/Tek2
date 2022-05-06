@@ -10,5 +10,5 @@
 int c_create(char *buff)
 {
     printf("create\n");
-    return (0);
+    return (CREATE);
 }

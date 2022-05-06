@@ -10,5 +10,5 @@
 int c_messages(char *buff)
 {
     printf("messages\n");
-    return (0);
+    return (MESSAGES);
 }
