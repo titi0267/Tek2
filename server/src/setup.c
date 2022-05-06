@@ -32,7 +32,7 @@ teams_t *init_struct(char *port)
     teams_t *teams;
 
     teams = malloc(sizeof(teams_t));
-    if (teams == NULL)
+    if (teams == NULL || atoi(port) == 0)
         return (NULL);
     teams->fds = malloc(sizeof(fd_set_t));
     if (teams->fds == NULL) {

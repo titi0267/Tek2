@@ -11,13 +11,14 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/free.c		\
 				server/src/list/lib.c
 
-SRC_CLIENT	=	client/src/main.c
+SRC_CLIENT	=	client/src/main.c		\
+				client/src/setup.c
 
 OBJ_SERVER		=	$(SRC_SERVER:.c=.o)
 
 OBJ_CLIENT = 	$(SRC_CLIENT:.c=.o)
 
-NAME_SERVER		=	my_nm
+NAME_SERVER		=	myteams_server
 
 NAME_CLIENT	=	myteams_cli
 

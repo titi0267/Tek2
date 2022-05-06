@@ -46,7 +46,7 @@ typedef struct fd_set_s {
     fd_set exeptions;
 } fd_set_t;
 
-typedef struct ftp_s {
+typedef struct teams_s {
     int socket_fd;
     int select_ret;
     client_list_t *head;

@@ -10,14 +10,14 @@
 void usage(void)
 {
     printf("USAGE: ./myteams_server port\n\n");
-    printf("port is the port number on which the server socket listens.\n");
+    printf("    port is the port number on which the server socket listens.\n");
 }
 
 int handle_args(int ac, char **av)
 {
     if (ac != 2)
         return (ERROR);
-    if (strcmp(av[1], "-h") == 0) {
+    if (strcmp(av[1], "-help") == 0) {
         usage();
         return (ERROR);
     }
