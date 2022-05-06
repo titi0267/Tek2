@@ -20,5 +20,6 @@ void loop(client_t *client)
             break;
         write(client->socket_fd, msg, sizeof(message_t));
     }
+    free(msg);
     free_all(client, buff);
 }
