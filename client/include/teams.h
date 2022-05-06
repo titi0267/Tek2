@@ -25,7 +25,6 @@
 #include "./command.h"
 
 #define ERROR 84
-#define MAX_CONNECTIONS 15
 #define BUFFER_SIZE 1024
 #define UNUSED(x) (void)(x)
 
@@ -36,6 +35,10 @@ enum user_status {
 
 typedef struct client_s {
     int socket_fd;
+    char *pseudo;
+    enum user_status log_status;
 } client_t;
 
 client_t *init_struct(char **av);
+void loop(client_t *client);
+void free_all(client_t *client, char *buff);

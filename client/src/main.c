@@ -37,6 +37,6 @@ int main(int ac, char **av)
     client = init_struct(av);
     if (client == NULL)
         return (ERROR);
-    while (1);
+    loop(client);
     return (0);
 }

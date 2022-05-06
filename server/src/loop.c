@@ -29,7 +29,7 @@ void command_loop(teams_t *teams)
     }
 }
 
-void sigintHandler(int sig_num)
+void sigint_handler(int sig_num)
 {
     UNUSED(sig_num);
     isRunning = 0;
@@ -63,7 +63,7 @@ void clear_fds(teams_t *teams)
 
 void loop(teams_t *teams)
 {
-    signal(SIGINT, sigintHandler);
+    signal(SIGINT, sigint_handler);
 
     while (isRunning) {
         clear_fds(teams);

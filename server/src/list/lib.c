@@ -10,10 +10,12 @@
 void free_list(teams_t *teams)
 {
     client_list_t *tmp;
+    printf("je free\n");
 
     while (teams->head != NULL) {
         tmp = teams->head;
         teams->head = teams->head->next;
+        free(tmp->message);
         free(tmp);
     }
 }

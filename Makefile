@@ -12,7 +12,9 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/list/lib.c
 
 SRC_CLIENT	=	client/src/main.c		\
-				client/src/setup.c
+				client/src/setup.c		\
+				client/src/loop.c		\
+				client/src/free.c
 
 OBJ_SERVER		=	$(SRC_SERVER:.c=.o)
 
