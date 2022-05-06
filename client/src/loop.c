@@ -9,15 +9,17 @@
 
 void loop(client_t *client)
 {
-    char *buff = malloc(BUFFER_SIZE);
+    char *buff = NULL;
+    size_t n = 0;
+    int command = -1;
     message_t *msg = malloc(sizeof(message_t));
 
-    memset(buff, 0, BUFFER_SIZE);
     msg->command = 16;
-    while (strcmp(buff, "/logout") != 0) {
+    while (command != LOGOUT) {
         printf("%s > ", client->log_status == LOGGED ? client->pseudo : "");
-        if (scanf("%s", buff) == EOF)
+        if (getline(&buff, &n, stdin) == -1)
             break;
+        command = parse_cmd(buff);
         write(client->socket_fd, msg, sizeof(message_t));
     }
     free(msg);

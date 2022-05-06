@@ -2,3 +2,4 @@ myftp
 .vscode/
 test.txt
 *.o
+vgcore*
