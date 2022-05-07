@@ -15,7 +15,8 @@ SRC_SERVER		=	server/src/main.c		\
 SRC_CLIENT	=	client/src/main.c		\
 				client/src/setup.c		\
 				client/src/loop.c		\
-				client/src/free.c
+				client/src/free.c		\
+				client/src/print/print_struct.c
 
 OBJ_SERVER		=	$(SRC_SERVER:.c=.o)
 
@@ -31,7 +32,7 @@ all:	$(NAME_SERVER)
 
 $(NAME_SERVER): $(OBJ_SERVER) $(OBJ_CLIENT)
 		gcc -o $(NAME_SERVER) $(OBJ_SERVER) $(CFLAGS)
-		gcc -o $(NAME_CLIENT) $(OBJ_CLIENT)
+		gcc -o $(NAME_CLIENT) $(OBJ_CLIENT) $(CFLAGS)
 
 server: $(OBJ_SERVER)
 		gcc -o $(NAME_SERVER) $(OBJ_SERVER) $(CFLAGS)
