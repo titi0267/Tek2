@@ -23,6 +23,7 @@
 #include <ctype.h>
 
 #include "./command.h"
+#include "./logging.h"
 
 #define ERROR 84
 #define BUFFER_SIZE 1024
