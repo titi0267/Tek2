@@ -7,6 +7,11 @@
 
 #pragma once
 #include <stdio.h>
+#include <string.h>
+
+#define CMD_ERROR 84
+#define MAX_NAME_LENGTH 32
+#define MAX_BODY_LENGTH 512
 
 enum command_id {
     HELP,
@@ -43,3 +48,6 @@ int c_use(char *);
 int c_create(char *);
 int c_list(char *);
 int c_info(char *);
+int check_is_arg(char *buff);
+int check_valid_cmd_type(char *buff);
+int check_valid_uuid(char *buff);
