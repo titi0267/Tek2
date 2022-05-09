@@ -1,0 +1,30 @@
+#!/usr/bin/env lua
+
+local function mysplit (inputstr, sep)
+    if sep == nil then
+            sep = "%s"
+    end
+    local t={}
+    for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+            table.insert(t, str)
+    end
+    return t
+end
+
+
+local function main ()
+    -- for nameCount = 1, #arg do
+    --     print (arg[nameCount])
+    -- end
+    local global = {}
+    local tmp = {}
+    for line in io.lines("207demography_data.csv") do
+        local splitedLine = mysplit(line, ';')
+        for _, v in ipairs(splitedLine) do table.insert(tmp, v) end
+        table.insert(global, tmp)
+        tmp = {}
+    end
+    print(global[2][1])
+end
+
+main()
