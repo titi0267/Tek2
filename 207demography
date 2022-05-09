@@ -11,11 +11,99 @@ local function mysplit(inputstr, sep)
     return t
 end
 
+local function Tablelength(T)
+    local count = 0
+    for _ in pairs(T) do count = count + 1 end
+    return count
+end
+
+local function GetCountryTab(global)
+    local country = {}
+    local tmp_next = {}
+    for name = 1, #arg do
+        for total = 1, 265, 1 do
+            if (arg[name] == global[total][2]) then
+                tmp_next = global[total]
+                table.insert(country, tmp_next)
+                tmp_next = {}
+            end
+        end
+    end
+    return (country)
+end
+
+local function DateDiff()
+    local dateDiff = {}
+    for value = 1, 58, 1 do
+        table.insert(dateDiff, (-28.5 + value - 1))
+    end
+    return (dateDiff)
+end
+
+local function PowDate(country)
+    local sumPow = 0;
+    local dateDiff = DateDiff()
+    for value = 1, 58, 1 do
+        sumPow = sumPow + (dateDiff[value] ^ 2)
+    end
+    return sumPow
+end
+
+local function Prod(country)
+    local dateDiff = DateDiff()
+    local sumVillager = 0
+    for vill = 1, Tablelength(country), 1 do
+        for value = 1, 58, 1 do
+            sumVillager = sumVillager + (dateDiff[value] * country[vill][value + 2])
+        end
+    end
+        return sumVillager
+end
+
+local function Coeffb(powDate, prod)
+    local bx = prod / powDate;
+    return bx
+end
+
+local function Coeffa(country)
+    local Mx = 1988.5
+    local My = 0
+    local total = 0
+    local total_village = 0
+    for vill = 1, Tablelength(country), 1 do
+        for value = 1, 58, 1 do
+            My = My + country[vill][value + 2]
+        end
+    end
+    My = My / 58
+    total = My - (Coeffb(PowDate(country), Prod(country)) * Mx)
+    return (total)
+end
+
+local function PrintCountry(country)
+    io.write("Country: ")
+    local sorted = country
+    local two_dig = 0
+        table.sort(sorted, function (left, right)
+                return (left[1] < right[1])
+        end)
+    for len = 1, Tablelength(country), 1 do
+        io.write(country[len][1])
+        if (len ~= Tablelength(country)) then
+            io.write(", ")
+        end
+    end
+    print("\nFit1")
+    two_dig = string.format("%.2f", (Coeffb(PowDate(country), Prod(country)) / 1000000))
+    io.write("    Y = " .. two_dig .. " X - ")
+    two_dig = string.format("%.2f", ((-1 * Coeffa(country)) / 1000000))
+    print(two_dig)
+    return (sorted)
+end
+
 local function main()
-    -- for nameCount = 1, #arg do
-    --     print (arg[nameCount])
-    -- end
     local global = {}
+    local country = {}
     local tmp = {}
     for line in io.lines("207demography_data.csv") do
         local splitedLine = mysplit(line, ';')
@@ -23,7 +111,12 @@ local function main()
         table.insert(global, tmp)
         tmp = {}
     end
-    print(global[2][1])
+    country = GetCountryTab(global)
+    if (Tablelength(country) ~= (Tablelength(arg) - 2)) then
+        print("Len not valid")
+        do return end
+    end
+    country = PrintCountry(country)
 end
 
 main()
