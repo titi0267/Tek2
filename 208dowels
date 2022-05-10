@@ -1,0 +1,84 @@
+#!/usr/bin/env node
+
+/*
+loi binomial
+p(a sachant b) = p(b sachant a) * (p(A) / p(b))
+
+Tx = N (x sachant n) * p2 *(1 - p)2
+N = nbr de samples
+
+p = (moyenne de x) / n = (1 / (n  * N)) * somme x
+
+x2 = somme((Ox - Tx)2 / Tx)
+*/
+
+const getArgs = () => {
+  const arg = process.argv;
+  arg.shift();
+  arg.shift();
+  return arg;
+};
+
+const printFirstTwoLines = (argAsInt) => {
+  console.log(
+    "   x    | 0-1   | 2     | 3     | 4     | 5     | 6     | 7+    | Total"
+  );
+  console.log(
+    "  Ox    | " +
+      align6Print(argAsInt[0] + argAsInt[1]) +
+      "| " +
+      align6Print(argAsInt[2]) +
+      "| " +
+      align6Print(argAsInt[3]) +
+      "| " +
+      align6Print(argAsInt[4]) +
+      "| " +
+      align6Print(argAsInt[5]) +
+      "| " +
+      align6Print(argAsInt[6]) +
+      "| " +
+      align6Print(argAsInt[7] + argAsInt[8]) +
+      "| 100"
+  );
+};
+
+const usage = () => {
+  console.log("USAGE\n    ./208dowels O0 O1 O2 O3 O4 O5 O6 O7 O8\n");
+  console.log("DESCRIPTION\n    Oi size of the observed class");
+  process.exit(0);
+};
+
+const align6Print = (nbr) => {
+  let str = String(nbr);
+  while (str.length != 6) str += " ";
+  return str;
+};
+
+const checkValidArgs = (arg) => {
+  const itemTab = [];
+  let sum = 0;
+  for (let item of arg) {
+    let value = Number(item);
+    if (item === "" || !Number.isInteger(value) || value < 0) process.exit(84);
+    itemTab.push(value);
+  }
+  itemTab.forEach((item) => (sum += item));
+  if (sum != 100) process.exit(84);
+  return itemTab;
+};
+
+const compute = (argAsInt) => {
+  printFirstTwoLines(argAsInt);
+};
+
+const main = () => {
+  const arg = getArgs();
+  if (arg[0] === undefined) process.exit(84);
+  if (arg[0] === "-h") usage();
+  if (arg.length != 9) process.exit(84);
+  const argTab = checkValidArgs(arg);
+  compute(argTab);
+  process.exit(0);
+};
+
+main();
