@@ -7,7 +7,7 @@
 
 #include <threads.h>
 #include <iostream>
-#include "Mutex/CMutex.hpp"
+#include "Encapsulations/Mutex/CMutex.hpp"
 
 CMutex mutex;
 
