@@ -177,7 +177,7 @@ const getClusterValues = (argAsInt) => {
   }
   if (tmp != 0) {
     array[array.length - 1] += tmp;
-    posTab[array.length - 1] = 0; 
+    posTab[array.length - 1] = 0;
   }
   array.reverse();
   posTab.reverse();
