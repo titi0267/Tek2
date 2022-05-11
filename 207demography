@@ -20,6 +20,9 @@ end
 local function GetCountryTab(global)
     local country = {}
     local tmp_next = {}
+    if (#arg <= 1)then
+        os.exit(1)
+    end
     for name = 1, #arg do
         for total = 1, 265, 1 do
             if (arg[name] == global[total][2]) then
