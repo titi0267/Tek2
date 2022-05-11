@@ -9,8 +9,11 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake" ${CMAKE_MODULE_PATH})
 
 set(
 SRCS
-Src/plazza.cpp
+Src/main.cpp
 Src/Encapsulations/Mutex/CMutex.cpp
+Src/Reception/Reception.cpp
+Src/Error/Error.cpp
+Src/Utils/Utils.cpp
 )
 
 add_executable(plazza ${SRCS} ${HEADERS})
