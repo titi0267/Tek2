@@ -95,7 +95,6 @@ end
 
 local function CoeffaY(prod, powDate)
     local bx = prod / powDate;
-    --print(prod .. " / " .. powDate .. " = " .. bx)
     return bx
 end
 
@@ -117,11 +116,32 @@ local function CoeffbY(country, fit)
     return total
 end
 
+local function RootMeanSquare(country, realValue, a, b, fit)
+    local total = 0
+    local sumPopu = PopuTable(country)
+    if (fit == 0)then
+        for value = 1, 58, 1 do
+            total = total + (((realValue[value] * a + b) - sumPopu[value]) ^ 2) / 58
+        end
+        total = math.sqrt(total)
+    else if (fit == 1)then
+        total = 0
+        for value = 1, 58, 1 do
+            total = total + ((((realValue[value] - b) / a) - sumPopu[value]) ^ 2) / 58
+        end
+        total = math.sqrt(total)
+    end
+    end
+    return total
+end
+
 local function PrintCountry(country)
     io.write("Country: ")
     local sorted = country
-    local tmp = 0
+    local tmpa = 0
     local two_dig = 0
+    local tmpb = 0
+    local rmse = 0
         table.sort(sorted, function (left, right)
                 return (left[1] < right[1])
         end)
@@ -132,23 +152,32 @@ local function PrintCountry(country)
         end
     end
     print("\nFit1")
-    two_dig = string.format("%.2f", (CoeffaY(Prod(country), SumPow(country, 115333, GetDate())) / 1000000))
+    tmpa = CoeffaY(Prod(country), SumPow(country, 115333, GetDate()))
+    two_dig = string.format("%.2f", (tmpa / 1000000))
     io.write("    Y = " .. two_dig .. " X - ")
-    tmp = CoeffbY(country, 0)
-    if (tmp < 0)then
-        tmp = tmp * -1
+    tmpb = CoeffbY(country, 0)
+    rmse = RootMeanSquare(country, GetDate(), tmpa, tmpb, 0)
+    if (tmpb < 0)then
+        tmpb = tmpb * -1
     end
-    two_dig = string.format("%.2f", (tmp / 1000000))
+    two_dig = string.format("%.2f", (tmpb / 1000000))
     print(two_dig)
-    two_dig = string.format("%.2f", (CoeffaY(Prod(country), SumPow(country, SumPopu(country), PopuTable(country)))) * 1000000)
+    two_dig = string.format("%.2f", rmse / 1000000)
+    print("    Root-mean-square deviation: " .. two_dig)
+    tmpa = CoeffaY(Prod(country), SumPow(country, SumPopu(country), PopuTable(country)))
+    two_dig = string.format("%.2f", tmpa * 1000000)
     print("Fit2")
     io.write("    X = " .. two_dig .. " Y - ")
-    tmp = CoeffbY(country, 1)
-    if (tmp < 0)then
-        tmp = tmp * -1
+    tmpb = CoeffbY(country, 1)
+    rmse = 0
+    rmse = RootMeanSquare(country, GetDate(), tmpa, tmpb, 1)
+    if (tmpb < 0)then
+        tmpb = tmpb * -1
     end
-    two_dig = string.format("%.2f", tmp)
+    two_dig = string.format("%.2f", tmpb)
     print(two_dig)
+    two_dig = string.format("%.2f", rmse / 1000000)
+    print("    Root-mean-square deviation: " .. two_dig)
     return (sorted)
 end
 
