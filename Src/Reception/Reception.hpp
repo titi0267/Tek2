@@ -6,7 +6,13 @@
 */
 
 #pragma once
+#include <deque>
+#include <memory>
+
 #include "../Utils/Utils.hpp"
+#include "../Pizza/IPizza.hpp"
+
+using pizzaPtr = std::unique_ptr<IPizza>;
 
 class Reception {
     public:
@@ -19,4 +25,5 @@ class Reception {
         int _cooksPerKitchen;
         int _timeToReplace;
         Utils _tools;
+        std::deque<pizzaPtr> pizzaQueue;
 };
