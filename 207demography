@@ -20,8 +20,8 @@ end
 local function GetCountryTab(global)
     local country = {}
     local tmp_next = {}
-    if (#arg <= 1)then
-        os.exit(1)
+    if (#arg < 1)then
+        os.exit(84)
     end
     for name = 1, #arg do
         for total = 1, 265, 1 do
@@ -256,8 +256,7 @@ local function main()
     end
     country = GetCountryTab(global)
     if (Tablelength(country) ~= (Tablelength(arg) - 2)) then
-        print("Len not valid")
-        do return end
+        os.exit(84)
     end
     country = PrintCountry(country)
 end
