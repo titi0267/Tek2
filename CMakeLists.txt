@@ -12,6 +12,7 @@ SRCS
 Src/main.cpp
 Src/Encapsulations/Mutex/CMutex.cpp
 Src/Reception/Reception.cpp
+Src/Reception/Order.cpp
 Src/Pizza/Margarita.cpp
 Src/Error/Error.cpp
 Src/Utils/Utils.cpp

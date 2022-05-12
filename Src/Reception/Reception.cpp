@@ -21,6 +21,18 @@ Reception::Reception(int ac, char **av)
     _timeToReplace = std::atoi(av[3]);
 }
 
+void Reception::createOrder()
+{
+    static u_int32_t id = 0;
+    Order order;
+
+    for (int i = 0; i < 7; i++) {
+        _pizzaQueue.push_back(std::make_unique<Margarita>(id, IPizza::PizzaSize::L));
+        order.pushPizza(id);
+    }
+    _orderList.push_back(order);
+}
+
 void Reception::loop()
 {
     std::string buff = "";
@@ -30,6 +42,7 @@ void Reception::loop()
         std::cin >> buff;
         if (!buff.compare("No"))
             break;
+        createOrder();
     }
 }
 
