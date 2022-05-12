@@ -21,6 +21,18 @@ Reception::Reception(int ac, char **av)
     _timeToReplace = std::atoi(av[3]);
 }
 
+void Reception::loop()
+{
+    std::string buff = "";
+
+    while (1) {
+        std::cout << "Waiter : What would you like to order ?" << std::endl;
+        std::cin >> buff;
+        if (!buff.compare("No"))
+            break;
+    }
+}
+
 Reception::~Reception()
 {
 }

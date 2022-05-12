@@ -18,6 +18,7 @@ class Reception {
     public:
         Reception(int ac, char **av);
         ~Reception();
+        void loop();
 
     protected:
     private:

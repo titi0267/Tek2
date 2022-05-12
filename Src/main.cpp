@@ -14,6 +14,7 @@ int main(int ac, char **av)
 {
     try {
         Reception reception(ac, av);
+        reception.loop();
     } catch (Error e) {
         std::cerr << e.what() << std::endl;
         return (84);
