@@ -12,6 +12,7 @@ SRCS
 Src/main.cpp
 Src/Encapsulations/Mutex/CMutex.cpp
 Src/Encapsulations/Fork/CFork.cpp
+Src/Encapsulations/Threads/CThreads.cpp
 Src/Reception/Reception.cpp
 Src/Error/Error.cpp
 Src/Utils/Utils.cpp
