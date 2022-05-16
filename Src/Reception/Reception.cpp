@@ -29,6 +29,7 @@ void Reception::createOrder()
     for (int i = 0; i < 7; i++) {
         _pizzaQueue.push_back(std::make_unique<Margarita>(id, IPizza::PizzaSize::L));
         order.pushPizza(id);
+        id++;
     }
     _orderList.push_back(order);
 }
