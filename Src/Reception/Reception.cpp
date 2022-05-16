@@ -55,6 +55,21 @@ bool operator==(Order value, const Order o)
     return (value.getOrderId() == o.getOrderId());
 }
 
+void Reception::createKitchen()
+{
+    CFork cfork;
+
+    if (cfork.getPid() == 0) {
+        //we are in child -> kitchen must be created here
+        //child read ?
+        //to read : get _message
+    } else {
+        //we are in parent -> shm
+        //parent write ?
+        //to write : (printf ?) or use of gets/getline
+    }
+}
+
 void Reception::dropOrder()
 {
     auto itr = _orderList.begin();

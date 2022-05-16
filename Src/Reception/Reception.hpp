@@ -14,6 +14,7 @@
 #include "../Utils/Utils.hpp"
 #include "../Pizza/IPizza.hpp"
 #include "../Pizza/Margarita.hpp"
+#include "../Encapsulations/Fork/CFork.hpp"
 #include "Order.hpp"
 
 using pizzaPtr = std::unique_ptr<IPizza>;
@@ -30,6 +31,7 @@ class Reception {
         void dropPizzaId(uint32_t orderId);
         void dropOrder();
         void setOrderId(uint32_t orderId);
+        void createKitchen();
 
     protected:
     private:
