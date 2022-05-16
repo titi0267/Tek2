@@ -16,7 +16,6 @@ class CThreads {
         ~CThreads();
         int createThread(int threadNbr, void *(*_start_routine)(void *));
         int joinThreads(int threadNbr);
-        //std::deque<pthread_t> getThread();
 
     protected:
     private:
