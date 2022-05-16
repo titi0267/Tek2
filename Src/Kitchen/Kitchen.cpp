@@ -1,0 +1,25 @@
+/*
+** EPITECH PROJECT, 2022
+** plazza
+** File description:
+** Kitchen
+*/
+
+#include "Kitchen.hpp"
+
+Kitchen::Kitchen(uint32_t cookNbr, uint32_t cookingTimeMultiplier)
+{
+    _cookingTimeMultiplier = cookingTimeMultiplier;
+
+    for (int i = 0; i < cookNbr; i++)
+        _cooker.push_back(CThreads());
+}
+
+void Kitchen::addPizza(std::unique_ptr<IPizza> &pizza)
+{
+    _pizzaToCook.push_back(std::move(pizza));
+}
+
+Kitchen::~Kitchen()
+{
+}

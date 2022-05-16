@@ -7,11 +7,9 @@
 
 #pragma once
 
-#include "../IMutex.hpp"
 #include <pthread.h>
 
-
-class CMutex: public IMutex {
+class CMutex {
     public:
         CMutex();
         ~CMutex();

@@ -15,12 +15,12 @@ CThreads::~CThreads()
 {
 }
 
-int CThreads::createThread(int threadNbr, void *(*_start_routine)(void *))
+int CThreads::createThread(void *(*_start_routine)(void *), void *threadParam)
 {
-    return (pthread_create(&_thread[threadNbr], NULL, _start_routine, (void *)threadNbr));
+    return (pthread_create(&_thread, NULL, _start_routine, threadParam));
 }
 
-int CThreads::joinThreads(int threadNbr)
+int CThreads::joinThreads()
 {
-    return (pthread_join(_thread[threadNbr], NULL));
+    return (pthread_join(_thread, NULL));
 }

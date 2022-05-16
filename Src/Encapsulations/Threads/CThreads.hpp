@@ -14,10 +14,10 @@ class CThreads {
     public:
         CThreads();
         ~CThreads();
-        int createThread(int threadNbr, void *(*_start_routine)(void *));
-        int joinThreads(int threadNbr);
+        int createThread(void *(*_start_routine)(void *), void *threadParam);
+        int joinThreads();
 
     protected:
     private:
-        std::vector<pthread_t> _thread;
+        pthread_t _thread;
 };
