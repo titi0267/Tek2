@@ -6,6 +6,7 @@
 */
 
 #include "Reception.hpp"
+#include "../Kitchen/Kitchen.hpp"
 #include "../Error/Error.hpp"
 
 Reception::Reception(int ac, char **av)
@@ -44,6 +45,7 @@ void Reception::loop()
         if (!buff.compare("No"))
             break;
         createOrder();
+        Kitchen lol(12, 12);
     }
 }
 

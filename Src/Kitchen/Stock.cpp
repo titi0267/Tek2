@@ -27,5 +27,5 @@ int Stock::takeInStock(Ingredients index)
 {
     if (_ingredients[(int)index] == 0)
         return (-1);
-    return (_ingredients[(int)index]--);
+    return (--_ingredients[(int)index]);
 }

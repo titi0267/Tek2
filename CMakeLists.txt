@@ -17,6 +17,8 @@ Src/Encapsulations/ConditionnalVar/ConditionnalVar.cpp
 Src/Reception/Reception.cpp
 Src/Reception/Order.cpp
 Src/Pizza/Margarita.cpp
+Src/Kitchen/ThreadPull.cpp
+Src/Kitchen/ThreadPayload.cpp
 Src/Error/Error.cpp
 Src/Utils/Utils.cpp
 Src/Kitchen/Stock.cpp

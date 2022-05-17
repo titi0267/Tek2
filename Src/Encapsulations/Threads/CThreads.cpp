@@ -6,6 +6,7 @@
 */
 
 #include "CThreads.hpp"
+#include <iostream>
 
 CThreads::CThreads()
 {

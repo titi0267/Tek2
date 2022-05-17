@@ -7,12 +7,9 @@
 
 #include "Kitchen.hpp"
 
-Kitchen::Kitchen(uint32_t cookNbr, uint32_t cookingTimeMultiplier)
+Kitchen::Kitchen(uint32_t cookNbr, uint32_t cookingTimeMultiplier) : _threadPull(cookNbr), _cookingTimeMultiplier(cookingTimeMultiplier)
 {
-    _cookingTimeMultiplier = cookingTimeMultiplier;
-
-    for (int i = 0; i < cookNbr; i++)
-        _cooker.push_back(CThreads());
+    _threadPull.launchThread();
 }
 
 void Kitchen::addPizza(std::unique_ptr<IPizza> &pizza)

@@ -11,9 +11,9 @@
 #include <iostream>
 #include <memory>
 
-#include "../Encapsulations/Threads/CThreads.hpp"
 #include "../Encapsulations/Mutex/CMutex.hpp"
 #include "../Pizza/IPizza.hpp"
+#include "./ThreadPull.hpp"
 
 using pizzaPtr = std::unique_ptr<IPizza>;
 
@@ -26,7 +26,7 @@ class Kitchen {
 
     protected:
     private:
-        std::deque<CThreads> _cooker;
+        ThreadPull _threadPull;
         std::deque<pizzaPtr> _pizzaToCook;
         uint32_t _cookingTimeMultiplier;
         CMutex _pickInStock;
