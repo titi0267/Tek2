@@ -58,12 +58,19 @@ bool operator==(Order value, const Order o)
 void Reception::createKitchen()
 {
     CFork cfork;
+    std::string str;
 
+    cfork.CMakeFifo();
     if (cfork.getPid() == 0) {
+        cfork.COpenFifoWrite();
+        cfork.CWriteFifo("Lol");
         //we are in child -> kitchen must be created here
         //child read ?
         //to read : get _message
     } else {
+        cfork.COpenFifoRead();
+        str = cfork.CReadFifo();
+        cfork.CKillPid();
         //we are in parent -> shm
         //parent write ?
         //to write : (printf ?) or use of gets/getline
@@ -93,6 +100,7 @@ void Reception::loop()
     while (1) {
         std::cout << "Waiter : What would you like to order ?" << std::endl;
         std::cin >> buff;
+        createKitchen();
         if (!buff.compare("No"))
             break;
         createOrder(orderId);

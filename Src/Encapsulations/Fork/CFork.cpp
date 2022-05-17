@@ -14,6 +14,10 @@ CFork::CFork()
 
 CFork::~CFork()
 {
+}
+
+void CFork::CKillPid()
+{
     kill(getPid(), SIGKILL);
 }
 
@@ -28,27 +32,30 @@ pid_t CFork::getPid() const
     return (_childPid);
 }
 
-void CFork::CToken()
+int CFork::CMakeFifo()
 {
-    if ((_token = ftok("/tmp", 'A')) == -1)
-        std::cout << "Key gen failed" << std::endl;
+    return (mkfifo("/tmp/myfifo", 0666));
 }
 
-void CFork::CGetShmId()
+void CFork::COpenFifoRead()
 {
-    if ((_shMId = shmget(_token, 1024, 0666|IPC_CREAT)) == -1)
-        std::cout << "Generate memory segment id failed" << std::endl;
+    _in = std::ifstream("/tmp/myfifo", std::ios::in);
 }
 
-void CFork::CAttachShm()
+void CFork::COpenFifoWrite()
 {
-    if ((_message = (char *)shmat(_shMId, NULL, 0)) == (void *)-1)
-        std::cout << "Attach shared memory with shared memory id failed" << std::endl;
+    _out = std::ofstream("/tmp/myfifo");
 }
 
-void CFork::CShmAssemble()
+std::string CFork::CReadFifo()
 {
-    CToken();
-    CGetShmId();
-    CAttachShm();
+    std::string messageRead;
+
+    messageRead.assign((std::istreambuf_iterator<char>(_in)), (std::istreambuf_iterator<char>()));
+    return (messageRead);
+}
+
+void CFork::CWriteFifo(std::string messageWrite)
+{
+    _out << messageWrite;
 }

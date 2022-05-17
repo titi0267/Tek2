@@ -10,24 +10,27 @@
 #include <unistd.h>
 #include <iostream>
 #include <signal.h>
-#include <sys/shm.h>
-#include <sys/ipc.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fstream>
 
 class CFork {
     public:
         CFork();
         ~CFork();
-        void CToken();
-        void CGetShmId();
-        void CAttachShm();
-        void CShmAssemble();
+        int CMakeFifo();
+        void COpenFifoRead();
+        void COpenFifoWrite();
+        std::string CReadFifo();
+        void CWriteFifo(std::string messageWrite);
+        void CKillPid();
         pid_t getPid() const;
         void setPid();
 
     protected:
     private:
         pid_t _childPid;
-        key_t _token;
-        int _shMId;
-        char *_message;
+        std::string messageRead;
+        std::ifstream _in;
+        std::ofstream _out;
 };
