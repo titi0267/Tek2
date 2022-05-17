@@ -15,6 +15,7 @@ class ThreadPull {
         ThreadPull(uint32_t cookNbr);
         ~ThreadPull();
         void launchThread();
+        void flushFinishedThread();
         void setThreadFinish(uint32_t index);
         int _test;
 

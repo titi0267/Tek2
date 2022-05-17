@@ -34,6 +34,16 @@ void ThreadPull::setThreadFinish(uint32_t index)
     _isRunningThread[index] = ThreadStatus::FINISH;
 }
 
+void ThreadPull::flushFinishedThread()
+{
+    for (int i = 0; i < _isRunningThread.size(); i++) {
+        if (_isRunningThread[i] == ThreadStatus::FINISH) {
+            _cooker[i] = CThreads();
+            _isRunningThread[i] = ThreadStatus::FREE;
+        }
+    }
+}
+
 void ThreadPull::launchThread()
 {
     for (int i = 0; i < _isRunningThread.size(); i++) {
