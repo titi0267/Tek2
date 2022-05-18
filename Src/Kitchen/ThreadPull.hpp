@@ -9,6 +9,7 @@
 #include <deque>
 #include <iostream>
 #include "../Encapsulations/Threads/CThreads.hpp"
+#include "ThreadPayload.hpp"
 
 class ThreadPull {
     public:
@@ -27,6 +28,7 @@ class ThreadPull {
 
     protected:
     private:
+        std::deque<ThreadPayload> _payloads;
         std::deque<CThreads> _cooker;
         std::deque<ThreadStatus> _isRunningThread;
 };

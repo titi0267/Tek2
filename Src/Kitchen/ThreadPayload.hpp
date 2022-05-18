@@ -6,8 +6,9 @@
 */
 
 #pragma once
-#include "ThreadPull.hpp"
+#include <iostream>
 
+class ThreadPull;
 class ThreadPayload {
     public:
         ThreadPayload(ThreadPull *pull, uint32_t id);
