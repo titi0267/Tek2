@@ -18,11 +18,7 @@ class CFork {
     public:
         CFork();
         ~CFork();
-        int CMakeFifo();
-        void COpenFifoRead();
-        void COpenFifoWrite();
-        std::string CReadFifo();
-        void CWriteFifo(std::string messageWrite);
+        void CCreateChild();
         void CKillPid();
         pid_t getPid() const;
         void setPid();
@@ -30,7 +26,4 @@ class CFork {
     protected:
     private:
         pid_t _childPid;
-        std::string messageRead;
-        std::ifstream _in;
-        std::ofstream _out;
 };

@@ -13,6 +13,7 @@ Src/main.cpp
 Src/Encapsulations/Mutex/CMutex.cpp
 Src/Encapsulations/Fork/CFork.cpp
 Src/Encapsulations/Threads/CThreads.cpp
+Src/Encapsulations/FIFO/CFifo.cpp
 Src/Reception/Reception.cpp
 Src/Reception/Order.cpp
 Src/Pizza/Margarita.cpp

@@ -50,14 +50,28 @@ void Reception::setOrderId(uint32_t orderId)
    _orderId = orderId;
 }
 
-bool operator==(Order value, const Order o)
-{
-    return (value.getOrderId() == o.getOrderId());
-}
-
 void Reception::createKitchen()
 {
-    CFork cfork;
+    std::cout << "create child" << std::endl;
+    cfork.CCreateChild();
+    cfifo.CMakeFifo();
+
+    if (cfork.getPid() == 0) {
+        cfifo.COpenFifoRead();
+        std::cout << "Child recieved: " << cfifo.CReadFifo() << std::endl;
+        cfifo.CCloseIn();
+        cfifo.COpenFifoWrite();
+        cfifo.CWriteFifo("Child sent this\n");
+        cfifo.CCloseOut();
+    } else {
+        cfifo.COpenFifoWrite();
+        cfifo.CWriteFifo("Parent sent this\n");
+        cfifo.CCloseOut();
+        cfifo.COpenFifoRead();
+        std::cout << "Parent recieved this: "<< cfifo.CReadFifo() << std::endl;
+        cfifo.CCloseIn();
+    }
+    /*CFork cfork;
     std::string str;
 
     cfork.CMakeFifo();
@@ -74,7 +88,7 @@ void Reception::createKitchen()
         //we are in parent -> shm
         //parent write ?
         //to write : (printf ?) or use of gets/getline
-    }
+    }*/
 }
 
 void Reception::dropOrder()
