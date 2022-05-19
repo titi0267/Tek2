@@ -14,6 +14,15 @@ CFork::CFork()
 
 CFork::~CFork()
 {
+}
+
+void CFork::CCreateChild()
+{
+    setPid();
+}
+
+void CFork::CKillPid()
+{
     kill(getPid(), SIGKILL);
 }
 

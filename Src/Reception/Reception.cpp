@@ -51,9 +51,45 @@ void Reception::setOrderId(uint32_t orderId)
    _orderId = orderId;
 }
 
-bool operator==(Order value, const Order o)
+void Reception::createKitchen()
 {
-    return (value.getOrderId() == o.getOrderId());
+    std::cout << "create child" << std::endl;
+    cfork.CCreateChild();
+    cfifo.CMakeFifo();
+
+    if (cfork.getPid() == 0) {
+        cfifo.COpenFifoRead();
+        std::cout << "Child recieved: " << cfifo.CReadFifo() << std::endl;
+        cfifo.CCloseIn();
+        cfifo.COpenFifoWrite();
+        cfifo.CWriteFifo("Child sent this\n");
+        cfifo.CCloseOut();
+    } else {
+        cfifo.COpenFifoWrite();
+        cfifo.CWriteFifo("Parent sent this\n");
+        cfifo.CCloseOut();
+        cfifo.COpenFifoRead();
+        std::cout << "Parent recieved this: "<< cfifo.CReadFifo() << std::endl;
+        cfifo.CCloseIn();
+    }
+    /*CFork cfork;
+    std::string str;
+
+    cfork.CMakeFifo();
+    if (cfork.getPid() == 0) {
+        cfork.COpenFifoWrite();
+        cfork.CWriteFifo("Lol");
+        //we are in child -> kitchen must be created here
+        //child read ?
+        //to read : get _message
+    } else {
+        cfork.COpenFifoRead();
+        str = cfork.CReadFifo();
+        cfork.CKillPid();
+        //we are in parent -> shm
+        //parent write ?
+        //to write : (printf ?) or use of gets/getline
+    }*/
 }
 
 void Reception::dropOrder()
@@ -79,6 +115,7 @@ void Reception::loop()
     while (1) {
         std::cout << "Waiter : What would you like to order ?" << std::endl;
         std::cin >> buff;
+        createKitchen();
         if (!buff.compare("No"))
             break;
         createOrder(orderId);

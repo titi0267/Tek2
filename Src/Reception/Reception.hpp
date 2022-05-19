@@ -14,12 +14,11 @@
 #include "../Utils/Utils.hpp"
 #include "../Pizza/IPizza.hpp"
 #include "../Pizza/Margarita.hpp"
+#include "../Encapsulations/Fork/CFork.hpp"
+#include "../Encapsulations/FIFO/CFifo.hpp"
 #include "Order.hpp"
 
 using pizzaPtr = std::unique_ptr<IPizza>;
-
-static inline bool operator==(Order value, const Order o);
-
 
 class Reception {
     public:
@@ -30,6 +29,7 @@ class Reception {
         void dropPizzaId(uint32_t orderId);
         void dropOrder();
         void setOrderId(uint32_t orderId);
+        void createKitchen();
 
     protected:
     private:
@@ -41,4 +41,6 @@ class Reception {
         std::deque<pizzaPtr> _pizzaQueue;
         std::list<Order> _orderList;
         std::list<uint32_t> _pizzasId;
+        CFork cfork;
+        CFifo cfifo;
 };

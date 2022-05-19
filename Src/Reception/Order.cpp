@@ -31,6 +31,11 @@ uint32_t Order::getOrderId() const
     return (_orderId);
 }
 
+bool Order::operator==(const Order &o) const
+{
+    return (_orderId == o.getOrderId());
+}
+
 void Order::setId(std::list<uint32_t> pizzasId)
 {
     _pizzasId = pizzasId;
