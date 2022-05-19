@@ -12,6 +12,7 @@ SRCS
 Src/main.cpp
 Src/Encapsulations/Mutex/CMutex.cpp
 Src/Encapsulations/Fork/CFork.cpp
+Src/Encapsulations/Wait/Wait.cpp
 Src/Encapsulations/Threads/CThreads.cpp
 Src/Encapsulations/FIFO/CFifo.cpp
 Src/Encapsulations/ConditionnalVar/ConditionnalVar.cpp
