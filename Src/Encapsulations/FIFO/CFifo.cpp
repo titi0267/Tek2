@@ -7,8 +7,9 @@
 
 #include "CFifo.hpp"
 
-CFifo::CFifo()
+CFifo::CFifo(int Id)
 {
+    sprintf(_str, "/tmp/myfifo%d", Id);
 }
 
 CFifo::~CFifo()
@@ -17,17 +18,17 @@ CFifo::~CFifo()
 
 void CFifo::CMakeFifo()
 {
-    mkfifo("/tmp/myfifo", 0666);
+    mkfifo(_str, 0666);
 }
 
 void CFifo::COpenFifoRead()
 {
-    _in = std::ifstream("/tmp/myfifo", std::ios::in);
+    _in = std::ifstream(_str, std::ios::in);
 }
 
 void CFifo::COpenFifoWrite()
 {
-    _out = std::ofstream("/tmp/myfifo");
+    _out = std::ofstream(_str);
 }
 
 std::string CFifo::CReadFifo()

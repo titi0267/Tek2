@@ -14,7 +14,7 @@
 
 class CFifo {
     public:
-        CFifo();
+        CFifo(int Id);
         ~CFifo();
         void CMakeFifo();
         void COpenFifoRead();
@@ -29,4 +29,5 @@ class CFifo {
         std::string messageRead;
         std::ifstream _in;
         std::ofstream _out;
+        char _str[20];
 };
