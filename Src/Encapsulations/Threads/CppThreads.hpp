@@ -2,22 +2,21 @@
 ** EPITECH PROJECT, 2022
 ** plazza
 ** File description:
-** CThreads
+** CppThreads
 */
 
 #pragma once
-#include <pthread.h>
-#include <stdlib.h>
-#include <vector>
+#include <thread>
 
-class CThreads {
+class CppThreads {
     public:
-        CThreads();
-        ~CThreads();
+        CppThreads();
+        ~CppThreads();
+
         int createThread(void *(*_start_routine)(void *), void *threadParam);
         int joinThreads();
 
     protected:
     private:
-        pthread_t _thread;
+        std::thread _thread;
 };

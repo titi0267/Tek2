@@ -13,11 +13,16 @@ Src/main.cpp
 Src/Encapsulations/Mutex/CMutex.cpp
 Src/Encapsulations/Fork/CFork.cpp
 Src/Encapsulations/Threads/CThreads.cpp
+Src/Encapsulations/ConditionnalVar/ConditionnalVar.cpp
 Src/Reception/Reception.cpp
 Src/Reception/Order.cpp
 Src/Pizza/Margarita.cpp
+Src/Kitchen/ThreadPull.cpp
+Src/Kitchen/ThreadPayload.cpp
 Src/Error/Error.cpp
 Src/Utils/Utils.cpp
+Src/Kitchen/Stock.cpp
+Src/Kitchen/Kitchen.cpp
 )
 
 add_executable(plazza ${SRCS} ${HEADERS})
