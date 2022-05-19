@@ -29,7 +29,8 @@ class Reception {
         void dropPizzaId(uint32_t orderId);
         void dropOrder();
         void setOrderId(uint32_t orderId);
-        void createKitchen();
+        void createKitchen(uint32_t kitchenId);
+        void sendOrder();
 
     protected:
     private:
@@ -42,5 +43,4 @@ class Reception {
         std::list<Order> _orderList;
         std::list<uint32_t> _pizzasId;
         CFork cfork;
-        CFifo cfifo;
 };

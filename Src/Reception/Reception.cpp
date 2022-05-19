@@ -5,6 +5,8 @@
 ** Reception
 */
 
+#include <cmath>
+
 #include "Reception.hpp"
 #include "../Kitchen/Kitchen.hpp"
 #include "../Error/Error.hpp"
@@ -48,11 +50,12 @@ void Reception::dropPizzaId(uint32_t orderId)
 
 void Reception::setOrderId(uint32_t orderId)
 {
-   _orderId = orderId;
+    _orderId = orderId;
 }
 
-void Reception::createKitchen()
+void Reception::createKitchen(uint32_t kitchenId)
 {
+    CFifo cfifo(kitchenId);
     std::cout << "create child" << std::endl;
     cfork.CCreateChild();
     cfifo.CMakeFifo();
@@ -89,6 +92,12 @@ void Reception::dropOrder()
     }
 }
 
+void Reception::sendOrder()
+{
+    for (int i = 0; i < ceil(_pizzaQueue.size() / _cooksPerKitchen); i++)
+        createKitchen(i);
+}
+
 void Reception::loop()
 {
     std::string buff = "";
@@ -97,13 +106,14 @@ void Reception::loop()
     while (1) {
         std::cout << "Waiter : What would you like to order ?" << std::endl;
         std::cin >> buff;
-        createKitchen();
         if (!buff.compare("No"))
             break;
         createOrder(orderId);
-        dropPizzaId(0);
         dropOrder();
-        orderId++;
+        if (1) {
+            sendOrder();
+            orderId++;
+        }
     }
 }
 
