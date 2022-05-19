@@ -6,6 +6,7 @@
 */
 
 #include "Reception.hpp"
+#include "../Kitchen/Kitchen.hpp"
 #include "../Error/Error.hpp"
 
 Reception::Reception(int ac, char **av)
