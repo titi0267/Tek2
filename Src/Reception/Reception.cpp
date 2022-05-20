@@ -12,7 +12,7 @@
 #include "../Kitchen/Kitchen.hpp"
 #include "../Error/Error.hpp"
 
-Reception::Reception(int ac, char **av) : orderTest(0)
+Reception::Reception(int ac, char **av)
 {
     if (ac != 4)
         throw (Error("Not Enough Arguments"));
@@ -57,10 +57,9 @@ void Reception::setOrderId(uint32_t orderId)
 void Reception::createKitchen(uint32_t kitchenId)
 {
     //_fifoList.push_back(CFifo(kitchenId));
-    cfork.CCreateChild();
     _fifoList[kitchenId].CMakeFifo();
 
-    if (cfork.getPid() == 0) {
+    if (0) {
         _runningKitchens.push_back(std::make_unique<Kitchen>(kitchenId, _cooksPerKitchen, _cookingTime));
         _runningKitchens[kitchenId]->loop();
         // enleve de la list
@@ -136,8 +135,7 @@ bool Reception::checkOrder(std::string buff, uint32_t orderId)
         std::cout << "ERROR, order syntaxe isn't correct!" << std::endl;
         return (false);
     }
-    Order order(orderTest);
-    orderTest+=1;
+    Order order(orderId);
     while (iter != end) {
         createPizza((*iter)[2], (*iter)[3], (*iter)[4], order);
         ++iter;
