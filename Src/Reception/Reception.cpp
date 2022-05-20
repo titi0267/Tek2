@@ -126,8 +126,8 @@ void Reception::createPizza(std::string pizza, std::string size, std::string num
 
 bool Reception::checkOrder(std::string buff, uint32_t orderId)
 {
-    std::regex all_regex("((Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))(; (Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))*");
-    std::regex my_regex("((Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))");
+    std::regex all_regex("((margarita|regina|americana|fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))(; (margarita|regina|americana|fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))*");
+    std::regex my_regex("((margarita|regina|americana|fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))");
     std::sregex_iterator end;
     std::sregex_iterator iter(buff.begin(), buff.end(), my_regex);
 
@@ -155,6 +155,9 @@ void Reception::loop()
         if (!std::getline(std::cin, buff))
             break;
         checkOrderRet = checkOrder(buff, orderId);
+        if (checkOrderRet) {
+            orderId++;
+        }
     }
 }
 
