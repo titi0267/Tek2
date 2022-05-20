@@ -34,7 +34,7 @@ class Reception {
         void dropOrder();
         void setOrderId(uint32_t orderId);
         void createKitchen(uint32_t kitchenId);
-        int checkOrder(std::string buff, uint32_t orderId);
+        bool checkOrder(std::string buff, uint32_t orderId);
         void sendOrder();
         void createPizza(std::string pizza, std::string size, std::string number, Order &order);
 

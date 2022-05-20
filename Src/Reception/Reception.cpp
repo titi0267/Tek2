@@ -125,16 +125,16 @@ void Reception::createPizza(std::string pizza, std::string size, std::string num
     }
 }
 
-int Reception::checkOrder(std::string buff, uint32_t orderId)
+bool Reception::checkOrder(std::string buff, uint32_t orderId)
 {
-    std::regex checkRgx("((Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))(; (Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))*");
-    std::regex rgx("((Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))");
+    std::regex all_regex("((Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))(; (Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))*");
+    std::regex my_regex("((Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))");
     std::sregex_iterator end;
-    std::sregex_iterator iter(buff.begin(), buff.end(), rgx);
+    std::sregex_iterator iter(buff.begin(), buff.end(), my_regex);
 
-    if (!std::regex_match(buff, checkRgx)) {
-        std::cerr << "Invalid Pizza" << std::endl;
-        return (-1);
+    if (!std::regex_match(buff, all_regex)) {
+        std::cout << "ERROR, order syntaxe isn't correct!" << std::endl;
+        return (false);
     }
     Order order(orderId);
     while (iter != end) {
@@ -142,26 +142,20 @@ int Reception::checkOrder(std::string buff, uint32_t orderId)
         ++iter;
     }
     _orderList.push_back(order);
-    return (0);
+    return (true);
 }
 
 void Reception::loop()
 {
     std::string buff = "";
     uint32_t orderId = 0;
-    int checkOrderRet;
+    bool checkOrderRet;
 
     while (1) {
         std::cout << "Waiter : What would you like to order ?" << std::endl;
         if (!std::getline(std::cin, buff))
             break;
         checkOrderRet = checkOrder(buff, orderId);
-        // createOrder(orderId);
-        // dropOrder();
-        // if (1) {
-        //     sendOrder();
-        //     orderId++;
-        // }
     }
 }
 
