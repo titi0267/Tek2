@@ -16,6 +16,7 @@ class CFifo {
     public:
         CFifo(int Id);
         ~CFifo();
+        CFifo(const CFifo &) = delete;
         void CMakeFifo();
         void COpenFifoRead();
         void COpenFifoWrite();

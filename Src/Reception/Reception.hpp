@@ -49,7 +49,7 @@ class Reception {
         CFork cfork;
         std::deque<pizzaPtr> _pizzaQueue;
         std::deque<std::unique_ptr<Kitchen>> _runningKitchens;
-        std::deque<CFifo> _fifoList;
+        std::deque<std::unique_ptr<CFifo>> _fifoList;
         std::list<Order> _orderList;
         std::list<uint32_t> _pizzasId;
 };

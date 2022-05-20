@@ -21,9 +21,9 @@ class CFork {
         void CCreateChild();
         void CKillPid();
         pid_t getPid() const;
-        void setPid();
 
     protected:
+        void setPid();
     private:
         pid_t _childPid;
 };

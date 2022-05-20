@@ -56,10 +56,14 @@ void Reception::setOrderId(uint32_t orderId)
 
 void Reception::createKitchen(uint32_t kitchenId)
 {
-    //_fifoList.push_back(CFifo(kitchenId));
-    _fifoList[kitchenId].CMakeFifo();
+    for (int i = 0;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
+        std::cout << "Kitchen : " << i << std::endl;
+        cfork.CCreateChild();
+    }
+    _fifoList.push_back(std::make_unique<CFifo>(kitchenId));
+    _fifoList[kitchenId]->CMakeFifo();
 
-    if (0) {
+    if (cfork.getPid() == 0) {
         _runningKitchens.push_back(std::make_unique<Kitchen>(kitchenId, _cooksPerKitchen, _cookingTime));
         _runningKitchens[kitchenId]->loop();
         // enleve de la list
@@ -148,6 +152,7 @@ void Reception::loop()
 {
     std::string buff = "";
     uint32_t orderId = 0;
+    uint32_t kitchenId = 0;
     bool checkOrderRet;
 
     while (1) {
@@ -155,8 +160,10 @@ void Reception::loop()
         if (!std::getline(std::cin, buff))
             break;
         checkOrderRet = checkOrder(buff, orderId);
+        std::cout << "Order " << checkOrderRet << std::endl;
         if (checkOrderRet) {
             orderId++;
+            createKitchen(kitchenId);
         }
     }
 }
