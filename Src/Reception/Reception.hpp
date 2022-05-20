@@ -46,6 +46,7 @@ class Reception {
         int _timeToReplace;
         Utils _tools;
         uint32_t _orderId;
+        CFork cfork;
         std::deque<pizzaPtr> _pizzaQueue;
         std::deque<std::unique_ptr<Kitchen>> _runningKitchens;
         std::deque<CFifo> _fifoList;

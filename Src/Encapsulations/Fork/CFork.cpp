@@ -9,7 +9,6 @@
 
 CFork::CFork()
 {
-    setPid();
 }
 
 CFork::~CFork()
