@@ -12,7 +12,7 @@
 #include "../Kitchen/Kitchen.hpp"
 #include "../Error/Error.hpp"
 
-Reception::Reception(int ac, char **av)
+Reception::Reception(int ac, char **av) : orderTest(0)
 {
     if (ac != 4)
         throw (Error("Not Enough Arguments"));
@@ -136,7 +136,8 @@ bool Reception::checkOrder(std::string buff, uint32_t orderId)
         std::cout << "ERROR, order syntaxe isn't correct!" << std::endl;
         return (false);
     }
-    Order order(orderId);
+    Order order(orderTest);
+    orderTest+=1;
     while (iter != end) {
         createPizza((*iter)[2], (*iter)[3], (*iter)[4], order);
         ++iter;

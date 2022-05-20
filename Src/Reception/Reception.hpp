@@ -10,6 +10,7 @@
 #include <memory>
 #include <list>
 #include <tuple>
+#include <climits>
 
 #include "../Utils/Utils.hpp"
 #include "../Pizza/IPizza.hpp"
@@ -43,6 +44,7 @@ class Reception {
         int _cookingTime;
         int _cooksPerKitchen;
         int _timeToReplace;
+        int orderTest;
         Utils _tools;
         uint32_t _orderId;
         std::deque<pizzaPtr> _pizzaQueue;
