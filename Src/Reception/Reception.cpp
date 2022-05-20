@@ -160,10 +160,9 @@ void Reception::loop()
         if (!std::getline(std::cin, buff))
             break;
         checkOrderRet = checkOrder(buff, orderId);
-        std::cout << "Order " << checkOrderRet << std::endl;
         if (checkOrderRet) {
-            orderId++;
             createKitchen(kitchenId);
+            orderId++;
         }
     }
 }
