@@ -6,12 +6,13 @@
 */
 
 #include <cmath>
+#include <regex>
 
 #include "Reception.hpp"
 #include "../Kitchen/Kitchen.hpp"
 #include "../Error/Error.hpp"
 
-Reception::Reception(int ac, char **av)
+Reception::Reception(int ac, char **av) : orderTest(0)
 {
     if (ac != 4)
         throw (Error("Not Enough Arguments"));
@@ -29,7 +30,7 @@ void Reception::createOrder(uint32_t orderId)
     static u_int32_t id = 0;
     Order order(orderId);
 
-    for (int i = 0; i < 7; i++) {
+    for (int i = 0; i < 12; i++) {
         _pizzaQueue.push_back(std::make_unique<Margarita>(id, IPizza::PizzaSize::L));
         order.pushPizza(id);
         id++;
@@ -55,25 +56,16 @@ void Reception::setOrderId(uint32_t orderId)
 
 void Reception::createKitchen(uint32_t kitchenId)
 {
-    CFifo cfifo(kitchenId);
-    std::cout << "create child" << std::endl;
+    //_fifoList.push_back(CFifo(kitchenId));
     cfork.CCreateChild();
-    cfifo.CMakeFifo();
+    _fifoList[kitchenId].CMakeFifo();
 
     if (cfork.getPid() == 0) {
-        cfifo.COpenFifoRead();
-        std::cout << "Child recieved: " << cfifo.CReadFifo() << std::endl;
-        cfifo.CCloseIn();
-        cfifo.COpenFifoWrite();
-        cfifo.CWriteFifo("Child sent this\n");
-        cfifo.CCloseOut();
-    } else {
-        cfifo.COpenFifoWrite();
-        cfifo.CWriteFifo("Parent sent this\n");
-        cfifo.CCloseOut();
-        cfifo.COpenFifoRead();
-        std::cout << "Parent recieved this: "<< cfifo.CReadFifo() << std::endl;
-        cfifo.CCloseIn();
+        _runningKitchens.push_back(std::make_unique<Kitchen>(kitchenId, _cooksPerKitchen, _cookingTime));
+        _runningKitchens[kitchenId]->loop();
+        // enleve de la list
+        // enleve le fifo de la list;
+        exit(0);
     }
 }
 
@@ -98,22 +90,73 @@ void Reception::sendOrder()
         createKitchen(i);
 }
 
+void Reception::createPizza(std::string pizza, std::string size, std::string number, Order &order)
+{
+    static u_int32_t id = 0;
+    IPizza::PizzaSize pizzaSize = _tools.getSizeFromStr(size);
+    IPizza::PizzaType type = _tools.getTypeFromStr(pizza);
+    int nbr = std::atoi(number.c_str());
+
+    switch (type) {
+        case IPizza::PizzaType::Margarita :
+            for (int i = 0; i < nbr; i++, id++) {
+                _pizzaQueue.push_back(std::make_unique<Margarita>(id, pizzaSize));
+                order.pushPizza(id);
+            }
+            break;
+        case IPizza::PizzaType::Regina :
+            for (int i = 0; i < nbr; i++, id++) {
+                _pizzaQueue.push_back(std::make_unique<Regina>(id, pizzaSize));
+                order.pushPizza(id);
+            }
+            break;
+        case IPizza::PizzaType::Fantasia :
+            for (int i = 0; i < nbr; i++, id++) {
+                _pizzaQueue.push_back(std::make_unique<Fantasia>(id, pizzaSize));
+                order.pushPizza(id);
+            }
+            break;
+        default:
+            for (int i = 0; i < nbr; i++, id++) {
+                _pizzaQueue.push_back(std::make_unique<Americana>(id, pizzaSize));
+                order.pushPizza(id);
+            }
+            break;
+    }
+}
+
+bool Reception::checkOrder(std::string buff, uint32_t orderId)
+{
+    std::regex all_regex("((Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))(; (Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))*");
+    std::regex my_regex("((Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))");
+    std::sregex_iterator end;
+    std::sregex_iterator iter(buff.begin(), buff.end(), my_regex);
+
+    if (!std::regex_match(buff, all_regex)) {
+        std::cout << "ERROR, order syntaxe isn't correct!" << std::endl;
+        return (false);
+    }
+    Order order(orderTest);
+    orderTest+=1;
+    while (iter != end) {
+        createPizza((*iter)[2], (*iter)[3], (*iter)[4], order);
+        ++iter;
+    }
+    _orderList.push_back(order);
+    return (true);
+}
+
 void Reception::loop()
 {
     std::string buff = "";
     uint32_t orderId = 0;
+    bool checkOrderRet;
 
     while (1) {
         std::cout << "Waiter : What would you like to order ?" << std::endl;
-        std::cin >> buff;
-        if (!buff.compare("No"))
+        if (!std::getline(std::cin, buff))
             break;
-        createOrder(orderId);
-        dropOrder();
-        if (1) {
-            sendOrder();
-            orderId++;
-        }
+        checkOrderRet = checkOrder(buff, orderId);
     }
 }
 

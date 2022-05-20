@@ -19,13 +19,15 @@ using pizzaPtr = std::unique_ptr<IPizza>;
 
 class Kitchen {
     public:
-        Kitchen(uint32_t _cookNbr, uint32_t _cookingTimeMultiplier);
+        Kitchen(uint32_t id, uint32_t _cookNbr, uint32_t _cookingTimeMultiplier);
         ~Kitchen();
 
+        void loop();
         void addPizza(std::unique_ptr<IPizza> &);
 
     protected:
     private:
+        uint32_t _id;
         ThreadPull _threadPull;
         std::deque<pizzaPtr> _pizzaToCook;
         uint32_t _cookingTimeMultiplier;
