@@ -139,7 +139,6 @@ int Reception::checkOrder(std::string buff, uint32_t orderId)
     Order order(orderId);
     while (iter != end) {
         createPizza((*iter)[2], (*iter)[3], (*iter)[4], order);
-        std::cout << (*iter)[4] << std::endl;
         ++iter;
     }
     _orderList.push_back(order);
