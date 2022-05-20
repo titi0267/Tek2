@@ -12,7 +12,7 @@
 #include "../Kitchen/Kitchen.hpp"
 #include "../Error/Error.hpp"
 
-Reception::Reception(int ac, char **av)
+Reception::Reception(int ac, char **av) : orderTest(0)
 {
     if (ac != 4)
         throw (Error("Not Enough Arguments"));
@@ -125,10 +125,10 @@ void Reception::createPizza(std::string pizza, std::string size, std::string num
     }
 }
 
-int Reception::checkOrder(std::string buff, uint32_t orderId)
+int Reception::checkOrder(std::string buff)
 {
-    std::regex checkRgx("((Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))(; (Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))*");
-    std::regex rgx("((Margarita|Regina|Americana|Fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))");
+    std::regex checkRgx("((margarita|regina|americana|fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))(; (margarita|regina|americana|fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))*");
+    std::regex rgx("((margarita|regina|americana|fantasia) (S|M|L|XL|XXL) x([1-9][0-9]*))");
     std::sregex_iterator end;
     std::sregex_iterator iter(buff.begin(), buff.end(), rgx);
 
@@ -136,26 +136,42 @@ int Reception::checkOrder(std::string buff, uint32_t orderId)
         std::cerr << "Invalid Pizza" << std::endl;
         return (-1);
     }
-    Order order(orderId);
+    //setOrderId(_orderId + 1);
+    Order order(orderTest);
+    std::cout << "Before created : " << orderTest << std::endl;
+    orderTest+=1;
+    std::cout << "New order created : " << orderTest << std::endl;
     while (iter != end) {
         createPizza((*iter)[2], (*iter)[3], (*iter)[4], order);
         ++iter;
     }
     _orderList.push_back(order);
+    std::cout << "End : " << orderTest << std::endl;
+
     return (0);
 }
 
 void Reception::loop()
 {
     std::string buff = "";
-    uint32_t orderId = 0;
     int checkOrderRet;
 
+    //std::cin.clear();
     while (1) {
+        std::cout << "Before getline : " << orderTest << std::endl;
         std::cout << "Waiter : What would you like to order ?" << std::endl;
-        if (!std::getline(std::cin, buff))
+        //std::cin >> buff;
+        if (!std::getline(std::cin, buff)) {
             break;
-        checkOrderRet = checkOrder(buff, orderId);
+        }
+        std::cout << "After getline : " << orderTest << std::endl;
+        checkOrderRet = checkOrder(buff);
+        for (auto itr = _orderList.begin(); itr != _orderList.end(); itr++) {
+            _pizzasId = itr->getId();
+            std::cout << "ORDER " << itr->getOrderId() << " : " << _pizzasId.size() << std::endl;
+        }
+    std::cout << "End While : " << orderTest << std::endl;
+
         // createOrder(orderId);
         // dropOrder();
         // if (1) {

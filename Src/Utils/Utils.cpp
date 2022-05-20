@@ -25,11 +25,11 @@ bool Utils::is_number(const std::string& s)
 
 IPizza::PizzaType Utils::getTypeFromStr(std::string type)
 {
-    if (type.compare("Margarita") == 0)
+    if (type.compare("margarita") == 0)
         return (IPizza::PizzaType::Margarita);
-    if (type.compare("Regina") == 0)
+    if (type.compare("regina") == 0)
         return (IPizza::PizzaType::Regina);
-    if (type.compare("Americana") == 0)
+    if (type.compare("americana") == 0)
         return (IPizza::PizzaType::Americana);
     return (IPizza::PizzaType::Fantasia);
 }
