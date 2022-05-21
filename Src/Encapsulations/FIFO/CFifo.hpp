@@ -27,11 +27,12 @@ class CFifo {
         void CCloseRd();
         void CCloseWr();
         void CWriteFifo(SendPizza_t *pizzaInfo);
-        int test_poll();
+        bool test_poll();
 
     protected:
     private:
         SendPizza_t _messageRead;
+        struct pollfd _poll;
         int _fdRd;
         int _fdWr;
         char _str[20];
