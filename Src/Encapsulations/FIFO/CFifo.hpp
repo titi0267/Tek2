@@ -9,8 +9,10 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <poll.h>
 #include <iostream>
 #include <fstream>
+#include <fcntl.h>
 #include "../../Pizza/SendPizza.hpp"
 
 class CFifo {
@@ -21,15 +23,15 @@ class CFifo {
         void CMakeFifo();
         void COpenFifoRead();
         void COpenFifoWrite();
-        void CReadFifo(SendPizza_t &pizzaInfo);
-        void CCloseIn();
-        void CCloseOut();
+        SendPizza_t *CReadFifo();
+        void CCloseRd();
+        void CCloseWr();
         void CWriteFifo(SendPizza_t *pizzaInfo);
 
     protected:
     private:
-        std::string messageRead;
-        std::ifstream _in;
-        std::ofstream _out;
+        SendPizza_t *_messageRead;
+        int _fdRd;
+        int _fdWr;
         char _str[20];
 };

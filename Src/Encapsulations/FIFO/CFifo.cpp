@@ -6,6 +6,7 @@
 */
 
 #include "CFifo.hpp"
+#include <unistd.h>
 
 CFifo::CFifo(int Id)
 {
@@ -23,37 +24,35 @@ void CFifo::CMakeFifo()
 
 void CFifo::COpenFifoRead()
 {
-    _in = std::ifstream(_str, std::ios::in);
+    _fdRd = open(_str, O_RDONLY);//std::ifstream("/tmp/myfifo", std::ios::in);
 }
 
 void CFifo::COpenFifoWrite()
 {
-    _out = std::ofstream(_str);
+    _fdWr = open(_str, O_WRONLY);//std::ofstream("/tmp/myfifo");
 }
 
-void CFifo::CReadFifo(SendPizza_t &pizzaInfo)
+SendPizza_t *CFifo::CReadFifo()
 {
-    _in.read(reinterpret_cast<char *>(&pizzaInfo), sizeof(SendPizza_t));
+    //std::cout << "Read under this" << std::endl;
+    read(_fdRd, _messageRead, sizeof(SendPizza_t));
+    //std::cout << "Read is fine : " << std::endl;//<< _messageRead->doe << "$"<< std::endl;
+    //std::cout << "fd = " << rd << " | $" << _messageRead[0] << "$" << std::endl;
+    return (_messageRead);
 }
 
-std::ofstream &operator<<(std::ofstream &out, SendPizza_t *pizzaInfo)
+void CFifo::CCloseRd()
 {
-    out.write(reinterpret_cast<char *>(pizzaInfo), sizeof(SendPizza_t));
-    return (out);
+    close(_fdRd);
 }
 
-void CFifo::CWriteFifo(SendPizza_t *pizzaInfo)
+void CFifo::CCloseWr()
 {
-    //std::cout << pizzaInfo;
-    _out << pizzaInfo;
+    close(_fdWr);
 }
 
-void CFifo::CCloseIn()
-{
-    _in.close();
-}
 
-void CFifo::CCloseOut()
+void CFifo::CWriteFifo(SendPizza_t *pizza)
 {
-    _out.close();
+    write(_fdWr, pizza, sizeof(SendPizza_t));
 }

@@ -65,7 +65,8 @@ void Reception::createKitchen()
     }
     _forkList[0]->cfifo.COpenFifoWrite();
     _forkList[0]->cfifo.CWriteFifo(&pizzaInfo);
-    _forkList[0]->cfifo.CCloseOut();
+    _forkList[0]->cfifo.CCloseWr();
+    std::cout << "Fifo was written" << std::endl;
     /*ici -> read pour recup message enfant*/
 }
 
