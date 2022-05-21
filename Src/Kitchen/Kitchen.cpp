@@ -6,6 +6,7 @@
 */
 
 #include "Kitchen.hpp"
+#include "../Pizza/SendPizza.hpp"
 
 Kitchen::Kitchen(uint32_t id, uint32_t cookNbr, uint32_t cookingTimeMultiplier, CFifo &fifo) :
 _threadPull(std::make_unique<ThreadPull>(cookNbr, cookingTimeMultiplier)), _cookingTimeMultiplier(cookingTimeMultiplier), _id(id), _fifo(fifo)
@@ -18,15 +19,17 @@ void Kitchen::loop()
     clock_t tmp;
     _clock = clock();
     bool isPizzaToCook = false;
-
+    SendPizza_t pizza;
 
     while(1) {
         tmp = clock();
         isPizzaToCook = _threadPull->cookPizza();
-        if (isPizzaToCook)
+        if (isPizzaToCook == true)
             _clock = clock();
         _fifo.COpenFifoRead();
-        _fifo.CReadFifo();
+        _fifo.COpenFifoRead();
+        _fifo.CReadFifo(pizza);
+        std::cout << pizza.doe << std::endl;
         _fifo.CCloseIn();
 /*        _fifo.COpenFifoWrite(); //ici -> write pour passer au parent
         _fifo.CWriteFifo("");

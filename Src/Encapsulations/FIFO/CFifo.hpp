@@ -21,7 +21,7 @@ class CFifo {
         void CMakeFifo();
         void COpenFifoRead();
         void COpenFifoWrite();
-        SendPizza_t *CReadFifo();
+        void CReadFifo(SendPizza_t &pizzaInfo);
         void CCloseIn();
         void CCloseOut();
         void CWriteFifo(SendPizza_t *pizzaInfo);

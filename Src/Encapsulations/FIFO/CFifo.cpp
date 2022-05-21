@@ -31,17 +31,15 @@ void CFifo::COpenFifoWrite()
     _out = std::ofstream(_str);
 }
 
-SendPizza_t *CFifo::CReadFifo()
+void CFifo::CReadFifo(SendPizza_t &pizzaInfo)
 {
-    SendPizza_t *pizzaInfo;
-
     _in.read(reinterpret_cast<char *>(&pizzaInfo), sizeof(SendPizza_t));
-    return (pizzaInfo);
 }
 
-std::ofstream operator<<(std::ofstream &out, SendPizza_t *pizzaInfo)
+std::ofstream &operator<<(std::ofstream &out, SendPizza_t *pizzaInfo)
 {
-    out.write(reinterpret_cast<char *>(&pizzaInfo), sizeof(SendPizza_t));
+    out.write(reinterpret_cast<char *>(pizzaInfo), sizeof(SendPizza_t));
+    return (out);
 }
 
 void CFifo::CWriteFifo(SendPizza_t *pizzaInfo)
