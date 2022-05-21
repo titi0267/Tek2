@@ -57,10 +57,9 @@ void Reception::setOrderId(uint32_t orderId)
 void Reception::createKitchen()
 {
     static int kitchenId = 0;
-
     for (int i = kitchenId;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
         std::cout << "Kitchen : " << i << std::endl;
-        _forkList.push_back(std::make_unique<CFork>(kitchenId, _cooksPerKitchen, _cookingTime));
+        _forkList.push_back(std::make_unique<CFork>(i, _cooksPerKitchen, _cookingTime));
         /*cfork.CCreateChild()
         _fifoList.push_back(std::make_unique<CFifo>(kitchenId));
         _fifoList[kitchenId]->CMakeFifo();

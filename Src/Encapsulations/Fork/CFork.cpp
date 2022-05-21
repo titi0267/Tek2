@@ -14,7 +14,8 @@ CFork::CFork(uint32_t forkNbr, uint32_t cookNbr, uint32_t cookingTimeMultiplier)
         cfifo.CMakeFifo();
         cfifo.COpenFifoRead();
         std::cout << "Enfant: " << cfifo.CReadFifo() << std::endl;
-        std::unique_ptr<Kitchen> kitchen = std::make_unique<Kitchen>(forkNbr, cookNbr, cookingTimeMultiplier);
+        std::unique_ptr<Kitchen> kitchen = std::make_unique<Kitchen>(forkNbr, cookNbr, cookingTimeMultiplier, cfifo);
+        kitchen->loop();
         cfifo.CCloseIn();
         cfifo.COpenFifoWrite();
         cfifo.CWriteFifo("String from child");

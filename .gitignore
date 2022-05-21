@@ -2,3 +2,4 @@ test.sh
 build/
 .vscode/
 plazza
+*.o
