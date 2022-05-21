@@ -12,21 +12,22 @@ ThreadPull::ThreadPull(uint32_t cookNbr)
     for (int i = 0; i < cookNbr; i++) {
         _cooker.push_back(std::make_unique<CThreads>());
         _isRunningThread.push_back(ThreadStatus::FREE);
-        _payloads.push_back(std::make_unique<ThreadPayload>(this, 12));
+        _payloads.push_back(std::make_unique<ThreadPayload>(this, i));
     }
-    _test = 12;
 }
 
 ThreadPull::~ThreadPull()
 {
 }
 
-void *cook(void * ptr)
+bool ThreadPull::cookPizza()
 {
-    ThreadPayload *pull = (ThreadPayload *)ptr;
-    std::cout << "Je suis " << pull->getId() << std::endl;
-    pull->getThreadPull()->setThreadFinish(pull->getId());
-    return (NULL);
+    if (_pizzaToCook.size() == 0)
+        return (false);
+    else {
+        launchThread();
+        return (true);
+    }
 }
 
 void ThreadPull::setThreadFinish(uint32_t index)

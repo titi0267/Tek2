@@ -24,7 +24,8 @@ SRC =	Src/Encapsulations/Mutex/CMutex.cpp		\
 		Src/Error/Error.cpp		\
 		Src/Utils/Utils.cpp		\
 		Src/Kitchen/Stock.cpp		\
-		Src/Kitchen/Kitchen.cpp
+		Src/Kitchen/Kitchen.cpp		\
+		Src/Kitchen/ThreadFunction.cpp
 
 MAIN_OBJ            =    $(MAIN_SRC:.cpp=.o)
 OBJ                    =    $(SRC:.cpp=.o)
