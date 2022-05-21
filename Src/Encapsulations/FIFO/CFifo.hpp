@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <iostream>
 #include <fstream>
+#include "../../Pizza/SendPizza.hpp"
 
 class CFifo {
     public:
@@ -20,10 +21,10 @@ class CFifo {
         void CMakeFifo();
         void COpenFifoRead();
         void COpenFifoWrite();
-        std::string CReadFifo();
+        SendPizza_t *CReadFifo();
         void CCloseIn();
         void CCloseOut();
-        void CWriteFifo(std::string messageWrite);
+        void CWriteFifo(SendPizza_t *pizzaInfo);
 
     protected:
     private:

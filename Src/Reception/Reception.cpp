@@ -57,12 +57,14 @@ void Reception::setOrderId(uint32_t orderId)
 void Reception::createKitchen()
 {
     static int kitchenId = 0;
+    SendPizza_t pizzaInfo = {_pizzaQueue[0]->getPizzaId(), (uint32_t)_pizzaQueue[0]->getPizzaSize(), 1, 1, 1, 1, 0, 0, 0, 0, 0};
+
     for (int i = kitchenId;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
         std::cout << "Kitchen : " << i << std::endl;
         _forkList.push_back(std::make_unique<CFork>(i, _cooksPerKitchen, _cookingTime));
     }
     _forkList[0]->cfifo.COpenFifoWrite();
-    _forkList[0]->cfifo.CWriteFifo("I write from PARENT\n");
+    _forkList[0]->cfifo.CWriteFifo(&pizzaInfo);
     _forkList[0]->cfifo.CCloseOut();
     /*ici -> read pour recup message enfant*/
 }
