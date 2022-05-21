@@ -10,6 +10,7 @@
 #include <deque>
 #include <iostream>
 #include <memory>
+#include <time.h>
 
 #include "../Encapsulations/Mutex/CMutex.hpp"
 #include "../Pizza/IPizza.hpp"
@@ -32,4 +33,5 @@ class Kitchen {
         std::deque<pizzaPtr> _pizzaToCook;
         uint32_t _cookingTimeMultiplier;
         CMutex _pickInStock;
+        clock_t _clock;
 };
