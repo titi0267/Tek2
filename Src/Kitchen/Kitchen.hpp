@@ -30,7 +30,7 @@ class Kitchen {
     protected:
     private:
         uint32_t _id;
-        ThreadPull _threadPull;
+        std::unique_ptr<ThreadPull> _threadPull;
         std::deque<pizzaPtr> _pizzaToCook;
         uint32_t _cookingTimeMultiplier;
         CMutex _pickInStock;

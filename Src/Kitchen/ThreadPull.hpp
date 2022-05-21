@@ -8,8 +8,13 @@
 #pragma once
 #include <deque>
 #include <iostream>
+#include <memory>
+
 #include "../Encapsulations/Threads/CThreads.hpp"
 #include "ThreadPayload.hpp"
+
+using ThreadPayloadPtr = std::unique_ptr<ThreadPayload>;
+using ThreadPtr = std::unique_ptr<CThreads>;
 
 class ThreadPull {
     public:
@@ -28,7 +33,7 @@ class ThreadPull {
 
     protected:
     private:
-        std::deque<ThreadPayload> _payloads;
-        std::deque<CThreads> _cooker;
+        std::deque<ThreadPayloadPtr> _payloads;
+        std::deque<ThreadPtr> _cooker;
         std::deque<ThreadStatus> _isRunningThread;
 };
