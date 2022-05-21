@@ -26,11 +26,11 @@ class CFifo {
         SendPizza_t *CReadFifo();
         void CCloseRd();
         void CCloseWr();
-        void CWriteFifo(SendPizza_t *pizzaInfo);
+        void CWriteFifo(SendPizza_t pizzaInfo);
 
     protected:
     private:
-        SendPizza_t *_messageRead;
+        SendPizza_t _messageRead;
         int _fdRd;
         int _fdWr;
         char _str[20];

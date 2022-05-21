@@ -35,10 +35,10 @@ void CFifo::COpenFifoWrite()
 SendPizza_t *CFifo::CReadFifo()
 {
     //std::cout << "Read under this" << std::endl;
-    read(_fdRd, _messageRead, sizeof(SendPizza_t));
-    //std::cout << "Read is fine : " << std::endl;//<< _messageRead->doe << "$"<< std::endl;
+    read(_fdRd, &_messageRead, sizeof(SendPizza_t));
+    std::cout << "Read is fine : " << std::endl;//<< _messageRead->doe << "$"<< std::endl;
     //std::cout << "fd = " << rd << " | $" << _messageRead[0] << "$" << std::endl;
-    return (_messageRead);
+    return (&_messageRead);
 }
 
 void CFifo::CCloseRd()
@@ -52,7 +52,7 @@ void CFifo::CCloseWr()
 }
 
 
-void CFifo::CWriteFifo(SendPizza_t *pizza)
+void CFifo::CWriteFifo(SendPizza_t pizza)
 {
-    write(_fdWr, pizza, sizeof(SendPizza_t));
+    write(_fdWr, &pizza, sizeof(SendPizza_t));
 }
