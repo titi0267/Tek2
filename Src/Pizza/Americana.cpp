@@ -12,10 +12,13 @@ Americana::Americana(uint32_t pizzaId, IPizza::PizzaSize size)
     _id = pizzaId;
     _size = size;
 
-    _ingredients.push_back("doe");
-    _ingredients.push_back("tomato");
-    _ingredients.push_back("gruyere");
-    _ingredients.push_back("steak");
+    for (int i = 0; i <= (int)IPizza::Ingredients::CHIEF_LOVE; i++) {
+        _ingredients.push_back(false);
+    }
+    _ingredients[(int)IPizza::Ingredients::DOE] = true;
+    _ingredients[(int)IPizza::Ingredients::TOMATO] = true;
+    _ingredients[(int)IPizza::Ingredients::GRUYERE] = true;
+    _ingredients[(int)IPizza::Ingredients::STEAK] = true;
     _bakedTime = 2;
 }
 
@@ -29,7 +32,7 @@ uint32_t Americana::getPizzaId()
     return (_id);
 }
 
-std::deque<std::string> Americana::getIngredients()
+std::deque<bool> Americana::getIngredients()
 {
     return (_ingredients);
 }

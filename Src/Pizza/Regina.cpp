@@ -12,11 +12,14 @@ Regina::Regina(uint32_t pizzaId, IPizza::PizzaSize size)
     _id = pizzaId;
     _size = size;
 
-    _ingredients.push_back("doe");
-    _ingredients.push_back("tomato");
-    _ingredients.push_back("gruyere");
-    _ingredients.push_back("ham");
-    _ingredients.push_back("mushrooms");
+    for (int i = 0; i <= (int)IPizza::Ingredients::CHIEF_LOVE; i++) {
+        _ingredients.push_back(false);
+    }
+    _ingredients[(int)IPizza::Ingredients::DOE] = true;
+    _ingredients[(int)IPizza::Ingredients::TOMATO] = true;
+    _ingredients[(int)IPizza::Ingredients::GRUYERE] = true;
+    _ingredients[(int)IPizza::Ingredients::HAM] = true;
+    _ingredients[(int)IPizza::Ingredients::MUSHROOM] = true;
     _bakedTime = 2;
 }
 
@@ -30,7 +33,7 @@ uint32_t Regina::getPizzaId()
     return (_id);
 }
 
-std::deque<std::string> Regina::getIngredients()
+std::deque<bool> Regina::getIngredients()
 {
     return (_ingredients);
 }

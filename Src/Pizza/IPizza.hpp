@@ -27,8 +27,20 @@ class IPizza {
             XXL = 16
         };
 
+        enum class Ingredients {
+            DOE,
+            TOMATO,
+            GRUYERE,
+            HAM,
+            MUSHROOM,
+            STEAK,
+            EGG,
+            GOAT_CHEESE,
+            CHIEF_LOVE
+        };
+
         virtual ~IPizza() = default;
-        virtual std::deque<std::string> getIngredients() = 0;
+        virtual std::deque<bool> getIngredients() = 0;
         virtual uint32_t getPizzaId() = 0;
         virtual PizzaSize getPizzaSize() = 0;
         virtual uint32_t getBakedTime() = 0;

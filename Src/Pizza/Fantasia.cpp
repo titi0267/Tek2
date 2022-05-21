@@ -12,11 +12,14 @@ Fantasia::Fantasia(uint32_t pizzaId, IPizza::PizzaSize size)
     _id = pizzaId;
     _size = size;
 
-    _ingredients.push_back("doe");
-    _ingredients.push_back("tomato");
-    _ingredients.push_back("eggplant");
-    _ingredients.push_back("goat cheese");
-    _ingredients.push_back("chief love");
+    for (int i = 0; i <= (int)IPizza::Ingredients::CHIEF_LOVE; i++) {
+        _ingredients.push_back(false);
+    }
+    _ingredients[(int)IPizza::Ingredients::DOE] = true;
+    _ingredients[(int)IPizza::Ingredients::TOMATO] = true;
+    _ingredients[(int)IPizza::Ingredients::EGG] = true;
+    _ingredients[(int)IPizza::Ingredients::GOAT_CHEESE] = true;
+    _ingredients[(int)IPizza::Ingredients::CHIEF_LOVE] = true;
     _bakedTime = 4;
 }
 
@@ -30,7 +33,7 @@ uint32_t Fantasia::getPizzaId()
     return (_id);
 }
 
-std::deque<std::string> Fantasia::getIngredients()
+std::deque<bool> Fantasia::getIngredients()
 {
     return (_ingredients);
 }

@@ -12,9 +12,12 @@ Margarita::Margarita(uint32_t pizzaId, IPizza::PizzaSize size)
     _id = pizzaId;
     _size = size;
 
-    _ingredients.push_back("doe");
-    _ingredients.push_back("tomato");
-    _ingredients.push_back("gruyere");
+    for (int i = 0; i <= (int)IPizza::Ingredients::CHIEF_LOVE; i++) {
+        _ingredients.push_back(false);
+    }
+    _ingredients[(int)IPizza::Ingredients::DOE] = true;
+    _ingredients[(int)IPizza::Ingredients::TOMATO] = true;
+    _ingredients[(int)IPizza::Ingredients::GRUYERE] = true;
     _bakedTime = 1;
 }
 
@@ -28,7 +31,7 @@ uint32_t Margarita::getPizzaId()
     return (_id);
 }
 
-std::deque<std::string> Margarita::getIngredients()
+std::deque<bool> Margarita::getIngredients()
 {
     return (_ingredients);
 }
