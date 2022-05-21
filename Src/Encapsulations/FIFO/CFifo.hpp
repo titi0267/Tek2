@@ -26,7 +26,7 @@ class CFifo {
         SendPizza_t *CReadFifo();
         void CCloseRd();
         void CCloseWr();
-        void CWriteFifo(SendPizza_t pizzaInfo);
+        void CWriteFifo(SendPizza_t *pizzaInfo);
 
     protected:
     private:
