@@ -60,18 +60,11 @@ void Reception::createKitchen()
     for (int i = kitchenId;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
         std::cout << "Kitchen : " << i << std::endl;
         _forkList.push_back(std::make_unique<CFork>(i, _cooksPerKitchen, _cookingTime));
-        /*cfork.CCreateChild()
-        _fifoList.push_back(std::make_unique<CFifo>(kitchenId));
-        _fifoList[kitchenId]->CMakeFifo();
-        kitchenId++;
-        if (cfork.getPid() == 0) {
-            _runningKitchens.push_back(std::make_unique<Kitchen>(kitchenId, _cooksPerKitchen, _cookingTime));
-            _runningKitchens[kitchenId]->loop();
-            // enleve de la list
-            // enleve le fifo de la list;
-            exit(0);
-        }*/
     }
+    _forkList[0]->cfifo.COpenFifoWrite();
+    _forkList[0]->cfifo.CWriteFifo("I write from PARENT\n");
+    _forkList[0]->cfifo.CCloseOut();
+    /*ici -> read pour recup message enfant*/
 }
 
 void Reception::dropOrder()
