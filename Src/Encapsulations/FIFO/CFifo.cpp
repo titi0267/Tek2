@@ -51,6 +51,14 @@ void CFifo::CCloseWr()
     close(_fdWr);
 }
 
+int CFifo::test_poll()
+{
+    struct pollfd fd[1];
+    fd[0].fd = _fdRd;
+    fd[0].events = POLLIN;
+
+    return(poll(fd, (unsigned long)1, -1));
+}
 
 void CFifo::CWriteFifo(SendPizza_t *pizza)
 {

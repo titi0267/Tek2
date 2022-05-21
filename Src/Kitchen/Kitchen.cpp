@@ -27,10 +27,12 @@ void Kitchen::loop()
         if (isPizzaToCook == true)
             _clock = clock();
         _fifo.COpenFifoRead();
-        pizza = _fifo.CReadFifo();
-        //_fifo.CClear();
-        std::cout << pizza->doe << std::endl;
-        _fifo.CCloseRd();
+        if (_fifo.test_poll()) {
+            pizza = _fifo.CReadFifo();
+            //_fifo.CClear();
+            std::cout << "J'ai read un truc\n" << std::endl;
+            _fifo.CCloseRd();
+        }
 /*        _fifo.COpenFifoWrite(); //ici -> write pour passer au parent
         _fifo.CWriteFifo("");
         _fifo.CCloseOut();*/

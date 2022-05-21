@@ -27,6 +27,7 @@ class CFifo {
         void CCloseRd();
         void CCloseWr();
         void CWriteFifo(SendPizza_t *pizzaInfo);
+        int test_poll();
 
     protected:
     private:
