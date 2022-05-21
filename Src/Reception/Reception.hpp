@@ -34,7 +34,7 @@ class Reception {
         void dropPizzaId(uint32_t orderId);
         void dropOrder();
         void setOrderId(uint32_t orderId);
-        void createKitchen(uint32_t kitchenId);
+        void createKitchen();
         bool checkOrder(std::string buff, uint32_t orderId);
         void sendOrder();
         void createPizza(std::string pizza, std::string size, std::string number, Order &order);
@@ -46,10 +46,9 @@ class Reception {
         int _timeToReplace;
         Utils _tools;
         uint32_t _orderId;
-        CFork cfork;
+        std::deque<std::unique_ptr<CFork>> _forkList;
         std::deque<pizzaPtr> _pizzaQueue;
-        std::deque<std::unique_ptr<Kitchen>> _runningKitchens;
-        std::deque<std::unique_ptr<CFifo>> _fifoList;
+        //std::deque<std::unique_ptr<CFifo>> _fifoList;
         std::list<Order> _orderList;
         std::list<uint32_t> _pizzasId;
 };

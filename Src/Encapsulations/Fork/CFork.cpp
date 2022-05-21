@@ -7,17 +7,31 @@
 
 #include "CFork.hpp"
 
-CFork::CFork()
+CFork::CFork(uint32_t forkNbr, uint32_t cookNbr, uint32_t cookingTimeMultiplier) : cfifo(forkNbr)
 {
+    setPid();
+    if (_childPid == 0) {
+        cfifo.CMakeFifo();
+        cfifo.COpenFifoRead();
+        std::cout << "Enfant: " << cfifo.CReadFifo() << std::endl;
+        std::unique_ptr<Kitchen> kitchen = std::make_unique<Kitchen>(forkNbr, cookNbr, cookingTimeMultiplier);
+        cfifo.CCloseIn();
+        cfifo.COpenFifoWrite();
+        cfifo.CWriteFifo("String from child");
+        cfifo.CCloseOut();
+        exit(0);
+    } else {
+        cfifo.COpenFifoWrite();
+        cfifo.CWriteFifo("String from parent");
+        cfifo.CCloseOut();
+        cfifo.COpenFifoRead();
+        std::cout << "Parent: " << cfifo.CReadFifo() << std::endl;
+        cfifo.CCloseIn();
+    }
 }
 
 CFork::~CFork()
 {
-}
-
-void CFork::CCreateChild()
-{
-    setPid();
 }
 
 void CFork::CKillPid()

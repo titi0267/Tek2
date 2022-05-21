@@ -54,21 +54,24 @@ void Reception::setOrderId(uint32_t orderId)
     _orderId = orderId;
 }
 
-void Reception::createKitchen(uint32_t kitchenId)
+void Reception::createKitchen()
 {
-    for (int i = 0;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
-        std::cout << "Kitchen : " << i << std::endl;
-        cfork.CCreateChild();
-    }
-    _fifoList.push_back(std::make_unique<CFifo>(kitchenId));
-    _fifoList[kitchenId]->CMakeFifo();
+    static int kitchenId = 0;
 
-    if (cfork.getPid() == 0) {
-        _runningKitchens.push_back(std::make_unique<Kitchen>(kitchenId, _cooksPerKitchen, _cookingTime));
-        _runningKitchens[kitchenId]->loop();
-        // enleve de la list
-        // enleve le fifo de la list;
-        exit(0);
+    for (int i = kitchenId;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
+        std::cout << "Kitchen : " << i << std::endl;
+        _forkList.push_back(std::make_unique<CFork>(kitchenId, _cooksPerKitchen, _cookingTime));
+        /*cfork.CCreateChild()
+        _fifoList.push_back(std::make_unique<CFifo>(kitchenId));
+        _fifoList[kitchenId]->CMakeFifo();
+        kitchenId++;
+        if (cfork.getPid() == 0) {
+            _runningKitchens.push_back(std::make_unique<Kitchen>(kitchenId, _cooksPerKitchen, _cookingTime));
+            _runningKitchens[kitchenId]->loop();
+            // enleve de la list
+            // enleve le fifo de la list;
+            exit(0);
+        }*/
     }
 }
 
@@ -85,12 +88,6 @@ void Reception::dropOrder()
             break;
         }
     }
-}
-
-void Reception::sendOrder()
-{
-    for (int i = 0; i < ceil(_pizzaQueue.size() / _cooksPerKitchen); i++)
-        createKitchen(i);
 }
 
 void Reception::createPizza(std::string pizza, std::string size, std::string number, Order &order)
@@ -152,7 +149,6 @@ void Reception::loop()
 {
     std::string buff = "";
     uint32_t orderId = 0;
-    uint32_t kitchenId = 0;
     bool checkOrderRet;
 
     while (1) {
@@ -163,7 +159,7 @@ void Reception::loop()
         std::cout << "Order " << checkOrderRet << std::endl;
         if (checkOrderRet) {
             orderId++;
-            createKitchen(kitchenId);
+            createKitchen();
         }
     }
 }

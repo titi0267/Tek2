@@ -13,14 +13,16 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fstream>
+#include "../FIFO/CFifo.hpp"
+#include "../../Kitchen/Kitchen.hpp"
 
 class CFork {
     public:
-        CFork();
+        CFork(uint32_t forkNumber,  uint32_t cookNbr, uint32_t cookingTimeMultiplier);
         ~CFork();
-        void CCreateChild();
         void CKillPid();
         pid_t getPid() const;
+        CFifo cfifo;
 
     protected:
         void setPid();
