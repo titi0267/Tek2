@@ -13,7 +13,7 @@ class Americana: public IPizza {
         Americana(uint32_t pizzaId, IPizza::PizzaSize size);
         ~Americana();
 
-        std::deque<std::string> getIngredients();
+        std::deque<bool> getIngredients();
         uint32_t getPizzaId();
         IPizza::PizzaSize getPizzaSize();
         uint32_t getBakedTime();
@@ -21,7 +21,7 @@ class Americana: public IPizza {
     protected:
     private:
         uint32_t _id;
-        std::deque<std::string> _ingredients;
+        std::deque<bool> _ingredients;
         IPizza::PizzaSize _size;
         uint32_t _bakedTime;
 };
