@@ -14,10 +14,10 @@ typedef struct SendPizza_s {
     bool doe;
     bool tomato;
     bool gruyere;
+    bool ham;
+    bool mushroom;
     bool steak;
     bool eggplant;
     bool goat_cheese;
     bool chief_love;
-    bool ham;
-    bool mushroom;
 } SendPizza_t;
