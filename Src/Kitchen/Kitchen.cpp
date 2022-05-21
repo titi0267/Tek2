@@ -21,7 +21,16 @@ void Kitchen::addPizza(std::unique_ptr<IPizza> &pizza)
 
 void Kitchen::loop()
 {
-    while(1);
+    clock_t tmp;
+    _clock = clock();
+
+    while(1) {
+        tmp = clock();
+        if (((tmp - _clock) / CLOCKS_PER_SEC) > 3) {
+            std::cout << "Cuisine se ferme" << std::endl;
+            break;
+        }
+    }
 }
 
 Kitchen::~Kitchen()
