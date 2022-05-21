@@ -19,11 +19,18 @@ void Kitchen::loop()
     _clock = clock();
     bool isPizzaToCook = false;
 
+
     while(1) {
         tmp = clock();
         isPizzaToCook = _threadPull->cookPizza();
         if (isPizzaToCook)
             _clock = clock();
+        _fifo.COpenFifoRead();
+        _fifo.CReadFifo();
+        _fifo.CCloseIn();
+/*        _fifo.COpenFifoWrite(); //ici -> write pour passer au parent
+        _fifo.CWriteFifo("");
+        _fifo.CCloseOut();*/
         if (((tmp - _clock) / CLOCKS_PER_SEC) > 3) {
             std::cout << "The kitchen: " << _id  << " is closing" << std::endl;
             break;
