@@ -23,13 +23,14 @@ void *cook(void * ptr);
 
 class ThreadPull {
     public:
-        ThreadPull(uint32_t cookNbr);
+        ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier);
         ~ThreadPull();
         void launchThread();
         void flushFinishedThread();
         bool cookPizza();
         void setThreadFinish(uint32_t index);
-        //IPizza &getFirstPizza();
+        uint32_t getCookTime();
+        std::unique_ptr <IPizza>getFirstPizza();
         int _test;
 
         enum class ThreadStatus {
@@ -46,4 +47,5 @@ class ThreadPull {
         std::deque<pizzaPtr> _pizzaToCook;
         CMutex _pickInStock;
         CMutex _pickPizza;
+        uint32_t _cookTimeMultiplier;
 };

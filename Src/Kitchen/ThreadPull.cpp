@@ -7,7 +7,7 @@
 
 #include "ThreadPull.hpp"
 
-ThreadPull::ThreadPull(uint32_t cookNbr)
+ThreadPull::ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier) : _cookTimeMultiplier(cookTimeMultiplier)
 {
     for (int i = 0; i < cookNbr; i++) {
         _cooker.push_back(std::make_unique<CThreads>());
@@ -18,6 +18,18 @@ ThreadPull::ThreadPull(uint32_t cookNbr)
 
 ThreadPull::~ThreadPull()
 {
+}
+
+uint32_t ThreadPull::getCookTime()
+{
+    return (_cookTimeMultiplier);
+}
+
+std::unique_ptr <IPizza>ThreadPull::getFirstPizza()
+{
+    std::unique_ptr<IPizza> firstPizza = std::move(_pizzaToCook[0]);
+    _pizzaToCook.pop_front();
+    return (firstPizza);
 }
 
 bool ThreadPull::cookPizza()

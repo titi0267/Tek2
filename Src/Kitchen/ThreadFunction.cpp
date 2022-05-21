@@ -6,11 +6,16 @@
 */
 
 #include "ThreadPull.hpp"
+#include <chrono>
+#include <thread>
 
 void *cook(void * ptr)
 {
     ThreadPayload *pull = (ThreadPayload *)ptr;
-    std::cout << "Je suis " << pull->getId() << std::endl;
+    std::unique_ptr<IPizza> pizza = std::move(pull->getThreadPull()->getFirstPizza());
+    std::cout << "Je suis " << pizza->getPizzaId() << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(pizza->getBakedTime() *
+    pull->getThreadPull()->getCookTime()));
     pull->getThreadPull()->setThreadFinish(pull->getId());
     return (NULL);
 }
