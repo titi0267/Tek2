@@ -23,6 +23,8 @@ Reception::Reception(int ac, char **av)
     _cookingTime = std::atoi(av[1]);
     _cooksPerKitchen = std::atoi(av[2]);
     _timeToReplace = std::atoi(av[3]);
+    for (int i = 0; i < 1; i++)
+        _recptionThread.push_back(CThreads());
 }
 
 void Reception::createOrder(uint32_t orderId)
@@ -151,31 +153,75 @@ bool Reception::checkOrder(std::string buff, uint32_t orderId)
     return (true);
 }
 
-void Reception::loop()
+void *InputThread(void *ptr)
 {
     std::string buff = "";
-    uint32_t orderId = 0;
     bool checkOrderRet;
-    uint32_t pizzaId = 0;
+    uint32_t orderId = 0;
 
+    Reception *reception = (Reception *)ptr;
     while (1) {
         std::cout << "Waiter : What would you like to order ?" << std::endl;
         if (!std::getline(std::cin, buff))
             break;
-        checkOrderRet = checkOrder(buff, orderId);
+        checkOrderRet = reception->checkOrder(buff, orderId);
         if (checkOrderRet) {
             orderId++;
-            createKitchen();
+            reception->createKitchen();
         }
-        std::cout << "J'attend un truc" << std::endl;
-        if (_forkList[0]->childWrite.test_poll()) {
-        pizzaId = _forkList[0]->childWrite.CReadFifo();
+    }
+}
+
+std::deque<std::unique_ptr<CFork>> &Reception::getForkList()
+{
+    return (_forkList);
+}
+
+void *CommThread(void *ptr)
+{
+    Reception *reception = (Reception *)ptr;
+    uint32_t pizzaId = 0;
+
+    while (1) {
+        if (reception->getForkList()[0]->childWrite.test_poll()) {
+        pizzaId = reception->getForkList()[0]->childWrite.CReadFifo();
         if (pizzaId != 0) {
             std::cout << pizzaId << std::endl;
                 //dropPizzaId(pizzaId);
             }
         }
     }
+}
+
+void Reception::loop()
+{
+    //std::string buff = "";
+ //   uint32_t orderId = 0;
+    //bool checkOrderRet;
+    //uint32_t pizzaId = 0;
+
+    _recptionThread[0].createThread(InputThread, (void *)this);
+    _recptionThread[0].joinThreads();
+    _recptionThread[1].createThread(CommThread, (void *)this);
+    _recptionThread[1].joinThreads();
+    //while (1) {
+        //std::cout << "Waiter : What would you like to order ?" << std::endl;
+        //if (!std::getline(std::cin, buff))
+            //break;
+        //checkOrderRet = checkOrder(buff, orderId);
+        /*if (checkOrderRet) {
+            orderId++;
+            createKitchen();
+        }*/
+        //std::cout << "J'attend un truc" << std::endl;
+        /*if (_forkList[0]->childWrite.test_poll()) {
+        pizzaId = _forkList[0]->childWrite.CReadFifo();
+        if (pizzaId != 0) {
+            std::cout << pizzaId << std::endl;
+                //dropPizzaId(pizzaId);
+            }
+        }*/
+    //}
 }
 
 Reception::~Reception()

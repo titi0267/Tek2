@@ -19,6 +19,7 @@
 #include "../Pizza/Fantasia.hpp"
 #include "../Pizza/Americana.hpp"
 #include "../Encapsulations/Fork/CFork.hpp"
+#include "../Encapsulations/Threads/CThreads.hpp"
 #include "../Encapsulations/FIFO/CFifo.hpp"
 #include "../Kitchen/Kitchen.hpp"
 #include "Order.hpp"
@@ -37,6 +38,7 @@ class Reception {
         void createKitchen();
         bool checkOrder(std::string buff, uint32_t orderId);
         void sendOrder();
+        std::deque<std::unique_ptr<CFork>> &getForkList();
         void createPizza(std::string pizza, std::string size, std::string number, Order &order);
 
     protected:
@@ -51,4 +53,5 @@ class Reception {
         //std::deque<std::unique_ptr<CFifo>> _fifoList;
         std::list<Order> _orderList;
         std::list<uint32_t> _pizzasId;
+        std::deque<CThreads> _recptionThread;
 };
