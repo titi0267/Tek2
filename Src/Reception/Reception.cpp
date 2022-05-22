@@ -38,18 +38,18 @@ void Reception::createOrder(uint32_t orderId)
     _orderList.push_back(order);
 }
 
-void Reception::dropPizzaId(SendPizza_t *pizza)
+void Reception::dropPizzaId(uint32_t pizzaId)
 {
     auto itr = _orderList.begin();
 
-    if (pizza == NULL)
+    if (pizzaId == -1)
         return;
     for (; itr != _orderList.end(); itr++) {
         _pizzasId = itr->getId();
-        _pizzasId.remove(pizza->pizzaId);
+        _pizzasId.remove(pizzaId);
         itr->setId(_pizzasId);
     }
-    std::cout << "Removed :" << pizza->pizzaId << std::endl;
+    std::cout << "Removed :" << pizzaId << std::endl;
     for (auto itr1 = _pizzasId.begin(); itr1 != _pizzasId.end(); itr1++) {
         std::cout << *itr1 << std::endl;
     }
@@ -150,7 +150,7 @@ void Reception::loop()
     std::string buff = "";
     uint32_t orderId = 0;
     bool checkOrderRet;
-    SendPizza_t *pizza = NULL;
+    uint32_t pizzaId = 0;
 
     while (1) {
         std::cout << "Waiter : What would you like to order ?" << std::endl;
@@ -161,12 +161,12 @@ void Reception::loop()
             orderId++;
             createKitchen();
         }
-        /*_forkList[0]->parentWrite.COpenFifoRead();
-        if (_forkList[0]->cfifo.test_poll()) {
-            pizza = _forkList[0]->cfifo.CReadFifo();
+        _forkList[0]->childWrite.COpenFifoRead();
+        if (_forkList[0]->childWrite.test_poll()) {
+            pizzaId = _forkList[0]->childWrite.CReadFifo();
         }
-        _forkList[0]->cfifo.CCloseRd();
-        dropPizzaId(pizza);*/
+        _forkList[0]->childWrite.CCloseRd();
+        dropPizzaId(pizzaId);
     }
 }
 
