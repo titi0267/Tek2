@@ -38,7 +38,7 @@ SendPizza_t *CFifo::CReadFifo()
     int ret = read(_fdRd, &_messageRead, sizeof(SendPizza_t));
     //std::cout << "Read is fine : " << std::endl;//<< _messageRead->doe << "$"<< std::endl;
     //std::cout << "fd = " << rd << " | $" << _messageRead[0] << "$" << std::endl;
-    if (ret == 0)
+    if (ret <= 0)
         return (NULL);
     return (&_messageRead);
 }
@@ -61,5 +61,5 @@ bool CFifo::test_poll()
 
 void CFifo::CWriteFifo(SendPizza_t *pizza)
 {
-    write(_fdWr, pizza, sizeof(SendPizza_t *));
+    write(_fdWr, pizza, sizeof(SendPizza_t));
 }

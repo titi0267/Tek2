@@ -20,6 +20,24 @@ ThreadPull::~ThreadPull()
 {
 }
 
+void ThreadPull::addPizzaToCook(SendPizza_t *pizza)
+{
+    std::cout << "Je suis la taille: " << pizza->size << std::endl;
+    if (pizza->chief_love == 1) {
+        _pizzaToCook.push_back(std::make_unique<Fantasia>(pizza->pizzaId, (IPizza::PizzaSize)pizza->size));
+        return;
+    }
+    if (pizza->steak == 1) {
+        _pizzaToCook.push_back(std::make_unique<Americana>(pizza->pizzaId, (IPizza::PizzaSize)pizza->size));
+        return;
+    }
+    if (pizza->ham == 1) {
+        _pizzaToCook.push_back(std::make_unique<Americana>(pizza->pizzaId, (IPizza::PizzaSize)pizza->size));
+        return;
+    }
+    _pizzaToCook.push_back(std::make_unique<Margarita>(pizza->pizzaId, (IPizza::PizzaSize)pizza->size));
+}
+
 uint32_t ThreadPull::getCookTime()
 {
     return (_cookTimeMultiplier);
