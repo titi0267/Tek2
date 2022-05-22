@@ -22,10 +22,10 @@ class CFork {
         ~CFork();
         void CKillPid();
         pid_t getPid() const;
+        CFifo cfifo;
 
     protected:
         void setPid();
     private:
-        CFifo _cfifo;
         pid_t _childPid;
 };

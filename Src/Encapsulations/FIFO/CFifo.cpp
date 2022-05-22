@@ -35,9 +35,11 @@ void CFifo::COpenFifoWrite()
 SendPizza_t *CFifo::CReadFifo()
 {
     //std::cout << "Read under this" << std::endl;
-    read(_fdRd, &_messageRead, sizeof(SendPizza_t));
+    int ret = read(_fdRd, &_messageRead, sizeof(SendPizza_t));
     //std::cout << "Read is fine : " << std::endl;//<< _messageRead->doe << "$"<< std::endl;
     //std::cout << "fd = " << rd << " | $" << _messageRead[0] << "$" << std::endl;
+    if (ret == 0)
+        return (NULL);
     return (&_messageRead);
 }
 

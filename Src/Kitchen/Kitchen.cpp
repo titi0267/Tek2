@@ -29,7 +29,8 @@ void Kitchen::loop()
             _clock = clock();
         if (_fifo.test_poll()) {
             pizza = _fifo.CReadFifo();
-            std::cout << "J'ai read un truc\n" << std::endl;
+            if (pizza != NULL)
+                std::cout << "J'ai read un truc" << std::endl;
         }
         if (((tmp - _clock) / CLOCKS_PER_SEC) > 3) {
             std::cout << "The kitchen: " << _id  << " is closing" << std::endl;
