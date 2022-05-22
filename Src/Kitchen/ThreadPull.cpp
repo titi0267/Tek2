@@ -10,6 +10,7 @@
 ThreadPull::ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier, IPC::ChildToParent &fifo) : _cookTimeMultiplier(cookTimeMultiplier), _childToParent(fifo)
 {
     for (int i = 0; i < cookNbr; i++) {
+        std::cout << i << std::endl;
         _cooker.push_back(std::make_unique<CThreads>());
         _isRunningThread.push_back(ThreadStatus::FREE);
         _payloads.push_back(std::make_unique<ThreadPayload>(this, i));
@@ -22,7 +23,6 @@ ThreadPull::~ThreadPull()
 
 void ThreadPull::addPizzaToCook(SendPizza_t *pizza)
 {
-    std::cout << "Je suis la taille: " << pizza->size << std::endl;
     if (pizza->chief_love == 1) {
         _pizzaToCook.push_back(std::make_unique<Fantasia>(pizza->pizzaId, (IPizza::PizzaSize)pizza->size));
         return;
@@ -57,12 +57,25 @@ std::unique_ptr <IPizza>ThreadPull::getFirstPizza()
 
 bool ThreadPull::cookPizza()
 {
-    if (_pizzaToCook.size() == 0)
+    int pizzaNbr = _pizzaToCook.size();
+
+    if (pizzaNbr == 0)
         return (false);
     else {
-        launchThread();
+        for (int i = 0; i < pizzaNbr; i++)
+            launchThread();
         return (true);
     }
+}
+
+void ThreadPull::lockPizzaMutex()
+{
+    _pickPizza.lock();
+}
+
+void ThreadPull::delockPizzaMutex()
+{
+    _pickPizza.unlock();
 }
 
 bool ThreadPull::isSomeoneCooking()
