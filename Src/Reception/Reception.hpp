@@ -31,7 +31,7 @@ class Reception {
         ~Reception();
         void createOrder(uint32_t orderId);
         void loop();
-        void dropPizzaId(uint32_t orderId);
+        void dropPizzaId(SendPizza_t *pizza);
         void dropOrder();
         void setOrderId(uint32_t orderId);
         void createKitchen();

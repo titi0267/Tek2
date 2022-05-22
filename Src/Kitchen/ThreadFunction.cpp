@@ -6,6 +6,7 @@
 */
 
 #include "ThreadPull.hpp"
+#include "../Encapsulations/FIFO/CFifo.hpp"
 #include <chrono>
 #include <thread>
 

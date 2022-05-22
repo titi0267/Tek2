@@ -38,14 +38,20 @@ void Reception::createOrder(uint32_t orderId)
     _orderList.push_back(order);
 }
 
-void Reception::dropPizzaId(uint32_t orderId)
+void Reception::dropPizzaId(SendPizza_t *pizza)
 {
     auto itr = _orderList.begin();
 
+    if (pizza == NULL)
+        return;
     for (; itr != _orderList.end(); itr++) {
         _pizzasId = itr->getId();
-        _pizzasId.remove(orderId);
+        _pizzasId.remove(pizza->pizzaId);
         itr->setId(_pizzasId);
+    }
+    std::cout << "Removed :" << pizza->pizzaId << std::endl;
+    for (auto itr1 = _pizzasId.begin(); itr1 != _pizzasId.end(); itr1++) {
+        std::cout << *itr1 << std::endl;
     }
 }
 
@@ -58,6 +64,7 @@ void Reception::createKitchen()
 {
     static int kitchenId = 0;
     SendPizza_t pizzaInfo = {_pizzaQueue[0]->getPizzaId(), (uint32_t)_pizzaQueue[0]->getPizzaSize(), _pizzaQueue[0]->getIngredients()[0], _pizzaQueue[0]->getIngredients()[1], _pizzaQueue[0]->getIngredients()[2], _pizzaQueue[0]->getIngredients()[3],_pizzaQueue[0]->getIngredients()[4], _pizzaQueue[0]->getIngredients()[5], _pizzaQueue[0]->getIngredients()[6], _pizzaQueue[0]->getIngredients()[7], _pizzaQueue[0]->getIngredients()[8]};
+    SendPizza_t *pizza;
 
     for (int i = kitchenId;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
         std::cout << "Kitchen : " << i << std::endl;
@@ -66,8 +73,6 @@ void Reception::createKitchen()
     _forkList[0]->cfifo.COpenFifoWrite();
     _forkList[0]->cfifo.CWriteFifo(&pizzaInfo);
     _forkList[0]->cfifo.CCloseWr();
-    std::cout << "Fifo was written" << std::endl;
-    /*ici -> read pour recup message enfant*/
 }
 
 void Reception::dropOrder()
@@ -145,6 +150,7 @@ void Reception::loop()
     std::string buff = "";
     uint32_t orderId = 0;
     bool checkOrderRet;
+    SendPizza_t *pizza = NULL;
 
     while (1) {
         std::cout << "Waiter : What would you like to order ?" << std::endl;
@@ -155,6 +161,12 @@ void Reception::loop()
             orderId++;
             createKitchen();
         }
+        /*_forkList[0]->cfifo.COpenFifoRead();
+        if (_forkList[0]->cfifo.test_poll()) {
+            pizza = _forkList[0]->cfifo.CReadFifo();
+        }
+        _forkList[0]->cfifo.CCloseRd();
+        dropPizzaId(pizza);*/
     }
 }
 
