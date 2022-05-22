@@ -155,6 +155,7 @@ void *InputThread(void *ptr)
     std::string buff = "";
     bool checkOrderRet;
     uint32_t orderId = 0;
+    SendPizza_t pizzaInfo;
 
     Reception *reception = (Reception *)ptr;
     while (1) {
@@ -162,6 +163,10 @@ void *InputThread(void *ptr)
         if (!std::getline(std::cin, buff))
             break;
         if (buff.compare("status") == 0) {
+            for (int i = 0; i < reception->getForkList().size(); i++) {
+                pizzaInfo = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1};
+                reception->getForkList()[i]->parentWrite.CWriteFifo(&pizzaInfo);
+            }
             continue;
         }
         checkOrderRet = reception->checkOrder(buff, orderId);
