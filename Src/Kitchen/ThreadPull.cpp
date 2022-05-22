@@ -10,7 +10,6 @@
 ThreadPull::ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier, IPC::ChildToParent &fifo) : _cookTimeMultiplier(cookTimeMultiplier), _childToParent(fifo)
 {
     for (int i = 0; i < cookNbr; i++) {
-        std::cout << i << std::endl;
         _cooker.push_back(std::make_unique<CThreads>());
         _isRunningThread.push_back(ThreadStatus::FREE);
         _payloads.push_back(std::make_unique<ThreadPayload>(this, i));
@@ -64,6 +63,10 @@ bool ThreadPull::cookPizza()
     else {
         for (int i = 0; i < pizzaNbr; i++)
             launchThread();
+        for (int i = 0; i < _isRunningThread.size(); i++) {
+            if (_isRunningThread[i] == ThreadStatus::RUNNING)
+                _cooker[i]->joinThreads();
+        }
         return (true);
     }
 }
@@ -108,7 +111,6 @@ void ThreadPull::launchThread()
         if (_isRunningThread[i] == ThreadStatus::FREE) {
             _isRunningThread[i] = ThreadStatus::RUNNING;
             _cooker[i]->createThread(cook, (void *)_payloads[i].get());
-            _cooker[i]->joinThreads();
             return;
         }
     }

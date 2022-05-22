@@ -25,15 +25,12 @@ void Kitchen::loop()
     while(1) {
         tmp = clock();
         _threadPull->cookPizza();
-        if (_threadPull->isSomeoneCooking()) {
-            std::cout << "clock is reseting\n";
+        if (_threadPull->isSomeoneCooking())
             _clock = clock();
-        }
         while (_parentWrite.test_poll()) {
             pizza = _parentWrite.CReadFifo();
-            if (pizza != NULL) {
+            if (pizza != NULL)
                 _threadPull->addPizzaToCook(pizza);
-            }
         }
         if (((double)(tmp - _clock) / (double)CLOCKS_PER_SEC) > 0.4) {
             std::cout << "The kitchen: " << _id  << " is closing" << std::endl;
