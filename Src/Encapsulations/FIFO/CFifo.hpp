@@ -35,7 +35,7 @@ namespace IPC {
             struct pollfd _poll;
             int _fdRd;
             int _fdWr;
-            char _PToC[20];
+            char _PToC[30];
         };
     class ChildToParent {
         public:
@@ -56,6 +56,6 @@ namespace IPC {
             uint32_t _messageRead;
             int _fdRd;
             int _fdWr;
-            char _CToP[20];
+            char _CToP[30];
     };
 };
