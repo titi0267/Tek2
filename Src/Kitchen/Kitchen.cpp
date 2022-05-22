@@ -34,10 +34,10 @@ void Kitchen::loop()
                 _threadPull->addPizzaToCook(pizza);
             }
         }
-        if (((tmp - _clock) / CLOCKS_PER_SEC) > 5) {
-            std::cout << "The kitchen: " << _id  << " is closing" << std::endl;
-            break;
-        }
+        // if (((tmp - _clock) / CLOCKS_PER_SEC) > 5) {
+        //     std::cout << "The kitchen: " << _id  << " is closing" << std::endl;
+        //     break;
+        // }
     }
     _parentWrite.CCloseRd();
     _childWrite.CCloseWr();

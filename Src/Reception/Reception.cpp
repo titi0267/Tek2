@@ -150,7 +150,7 @@ void Reception::loop()
     std::string buff = "";
     uint32_t orderId = 0;
     bool checkOrderRet;
-    uint32_t pizzaId = 0;
+    uint32_t pizzaId = -1;
 
     while (1) {
         std::cout << "Waiter : What would you like to order ?" << std::endl;
@@ -161,11 +161,8 @@ void Reception::loop()
             orderId++;
             createKitchen();
         }
-        _forkList[0]->childWrite.COpenFifoRead();
-        if (_forkList[0]->childWrite.test_poll()) {
-            pizzaId = _forkList[0]->childWrite.CReadFifo();
-        }
-        _forkList[0]->childWrite.CCloseRd();
+        std::cout << "J'attend un truc" << std::endl;
+        pizzaId = _forkList[0]->childWrite.CReadFifo();
         dropPizzaId(pizzaId);
     }
 }

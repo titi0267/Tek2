@@ -13,7 +13,6 @@ CFork::CFork(uint32_t forkNbr, uint32_t cookNbr, uint32_t cookingTimeMultiplier)
     parentWrite.CMakeFifo();
     childWrite.CMakeFifo();
     if (_childPid == 0) {
-        std::cout << "lol\n";
         std::unique_ptr<Kitchen> kitchen = std::make_unique<Kitchen>(forkNbr, cookNbr, cookingTimeMultiplier, parentWrite, childWrite);
         kitchen->loop();
 /*        cfifo.COpenFifoWrite();
@@ -21,17 +20,13 @@ CFork::CFork(uint32_t forkNbr, uint32_t cookNbr, uint32_t cookingTimeMultiplier)
         cfifo.CCloseOut();*/
         exit(0);
     } else {
-        /*cfifo.COpenFifoWrite();
-        cfifo.CWriteFifo("String from parent");
-        cfifo.CCloseOut();
-        cfifo.COpenFifoRead();
-        std::cout << "Parent: " << cfifo.CReadFifo() << std::endl;
-        cfifo.CCloseIn();*/
+        childWrite.COpenFifoRead();
     }
 }
 
 CFork::~CFork()
 {
+    childWrite.CCloseRd();
 }
 
 void CFork::CKillPid()
