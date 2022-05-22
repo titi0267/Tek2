@@ -22,7 +22,7 @@ class CFork {
         ~CFork();
         void CKillPid();
         pid_t getPid() const;
-        CFifo cfifo;
+        IPC::ParentToChild parentWrite;
 
     protected:
         void setPid();

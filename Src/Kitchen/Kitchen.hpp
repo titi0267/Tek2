@@ -17,7 +17,7 @@
 
 class Kitchen {
     public:
-        Kitchen(uint32_t id, uint32_t _cookNbr, uint32_t _cookingTimeMultiplier, CFifo &fifo);
+        Kitchen(uint32_t id, uint32_t _cookNbr, uint32_t _cookingTimeMultiplier, IPC::ParentToChild &parentWrite);
         ~Kitchen();
 
         void loop();
@@ -28,5 +28,5 @@ class Kitchen {
         std::unique_ptr<ThreadPull> _threadPull;
         uint32_t _cookingTimeMultiplier;
         clock_t _clock;
-        CFifo &_fifo;
+        IPC::ParentToChild &_parentWrite;
 };

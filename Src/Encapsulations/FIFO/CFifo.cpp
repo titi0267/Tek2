@@ -2,37 +2,37 @@
 ** EPITECH PROJECT, 2022
 ** plazza
 ** File description:
-** CFifo
+** Cfifo
 */
 
 #include "CFifo.hpp"
 #include <unistd.h>
 
-CFifo::CFifo(int Id)
+IPC::ParentToChild::ParentToChild(int Id)
 {
-    sprintf(_str, "/tmp/myfifo%d", Id);
+    sprintf(_PToC, "/tmp/myfifo%d", Id);
 }
 
-CFifo::~CFifo()
+IPC::ParentToChild::~ParentToChild()
 {
 }
 
-void CFifo::CMakeFifo()
+void IPC::ParentToChild::CMakeFifo()
 {
-    mkfifo(_str, 0666);
+    mkfifo(_PToC, 0666);
 }
 
-void CFifo::COpenFifoRead()
+void IPC::ParentToChild::COpenFifoRead()
 {
-    _fdRd = open(_str, O_RDONLY);//std::ifstream("/tmp/myfifo", std::ios::in);
+    _fdRd = open(_PToC, O_RDONLY);
 }
 
-void CFifo::COpenFifoWrite()
+void IPC::ParentToChild::COpenFifoWrite()
 {
-    _fdWr = open(_str, O_WRONLY);//std::ofstream("/tmp/myfifo");
+    _fdWr = open(_PToC, O_WRONLY);
 }
 
-SendPizza_t *CFifo::CReadFifo()
+SendPizza_t *IPC::ParentToChild::CReadFifo()
 {
     int ret = read(_fdRd, &_messageRead, sizeof(SendPizza_t));
     if (ret == 0)
@@ -40,23 +40,79 @@ SendPizza_t *CFifo::CReadFifo()
     return (&_messageRead);
 }
 
-void CFifo::CCloseRd()
+void IPC::ParentToChild::CCloseRd()
 {
     close(_fdRd);
 }
 
-void CFifo::CCloseWr()
+void IPC::ParentToChild::CCloseWr()
 {
     close(_fdWr);
 }
 
-bool CFifo::test_poll()
+bool IPC::ParentToChild::test_poll()
 {
     struct pollfd fd = {.fd = _fdRd, .events = POLLIN, .revents = 0};
     return (poll(&fd, 1, 1) == 1);
 }
 
-void CFifo::CWriteFifo(SendPizza_t *pizza)
+void IPC::ParentToChild::CWriteFifo(SendPizza_t *pizza)
 {
     write(_fdWr, pizza, sizeof(SendPizza_t));
 }
+
+/***********************************************************************/
+
+IPC::ChildToParent::ChildToParent(int Id)
+{
+    sprintf(_CToP, "/tmp/myfifoX%d", Id);
+}
+
+IPC::ChildToParent::~ChildToParent()
+{
+}
+
+void IPC::ChildToParent::CMakeFifo()
+{
+    mkfifo(_CToP, 0666);
+}
+
+void IPC::ChildToParent::COpenFifoRead()
+{
+    _fdRd = open(_CToP, O_RDONLY);
+}
+
+void IPC::ChildToParent::COpenFifoWrite()
+{
+    _fdWr = open(_CToP, O_WRONLY);
+}
+
+uint32_t IPC::ChildToParent::CReadFifo()
+{
+    int ret = read(_fdRd, &_messageRead, sizeof(uint32_t));
+    if (ret == 0)
+        return (-1);
+    return (_messageRead);
+}
+
+void IPC::ChildToParent::CCloseRd()
+{
+    close(_fdRd);
+}
+
+void IPC::ChildToParent::CCloseWr()
+{
+    close(_fdWr);
+}
+
+bool IPC::ChildToParent::test_poll()
+{
+    struct pollfd fd = {.fd = _fdRd, .events = POLLIN, .revents = 0};
+    return (poll(&fd, 1, 1) == 1);
+}
+
+void IPC::ChildToParent::CWriteFifo(uint32_t Id)
+{
+    write(_fdWr, &Id, sizeof(uint32_t));
+}
+

@@ -8,10 +8,10 @@
 #include "Kitchen.hpp"
 #include "../Pizza/SendPizza.hpp"
 
-Kitchen::Kitchen(uint32_t id, uint32_t cookNbr, uint32_t cookingTimeMultiplier, CFifo &fifo) :
-_threadPull(std::make_unique<ThreadPull>(cookNbr, cookingTimeMultiplier)), _cookingTimeMultiplier(cookingTimeMultiplier), _id(id), _fifo(fifo)
+Kitchen::Kitchen(uint32_t id, uint32_t cookNbr, uint32_t cookingTimeMultiplier, IPC::ParentToChild &parentWrite) :
+_threadPull(std::make_unique<ThreadPull>(cookNbr, cookingTimeMultiplier)), _cookingTimeMultiplier(cookingTimeMultiplier), _id(id), _parentWrite(parentWrite)
 {
-    _fifo.COpenFifoRead();
+    _parentWrite.COpenFifoRead();
     std::cout << "Kitchen: " << _id << " is now open" << std::endl;
 }
 
@@ -27,8 +27,8 @@ void Kitchen::loop()
         isPizzaToCook = _threadPull->cookPizza();
         if (isPizzaToCook == true)
             _clock = clock();
-        if (_fifo.test_poll()) {
-            pizza = _fifo.CReadFifo();
+        if (_parentWrite.test_poll()) {
+            pizza = _parentWrite.CReadFifo();
             if (pizza != NULL) {
                 _threadPull->addPizzaToCook(pizza);
             }
@@ -38,7 +38,7 @@ void Kitchen::loop()
             break;
         }
     }
-    _fifo.CCloseRd();
+    _parentWrite.CCloseRd();
 }
 
 Kitchen::~Kitchen()

@@ -70,9 +70,9 @@ void Reception::createKitchen()
         std::cout << "Kitchen : " << i << std::endl;
         _forkList.push_back(std::make_unique<CFork>(i, _cooksPerKitchen, _cookingTime));
     }
-    _forkList[0]->cfifo.COpenFifoWrite();
-    _forkList[0]->cfifo.CWriteFifo(&pizzaInfo);
-    _forkList[0]->cfifo.CCloseWr();
+    _forkList[0]->parentWrite.COpenFifoWrite();
+    _forkList[0]->parentWrite.CWriteFifo(&pizzaInfo);
+    _forkList[0]->parentWrite.CCloseWr();
 }
 
 void Reception::dropOrder()
@@ -161,7 +161,7 @@ void Reception::loop()
             orderId++;
             createKitchen();
         }
-        /*_forkList[0]->cfifo.COpenFifoRead();
+        /*_forkList[0]->parentWrite.COpenFifoRead();
         if (_forkList[0]->cfifo.test_poll()) {
             pizza = _forkList[0]->cfifo.CReadFifo();
         }
