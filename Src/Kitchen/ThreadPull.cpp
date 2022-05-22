@@ -63,6 +63,10 @@ bool ThreadPull::cookPizza()
     else {
         for (int i = 0; i < pizzaNbr; i++)
             launchThread();
+        for (int i = 0; i < _isRunningThread.size(); i++) {
+            if (_isRunningThread[i] == ThreadStatus::RUNNING)
+                _cooker[i]->joinThreads();
+        }
         return (true);
     }
 }
@@ -107,7 +111,6 @@ void ThreadPull::launchThread()
         if (_isRunningThread[i] == ThreadStatus::FREE) {
             _isRunningThread[i] = ThreadStatus::RUNNING;
             _cooker[i]->createThread(cook, (void *)_payloads[i].get());
-            _cooker[i]->joinThreads();
             return;
         }
     }
