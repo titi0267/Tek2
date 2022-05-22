@@ -30,6 +30,7 @@ void Kitchen::loop()
         if (_parentWrite.test_poll()) {
             pizza = _parentWrite.CReadFifo();
             if (pizza != NULL) {
+                std::cout << "This pizza was sent : " << pizza->pizzaId << std::endl;
                 _threadPull->addPizzaToCook(pizza);
             }
         }
