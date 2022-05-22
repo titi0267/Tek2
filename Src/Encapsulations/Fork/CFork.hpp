@@ -23,6 +23,7 @@ class CFork {
         void CKillPid();
         pid_t getPid() const;
         IPC::ParentToChild parentWrite;
+        IPC::ChildToParent childWrite;
 
     protected:
         void setPid();
