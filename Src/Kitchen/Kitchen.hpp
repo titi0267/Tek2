@@ -17,7 +17,7 @@
 
 class Kitchen {
     public:
-        Kitchen(uint32_t id, uint32_t _cookNbr, uint32_t _cookingTimeMultiplier, IPC::ParentToChild &parentWrite);
+        Kitchen(uint32_t id, uint32_t _cookNbr, uint32_t _cookingTimeMultiplier, IPC::ParentToChild &parentWrite, IPC::ChildToParent &childWrite);
         ~Kitchen();
 
         void loop();
@@ -29,4 +29,5 @@ class Kitchen {
         uint32_t _cookingTimeMultiplier;
         clock_t _clock;
         IPC::ParentToChild &_parentWrite;
+        IPC::ChildToParent &_childWrite;
 };

@@ -18,6 +18,7 @@ void *cook(void * ptr)
     std::this_thread::sleep_for(std::chrono::seconds(pizza->getBakedTime() *
     pull->getThreadPull()->getCookTime()));
     std::cout << "J'ai fini " << pizza->getPizzaId() << std::endl;
+    pull->getThreadPull()->sendFinishPizza(pizza->getPizzaId());
     pull->getThreadPull()->setThreadFinish(pull->getId());
     return (NULL);
 }

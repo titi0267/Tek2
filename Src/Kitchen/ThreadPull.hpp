@@ -12,6 +12,7 @@
 
 #include "../Encapsulations/Threads/CThreads.hpp"
 #include "../Encapsulations/Mutex/CMutex.hpp"
+#include "../Encapsulations/FIFO/CFifo.hpp"
 #include "../Pizza/IPizza.hpp"
 #include "../Pizza/Margarita.hpp"
 #include "../Pizza/Regina.hpp"
@@ -28,7 +29,7 @@ void *cook(void * ptr);
 
 class ThreadPull {
     public:
-        ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier);
+        ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier, IPC::ChildToParent &fifo);
         ~ThreadPull();
         void launchThread();
         void flushFinishedThread();
@@ -36,6 +37,7 @@ class ThreadPull {
         void setThreadFinish(uint32_t index);
         uint32_t getCookTime();
         void addPizzaToCook(SendPizza_t *pizza);
+        void sendFinishPizza(uint32_t id);
         std::unique_ptr <IPizza>getFirstPizza();
         int _test;
 
@@ -53,5 +55,6 @@ class ThreadPull {
         std::deque<pizzaPtr> _pizzaToCook;
         CMutex _pickInStock;
         CMutex _pickPizza;
+        IPC::ChildToParent &_childToParent;
         uint32_t _cookTimeMultiplier;
 };

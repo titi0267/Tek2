@@ -7,7 +7,7 @@
 
 #include "ThreadPull.hpp"
 
-ThreadPull::ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier) : _cookTimeMultiplier(cookTimeMultiplier)
+ThreadPull::ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier, IPC::ChildToParent &fifo) : _cookTimeMultiplier(cookTimeMultiplier), _childToParent(fifo)
 {
     for (int i = 0; i < cookNbr; i++) {
         _cooker.push_back(std::make_unique<CThreads>());
@@ -41,6 +41,11 @@ void ThreadPull::addPizzaToCook(SendPizza_t *pizza)
 uint32_t ThreadPull::getCookTime()
 {
     return (_cookTimeMultiplier);
+}
+
+void ThreadPull::sendFinishPizza(uint32_t id)
+{
+    _childToParent.CWriteFifo(id);
 }
 
 std::unique_ptr <IPizza>ThreadPull::getFirstPizza()
