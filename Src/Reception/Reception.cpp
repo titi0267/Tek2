@@ -63,16 +63,18 @@ void Reception::createKitchen()
 {
     static int kitchenId = 0;
     SendPizza_t pizzaInfo;
+    int totalKitchen = 0;
 
-    for (int i = kitchenId;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
-        _forkList.push_back(std::make_unique<CFork>(i, _cooksPerKitchen, _cookingTime));
-    }
-    for (int i = 0; i <= _forkList.size(); i++) {
-        for (int d = _pizzaQueue.size(); d > (_cooksPerKitchen * 2) || d > 0; d--) {
+    for (int i = 0;  i < ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++)
+        _forkList.push_back(std::make_unique<CFork>(_forkList.size() + 1, _cooksPerKitchen, _cookingTime));
+    for (int i = 0; i < _forkList.size(); i++) {
+        for (int d = _pizzaQueue.size(); totalKitchen < (_cooksPerKitchen * 2) && d != 0; d--) {
             pizzaInfo = {_pizzaQueue[0]->getPizzaId(), (uint32_t)_pizzaQueue[0]->getPizzaSize(), _pizzaQueue[0]->getIngredients()[0], _pizzaQueue[0]->getIngredients()[1], _pizzaQueue[0]->getIngredients()[2], _pizzaQueue[0]->getIngredients()[3],_pizzaQueue[0]->getIngredients()[4], _pizzaQueue[0]->getIngredients()[5], _pizzaQueue[0]->getIngredients()[6], _pizzaQueue[0]->getIngredients()[7], _pizzaQueue[0]->getIngredients()[8], 0};
             _forkList[i]->parentWrite.CWriteFifo(&pizzaInfo);
             _pizzaQueue.pop_front();
+            totalKitchen++;
         }
+        totalKitchen = 0;
     }
 }
 
@@ -185,13 +187,15 @@ void *CommThread(void *ptr)
     uint32_t pizzaId = 0;
 
     while (1) {
-        if (reception->getForkList().size() > 0 && reception->getForkList()[0]->childWrite.test_poll()) {
-        pizzaId = reception->getForkList()[0]->childWrite.CReadFifo();
-        if (pizzaId != 0) {
-                reception->dropPizzaId(pizzaId);
+        for (int i = 0; i < reception->getForkList().size(); i++) {
+            if (reception->getForkList().size() > 0 && reception->getForkList()[i]->childWrite.test_poll()) {
+            pizzaId = reception->getForkList()[i]->childWrite.CReadFifo();
+            if (pizzaId != 0) {
+                    reception->dropPizzaId(pizzaId);
+                }
             }
+            reception->dropOrder();
         }
-        reception->dropOrder();
     }
     return (NULL);
 }
