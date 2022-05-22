@@ -20,4 +20,5 @@ typedef struct SendPizza_s {
     uint32_t eggplant;
     uint32_t goat_cheese;
     uint32_t chief_love;
+    bool statusCmd;
 } SendPizza_t;

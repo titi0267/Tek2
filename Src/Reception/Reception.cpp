@@ -65,17 +65,15 @@ void Reception::setOrderId(uint32_t orderId)
 void Reception::createKitchen()
 {
     static int kitchenId = 0;
-    SendPizza_t pizzaInfo;// = {_pizzaQueue[0]->getPizzaId(), (uint32_t)_pizzaQueue[0]->getPizzaSize(), _pizzaQueue[0]->getIngredients()[0], _pizzaQueue[0]->getIngredients()[1], _pizzaQueue[0]->getIngredients()[2], _pizzaQueue[0]->getIngredients()[3],_pizzaQueue[0]->getIngredients()[4], _pizzaQueue[0]->getIngredients()[5], _pizzaQueue[0]->getIngredients()[6], _pizzaQueue[0]->getIngredients()[7], _pizzaQueue[0]->getIngredients()[8]};
+    SendPizza_t pizzaInfo;
 
     for (int i = kitchenId;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
         std::cout << "Kitchen : " << i << std::endl;
         _forkList.push_back(std::make_unique<CFork>(i, _cooksPerKitchen, _cookingTime));
     }
-    
-            ///_forkList[0]->parentWrite.CWriteFifo(&pizzaInfo);
     for (int i = 0; i <= _forkList.size(); i++) {
         for (int d = _pizzaQueue.size(); d > (_cooksPerKitchen * 2) || d > 0; d--) {
-            pizzaInfo = {_pizzaQueue[0]->getPizzaId(), (uint32_t)_pizzaQueue[0]->getPizzaSize(), _pizzaQueue[0]->getIngredients()[0], _pizzaQueue[0]->getIngredients()[1], _pizzaQueue[0]->getIngredients()[2], _pizzaQueue[0]->getIngredients()[3],_pizzaQueue[0]->getIngredients()[4], _pizzaQueue[0]->getIngredients()[5], _pizzaQueue[0]->getIngredients()[6], _pizzaQueue[0]->getIngredients()[7], _pizzaQueue[0]->getIngredients()[8]};
+            pizzaInfo = {_pizzaQueue[0]->getPizzaId(), (uint32_t)_pizzaQueue[0]->getPizzaSize(), _pizzaQueue[0]->getIngredients()[0], _pizzaQueue[0]->getIngredients()[1], _pizzaQueue[0]->getIngredients()[2], _pizzaQueue[0]->getIngredients()[3],_pizzaQueue[0]->getIngredients()[4], _pizzaQueue[0]->getIngredients()[5], _pizzaQueue[0]->getIngredients()[6], _pizzaQueue[0]->getIngredients()[7], _pizzaQueue[0]->getIngredients()[8], 0};
             _forkList[i]->parentWrite.CWriteFifo(&pizzaInfo);
             _pizzaQueue.pop_front();
         }
@@ -163,7 +161,10 @@ void *InputThread(void *ptr)
         std::cout << "Waiter : What would you like to order ?" << std::endl;
         if (!std::getline(std::cin, buff))
             break;
-        checkOrderRet = reception->checkOrder(buff, orderId);
+        if (buff != "status")
+            checkOrderRet = reception->checkOrder(buff, orderId);
+        else
+            checkOrderRet = 1;
         if (checkOrderRet) {
             orderId++;
             reception->createKitchen();
@@ -189,42 +190,17 @@ void *CommThread(void *ptr)
                 reception->dropPizzaId(pizzaId);
             }
         }
+        reception->dropOrder();
     }
     return (NULL);
 }
 
 void Reception::loop()
 {
-    //std::string buff = "";
- //   uint32_t orderId = 0;
-    //bool checkOrderRet;
-    //uint32_t pizzaId = 0;
-    //for (int i = 0; i ==0; i++) {
-        _recptionThread[0].createThread(InputThread, (void *)this);
-        _recptionThread[1].createThread(CommThread, (void *)this);
-        _recptionThread[0].joinThreads();
-    //
-    //for (int i = 0; i ==0; i++) {
-        _recptionThread[1].joinThreads();
-    //}
-    //while (1) {
-        //std::cout << "Waiter : What would you like to order ?" << std::endl;
-        //if (!std::getline(std::cin, buff))
-            //break;
-        //checkOrderRet = checkOrder(buff, orderId);
-        /*if (checkOrderRet) {
-            orderId++;
-            createKitchen();
-        }*/
-        //std::cout << "J'attend un truc" << std::endl;
-        /*if (_forkList[0]->childWrite.test_poll()) {
-        pizzaId = _forkList[0]->childWrite.CReadFifo();
-        if (pizzaId != 0) {
-            std::cout << pizzaId << std::endl;
-                //dropPizzaId(pizzaId);
-            }
-        }*/
-    //}
+    _recptionThread[0].createThread(InputThread, (void *)this);
+    _recptionThread[1].createThread(CommThread, (void *)this);
+    _recptionThread[0].joinThreads();
+    _recptionThread[1].joinThreads();
 }
 
 Reception::~Reception()
