@@ -14,7 +14,7 @@ void *cook(void * ptr)
 {
     ThreadPayload *pull = (ThreadPayload *)ptr;
     std::unique_ptr<IPizza> pizza = std::move(pull->getThreadPull()->getFirstPizza());
-    std::cout << "Je suis " << pizza->getPizzaId() << std::endl;
+    std::cout << "Je suis " << pull->getId() << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(pizza->getBakedTime() *
     pull->getThreadPull()->getCookTime()));
     std::cout << "J'ai fini " << pizza->getPizzaId() << std::endl;

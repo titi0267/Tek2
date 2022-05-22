@@ -63,14 +63,16 @@ void Reception::setOrderId(uint32_t orderId)
 void Reception::createKitchen()
 {
     static int kitchenId = 0;
-    SendPizza_t pizzaInfo = {_pizzaQueue[0]->getPizzaId(), (uint32_t)_pizzaQueue[0]->getPizzaSize(), _pizzaQueue[0]->getIngredients()[0], _pizzaQueue[0]->getIngredients()[1], _pizzaQueue[0]->getIngredients()[2], _pizzaQueue[0]->getIngredients()[3],_pizzaQueue[0]->getIngredients()[4], _pizzaQueue[0]->getIngredients()[5], _pizzaQueue[0]->getIngredients()[6], _pizzaQueue[0]->getIngredients()[7], _pizzaQueue[0]->getIngredients()[8]};
+    SendPizza_t pizzaInfo;// = {_pizzaQueue[0]->getPizzaId(), (uint32_t)_pizzaQueue[0]->getPizzaSize(), _pizzaQueue[0]->getIngredients()[0], _pizzaQueue[0]->getIngredients()[1], _pizzaQueue[0]->getIngredients()[2], _pizzaQueue[0]->getIngredients()[3],_pizzaQueue[0]->getIngredients()[4], _pizzaQueue[0]->getIngredients()[5], _pizzaQueue[0]->getIngredients()[6], _pizzaQueue[0]->getIngredients()[7], _pizzaQueue[0]->getIngredients()[8]};
 
     for (int i = kitchenId;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
         std::cout << "Kitchen : " << i << std::endl;
         _forkList.push_back(std::make_unique<CFork>(i, _cooksPerKitchen, _cookingTime));
     }
-    for (int i = 0; i < _forkList.size(); i++) {
-        for (int d = _pizzaQueue.size(); d > (_cooksPerKitchen * 2); d--) {
+    
+            ///_forkList[0]->parentWrite.CWriteFifo(&pizzaInfo);
+    for (int i = 0; i <= _forkList.size(); i++) {
+        for (int d = _pizzaQueue.size(); d > (_cooksPerKitchen * 2) || d > 0; d--) {
             pizzaInfo = {_pizzaQueue[0]->getPizzaId(), (uint32_t)_pizzaQueue[0]->getPizzaSize(), _pizzaQueue[0]->getIngredients()[0], _pizzaQueue[0]->getIngredients()[1], _pizzaQueue[0]->getIngredients()[2], _pizzaQueue[0]->getIngredients()[3],_pizzaQueue[0]->getIngredients()[4], _pizzaQueue[0]->getIngredients()[5], _pizzaQueue[0]->getIngredients()[6], _pizzaQueue[0]->getIngredients()[7], _pizzaQueue[0]->getIngredients()[8]};
             _forkList[i]->parentWrite.CWriteFifo(&pizzaInfo);
             std::cout << "Parent write "<< pizzaInfo.pizzaId << std::endl;
