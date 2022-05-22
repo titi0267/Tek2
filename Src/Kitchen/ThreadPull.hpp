@@ -40,7 +40,8 @@ class ThreadPull {
         void sendFinishPizza(uint32_t id);
         bool isSomeoneCooking();
         std::unique_ptr <IPizza>getFirstPizza();
-        int _test;
+        void lockPizzaMutex();
+        void delockPizzaMutex();
 
         enum class ThreadStatus {
             FREE,

@@ -65,6 +65,16 @@ bool ThreadPull::cookPizza()
     }
 }
 
+void ThreadPull::lockPizzaMutex()
+{
+    _pickPizza.lock();
+}
+
+void ThreadPull::delockPizzaMutex()
+{
+    _pickPizza.unlock();
+}
+
 bool ThreadPull::isSomeoneCooking()
 {
     for (int i = 0; i < _isRunningThread.size(); i++) {
