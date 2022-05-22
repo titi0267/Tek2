@@ -65,7 +65,7 @@ void Reception::createKitchen()
     SendPizza_t pizzaInfo;
     int totalKitchen = 0;
 
-    for (int i = 0;  i < ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++)
+    for (int i = 0;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++)
         _forkList.push_back(std::make_unique<CFork>(_forkList.size() + 1, _cooksPerKitchen, _cookingTime));
     for (int i = 0; i < _forkList.size(); i++) {
         for (int d = _pizzaQueue.size(); totalKitchen < (_cooksPerKitchen * 2) && d != 0; d--) {
