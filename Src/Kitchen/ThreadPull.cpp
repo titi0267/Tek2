@@ -58,7 +58,6 @@ std::unique_ptr <IPizza>ThreadPull::getFirstPizza(uint32_t cookerId)
     std::string str = "Cooker is cooking pizza nbr ";
     str += std::to_string(firstPizza->getPizzaId());
     _pizzaToCook.pop_front();
-    std::cout << _dump << std::endl;
     if (_dump == true)
         std::cout << str << std::endl;
     return (firstPizza);

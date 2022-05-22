@@ -51,10 +51,7 @@ void Reception::dropPizzaId(uint32_t pizzaId)
         _pizzasId.remove(pizzaId);
         itr->setId(_pizzasId);
     }
-    std::cout << "Finished pizza : " << pizzaId << " | Rest :" << std::endl;
-    for (auto itr1 = _pizzasId.begin(); itr1 != _pizzasId.end(); itr1++) {
-        std::cout << *itr1 << std::endl;
-    }
+    std::cout << "Finished pizza " << pizzaId << std::endl;
 }
 
 void Reception::setOrderId(uint32_t orderId)
@@ -68,7 +65,6 @@ void Reception::createKitchen()
     SendPizza_t pizzaInfo;
 
     for (int i = kitchenId;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
-        std::cout << "Kitchen : " << i << std::endl;
         _forkList.push_back(std::make_unique<CFork>(i, _cooksPerKitchen, _cookingTime));
     }
     for (int i = 0; i <= _forkList.size(); i++) {
