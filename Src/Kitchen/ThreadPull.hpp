@@ -38,6 +38,7 @@ class ThreadPull {
         uint32_t getCookTime();
         void addPizzaToCook(SendPizza_t *pizza);
         void sendFinishPizza(uint32_t id);
+        bool isSomeoneCooking();
         std::unique_ptr <IPizza>getFirstPizza();
         int _test;
 

@@ -79,7 +79,7 @@ void IPC::ChildToParent::CMakeFifo()
 
 void IPC::ChildToParent::COpenFifoRead()
 {
-    _fdRd = open(_CToP, O_RDONLY);
+    _fdRd = open(_CToP, O_RDONLY | O_NONBLOCK);
 }
 
 void IPC::ChildToParent::COpenFifoWrite()
@@ -91,7 +91,7 @@ uint32_t IPC::ChildToParent::CReadFifo()
 {
     int ret = read(_fdRd, &_messageRead, sizeof(uint32_t));
     if (ret == 0)
-        return (-1);
+        return (0);
     return (_messageRead);
 }
 

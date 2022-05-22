@@ -92,7 +92,7 @@ void Reception::dropOrder()
 
 void Reception::createPizza(std::string pizza, std::string size, std::string number, Order &order)
 {
-    static u_int32_t id = 0;
+    static u_int32_t id = 1;
     IPizza::PizzaSize pizzaSize = _tools.getSizeFromStr(size);
     IPizza::PizzaType type = _tools.getTypeFromStr(pizza);
     int nbr = std::atoi(number.c_str());
@@ -150,7 +150,7 @@ void Reception::loop()
     std::string buff = "";
     uint32_t orderId = 0;
     bool checkOrderRet;
-    uint32_t pizzaId = -1;
+    uint32_t pizzaId = 0;
 
     while (1) {
         std::cout << "Waiter : What would you like to order ?" << std::endl;
@@ -163,7 +163,10 @@ void Reception::loop()
         }
         std::cout << "J'attend un truc" << std::endl;
         pizzaId = _forkList[0]->childWrite.CReadFifo();
-        dropPizzaId(pizzaId);
+        if (pizzaId != 0) {
+            std::cout << pizzaId << std::endl;
+            dropPizzaId(pizzaId);
+        }
     }
 }
 

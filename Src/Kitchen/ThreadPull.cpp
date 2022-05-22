@@ -65,6 +65,15 @@ bool ThreadPull::cookPizza()
     }
 }
 
+bool ThreadPull::isSomeoneCooking()
+{
+    for (int i = 0; i < _isRunningThread.size(); i++) {
+        if (_isRunningThread[i] != ThreadStatus::FREE)
+            return (true);
+    }
+    return (false);
+}
+
 void ThreadPull::setThreadFinish(uint32_t index)
 {
     _isRunningThread[index] = ThreadStatus::FINISH;

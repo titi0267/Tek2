@@ -20,13 +20,12 @@ void Kitchen::loop()
 {
     clock_t tmp;
     _clock = clock();
-    bool isPizzaToCook = false;
     SendPizza_t *pizza;
 
     while(1) {
         tmp = clock();
-        isPizzaToCook = _threadPull->cookPizza();
-        if (isPizzaToCook == true)
+        _threadPull->cookPizza();
+        if (_threadPull->isSomeoneCooking())
             _clock = clock();
         if (_parentWrite.test_poll()) {
             pizza = _parentWrite.CReadFifo();
@@ -34,10 +33,10 @@ void Kitchen::loop()
                 _threadPull->addPizzaToCook(pizza);
             }
         }
-        // if (((tmp - _clock) / CLOCKS_PER_SEC) > 5) {
-        //     std::cout << "The kitchen: " << _id  << " is closing" << std::endl;
-        //     break;
-        // }
+        if (((tmp - _clock) / CLOCKS_PER_SEC) > 5) {
+            std::cout << "The kitchen: " << _id  << " is closing" << std::endl;
+            break;
+        }
     }
     _parentWrite.CCloseRd();
     _childWrite.CCloseWr();
