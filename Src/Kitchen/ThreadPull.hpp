@@ -40,7 +40,6 @@ class ThreadPull {
         void sendFinishPizza(uint32_t id);
         bool isSomeoneCooking();
         std::unique_ptr <IPizza>getFirstPizza(uint32_t cookerId);
-        void dump();
         void lockPizzaMutex();
         void delockPizzaMutex();
 
@@ -61,5 +60,4 @@ class ThreadPull {
         CMutex _pickPizza;
         IPC::ChildToParent &_childToParent;
         uint32_t _cookTimeMultiplier;
-        std::deque<std::string> _stringToDump;
 };

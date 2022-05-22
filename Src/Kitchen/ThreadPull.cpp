@@ -13,7 +13,6 @@ ThreadPull::ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier, IPC::Child
         _cooker.push_back(std::make_unique<CThreads>());
         _isRunningThread.push_back(ThreadStatus::FREE);
         _payloads.push_back(std::make_unique<ThreadPayload>(this, i));
-        _stringToDump.push_back("Cooker is doing Nothing");
     }
 }
 
@@ -52,19 +51,15 @@ void ThreadPull::sendFinishPizza(uint32_t id)
     _childToParent.CWriteFifo(id);
 }
 
-void ThreadPull::dump()
-{
-    for (int i = 0; i < _stringToDump.size(); i++)
-        std::cout << _stringToDump[i] << std::endl;
-}
-
 std::unique_ptr <IPizza>ThreadPull::getFirstPizza(uint32_t cookerId)
 {
     std::unique_ptr<IPizza> firstPizza = std::move(_pizzaToCook[0]);
     std::string str = "Cooker is cooking pizza nbr ";
     str += std::to_string(firstPizza->getPizzaId());
     _pizzaToCook.pop_front();
-    _stringToDump[cookerId] = str;
+    std::cout << _dump << std::endl;
+    if (_dump == true)
+        std::cout << str << std::endl;
     return (firstPizza);
 }
 
@@ -81,8 +76,9 @@ bool ThreadPull::cookPizza()
             if (_isRunningThread[i] == ThreadStatus::RUNNING)
                 _cooker[i]->joinThreads();
         }
-        if (_dump == true)
-            dump();
+        if (_dump == true && pizzaNbr < _cooker.size())
+            std::cout << "A cooker was doing Nothing";
+        _dump = false;
         return (true);
     }
 }
@@ -109,7 +105,6 @@ bool ThreadPull::isSomeoneCooking()
 void ThreadPull::setThreadFinish(uint32_t index)
 {
     _isRunningThread[index] = ThreadStatus::FINISH;
-    _stringToDump[index] = "Cooker is doing Nothing";
 }
 
 void ThreadPull::flushFinishedThread()
