@@ -64,15 +64,12 @@ void Reception::createKitchen()
 {
     static int kitchenId = 0;
     SendPizza_t pizzaInfo = {_pizzaQueue[0]->getPizzaId(), (uint32_t)_pizzaQueue[0]->getPizzaSize(), _pizzaQueue[0]->getIngredients()[0], _pizzaQueue[0]->getIngredients()[1], _pizzaQueue[0]->getIngredients()[2], _pizzaQueue[0]->getIngredients()[3],_pizzaQueue[0]->getIngredients()[4], _pizzaQueue[0]->getIngredients()[5], _pizzaQueue[0]->getIngredients()[6], _pizzaQueue[0]->getIngredients()[7], _pizzaQueue[0]->getIngredients()[8]};
-    SendPizza_t *pizza;
 
     for (int i = kitchenId;  i <= ceil(_pizzaQueue.size() / (_cooksPerKitchen * 2)); i++) {
         std::cout << "Kitchen : " << i << std::endl;
         _forkList.push_back(std::make_unique<CFork>(i, _cooksPerKitchen, _cookingTime));
     }
-    _forkList[0]->parentWrite.COpenFifoWrite();
     _forkList[0]->parentWrite.CWriteFifo(&pizzaInfo);
-    _forkList[0]->parentWrite.CCloseWr();
 }
 
 void Reception::dropOrder()
@@ -162,10 +159,12 @@ void Reception::loop()
             createKitchen();
         }
         std::cout << "J'attend un truc" << std::endl;
+        if (_forkList[0]->childWrite.test_poll()) {
         pizzaId = _forkList[0]->childWrite.CReadFifo();
         if (pizzaId != 0) {
             std::cout << pizzaId << std::endl;
-            dropPizzaId(pizzaId);
+                //dropPizzaId(pizzaId);
+            }
         }
     }
 }
