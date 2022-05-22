@@ -161,10 +161,10 @@ void *InputThread(void *ptr)
         std::cout << "Waiter : What would you like to order ?" << std::endl;
         if (!std::getline(std::cin, buff))
             break;
-        if (buff != "status")
-            checkOrderRet = reception->checkOrder(buff, orderId);
-        else
-            checkOrderRet = 1;
+        if (buff.compare("status") == 0) {
+            continue;
+        }
+        checkOrderRet = reception->checkOrder(buff, orderId);
         if (checkOrderRet) {
             orderId++;
             reception->createKitchen();
