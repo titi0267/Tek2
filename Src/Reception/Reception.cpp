@@ -51,7 +51,7 @@ void Reception::dropPizzaId(uint32_t pizzaId)
         _pizzasId.remove(pizzaId);
         itr->setId(_pizzasId);
     }
-    std::cout << "Removed :" << pizzaId << std::endl;
+    std::cout << "Finished pizza : " << pizzaId << " | Rest :" << std::endl;
     for (auto itr1 = _pizzasId.begin(); itr1 != _pizzasId.end(); itr1++) {
         std::cout << *itr1 << std::endl;
     }
@@ -77,7 +77,6 @@ void Reception::createKitchen()
         for (int d = _pizzaQueue.size(); d > (_cooksPerKitchen * 2) || d > 0; d--) {
             pizzaInfo = {_pizzaQueue[0]->getPizzaId(), (uint32_t)_pizzaQueue[0]->getPizzaSize(), _pizzaQueue[0]->getIngredients()[0], _pizzaQueue[0]->getIngredients()[1], _pizzaQueue[0]->getIngredients()[2], _pizzaQueue[0]->getIngredients()[3],_pizzaQueue[0]->getIngredients()[4], _pizzaQueue[0]->getIngredients()[5], _pizzaQueue[0]->getIngredients()[6], _pizzaQueue[0]->getIngredients()[7], _pizzaQueue[0]->getIngredients()[8]};
             _forkList[i]->parentWrite.CWriteFifo(&pizzaInfo);
-            std::cout << "Parent write "<< pizzaInfo.pizzaId << std::endl;
             _pizzaQueue.pop_front();
         }
     }
@@ -187,7 +186,6 @@ void *CommThread(void *ptr)
         if (reception->getForkList().size() > 0 && reception->getForkList()[0]->childWrite.test_poll()) {
         pizzaId = reception->getForkList()[0]->childWrite.CReadFifo();
         if (pizzaId != 0) {
-            std::cout << "Pizza finished : " << pizzaId << std::endl;
                 reception->dropPizzaId(pizzaId);
             }
         }
