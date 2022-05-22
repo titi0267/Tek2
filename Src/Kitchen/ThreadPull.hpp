@@ -13,6 +13,11 @@
 #include "../Encapsulations/Threads/CThreads.hpp"
 #include "../Encapsulations/Mutex/CMutex.hpp"
 #include "../Pizza/IPizza.hpp"
+#include "../Pizza/Margarita.hpp"
+#include "../Pizza/Regina.hpp"
+#include "../Pizza/Fantasia.hpp"
+#include "../Pizza/Americana.hpp"
+#include "../Pizza/SendPizza.hpp"
 #include "ThreadPayload.hpp"
 
 using ThreadPayloadPtr = std::unique_ptr<ThreadPayload>;
@@ -30,6 +35,7 @@ class ThreadPull {
         bool cookPizza();
         void setThreadFinish(uint32_t index);
         uint32_t getCookTime();
+        void addPizzaToCook(SendPizza_t *pizza);
         std::unique_ptr <IPizza>getFirstPizza();
         int _test;
 

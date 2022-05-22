@@ -58,5 +58,5 @@ bool CFifo::test_poll()
 
 void CFifo::CWriteFifo(SendPizza_t *pizza)
 {
-    write(_fdWr, pizza, sizeof(SendPizza_t *));
+    write(_fdWr, pizza, sizeof(SendPizza_t));
 }

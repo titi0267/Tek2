@@ -11,6 +11,7 @@
 Kitchen::Kitchen(uint32_t id, uint32_t cookNbr, uint32_t cookingTimeMultiplier, CFifo &fifo) :
 _threadPull(std::make_unique<ThreadPull>(cookNbr, cookingTimeMultiplier)), _cookingTimeMultiplier(cookingTimeMultiplier), _id(id), _fifo(fifo)
 {
+    _fifo.COpenFifoRead();
     std::cout << "Kitchen: " << _id << " is now open" << std::endl;
 }
 
@@ -26,18 +27,18 @@ void Kitchen::loop()
         isPizzaToCook = _threadPull->cookPizza();
         if (isPizzaToCook == true)
             _clock = clock();
-        _fifo.COpenFifoRead();
         if (_fifo.test_poll()) {
             pizza = _fifo.CReadFifo();
-            if (pizza != NULL)
-                std::cout << "J'ai read un truc" << std::endl;
+            if (pizza != NULL) {
+                _threadPull->addPizzaToCook(pizza);
+            }
         }
-        _fifo.CCloseRd();
-        if (((tmp - _clock) / CLOCKS_PER_SEC) > 3) {
+        if (((tmp - _clock) / CLOCKS_PER_SEC) > 5) {
             std::cout << "The kitchen: " << _id  << " is closing" << std::endl;
             break;
         }
     }
+    _fifo.CCloseRd();
 }
 
 Kitchen::~Kitchen()
