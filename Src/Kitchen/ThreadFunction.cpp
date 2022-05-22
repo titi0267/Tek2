@@ -9,7 +9,6 @@
 #include "../Encapsulations/FIFO/CFifo.hpp"
 #include <chrono>
 #include <thread>
-#include <time.h>
 
 void *cook(void * ptr)
 {

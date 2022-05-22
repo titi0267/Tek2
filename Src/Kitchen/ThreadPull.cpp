@@ -9,6 +9,7 @@
 
 ThreadPull::ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier, IPC::ChildToParent &fifo) : _cookTimeMultiplier(cookTimeMultiplier), _childToParent(fifo)
 {
+    _dump = false;
     for (int i = 0; i < cookNbr; i++) {
         _cooker.push_back(std::make_unique<CThreads>());
         _isRunningThread.push_back(ThreadStatus::FREE);
