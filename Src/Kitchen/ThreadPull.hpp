@@ -29,7 +29,7 @@ void *cook(void * ptr);
 
 class ThreadPull {
     public:
-        ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier, IPC::ChildToParent &fifo);
+        ThreadPull(uint32_t kitchenId, uint32_t cookNbr, uint32_t cookTimeMultiplier, IPC::ChildToParent &fifo);
         ~ThreadPull();
         void launchThread();
         void flushFinishedThread();
@@ -52,6 +52,7 @@ class ThreadPull {
     protected:
     private:
         bool _dump;
+        uint32_t _kitchenId;
         std::deque<ThreadPayloadPtr> _payloads;
         std::deque<ThreadPtr> _cooker;
         std::deque<ThreadStatus> _isRunningThread;

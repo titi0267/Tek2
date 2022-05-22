@@ -7,7 +7,7 @@
 
 #include "ThreadPull.hpp"
 
-ThreadPull::ThreadPull(uint32_t cookNbr, uint32_t cookTimeMultiplier, IPC::ChildToParent &fifo) : _cookTimeMultiplier(cookTimeMultiplier), _childToParent(fifo)
+ThreadPull::ThreadPull(uint32_t kitchenId, uint32_t cookNbr, uint32_t cookTimeMultiplier, IPC::ChildToParent &fifo) : _cookTimeMultiplier(cookTimeMultiplier), _childToParent(fifo), _kitchenId(kitchenId)
 {
     _dump = false;
     for (int i = 0; i < cookNbr; i++) {
@@ -55,7 +55,11 @@ void ThreadPull::sendFinishPizza(uint32_t id)
 std::unique_ptr <IPizza>ThreadPull::getFirstPizza(uint32_t cookerId)
 {
     std::unique_ptr<IPizza> firstPizza = std::move(_pizzaToCook[0]);
-    std::string str = "Cooker is cooking pizza nbr ";
+    std::string str = "Cooker ";
+    str += std::to_string(cookerId);
+    str += " of kitchen ";
+    str += std::to_string(_kitchenId);
+    str += " is cooking pizza nbr ";
     str += std::to_string(firstPizza->getPizzaId());
     _pizzaToCook.pop_front();
     if (_dump == true)
