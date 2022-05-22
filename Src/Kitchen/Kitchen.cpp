@@ -11,7 +11,7 @@
 Kitchen::Kitchen(uint32_t id, uint32_t cookNbr, uint32_t cookingTimeMultiplier, IPC::ParentToChild &parentWrite, IPC::ChildToParent &childWrite) :
 _threadPull(std::make_unique<ThreadPull>(cookNbr, cookingTimeMultiplier, childWrite)), _cookingTimeMultiplier(cookingTimeMultiplier), _id(id), _parentWrite(parentWrite), _childWrite(childWrite)
 {
-    std::cout << "Kitchen: " << _id << " is now open" << std::endl;
+    std::cout << "Kitchen " << _id << " is open" << std::endl;
     parentWrite.COpenFifoRead();
     childWrite.COpenFifoWrite();
 }
