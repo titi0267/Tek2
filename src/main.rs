@@ -52,6 +52,6 @@ fn main() {
     println!("Voting intentions:       {:.2}%", p);
     let deviation: f32 = calc_variance(pop as f32, size as f32, p / 100.0);
     println!("Variance:                {:.6}", deviation);
-    println!("95% confidence interval: [%;%]");
-    println!("99% confidence interval: [%:%]");
+    println!("95% confidence interval: [{:.2}%; {:.2}%]", p - 100.0 * (deviation.sqrt() * 1.96), p + 100.0 * (deviation.sqrt() * 1.96));
+    println!("99% confidence interval: [{:.2}%; {:.2}%]", p - 100.0 * (deviation.sqrt() * 2.58), p + 100.0 * (deviation.sqrt() * 2.58));
 }
