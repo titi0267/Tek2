@@ -47,11 +47,14 @@ fn main() {
     let args: Vec<String> = env::args().collect();
     check_arg_len(&args);
     let (pop, size, p) = get_arg_as_number(&args);
+    if p > 100.0 || 0.0 > p {
+        std::process::exit(84);
+    }
     println!("Population size:         {}", pop);
     println!("Sample size:             {}", size);
     println!("Voting intentions:       {:.2}%", p);
     let deviation: f32 = calc_variance(pop as f32, size as f32, p / 100.0);
     println!("Variance:                {:.6}", deviation);
-    println!("95% confidence interval: [{:.2}%; {:.2}%]", p - 100.0 * (deviation.sqrt() * 1.96), p + 100.0 * (deviation.sqrt() * 1.96));
-    println!("99% confidence interval: [{:.2}%; {:.2}%]", p - 100.0 * (deviation.sqrt() * 2.58), p + 100.0 * (deviation.sqrt() * 2.58));
+    println!("95% confidence interval: [{:.2}%; {:.2}%]", if 0.0 > (p - 100.0 * (deviation.sqrt() * 1.96)) {0.0} else {p - 100.0 * (deviation.sqrt() * 1.96)}, if p + 100.0 * (deviation.sqrt() * 1.96) > 100.0 {100.0} else {p + 100.0 * (deviation.sqrt() * 1.96)});
+    println!("99% confidence interval: [{:.2}%; {:.2}%]", if 0.0 > (p - 100.0 * (deviation.sqrt() * 2.58)) {0.0} else {p - 100.0 * (deviation.sqrt() * 2.58)}, if p + 100.0 * (deviation.sqrt() * 2.58) > 100.0 {100.0} else {p + 100.0 * (deviation.sqrt() * 2.58)});
 }
