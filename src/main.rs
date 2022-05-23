@@ -50,6 +50,9 @@ fn main() {
     if p > 100.0 || 0.0 > p {
         std::process::exit(84);
     }
+    if size > pop {
+        std::process::exit(84);
+    }
     println!("Population size:         {}", pop);
     println!("Sample size:             {}", size);
     println!("Voting intentions:       {:.2}%", p);
