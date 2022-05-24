@@ -23,7 +23,7 @@
 #include <ctype.h>
 
 #include "./command.h"
-#include "./logging.h"
+#include "../../libs/myteams/logging_server.h"
 
 #define ERROR 84
 #define MAX_CONNECTIONS 15

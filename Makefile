@@ -9,14 +9,12 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/setup.c		\
 				server/src/loop.c		\
 				server/src/free.c		\
-				server/src/list/lib.c	\
-				server/src/print/print_struct.c
+				server/src/list/lib.c
 
 SRC_CLIENT	=	client/src/main.c		\
 				client/src/setup.c		\
 				client/src/loop.c		\
-				client/src/free.c		\
-				client/src/print/print_struct.c
+				client/src/free.c
 
 OBJ_SERVER		=	$(SRC_SERVER:.c=.o)
 
@@ -31,8 +29,8 @@ CFLAGS 		+= 		-ldl	-g
 all:	$(NAME_SERVER)
 
 $(NAME_SERVER): $(OBJ_SERVER) $(OBJ_CLIENT)
-		gcc -o $(NAME_SERVER) $(OBJ_SERVER) $(CFLAGS)
-		gcc -o $(NAME_CLIENT) $(OBJ_CLIENT) $(CFLAGS)
+		gcc -o $(NAME_SERVER) $(OBJ_SERVER) $(CFLAGS) -Llibs/myteams -lmyteams
+		gcc -o $(NAME_CLIENT) $(OBJ_CLIENT) $(CFLAGS) -Llibs/myteams -lmyteams
 
 server: $(OBJ_SERVER)
 		gcc -o $(NAME_SERVER) $(OBJ_SERVER) $(CFLAGS)

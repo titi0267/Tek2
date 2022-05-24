@@ -23,7 +23,7 @@
 #include <ctype.h>
 
 #include "./command.h"
-#include "./logging.h"
+#include "../../libs/myteams/logging_client.h"
 
 #define ERROR 84
 #define BUFFER_SIZE 1024
