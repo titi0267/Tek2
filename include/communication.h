@@ -7,15 +7,27 @@
 
 #pragma once
 
-typedef struct user_info_s {
-    int status;
-} user_info_t;
+#define CMD_ERROR 84
+#define MAX_NAME_LENGTH 32
+#define MAX_BODY_LENGTH 512
 
-typedef struct team_info_s {
-    int status;
-} team_info_t;
+enum command_id {
+    HELP,
+    LOGIN,
+    LOGOUT,
+    USERS,
+    USER,
+    SEND,
+    MESSAGES,
+    SUBSCRIBE,
+    SUBSCRIBED,
+    UNSUBSCRIBE,
+    USE,
+    CREATE,
+    LIST,
+    INFO
+};
 
-typedef struct com_type_s {
-    int user_info;
-    int team_info;
-} com_type_t;
+typedef struct message_s {
+    short command;
+} message_t;

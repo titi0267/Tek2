@@ -23,6 +23,7 @@
 #include <ctype.h>
 
 #include "./command.h"
+#include "../../include/communication.h"
 #include "../../libs/myteams/logging_client.h"
 
 #define ERROR 84

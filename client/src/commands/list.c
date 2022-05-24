@@ -5,8 +5,7 @@
 ** list
 */
 
-#include "../../include/command.h"
-
+#include "../../include/teams.h"
 int c_list(char *buff)
 {
     if (buff[0] != '\n')

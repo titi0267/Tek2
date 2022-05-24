@@ -5,7 +5,7 @@
 ** users
 */
 
-#include "../../include/command.h"
+#include "../../include/teams.h"
 
 int c_users(char *buff)
 {

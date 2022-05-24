@@ -5,8 +5,7 @@
 ** send
 */
 
-#include "../../include/command.h"
-
+#include "../../include/teams.h"
 int c_send(char *buff)
 {
     if (check_is_arg(buff) == CMD_ERROR)

@@ -5,8 +5,7 @@
 ** help
 */
 
-#include "../../include/command.h"
-
+#include "../../include/teams.h"
 void provide_help()
 {
     printf("    /unsubscribe [\"team_uuid\"] : unsubscribe from a team\n");

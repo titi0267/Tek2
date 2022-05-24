@@ -5,7 +5,7 @@
 ** check_valid_args
 */
 
-#include "../include/command.h"
+#include "../include/teams.h"
 
 int check_is_arg(char *buff)
 {

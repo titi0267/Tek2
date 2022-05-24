@@ -5,8 +5,7 @@
 ** use
 */
 
-#include "../../include/command.h"
-
+#include "../../include/teams.h"
 int check_args_thread(char *buff, int thread_uuid_len)
 {
     int max_sz = 0;

@@ -5,8 +5,7 @@
 ** info
 */
 
-#include "../../include/command.h"
-
+#include "../../include/teams.h"
 int c_info(char *buff)
 {
     if (buff[0] != '\n')

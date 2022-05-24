@@ -6,7 +6,6 @@
 */
 
 #include "../include/teams.h"
-#include "../include/command.h"
 
 int parse_cmd(char *buff)
 {

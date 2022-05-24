@@ -5,8 +5,7 @@
 ** messages
 */
 
-#include "../../include/command.h"
-
+#include "../../include/teams.h"
 int c_messages(char *buff)
 {
     if (check_is_arg(buff) == CMD_ERROR || check_valid_cmd_type(buff)

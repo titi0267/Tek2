@@ -22,7 +22,7 @@
 #include <fcntl.h>
 #include <ctype.h>
 
-#include "./command.h"
+#include "../../include/communication.h"
 #include "../../libs/myteams/logging_server.h"
 
 #define ERROR 84

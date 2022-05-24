@@ -5,8 +5,7 @@
 ** user
 */
 
-#include "../../include/command.h"
-
+#include "../../include/teams.h"
 int c_user(char *buff)
 {
     if (check_is_arg(buff) == CMD_ERROR ||

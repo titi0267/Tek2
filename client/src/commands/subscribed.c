@@ -5,8 +5,7 @@
 ** subscribed
 */
 
-#include "../../include/command.h"
-
+#include "../../include/teams.h"
 int c_subscribed(char *buff)
 {
     if (buff[0] != '\n' && (check_is_arg(buff) == CMD_ERROR ||
