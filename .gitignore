@@ -4,3 +4,4 @@ test.txt
 *.o
 myteams_cli
 myteams_server
+vgcore*

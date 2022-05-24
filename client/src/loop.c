@@ -9,16 +9,20 @@
 
 void loop(client_t *client)
 {
-    char *buff = malloc(BUFFER_SIZE);
+    char *buff = NULL;
+    size_t n = 0;
     message_t *msg = malloc(sizeof(message_t));
 
-    memset(buff, 0, BUFFER_SIZE);
-    msg->command = 16;
-    while (strcmp(buff, "/logout") != 0) {
+    msg->command = 84;
+    while (msg->command != LOGOUT) {
         printf("%s > ", client->log_status == LOGGED ? client->pseudo : "");
-        if (scanf("%s", buff) == EOF)
+        if (getline(&buff, &n, stdin) == -1)
             break;
-        write(client->socket_fd, msg, sizeof(message_t));
+        msg->command = parse_cmd(buff);
+        if (msg->command != 84)
+            write(client->socket_fd, msg, sizeof(message_t));
+        else
+            printf("Error: Invalid Command\n");
     }
     free(msg);
     free_all(client, buff);
