@@ -32,6 +32,7 @@ int main(int ac, char **av)
 {
     client_t *client;
 
+    client_error_already_exist();
     if (check_args(ac, av) == ERROR)
         return (ERROR);
     client = init_struct(av);

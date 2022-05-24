@@ -45,8 +45,8 @@ CFLAGS 		+= 		-ldl	-g
 all:	$(NAME_SERVER)
 
 $(NAME_SERVER): $(OBJ_SERVER) $(OBJ_CLIENT)
-		gcc -o $(NAME_SERVER) $(OBJ_SERVER) $(CFLAGS)
-		gcc -o $(NAME_CLIENT) $(OBJ_CLIENT)
+		gcc -o $(NAME_SERVER) $(OBJ_SERVER) $(CFLAGS) -Llibs/myteams -lmyteams
+		gcc -o $(NAME_CLIENT) $(OBJ_CLIENT) $(CFLAGS) -Llibs/myteams -lmyteams
 
 server: $(OBJ_SERVER)
 		gcc -o $(NAME_SERVER) $(OBJ_SERVER) $(CFLAGS)
