@@ -18,7 +18,7 @@ void loop(client_t *client)
         printf("%s > ", client->log_status == LOGGED ? client->pseudo : "");
         if (getline(&buff, &n, stdin) == -1)
             break;
-        msg->command = parse_cmd(buff);
+        msg->command = parse_cmd(buff, client);
         if (msg->command != 84)
             write(client->socket_fd, msg, sizeof(message_t));
         else

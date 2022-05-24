@@ -6,8 +6,9 @@
 */
 
 #include "../../include/teams.h"
+#include "../../include/command.h"
 
-int c_users(char *buff)
+int c_users(char *buff, client_t *client)
 {
     if (buff[0] != '\n')
         return (CMD_ERROR);

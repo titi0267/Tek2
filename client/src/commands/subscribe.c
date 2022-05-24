@@ -6,7 +6,9 @@
 */
 
 #include "../../include/teams.h"
-int c_subscribe(char *buff)
+#include "../../include/command.h"
+
+int c_subscribe(char *buff, client_t *client)
 {
     if (check_is_arg(buff) == CMD_ERROR || check_valid_cmd_type(buff)
         == CMD_ERROR || check_valid_uuid(buff) == CMD_ERROR)

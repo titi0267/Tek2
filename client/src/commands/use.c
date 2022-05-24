@@ -6,6 +6,8 @@
 */
 
 #include "../../include/teams.h"
+#include "../../include/command.h"
+
 int check_args_thread(char *buff, int thread_uuid_len)
 {
     int max_sz = 0;
@@ -68,7 +70,7 @@ int check_full_use_command(char *buff)
     return (0);
 }
 
-int c_use(char *buff)
+int c_use(char *buff, client_t *client)
 {
     if (buff[0] != '\n' && check_full_use_command(buff) == CMD_ERROR)
         return (CMD_ERROR);

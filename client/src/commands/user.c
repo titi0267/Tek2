@@ -6,7 +6,9 @@
 */
 
 #include "../../include/teams.h"
-int c_user(char *buff)
+#include "../../include/command.h"
+
+int c_user(char *buff, client_t *client)
 {
     if (check_is_arg(buff) == CMD_ERROR ||
         check_valid_cmd_type(buff) == CMD_ERROR)

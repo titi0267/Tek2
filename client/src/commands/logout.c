@@ -6,7 +6,9 @@
 */
 
 #include "../../include/teams.h"
-int c_logout(char *buff)
+#include "../../include/command.h"
+
+int c_logout(char *buff, client_t *client)
 {
     if (buff[0] != '\n')
         return (CMD_ERROR);

@@ -28,6 +28,10 @@ enum command_id {
     INFO
 };
 
+typedef struct cli_login_s {
+    char name[33];
+} cli_login_t;
+
 typedef struct message_s {
     short command;
 } message_t;

@@ -6,6 +6,8 @@
 */
 
 #include "../../include/teams.h"
+#include "../../include/command.h"
+
 void provide_help()
 {
     printf("    /unsubscribe [\"team_uuid\"] : unsubscribe from a team\n");
@@ -19,7 +21,7 @@ void provide_help()
     printf("current (see below)\n");
 }
 
-int c_help(char *buff)
+int c_help(char *buff, client_t *client)
 {
     if (buff[0] != '\n')
         return (CMD_ERROR);

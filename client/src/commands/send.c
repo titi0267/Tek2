@@ -6,7 +6,9 @@
 */
 
 #include "../../include/teams.h"
-int c_send(char *buff)
+#include "../../include/command.h"
+
+int c_send(char *buff, client_t *client)
 {
     if (check_is_arg(buff) == CMD_ERROR)
         return (CMD_ERROR);

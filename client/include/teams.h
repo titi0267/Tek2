@@ -22,7 +22,6 @@
 #include <fcntl.h>
 #include <ctype.h>
 
-#include "./command.h"
 #include "../../include/communication.h"
 #include "../../libs/myteams/logging_client.h"
 
@@ -42,6 +41,6 @@ typedef struct client_s {
 } client_t;
 
 client_t *init_struct(char **av);
-int parse_cmd(char *buff);
+int parse_cmd(char *buff, client_t *client);
 void loop(client_t *client);
 void free_all(client_t *client, char *buff);
