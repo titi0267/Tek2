@@ -30,6 +30,7 @@ SRC_CLIENT	=	client/src/main.c		\
 				client/src/commands/unsubscribed.c \
 				client/src/commands/use.c \
 				client/src/commands/user.c \
+				client/src/check_valid_args.c \
 
 OBJ_SERVER		=	$(SRC_SERVER:.c=.o)
 

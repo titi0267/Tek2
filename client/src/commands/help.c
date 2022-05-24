@@ -9,6 +9,8 @@
 
 int c_help(char *buff)
 {
-    printf("help\n");
+    if (buff[0] != '\n')
+        return (CMD_ERROR);
+    printf("/help\n");
     return (HELP);
 }

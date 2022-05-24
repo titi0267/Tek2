@@ -9,6 +9,8 @@
 
 int c_users(char *buff)
 {
+    if (buff[0] != '\n')
+        return (CMD_ERROR);
     printf("users\n");
     return (USERS);
 }
