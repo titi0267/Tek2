@@ -61,6 +61,8 @@ void push_back(teams_t *teams, int fd)
     new_node->fd = fd;
     new_node->buff = malloc(sizeof(message_t));
     new_node->next = NULL;
+    new_node->pseudo = "";
+    new_node->status = NOT_LOGGED;
     if (teams->head == NULL) {
         teams->head = new_node;
         return;

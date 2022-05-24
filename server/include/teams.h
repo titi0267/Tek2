@@ -37,6 +37,8 @@ enum user_status {
 
 typedef struct client_list_s {
     struct client_list_s *next;
+    enum user_status status;
+    char *pseudo;
     message_t *buff;
     int fd;
 } client_list_t;
@@ -62,3 +64,5 @@ void set_all_fd(teams_t *teams);
 void free_list(teams_t *teams);
 void free_all(teams_t *teams);
 void remove_in_list(teams_t *teams, int fd);
+void choose_command(client_list_t *client);
+void login(client_list_t *client);
