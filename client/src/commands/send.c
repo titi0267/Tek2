@@ -36,7 +36,7 @@ int c_send(char *buff, client_t *client)
     if (check_is_arg(buff) == CMD_ERROR)
         return (CMD_ERROR);
     buff += 2;
-    for (i = 0; buff[i] != '"'; i++) {
+    for (; buff[i] != '"'; i++) {
         cli_send.user_uuid[i] = buff[i];
         if (buff[i] < 48 || buff[i] > 57 || i > MAX_NAME_LENGTH)
             return (CMD_ERROR);

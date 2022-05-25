@@ -19,12 +19,9 @@ int c_subscribe(char *buff, client_t *client)
         return (CMD_ERROR);
     buff += 2;
     printf("Subscribe to ");
-    for (int i = 0; i < strlen(buff) - 2; i++) {
-        printf("%c", buff[i]);
+    for (int i = 0; i < strlen(buff) - 2; i++)
         cli_sub.team_uuid[i] = buff[i];
-
-    }
-    puts("");
+    printf("%s\n", cli_sub.team_uuid);
     msg.command = SUBSCRIBE;
     write(client->socket_fd, &msg, sizeof(message_t));
     write(client->socket_fd, &cli_sub, sizeof(cli_subscribe_t));
