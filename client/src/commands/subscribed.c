@@ -37,7 +37,6 @@ int c_subscribed(char *buff, client_t *client)
         check_valid_uuid(buff) == CMD_ERROR))
         return (CMD_ERROR);
     if (buff[0] == '\n') {
-        subed.team_uuid[0] = '\0';
         printf("you are subscribed to ...\n");
         msg.command = SUBSCRIBED;
         write(client->socket_fd, &msg, sizeof(message_t));

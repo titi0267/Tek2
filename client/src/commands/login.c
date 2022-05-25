@@ -12,7 +12,6 @@ int c_login(char *buff, client_t *client)
 {
     cli_login_t login;
     message_t msg;
-    int i = 0;
 
     memset(login.name, 0, MAX_NAME_LENGTH);
     if (check_is_arg(buff) == CMD_ERROR ||
@@ -20,9 +19,8 @@ int c_login(char *buff, client_t *client)
         return (CMD_ERROR);
     buff += 2;
     printf("Login with ");
-    for (; i < strlen(buff) - 2; i++)
+    for (int i = 0; i < strlen(buff) - 2; i++)
         login.name[i] = buff[i];
-    login.name[i] = '\0';
     printf("%s\n", login.name);
     msg.command = LOGIN;
     write(client->socket_fd, &msg, (sizeof(message_t)));

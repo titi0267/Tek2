@@ -19,11 +19,9 @@ int c_messages(char *buff, client_t *client)
         return (CMD_ERROR);
     buff += 2;
     printf("Messages from ");
-    for (int i = 0; i < strlen(buff) - 2; i++) {
-        printf("%c", buff[i]);
+    for (int i = 0; i < strlen(buff) - 2; i++)
         cli_msgs.user_uuid[i] = buff[i];
-    }
-    puts("");
+    printf("%s\n", cli_msgs.user_uuid);
     msg.command = MESSAGES;
     write(client->socket_fd, &msg, sizeof(message_t));
     printf("%s\n", cli_msgs.user_uuid);
