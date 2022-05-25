@@ -39,6 +39,7 @@ typedef struct client_list_s {
     struct client_list_s *next;
     enum user_status status;
     char *pseudo;
+    char *uid;
     message_t *buff;
     int fd;
 } client_list_t;
@@ -66,3 +67,4 @@ void free_all(teams_t *teams);
 void remove_in_list(teams_t *teams, int fd);
 void choose_command(client_list_t *client);
 void login(client_list_t *client);
+char *increment_str(char *str);

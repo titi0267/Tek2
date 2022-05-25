@@ -28,6 +28,11 @@ enum command_id {
     INFO
 };
 
+typedef struct server_user_s {
+    char *pseudo;
+    char *uid;
+} server_user_t;
+
 typedef struct cli_login_s {
     char name[33];
 } cli_login_t;
