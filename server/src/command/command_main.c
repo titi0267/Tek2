@@ -16,7 +16,7 @@ void error(client_list_t *client)
 
 void choose_command(client_list_t *client)
 {
-    void (*command[5])(client_list_t *) = {error, login, error, error, user};
+    void (*command[5])(client_list_t *) = {error, login, error, users, user};
 
     printf("command: %d\n", client->buff->command);
     if (client->buff->command > 13)
