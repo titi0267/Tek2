@@ -23,7 +23,6 @@ void command_loop(teams_t *teams)
             break;
         }
         choose_command(fd_node);
-        memset(fd_node->buff, 0, sizeof(message_t));
     }
 }
 

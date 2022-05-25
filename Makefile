@@ -43,7 +43,7 @@ NAME_SERVER		=	myteams_server
 
 NAME_CLIENT	=	myteams_cli
 
-CFLAGS 		+= 		-ldl	-g
+CFLAGS 		+= 		-g
 
 all:	$(NAME_SERVER)
 

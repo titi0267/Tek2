@@ -30,8 +30,8 @@ enum command_id {
 };
 
 typedef struct server_user_s {
-    char *pseudo;
-    char *uid;
+    char pseudo[MAX_NAME_LENGTH];
+    char uid[MAX_NAME_LENGTH];
 } server_user_t;
 
 typedef struct cli_login_s {
