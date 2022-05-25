@@ -7,9 +7,6 @@
 
 #include "../include/teams.h"
 #include <time.h>
-#include <signal.h>
-
-static int isRunning = 1;
 
 void command_loop(teams_t *teams)
 {
@@ -25,15 +22,8 @@ void command_loop(teams_t *teams)
             remove_in_list(teams, fd_node->fd);
             break;
         }
-        printf("%d\n", fd_node->buff->command);
-        memset(fd_node->buff, 0, sizeof(message_t));
+        choose_command(fd_node);
     }
-}
-
-void sigint_handler(int sig_num)
-{
-    UNUSED(sig_num);
-    isRunning = 0;
 }
 
 void loop_accept(teams_t *teams)
@@ -64,9 +54,7 @@ void clear_fds(teams_t *teams)
 
 void loop(teams_t *teams)
 {
-    signal(SIGINT, sigint_handler);
-
-    while (isRunning) {
+    while (1) {
         clear_fds(teams);
         set_all_fd(teams);
         teams->select_ret = select(FD_SETSIZE, &teams->fds->read,

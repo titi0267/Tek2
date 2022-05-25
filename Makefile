@@ -9,7 +9,10 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/setup.c		\
 				server/src/loop.c		\
 				server/src/free.c		\
-				server/src/list/lib.c
+				server/src/list/lib.c		\
+				server/src/command/command_main.c		\
+				server/src/command/login.c		\
+				server/src/utils/convertion.c
 
 SRC_CLIENT	=	client/src/main.c		\
 				client/src/setup.c		\
@@ -40,7 +43,7 @@ NAME_SERVER		=	myteams_server
 
 NAME_CLIENT	=	myteams_cli
 
-CFLAGS 		+= 		-ldl	-g
+CFLAGS 		+= 		-g
 
 all:	$(NAME_SERVER)
 
