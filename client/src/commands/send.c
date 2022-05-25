@@ -8,23 +8,42 @@
 #include "../../include/teams.h"
 #include "../../include/command.h"
 
-int c_send(char *buff, client_t *client)
+int send_to_serv(char *buff, client_t *client, cli_send_t cli_send)
 {
-    if (check_is_arg(buff) == CMD_ERROR)
-        return (CMD_ERROR);
-    for (int i = 0; buff[2] != '"'; i++, buff++) {
-        if (buff[2] < 48 || buff[2] > 57 || i > MAX_NAME_LENGTH) {
+    message_t msg;
+
+    msg.command = SEND;
+    write(client->socket_fd, &msg, sizeof(message_t));
+    for (int i = 0; buff[i] != '"'; i++) {
+        cli_send.body[i] = buff[i];
+        if (i > MAX_BODY_LENGTH || buff[i] == '\n') {
             return (CMD_ERROR);
         }
     }
-    if (check_is_arg(buff + 3) == CMD_ERROR)
+    printf("Send to %s : ", cli_send.user_uuid);
+    printf("%s\n", cli_send.body);
+    write(client->socket_fd, &cli_send, sizeof(cli_send_t));
+    return (SEND);
+}
+
+int c_send(char *buff, client_t *client)
+{
+    cli_send_t cli_send;
+    int i = 0;
+
+    memset(cli_send.body, 0, MAX_BODY_LENGTH);
+    memset(cli_send.user_uuid, 0, MAX_NAME_LENGTH);
+    if (check_is_arg(buff) == CMD_ERROR)
         return (CMD_ERROR);
-    for (int i = 5; buff[i] != '"'; i++) {
-        if (i > MAX_BODY_LENGTH)
+    buff += 2;
+    for (i = 0; buff[i] != '"'; i++) {
+        cli_send.user_uuid[i] = buff[i];
+        if (buff[i] < 48 || buff[i] > 57 || i > MAX_NAME_LENGTH)
             return (CMD_ERROR);
     }
-    printf("Send: ");
-    for (int i = 5; buff[i] != '\n'; i++)
-        (buff[i] == '"') ? puts("") : printf("%c", buff[i]);
-    return (SEND);
+    buff += i;
+    if (buff[0] != '"' || check_is_arg(buff + 1) == CMD_ERROR)
+        return (CMD_ERROR);
+    buff += 3;
+    return (send_to_serv(buff, client, cli_send));
 }

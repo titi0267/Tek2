@@ -10,8 +10,12 @@
 
 int c_info(char *buff, client_t *client)
 {
+    message_t msg;
+
     if (buff[0] != '\n')
         return (CMD_ERROR);
-    printf("info\n");
+    printf("info based on what /use defined earlier\n");
+    msg.command = INFO;
+    write(client->socket_fd, &msg, sizeof(message_t));
     return (INFO);
 }

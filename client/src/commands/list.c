@@ -10,8 +10,12 @@
 
 int c_list(char *buff, client_t *client)
 {
+    message_t msg;
+
     if (buff[0] != '\n')
         return (CMD_ERROR);
-    printf("list\n");
+    printf("list based on what /use defined earlier\n");
+    msg.command = LIST;
+    write(client->socket_fd, &msg, sizeof(message_t));
     return (LIST);
 }
