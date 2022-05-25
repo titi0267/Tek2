@@ -13,6 +13,7 @@ int c_user(char *buff, client_t *client)
     message_t msg;
     cli_users_t usrs;
 
+    memset(usrs.user_uuid, 0, MAX_NAME_LENGTH);
     if (check_is_arg(buff) == CMD_ERROR ||
         check_valid_cmd_type(buff) == CMD_ERROR)
         return (CMD_ERROR);
