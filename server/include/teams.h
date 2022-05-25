@@ -68,3 +68,5 @@ void remove_in_list(teams_t *teams, int fd);
 void choose_command(client_list_t *client);
 void login(client_list_t *client);
 char *increment_str(int id);
+void user(client_list_t *client);
+server_user_t get_default_user();

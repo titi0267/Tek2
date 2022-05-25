@@ -23,7 +23,7 @@ int c_user(char *buff, client_t *client)
         usrs.user_uuid[i] = buff[i];
     }
     puts("");
-    msg.command = USERS;
+    msg.command = USER;
     write(client->socket_fd, &msg, sizeof(message_t));
     write(client->socket_fd, &usrs, sizeof(cli_users_t));
     return (USER);

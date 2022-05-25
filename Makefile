@@ -12,7 +12,8 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/list/lib.c		\
 				server/src/command/command_main.c		\
 				server/src/command/login.c		\
-				server/src/utils/convertion.c
+				server/src/utils/convertion.c		\
+				server/src/command/user.c
 
 SRC_CLIENT	=	client/src/main.c		\
 				client/src/setup.c		\
