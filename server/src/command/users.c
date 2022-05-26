@@ -7,7 +7,7 @@
 
 #include "../../include/teams.h"
 
-void users(client_list_t *client)
+void users(teams_t *server, client_list_t *client)
 {
     server_get_user_t user = default_get_user();
     server_user_t tmp = get_default_user();
@@ -18,6 +18,7 @@ void users(client_list_t *client)
     while ((read_ret = read(fd, &tmp, sizeof(server_user_t))) != 0
     && read_ret != -1) {
         user.found = FOUND;
+        user.found = isConnected(server, tmp.uid);
         strcpy(user.pseudo, tmp.pseudo);
         strcpy(user.uid, tmp.uid);
         write(client->fd, &user, sizeof(server_get_user_t));

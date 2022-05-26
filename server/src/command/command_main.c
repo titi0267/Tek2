@@ -8,19 +8,21 @@
 #include "../../include/teams.h"
 #include "../../../include/communication.h"
 
-void error(client_list_t *client)
+void error(teams_t *server, client_list_t *client)
 {
     UNUSED(client);
+    UNUSED(server);
     printf("ERROR\n");
 }
 
-void choose_command(client_list_t *client)
+void choose_command(teams_t *server, client_list_t *client)
 {
-    void (*command[5])(client_list_t *) = {error, login, error, users, user};
+    void (*command[5])(teams_t *server, client_list_t *) =
+    {error, login, error, users, user};
 
     printf("command: %d\n", client->buff->command);
     if (client->buff->command > 13)
         return;
-    (command[client->buff->command])(client);
+    (command[client->buff->command])(server, client);
 }
 

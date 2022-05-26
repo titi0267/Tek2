@@ -22,7 +22,7 @@ void command_loop(teams_t *teams)
             remove_in_list(teams, fd_node->fd);
             break;
         }
-        choose_command(fd_node);
+        choose_command(teams, fd_node);
     }
 }
 
