@@ -36,7 +36,8 @@ enum user_status {
 
 typedef struct client_s {
     int socket_fd;
-    char *pseudo;
+    char pseudo[MAX_NAME_LENGTH];
+    char user_uuid[MAX_NAME_LENGTH];
     enum user_status log_status;
 } client_t;
 

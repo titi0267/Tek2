@@ -12,7 +12,7 @@ int c_users(char *buff, client_t *client)
 {
     message_t msg;
 
-    if (buff[0] != '\n')
+    if (buff[0] != '\n' || client->log_status == NOT_LOGGED)
         return (CMD_ERROR);
     printf("users\n");
     msg.command = USERS;

@@ -13,6 +13,7 @@ void loop(client_t *client)
     size_t n = 0;
     int command = 0;
 
+    memset(client->user_uuid, 0, MAX_NAME_LENGTH);
     while (command != LOGOUT) {
         printf("%s > ", client->log_status == LOGGED ? client->pseudo : "");
         if (getline(&buff, &n, stdin) == -1)

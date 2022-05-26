@@ -27,7 +27,7 @@ int c_create(char *buff, client_t *client)
 
     memset(create->comment_body, 0, MAX_BODY_LENGTH);
     memset(create->team_uuid, 0, MAX_NAME_LENGTH);
-    if (check_is_arg(buff) == CMD_ERROR) {
+    if (client->log_status == NOT_LOGGED || check_is_arg(buff) == CMD_ERROR) {
         free(create);
         return (CMD_ERROR);
     }

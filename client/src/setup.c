@@ -41,7 +41,7 @@ client_t *init_struct(char **av)
     client->socket_fd = create_client(av[1], av[2]);
     if (client->socket_fd == ERROR)
         return (NULL);
-    client->pseudo = "";
+    memset(client->pseudo, 0, MAX_NAME_LENGTH);
     client->log_status = NOT_LOGGED;
     return (client);
 }

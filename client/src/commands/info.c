@@ -12,7 +12,7 @@ int c_info(char *buff, client_t *client)
 {
     message_t msg;
 
-    if (buff[0] != '\n')
+    if (buff[0] != '\n' || client->log_status == NOT_LOGGED)
         return (CMD_ERROR);
     printf("info based on what /use defined earlier\n");
     msg.command = INFO;

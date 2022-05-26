@@ -12,6 +12,7 @@ int c_logout(char *buff, client_t *client)
 {
     if (buff[0] != '\n')
         return (CMD_ERROR);
-    printf("logout\n");
+    if (client->user_uuid[0] != 0)
+        client_event_logged_out(client->user_uuid, client->pseudo);
     return (LOGOUT);
 }
