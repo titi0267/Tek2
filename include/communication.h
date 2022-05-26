@@ -41,6 +41,7 @@ typedef struct server_user_s {
 
 typedef struct server_get_user_s {
     int found;
+    int connected;
     char pseudo[MAX_NAME_LENGTH];
     char uid[MAX_NAME_LENGTH];
 } server_get_user_t;

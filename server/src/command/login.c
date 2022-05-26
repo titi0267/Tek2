@@ -26,7 +26,6 @@ void write_first_user(client_list_t *client, cli_login_t login, int fd)
     write(fd, &new_user, sizeof(server_user_t));
     write(client->fd, &new_user, sizeof(server_user_t));
     server_event_user_logged_in(new_user.uid);
-    client->pseudo = new_user.pseudo;
     client->uid = new_user.uid;
 }
 
@@ -39,7 +38,6 @@ int check_if_user_exist(client_list_t *client, cli_login_t login, int fd)
     while ((read_ret = read(fd, &tmp, sizeof(server_user_t))) != 0
     && read_ret != -1) {
         if (strcmp(tmp.pseudo, login.name) == 0) {
-            client->pseudo = tmp.pseudo;
             client->uid = tmp.uid;
             server_event_user_logged_in(tmp.uid);
             write(client->fd, &tmp, sizeof(server_user_t));
@@ -65,16 +63,16 @@ void write_user(client_list_t *client, cli_login_t login, int fd)
     write(fd, &tmp, sizeof(server_user_t));
     write(client->fd, &tmp, sizeof(server_user_t));
     server_event_user_logged_in(tmp.uid);
-    client->pseudo = tmp.pseudo;
     client->uid = tmp.uid;
 }
 
-void login(client_list_t *client)
+void login(teams_t *server, client_list_t *client)
 {
     cli_login_t login;
     int does_save_file_exist = 0;
     int fd = 0;
 
+    UNUSED(server);
     does_save_file_exist = open("./saves/users.txt", O_RDONLY);
     fd = open("./saves/users.txt", O_RDWR | O_APPEND | O_CREAT);
     read(client->fd, &login, sizeof(cli_login_t));
