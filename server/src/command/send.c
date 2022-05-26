@@ -28,7 +28,7 @@ int get_message_save_fd(client_list_t *client, cli_send_t message)
         return (-1);
     sprintf(buff, "./saves/message/conv%d_%d.txt",
     (me <= to_send) ? me : to_send, (me <= to_send) ? to_send : me);
-    return (open(buff, O_WRONLY | O_APPEND | O_CREAT));
+    return (open(buff, O_RDONLY));
 }
 
 void send_message(teams_t *server, client_list_t *client)
@@ -43,6 +43,7 @@ void send_message(teams_t *server, client_list_t *client)
     if (fd == -1) {
         write(fd, &server_message, sizeof(server_message_t));
         write(client->fd, &server_message, sizeof(server_message_t));
+        return;
     }
     server_message.is_valid = 1;
     strcpy(server_message.body, message.body);
@@ -50,4 +51,6 @@ void send_message(teams_t *server, client_list_t *client)
     strcpy(server_message.from, client->uid);
     write(fd, &server_message, sizeof(server_message_t));
     write(client->fd, &server_message, sizeof(server_message_t));
+    server_event_private_message_sended(server_message.from,
+    server_message.to, server_message.body);
 }

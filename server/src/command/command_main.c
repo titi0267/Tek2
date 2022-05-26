@@ -17,8 +17,8 @@ void error(teams_t *server, client_list_t *client)
 
 void choose_command(teams_t *server, client_list_t *client)
 {
-    void (*command[6])(teams_t *server, client_list_t *) =
-    {error, login, error, users, user, send_message};
+    void (*command[7])(teams_t *server, client_list_t *) =
+    {error, login, error, users, user, send_message, messages};
 
     printf("command: %d\n", client->buff->command);
     if (client->buff->command > 13)
