@@ -11,6 +11,7 @@
 void server_answer(client_t *client, cli_login_t login)
 {
     server_user_t user;
+
     read(client->socket_fd, &user, sizeof(server_user_t));
     strcpy(client->user_uuid, user.uid);
     strcpy(client->pseudo, user.pseudo);
