@@ -74,3 +74,5 @@ void users(teams_t *server, client_list_t *client);
 int isConnected(teams_t *server, char *uid);
 int user_exist(char *uid);
 void send_message(teams_t *server, client_list_t *client);
+void messages(teams_t *server, client_list_t *client);
+server_message_t get_default_message();
