@@ -11,9 +11,9 @@
 server_user_t get_default_user()
 {
     server_user_t tmp;
+
     memset(tmp.pseudo, 0, MAX_NAME_LENGTH);
     memset(tmp.uid, 0, MAX_NAME_LENGTH);
-
     return (tmp);
 }
 
@@ -26,7 +26,7 @@ void write_first_user(client_list_t *client, cli_login_t login, int fd)
     write(fd, &new_user, sizeof(server_user_t));
     write(client->fd, &new_user, sizeof(server_user_t));
     server_event_user_logged_in(new_user.uid);
-    client->uid = new_user.uid;
+    client->uid = strdup(new_user.uid);
 }
 
 int check_if_user_exist(client_list_t *client, cli_login_t login, int fd)
@@ -38,7 +38,7 @@ int check_if_user_exist(client_list_t *client, cli_login_t login, int fd)
     while ((read_ret = read(fd, &tmp, sizeof(server_user_t))) != 0
     && read_ret != -1) {
         if (strcmp(tmp.pseudo, login.name) == 0) {
-            client->uid = tmp.uid;
+            client->uid = strdup(tmp.uid);
             server_event_user_logged_in(tmp.uid);
             write(client->fd, &tmp, sizeof(server_user_t));
             return (-2);
@@ -63,7 +63,7 @@ void write_user(client_list_t *client, cli_login_t login, int fd)
     write(fd, &tmp, sizeof(server_user_t));
     write(client->fd, &tmp, sizeof(server_user_t));
     server_event_user_logged_in(tmp.uid);
-    client->uid = tmp.uid;
+    client->uid = strdup(tmp.uid);
 }
 
 void login(teams_t *server, client_list_t *client)

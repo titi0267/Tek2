@@ -13,7 +13,7 @@ int isConnected(teams_t *server, char *uid)
 
     for (; tmp != NULL; tmp = tmp->next) {
         if (strcmp(tmp->uid, uid) == 0)
-            return (NOT_LOGGED);
+            return (LOGGED);
     }
-    return (LOGGED);
+    return (NOT_LOGGED);
 }

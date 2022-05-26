@@ -12,9 +12,8 @@ void get_user(client_t *client)
 {
     server_get_user_t user;
 
-    read(client->socket_fd, &user, sizeof(server_user_t));
+    read(client->socket_fd, &user, sizeof(server_get_user_t));
     client_print_user(user.uid, user.pseudo, user.connected);
-    //client_print_users()
 }
 
 int c_user(char *buff, client_t *client)
