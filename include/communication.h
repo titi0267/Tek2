@@ -39,6 +39,13 @@ typedef struct server_user_s {
     char uid[MAX_NAME_LENGTH];
 } server_user_t;
 
+typedef struct server_message_s {
+    char from[MAX_NAME_LENGTH];
+    char to[MAX_NAME_LENGTH];
+    char body[MAX_BODY_LENGTH];
+    int is_valid;
+} server_message_t;
+
 typedef struct server_get_user_s {
     int found;
     int connected;

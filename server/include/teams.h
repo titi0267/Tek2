@@ -72,3 +72,5 @@ server_user_t get_default_user();
 server_get_user_t default_get_user();
 void users(teams_t *server, client_list_t *client);
 int isConnected(teams_t *server, char *uid);
+int user_exist(char *uid);
+void send_message(teams_t *server, client_list_t *client);
