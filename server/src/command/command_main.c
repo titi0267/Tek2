@@ -17,10 +17,11 @@ void error(teams_t *server, client_list_t *client)
 
 void choose_command(teams_t *server, client_list_t *client)
 {
-    void (*command[8])(teams_t *server, client_list_t *) =
-    {error, login, error, users, user, send_message, messages, subscribe};
+    void (*command[9])(teams_t *server, client_list_t *) =
+    {error, login, error, users, user, send_message, messages, subscribe,
+    unsubscribe};
 
-    if (client->buff->command > 8)
+    if (client->buff->command > 9)
         return;
     (command[client->buff->command])(server, client);
 }

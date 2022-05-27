@@ -78,3 +78,4 @@ void send_message(teams_t *server, client_list_t *client);
 void messages(teams_t *server, client_list_t *client);
 server_message_t get_default_message();
 void subscribe(teams_t *server, client_list_t *client);
+void unsubscribe(teams_t *server, client_list_t *client);
