@@ -39,6 +39,7 @@ typedef struct client_list_s {
     struct client_list_s *next;
     enum user_status status;
     char *uid;
+    char *pseudo;
     message_t *buff;
     int fd;
 } client_list_t;
@@ -76,3 +77,4 @@ int user_exist(char *uid);
 void send_message(teams_t *server, client_list_t *client);
 void messages(teams_t *server, client_list_t *client);
 server_message_t get_default_message();
+void subscribe(teams_t *server, client_list_t *client);

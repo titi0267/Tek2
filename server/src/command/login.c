@@ -27,6 +27,7 @@ void write_first_user(client_list_t *client, cli_login_t login, int fd)
     write(client->fd, &new_user, sizeof(server_user_t));
     server_event_user_logged_in(new_user.uid);
     client->uid = strdup(new_user.uid);
+    client->pseudo = strdup(new_user.pseudo);
 }
 
 int check_if_user_exist(client_list_t *client, cli_login_t login, int fd)
@@ -39,6 +40,7 @@ int check_if_user_exist(client_list_t *client, cli_login_t login, int fd)
     && read_ret != -1) {
         if (strcmp(tmp.pseudo, login.name) == 0) {
             client->uid = strdup(tmp.uid);
+            client->pseudo = strdup(tmp.pseudo);
             server_event_user_logged_in(tmp.uid);
             write(client->fd, &tmp, sizeof(server_user_t));
             return (-2);
@@ -64,6 +66,7 @@ void write_user(client_list_t *client, cli_login_t login, int fd)
     write(client->fd, &tmp, sizeof(server_user_t));
     server_event_user_logged_in(tmp.uid);
     client->uid = strdup(tmp.uid);
+    client->pseudo = strdup(tmp.pseudo);
 }
 
 void login(teams_t *server, client_list_t *client)
