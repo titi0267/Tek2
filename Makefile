@@ -18,7 +18,9 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/utils/connected.c		\
 				server/src/command/send.c		\
 				server/src/utils/exist.c		\
-				server/src/command/messages.c
+				server/src/command/messages.c		\
+				server/src/command/subscribe.c		\
+				server/src/command/unsubscribe.c
 
 SRC_CLIENT	=	client/src/main.c		\
 				client/src/setup.c		\

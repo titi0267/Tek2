@@ -34,6 +34,20 @@ enum finded_user {
     NOT_FOUND
 };
 
+typedef struct server_unsub_s {
+    int valid;
+} server_unsub_t;
+
+typedef struct server_sub_s {
+    int exist;
+} server_sub_t;
+
+typedef struct server_team_user_s {
+    int is_active;
+    char pseudo[MAX_NAME_LENGTH];
+    char uid[MAX_NAME_LENGTH];
+} server_team_user_t;
+
 typedef struct server_user_s {
     char pseudo[MAX_NAME_LENGTH];
     char uid[MAX_NAME_LENGTH];
