@@ -34,10 +34,21 @@ enum user_status {
     LOGGED
 };
 
+enum use {
+    DEFAULT,
+    TEAMS,
+    CHANNEL,
+    THREADS
+};
+
 typedef struct client_s {
     int socket_fd;
+    enum use use_status;
     char pseudo[MAX_NAME_LENGTH];
     char user_uuid[MAX_NAME_LENGTH];
+    char team_uuid[MAX_NAME_LENGTH];
+    char channel_uuid[MAX_NAME_LENGTH];
+    char thread_uuid[MAX_NAME_LENGTH];
     enum user_status log_status;
 } client_t;
 

@@ -8,7 +8,7 @@
 #include "../../include/teams.h"
 #include "../../include/command.h"
 
-int check_args_thread(char *buff, int thread_uuid_len, cli_use_t *use)
+int check_args_thread(char *buff, int thread_uuid_len, client_t *client)
 {
     int max_sz = 0;
 
@@ -20,7 +20,7 @@ int check_args_thread(char *buff, int thread_uuid_len, cli_use_t *use)
     thread_uuid_len += 2;
     for (int i = 0; buff[thread_uuid_len] != '"';
         thread_uuid_len++, max_sz++, i++) {
-        use->thread_uuid[i] = buff[thread_uuid_len];
+        client->thread_uuid[i] = buff[thread_uuid_len];
         if (buff[thread_uuid_len] < 48 || buff[thread_uuid_len] > 57 ||
             max_sz >= MAX_NAME_LENGTH)
             return (CMD_ERROR);
@@ -30,9 +30,9 @@ int check_args_thread(char *buff, int thread_uuid_len, cli_use_t *use)
     return (0);
 }
 
-int check_args_channel(char *buff, int channel_uuid_len, cli_use_t *use)
+int check_args_channel(char *buff, int channel_uuid_len, client_t *cli)
 {
-    int thread_uuid_len = 0;
+    int thd_uuid_ln = 0;
     int max_sz = 0;
 
     if (check_is_arg(buff + channel_uuid_len) == CMD_ERROR &&
@@ -43,59 +43,56 @@ int check_args_channel(char *buff, int channel_uuid_len, cli_use_t *use)
     channel_uuid_len += 2;
     for (int i = 0; buff[channel_uuid_len] != '"';
         channel_uuid_len++, max_sz++, i++) {
-        use->channel_uuid[i] = buff[channel_uuid_len];
+        cli->channel_uuid[i] = buff[channel_uuid_len];
         if (buff[channel_uuid_len] < 48 || buff[channel_uuid_len] > 57 ||
             max_sz >= MAX_NAME_LENGTH)
             return (CMD_ERROR);
     }
-    thread_uuid_len = channel_uuid_len + 1;
-    if (max_sz == 0 || check_args_thread(buff, thread_uuid_len, use) == CMD_ERROR)
+    thd_uuid_ln = channel_uuid_len + 1;
+    if (max_sz == 0 || check_args_thread(buff, thd_uuid_ln, cli) == CMD_ERROR)
         return (CMD_ERROR);
     return (0);
 }
 
-int check_full_use_command(char *buff, cli_use_t *use)
+int check_full_use_command(char *buff, client_t *cli)
 {
     int team_uuid_len = 2;
-    int channel_uuid_len = 0;
+    int chnl_uuid_ln = 0;
     int max_sz = 0;
 
-    memset(use->team_uuid, 0, MAX_NAME_LENGTH);
-    memset(use->channel_uuid, 0, MAX_NAME_LENGTH);
-    memset(use->thread_uuid, 0, MAX_NAME_LENGTH);
     if (check_is_arg(buff) == CMD_ERROR)
         return (CMD_ERROR);
     for (int i = 0; buff[team_uuid_len] != '"';
         team_uuid_len++, max_sz++, i++) {
-        use->team_uuid[i] = buff[team_uuid_len];
+        cli->team_uuid[i] = buff[team_uuid_len];
         if (buff[team_uuid_len] < 48 || buff[team_uuid_len] > 57 ||
             max_sz >= MAX_NAME_LENGTH)
             return (CMD_ERROR);
     }
-    channel_uuid_len = team_uuid_len + 1;
-    if (max_sz == 0 || check_args_channel(buff, channel_uuid_len, use) == CMD_ERROR)
+    chnl_uuid_ln = team_uuid_len + 1;
+    if (max_sz == 0 || check_args_channel(buff, chnl_uuid_ln, cli) == CMD_ERROR)
         return (CMD_ERROR);
     return (0);
 }
 
 int c_use(char *buff, client_t *client)
 {
-    message_t msg;
-    cli_use_t *use = malloc(sizeof(cli_use_t));
-
-    use->team_uuid[0] = '\0';
-    use->channel_uuid[0] = '\0';
-    use->thread_uuid[0] = '\0';
-    if (buff[0] != '\n' && check_full_use_command(buff, use) == CMD_ERROR) {
-        free(use);
+    client->use_status = DEFAULT;
+    memset(client->team_uuid, 0, sizeof(MAX_NAME_LENGTH));
+    memset(client->channel_uuid, 0, sizeof(MAX_NAME_LENGTH));
+    memset(client->thread_uuid, 0, sizeof(MAX_NAME_LENGTH));
+    if (buff[0] != '\n' && check_full_use_command(buff, client) == CMD_ERROR)
         return (CMD_ERROR);
-    }
-    msg.command = USE;
-    write(client->socket_fd, &msg, sizeof(message_t));
+    if (strlen(client->team_uuid) == 0)
+        client->use_status = DEFAULT;
+    if (strlen(client->team_uuid) != 0)
+        client->use_status = TEAMS;
+    if (strlen(client->channel_uuid) != 0)
+        client->use_status = CHANNEL;
+    if (strlen(client->thread_uuid) != 0)
+        client->use_status = THREADS;
     printf("use : ");
-    printf("team ?: %s | channel ?: %s | thread ?: %s\n", use->team_uuid,
-        use->channel_uuid, use->thread_uuid);
-    write(client->socket_fd, use, sizeof(cli_use_t));
-    free(use);
+    printf("team ?: %s | channel ?: %s | thread ?: %s\n", client->team_uuid,
+        client->channel_uuid, client->thread_uuid);
     return (USE);
 }
