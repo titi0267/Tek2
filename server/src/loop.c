@@ -54,6 +54,7 @@ void clear_fds(teams_t *teams)
 
 void loop(teams_t *teams)
 {
+    print_all_user();
     while (1) {
         clear_fds(teams);
         set_all_fd(teams);

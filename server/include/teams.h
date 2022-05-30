@@ -80,3 +80,4 @@ server_message_t get_default_message();
 void subscribe(teams_t *server, client_list_t *client);
 void unsubscribe(teams_t *server, client_list_t *client);
 void logout(teams_t *server, client_list_t *client);
+void print_all_user();
