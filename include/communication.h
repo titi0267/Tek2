@@ -75,6 +75,10 @@ typedef struct cli_messages_s {
     char user_uuid[MAX_NAME_LENGTH];
 } cli_messages_t;
 
+typedef struct cli_logout_s {
+    int logout;
+} cli_logout_t;
+
 typedef struct cli_send_s {
     char user_uuid[MAX_NAME_LENGTH];
     char body[MAX_BODY_LENGTH];
