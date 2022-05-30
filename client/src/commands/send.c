@@ -8,6 +8,15 @@
 #include "../../include/teams.h"
 #include "../../include/command.h"
 
+int get_send_event(client_t *client)
+{
+    server_message_t srv_msg;
+
+    read(client->socket_fd, &srv_msg, sizeof(server_message_t));
+    client_event_private_message_received(srv_msg.from, srv_msg.body);
+    return (SEND);
+}
+
 int send_to_serv(char *buff, client_t *client, cli_send_t cli_send)
 {
     message_t msg;
@@ -23,7 +32,7 @@ int send_to_serv(char *buff, client_t *client, cli_send_t cli_send)
     printf("Send to %s : ", cli_send.user_uuid);
     printf("%s\n", cli_send.body);
     write(client->socket_fd, &cli_send, sizeof(cli_send_t));
-    return (SEND);
+    return (get_send_event(client));
 }
 
 int c_send(char *buff, client_t *client)

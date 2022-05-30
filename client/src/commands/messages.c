@@ -8,6 +8,15 @@
 #include "../../include/teams.h"
 #include "../../include/command.h"
 
+int get_messages(client_t *client, cli_messages_t cli_msgs)
+{
+    server_message_t serv_msg;
+
+    read(client->socket_fd, &serv_msg, sizeof(server_message_t));
+    //client_private_message_print_messages(serv_msg.from, serv_msg.to, serv_msg.body);
+    return (MESSAGES);
+}
+
 int c_messages(char *buff, client_t *client)
 {
     message_t msg;
@@ -27,6 +36,5 @@ int c_messages(char *buff, client_t *client)
     write(client->socket_fd, &msg, sizeof(message_t));
     printf("%s\n", cli_msgs.user_uuid);
     write(client->socket_fd, &cli_msgs, sizeof(cli_messages_t));
-    //client_private_message_print_messages()
-    return (MESSAGES);
+    return (get_messages(client, cli_msgs));
 }
