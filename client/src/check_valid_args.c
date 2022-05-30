@@ -33,3 +33,15 @@ int check_valid_uuid(char *buff)
     }
     return (0);
 }
+
+int check_valid_length(char *buff, int max_sz)
+{
+    int i = 0;
+
+    for (; buff[i] != '"' && buff[i] != 0; i++)
+        if (i > max_sz)
+            return (-1);
+    if (buff[i] == 0 || i == 0)
+        return (-1);
+    return (i);
+}

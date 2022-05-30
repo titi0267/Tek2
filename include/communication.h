@@ -107,8 +107,13 @@ typedef struct cli_use_s {
 } cli_use_t;
 
 typedef struct cli_create_s {
-    char team_uuid[MAX_NAME_LENGTH];
+    char name[MAX_NAME_LENGTH];
+    char description[MAX_DESCRIPTION_LENGTH];
     char comment_body[MAX_BODY_LENGTH];
+    char team_uuid[MAX_NAME_LENGTH];
+    char channel_uuid[MAX_NAME_LENGTH];
+    char thread_uuid[MAX_NAME_LENGTH];
+    int args_nbr;
 } cli_create_t;
 
 typedef struct message_s {
