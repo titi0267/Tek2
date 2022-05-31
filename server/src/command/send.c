@@ -6,12 +6,14 @@
 */
 
 #include "../../include/teams.h"
+#include <time.h>
 
 server_message_t get_default_message()
 {
     server_message_t message;
 
     message.is_valid = 0;
+    message.time = time(NULL);
     memset(message.from, 0, MAX_NAME_LENGTH);
     memset(message.to, 0, MAX_NAME_LENGTH);
     memset(message.body, 0, MAX_BODY_LENGTH);
