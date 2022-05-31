@@ -11,13 +11,13 @@ int open_good_fd(client_list_t *client, cli_messages_t message)
 {
     int me = atoi(client->uid);
     int to_send = atoi(message.user_uuid);
-    char *buff;
+    char *buff = malloc(MAX_NAME_LENGTH);
 
     if (to_send == 0 || !user_exist(message.user_uuid))
         return (-1);
     sprintf(buff, "./saves/message/conv%d_%d.txt",
     (me <= to_send) ? me : to_send, (me <= to_send) ? to_send : me);
-    return (open(buff, O_WRONLY | O_APPEND | O_CREAT));
+    return (open(buff, O_WRONLY | O_APPEND | O_CREAT, 0777));
 }
 
 void messages(teams_t *server, client_list_t *client)

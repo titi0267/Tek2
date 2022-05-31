@@ -77,7 +77,7 @@ void login(teams_t *server, client_list_t *client)
 
     UNUSED(server);
     does_save_file_exist = open("./saves/users.txt", O_RDONLY);
-    fd = open("./saves/users.txt", O_RDWR | O_APPEND | O_CREAT);
+    fd = open("./saves/users.txt", O_RDWR | O_APPEND | O_CREAT, 0777);
     read(client->fd, &login, sizeof(cli_login_t));
     if (!does_save_file_exist)
         return (write_first_user(client, login, fd));

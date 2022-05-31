@@ -15,7 +15,7 @@ cli_unsubscribe_t unsubscribe_payload)
 
     sprintf(path, "./saves/teams/t_%s/users.txt",
     unsubscribe_payload.team_uuid);
-    fd = open(path, O_RDWR | O_CREAT);
+    fd = open(path, O_RDWR | O_CREAT, 0777);
     free(path);
     return (fd);
 }

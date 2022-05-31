@@ -14,7 +14,7 @@ void users(teams_t *server, client_list_t *client)
     int read_ret = 0;
     int fd = 0;
 
-    fd = open("./saves/users.txt", O_RDWR | O_APPEND | O_CREAT);
+    fd = open("./saves/users.txt", O_RDWR | O_APPEND | O_CREAT, 0777);
     while ((read_ret = read(fd, &tmp, sizeof(server_user_t))) != 0
     && read_ret != -1) {
         user.found = FOUND;

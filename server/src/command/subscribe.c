@@ -42,7 +42,7 @@ cli_subscribe_t subscribe_payload)
     int fd = 0;
 
     sprintf(path, "./saves/teams/t_%s/users.txt", subscribe_payload.team_uuid);
-    fd = open(path, O_RDWR | O_CREAT);
+    fd = open(path, O_RDWR | O_CREAT, 0777);
     free(path);
     return (fd);
 }
