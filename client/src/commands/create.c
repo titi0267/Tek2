@@ -84,9 +84,8 @@ int c_create(char *buff, client_t *client)
     memset(create.name, 0, MAX_NAME_LENGTH);
     memset(create.description, 0, MAX_NAME_LENGTH);
     create.args_nbr = DEFAULT;
-    if (client->log_status == NOT_LOGGED) {
-        return (CMD_ERROR);
-    }
+    if (not_logged(client) == 0)
+        return (0);
     msg.command = CREATE;
     write(client->socket_fd, &msg, sizeof(message_t));
     return (create_right_params(buff, client, &create));

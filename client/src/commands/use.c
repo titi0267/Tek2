@@ -81,6 +81,8 @@ int c_use(char *buff, client_t *client)
     memset(client->team_uuid, 0, sizeof(MAX_NAME_LENGTH));
     memset(client->channel_uuid, 0, sizeof(MAX_NAME_LENGTH));
     memset(client->thread_uuid, 0, sizeof(MAX_NAME_LENGTH));
+    if (not_logged(client) == 0)
+        return (0);
     if (buff[0] != '\n' && check_full_use_command(buff, client) == CMD_ERROR)
         return (CMD_ERROR);
     if (strlen(client->team_uuid) == 0)

@@ -29,8 +29,6 @@ int send_to_serv(char *buff, client_t *client, cli_send_t cli_send)
             return (CMD_ERROR);
         }
     }
-    printf("Send to %s : ", cli_send.user_uuid);
-    printf("%s\n", cli_send.body);
     write(client->socket_fd, &cli_send, sizeof(cli_send_t));
     return (get_send_event(client));
 }
@@ -42,6 +40,8 @@ int c_send(char *buff, client_t *client)
 
     memset(cli_send.body, 0, MAX_BODY_LENGTH);
     memset(cli_send.user_uuid, 0, MAX_NAME_LENGTH);
+    if (not_logged(client) == 0)
+        return (0);
     if (check_is_arg(buff) == CMD_ERROR)
         return (CMD_ERROR);
     buff += 2;

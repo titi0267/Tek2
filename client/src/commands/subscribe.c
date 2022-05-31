@@ -14,6 +14,8 @@ int c_subscribe(char *buff, client_t *client)
     cli_subscribe_t cli_sub;
 
     memset(cli_sub.team_uuid, 0, MAX_NAME_LENGTH);
+    if (not_logged(client) == 0)
+        return (0);
     if (check_is_arg(buff) == CMD_ERROR || check_valid_cmd_type(buff)
         == CMD_ERROR || check_valid_uuid(buff) == CMD_ERROR)
         return (CMD_ERROR);
