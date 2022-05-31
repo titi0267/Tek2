@@ -124,6 +124,14 @@ typedef struct cli_create_s {
     int args_nbr;
 } cli_create_t;
 
+typedef struct cli_list_s {
+    int use_arg;
+} cli_list_t;
+
+typedef struct cli_info_s {
+    int use_arg;
+} cli_info_t;
+
 typedef struct message_s {
     short command;
 } message_t;

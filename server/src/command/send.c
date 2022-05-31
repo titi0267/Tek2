@@ -43,7 +43,6 @@ void send_message(teams_t *server, client_list_t *client)
     read(client->fd, &message, sizeof(cli_send_t));
     fd = get_message_save_fd(client, message);
     if (fd == -1) {
-        write(fd, &server_message, sizeof(server_message_t));
         write(client->fd, &server_message, sizeof(server_message_t));
         return;
     }

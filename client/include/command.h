@@ -28,3 +28,4 @@ int check_is_arg(char *buff);
 int check_valid_cmd_type(char *buff);
 int check_valid_uuid(char *buff);
 int check_valid_length(char *buff, int max_sz);
+int not_logged(client_t *client);

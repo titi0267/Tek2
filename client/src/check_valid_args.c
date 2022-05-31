@@ -45,3 +45,12 @@ int check_valid_length(char *buff, int max_sz)
         return (-1);
     return (i);
 }
+
+int not_logged(client_t *client)
+{
+    if (client->log_status == NOT_LOGGED) {
+        client_error_unauthorized();
+        return (0);
+    }
+    return (-1);
+}
