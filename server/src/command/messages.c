@@ -35,10 +35,8 @@ void messages(teams_t *server, client_list_t *client)
         return;
     }
     while ((read_ret = read(fd, &server_message, sizeof(server_message_t)))
-    != 0 && read_ret != -1) {
-        printf("%d\n", server_message.is_valid);
+    != 0 && read_ret != -1)
         write(client->fd, &server_message, sizeof(server_message_t));
-    }
     server_message = get_default_message();
     write(client->fd, &server_message, sizeof(server_message_t));
 }

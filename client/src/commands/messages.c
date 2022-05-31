@@ -14,11 +14,10 @@ int get_messages(client_t *client, cli_messages_t cli_msgs)
 
     while (1) {
         read(client->socket_fd, &serv_msg, sizeof(server_message_t));
-        if (serv_msg.is_valid == 0) {
-            printf("is 0\n");
+        if (serv_msg.is_valid == 0)
             return (MESSAGES);
-        }
-        client_private_message_print_messages(serv_msg.from, serv_msg.time, serv_msg.body);
+        client_private_message_print_messages(serv_msg.from,
+            serv_msg.time, serv_msg.body);
     }
     return (MESSAGES);
 }

@@ -29,8 +29,6 @@ int send_to_serv(char *buff, client_t *client, cli_send_t cli_send)
             return (CMD_ERROR);
         }
     }
-    printf("Send to %s : ", cli_send.user_uuid);
-    printf("%s\n", cli_send.body);
     write(client->socket_fd, &cli_send, sizeof(cli_send_t));
     return (get_send_event(client));
 }
