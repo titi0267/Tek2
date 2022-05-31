@@ -22,7 +22,8 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/command/subscribe.c		\
 				server/src/command/unsubscribe.c		\
 				server/src/command/logout.c		\
-				server/src/utils/print_allusers.c
+				server/src/utils/print_allusers.c	\
+				server/src/utils/save_architecture.c
 
 SRC_CLIENT	=	client/src/main.c		\
 				client/src/setup.c		\
