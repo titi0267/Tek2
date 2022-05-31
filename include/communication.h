@@ -34,6 +34,13 @@ enum finded_user {
     NOT_FOUND
 };
 
+enum use {
+    DEFAULT,
+    TEAMS,
+    CHANNEL,
+    THREADS
+};
+
 typedef struct server_unsub_s {
     int valid;
 } server_unsub_t;
