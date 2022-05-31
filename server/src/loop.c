@@ -54,6 +54,8 @@ void clear_fds(teams_t *teams)
 
 void loop(teams_t *teams)
 {
+    if (create_save() == -1)
+        exit(CMD_ERROR);
     print_all_user();
     while (1) {
         clear_fds(teams);
