@@ -22,7 +22,9 @@ int c_user(char *buff, client_t *client)
     cli_users_t usrs;
 
     memset(usrs.user_uuid, 0, MAX_NAME_LENGTH);
-    if (client->log_status == NOT_LOGGED || check_is_arg(buff) == CMD_ERROR ||
+    if (not_logged(client) == 0)
+        return (0);
+    if (check_is_arg(buff) == CMD_ERROR ||
         check_valid_cmd_type(buff) == CMD_ERROR ||
         check_valid_uuid(buff) == CMD_ERROR)
         return (CMD_ERROR);
