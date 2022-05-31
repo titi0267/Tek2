@@ -58,6 +58,7 @@ typedef struct server_message_s {
     char to[MAX_NAME_LENGTH];
     char body[MAX_BODY_LENGTH];
     int is_valid;
+    long int time;
 } server_message_t;
 
 typedef struct server_get_user_s {
