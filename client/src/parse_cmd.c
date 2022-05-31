@@ -18,10 +18,11 @@ int parse_cmd(char *buff, client_t *client)
         c_unsubscribe, c_use, c_create, c_list, c_info};
     int len;
 
-    for (len = 0; buff[len] != ' ' && buff[len] != '\n'
-        && buff[len] != '\0'; len++);
+    for (; buff[0] == ' '; buff++);
+    for (len = 0; buff[len] != ' ' && buff[len] != '\n' && buff[len] != '\0'; len++);
     for (int i = 0; i < 15; i++) {
-        if (strlen(cmd[i]) == len && strncmp(cmd[i], buff, len) == 0) {
+        if (strlen(cmd[i]) == len && strncmp(cmd[i], buff, len) == 0
+            && i != 14) {
             return ((command[i]((buff + len), client)));
         }
     }
