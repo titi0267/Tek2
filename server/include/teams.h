@@ -81,3 +81,4 @@ void subscribe(teams_t *server, client_list_t *client);
 void unsubscribe(teams_t *server, client_list_t *client);
 void logout(teams_t *server, client_list_t *client);
 void print_all_user();
+void create_team(teams_t *server, client_list_t *client, cli_create_t payload);

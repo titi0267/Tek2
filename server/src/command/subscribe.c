@@ -9,21 +9,6 @@
 #include <sys/types.h>
 #include <dirent.h>
 
-// TO USE LATER
-// void create_team(client_list_t *client, cli_subscribe_t subscribe_payload)
-// {
-//     char *path = malloc(MAX_NAME_LENGTH);
-//     DIR *dir;
-
-//     printf("%s\n", subscribe_payload.team_uuid);
-//     sprintf(path, "./saves/teams/t_%s", subscribe_payload.team_uuid);
-//     dir = opendir(path);
-//     if (dir)
-//         return;
-//     free(path);
-//     mkdir(path, 777);
-// }
-
 server_team_user_t get_team_user(char *pseudo, char *uid)
 {
     server_team_user_t team_user;
