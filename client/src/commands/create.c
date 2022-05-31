@@ -18,7 +18,6 @@ int check_create_args(char *buff)
     if ((sz = check_valid_length(buff, MAX_NAME_LENGTH)) == -1)
         return (CMD_ERROR);
     return (sz);
-
 }
 
 int create_uuid(char *buff, client_t *client, cli_create_t *create)
@@ -52,7 +51,6 @@ int create_thread(char *buff, client_t *client, cli_create_t *create)
         if (buff[i] == '\n' || i > MAX_BODY_LENGTH)
             return (CMD_ERROR);
     }
-    printf("finished copy to %s\n", buff+i);
     if (buff[i] == 0 || buff[i] != '"' || buff[i + 1] != '\n')
         return (CMD_ERROR);
     return (CREATE);
@@ -62,9 +60,6 @@ int create_right_params(char *buff, client_t *client, cli_create_t *create)
 {
     int ret_val = 0;
 
-    if (check_is_arg(buff) == CMD_ERROR)
-        return (CMD_ERROR);
-    buff += 2;
     if (client->use_status != THREADS)
         ret_val = create_uuid(buff, client, create);
     else
@@ -77,24 +72,22 @@ int create_right_params(char *buff, client_t *client, cli_create_t *create)
     create->args_nbr = client->use_status;
     printf("[%s : %s] | [%s]\nUse %i : [%s] | [%s] | [%s]\n", create->name, create->description, create->comment_body, create->args_nbr, create->team_uuid, create->channel_uuid, create->thread_uuid);
     write(client->socket_fd, create, sizeof(cli_create_t));
-    free(create);
     return (CREATE);
 }
 
 int c_create(char *buff, client_t *client)
 {
     message_t msg;
-    cli_create_t *create = malloc(sizeof(cli_create_t));
+    cli_create_t create;
 
-    memset(create->comment_body, 0, MAX_BODY_LENGTH);
-    memset(create->name, 0, MAX_NAME_LENGTH);
-    memset(create->description, 0, MAX_NAME_LENGTH);
-    create->args_nbr = DEFAULT;
+    memset(create.comment_body, 0, MAX_BODY_LENGTH);
+    memset(create.name, 0, MAX_NAME_LENGTH);
+    memset(create.description, 0, MAX_NAME_LENGTH);
+    create.args_nbr = DEFAULT;
     if (client->log_status == NOT_LOGGED) {
-        free(create);
         return (CMD_ERROR);
     }
     msg.command = CREATE;
     write(client->socket_fd, &msg, sizeof(message_t));
-    return (create_right_params(buff, client, create));
+    return (create_right_params(buff, client, &create));
 }
