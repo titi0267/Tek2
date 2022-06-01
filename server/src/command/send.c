@@ -39,7 +39,6 @@ void send_message(teams_t *server, client_list_t *client)
     server_message_t server_message = get_default_message();
     int fd = 0;
 
-    UNUSED(server);
     read(client->fd, &message, sizeof(cli_send_t));
     fd = get_message_save_fd(client, message);
     if (fd == -1) {
@@ -51,7 +50,8 @@ void send_message(teams_t *server, client_list_t *client)
     strcpy(server_message.to, message.user_uuid);
     strcpy(server_message.from, client->uid);
     write(fd, &server_message, sizeof(server_message_t));
-    write(client->fd, &server_message, sizeof(server_message_t));
+    if (is_connected(server, message.user_uuid))
+        send_to_uid(server, (int)SEND, &server_message, message.user_uuid);
     server_event_private_message_sended(server_message.from,
     server_message.to, server_message.body);
 }

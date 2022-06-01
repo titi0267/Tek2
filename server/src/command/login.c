@@ -25,7 +25,7 @@ client_list_t *client, cli_login_t login, int fd)
     strcpy(new_user.pseudo, login.name);
     strcpy(new_user.uid, "1");
     write(fd, &new_user, sizeof(server_user_t));
-    send_to_everyone(server, (int)LOGIN, &new_user, sizeof(server_user_t));
+    send_to_everyone(server, (int)LOGIN, &new_user);
     server_event_user_created(new_user.uid, new_user.pseudo);
     client->uid = strdup(new_user.uid);
     client->pseudo = strdup(new_user.pseudo);
@@ -44,7 +44,7 @@ client_list_t *client, cli_login_t login, int fd)
             client->uid = strdup(tmp.uid);
             client->pseudo = strdup(tmp.pseudo);
             server_event_user_logged_in(tmp.uid);
-            send_to_everyone(server, (int)LOGIN, &tmp, sizeof(server_user_t));
+            send_to_everyone(server, (int)LOGIN, &tmp);
             return (-2);
         }
         last_id = atoi(tmp.uid);
@@ -66,7 +66,7 @@ client_list_t *client, cli_login_t login, int fd)
     strcpy(tmp.uid, increment_str(last_id));
     strcpy(tmp.pseudo, login.name);
     write(fd, &tmp, sizeof(server_user_t));
-    send_to_everyone(server, (int)LOGIN, &tmp, sizeof(server_user_t));
+    send_to_everyone(server, (int)LOGIN, &tmp);
     server_event_user_created(tmp.uid, tmp.pseudo);
     client->uid = strdup(tmp.uid);
     client->pseudo = strdup(tmp.pseudo);

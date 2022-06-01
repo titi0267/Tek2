@@ -81,11 +81,16 @@ void subscribe(teams_t *server, client_list_t *client);
 void unsubscribe(teams_t *server, client_list_t *client);
 void logout(teams_t *server, client_list_t *client);
 void print_all_user(void);
-void create_team(client_list_t *client, cli_create_t payload);
+void create_team(teams_t *server, client_list_t *client, cli_create_t payload);
 void create_command(teams_t *server, client_list_t *client);
-void create_chanel(client_list_t *client, cli_create_t payload);
+void create_chanel(teams_t *server, client_list_t *client,
+cli_create_t payload);
 int create_save(void);
-void create_thread(client_list_t *client, cli_create_t payload);
-void create_reply(client_list_t *client, cli_create_t payload);
-void send_to_everyone(teams_t *server,
-int command_id, void *buff, size_t size);
+void create_thread(teams_t *server, client_list_t *client,
+cli_create_t payload);
+void create_reply(teams_t *server, client_list_t *client,
+cli_create_t payload);
+void send_to_everyone(teams_t *server, int command_id, void *buff);
+void send_to_uid(teams_t *server, int command_id, void *buff, char *uid);
+void send_to_everyone_except(teams_t *server, int command_id,
+void *buff, char *except);

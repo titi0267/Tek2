@@ -40,7 +40,7 @@ server_reply_info_t create_reply_info(cli_create_t payload)
     return (reply_info);
 }
 
-void create_reply(client_list_t *client, cli_create_t payload)
+void create_reply(teams_t *server, client_list_t *client, cli_create_t payload)
 {
     char *path = malloc(MAX_NAME_LENGTH);
     server_reply_info_t reply_info;
