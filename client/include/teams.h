@@ -45,6 +45,7 @@ typedef struct client_s {
     char thread_uuid[MAX_NAME_LENGTH];
     enum user_status log_status;
     fd_set client_rd;
+    char tmp_login[MAX_NAME_LENGTH];
 } client_t;
 
 client_t *init_struct(char **av);

@@ -23,5 +23,6 @@ int c_login(char *buff, client_t *client)
     msg.command = LOGIN;
     write(client->socket_fd, &msg, (sizeof(message_t)));
     write(client->socket_fd, &login, sizeof(cli_login_t));
+    strcpy(client->tmp_login, login.name);
     return (LOGIN);
 }
