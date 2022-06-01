@@ -8,7 +8,7 @@
 #include "../../include/teams.h"
 #include <time.h>
 
-server_message_t get_default_message()
+server_message_t get_default_message(void)
 {
     server_message_t message;
 

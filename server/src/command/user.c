@@ -7,7 +7,7 @@
 
 #include "../../include/teams.h"
 
-server_get_user_t default_get_user()
+server_get_user_t default_get_user(void)
 {
     server_get_user_t user;
 

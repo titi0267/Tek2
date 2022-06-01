@@ -8,7 +8,7 @@
 #include "../../include/teams.h"
 #include "../../../include/communication.h"
 
-server_user_t get_default_user()
+server_user_t get_default_user(void)
 {
     server_user_t tmp;
 
