@@ -14,6 +14,6 @@ void create_command(teams_t *server, client_list_t *client)
     read(client->fd, &client_payload, sizeof(cli_create_t));
     switch (client_payload.args_nbr) {
         default:
-            create_team(server, client, client_payload);
+            create_team(client, client_payload);
     }
 }
