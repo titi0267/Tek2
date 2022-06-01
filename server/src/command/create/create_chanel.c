@@ -81,7 +81,8 @@ cli_create_t payload, char *last_id)
     chanel_info.channel_uuid, chanel_info.name);
 }
 
-void create_chanel(client_list_t *client, cli_create_t payload)
+void create_chanel(teams_t *server, client_list_t *client,
+cli_create_t payload)
 {
     struct dirent *ep;
     DIR *dir;
