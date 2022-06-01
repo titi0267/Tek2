@@ -34,13 +34,6 @@ enum user_status {
     LOGGED
 };
 
-enum use {
-    DEFAULT,
-    TEAMS,
-    CHANNEL,
-    THREADS
-};
-
 typedef struct client_s {
     int socket_fd;
     int client_fd;

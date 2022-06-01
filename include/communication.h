@@ -34,6 +34,46 @@ enum finded_user {
     NOT_FOUND
 };
 
+enum use {
+    DEFAULT,
+    TEAMS,
+    CHANNEL,
+    THREADS
+};
+
+typedef struct server_team_info_s {
+    char name[MAX_NAME_LENGTH];
+    char description[MAX_DESCRIPTION_LENGTH];
+    char team_uuid[MAX_NAME_LENGTH];
+    int is_valid;
+} server_team_info_t;
+
+typedef struct server_chanel_info_s {
+    char name[MAX_NAME_LENGTH];
+    char description[MAX_DESCRIPTION_LENGTH];
+    char team_uuid[MAX_NAME_LENGTH];
+    char channel_uuid[MAX_NAME_LENGTH];
+    int is_valid;
+} server_chanel_info_t;
+
+typedef struct server_thread_info_s {
+    char name[MAX_NAME_LENGTH];
+    char description[MAX_DESCRIPTION_LENGTH];
+    char team_uuid[MAX_NAME_LENGTH];
+    char channel_uuid[MAX_NAME_LENGTH];
+    char thread_uid[MAX_NAME_LENGTH];
+    int is_valid;
+} server_thread_info_t;
+
+typedef struct server_reply_info_s {
+    char name[MAX_NAME_LENGTH];
+    char description[MAX_DESCRIPTION_LENGTH];
+    char team_uuid[MAX_NAME_LENGTH];
+    char channel_uuid[MAX_NAME_LENGTH];
+    char thread_uid[MAX_NAME_LENGTH];
+    int is_valid;
+} server_reply_info_t;
+
 typedef struct server_unsub_s {
     int valid;
 } server_unsub_t;
