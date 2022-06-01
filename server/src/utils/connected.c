@@ -7,7 +7,7 @@
 
 #include "../../include/teams.h"
 
-int isConnected(teams_t *server, char *uid)
+int is_connected(teams_t *server, char *uid)
 {
     client_list_t *tmp = server->head;
 

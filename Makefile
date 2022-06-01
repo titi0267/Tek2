@@ -22,8 +22,13 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/command/subscribe.c		\
 				server/src/command/unsubscribe.c		\
 				server/src/command/logout.c		\
-				server/src/utils/print_allusers.c	\
-				server/src/utils/save_architecture.c
+				server/src/utils/print_allusers.c		\
+				server/src/command/create/create.c		\
+				server/src/command/create/create_team.c		\
+				server/src/utils/save_architecture.c		\
+				server/src/command/create/create_chanel.c	\
+				server/src/command/create/create_thread.c		\
+				server/src/command/create/create_reply.c
 
 SRC_CLIENT	=	client/src/main.c		\
 				client/src/setup.c		\
@@ -54,7 +59,7 @@ NAME_SERVER		=	myteams_server
 
 NAME_CLIENT	=	myteams_cli
 
-CFLAGS 		+= 		-g
+CFLAGS 		+= 		-g	-Wall -Wextra
 
 all:	$(NAME_SERVER)
 
