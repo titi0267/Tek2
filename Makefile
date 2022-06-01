@@ -28,7 +28,8 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/utils/save_architecture.c		\
 				server/src/command/create/create_chanel.c	\
 				server/src/command/create/create_thread.c		\
-				server/src/command/create/create_reply.c
+				server/src/command/create/create_reply.c		\
+				server/src/res_sender/sender.c
 
 SRC_CLIENT	=	client/src/main.c		\
 				client/src/setup.c		\
