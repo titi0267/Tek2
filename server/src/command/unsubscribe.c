@@ -7,8 +7,7 @@
 
 #include "../../include/teams.h"
 
-int get_open_team_users_unsub(client_list_t *client,
-cli_unsubscribe_t unsubscribe_payload)
+int get_open_team_users_unsub(cli_unsubscribe_t unsubscribe_payload)
 {
     char *path = malloc(MAX_NAME_LENGTH);
     int fd = 0;
@@ -20,7 +19,7 @@ cli_unsubscribe_t unsubscribe_payload)
     return (fd);
 }
 
-int unsub_user(client_list_t *client, cli_unsubscribe_t unsub_payload, int fd)
+int unsub_user(client_list_t *client, int fd)
 {
     int read_ret = 0;
     server_team_user_t tmp;
@@ -49,12 +48,12 @@ void unsubscribe(teams_t *server, client_list_t *client)
     UNUSED(server);
     res_payload.exist = 0;
     read(client->fd, &unsub_payload, sizeof(cli_unsubscribe_t));
-    fd = get_open_team_users_unsub(client, unsub_payload);
+    fd = get_open_team_users_unsub(unsub_payload);
     if (fd == -1) {
         write(client->fd, &res_payload, sizeof(server_sub_t));
         return;
     }
-    if (unsub_user(client, unsub_payload, fd))
+    if (unsub_user(client, fd))
         return;
     write(client->fd, &res_payload, sizeof(server_sub_t));
 }

@@ -7,7 +7,7 @@
 
 #include "../../include/teams.h"
 
-void print_all_user()
+void print_all_user(void)
 {
     int fd = 0;
     int read_ret = 0;
