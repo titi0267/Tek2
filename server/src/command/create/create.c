@@ -16,6 +16,8 @@ void create_command(teams_t *server, client_list_t *client)
         case TEAMS:
             create_chanel(client, client_payload);
             break;
+        case CHANNEL:
+            create_thread(client, client_payload);
         default:
             create_team(client, client_payload);
             break;

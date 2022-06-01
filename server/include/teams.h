@@ -85,3 +85,4 @@ void create_team(client_list_t *client, cli_create_t payload);
 void create_command(teams_t *server, client_list_t *client);
 void create_chanel(client_list_t *client, cli_create_t payload);
 int create_save(void);
+void create_thread(client_list_t *client, cli_create_t payload);

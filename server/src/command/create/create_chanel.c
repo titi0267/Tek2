@@ -5,13 +5,6 @@
 ** create_chanel
 */
 
-/*
-** EPITECH PROJECT, 2022
-** teams
-** File description:
-** create_team
-*/
-
 #include "../../../include/teams.h"
 
 server_chanel_info_t create_chanel_info(cli_create_t payload, char *id)
