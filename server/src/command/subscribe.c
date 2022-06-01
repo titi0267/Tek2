@@ -32,7 +32,8 @@ int get_open_team_users(cli_subscribe_t subscribe_payload)
     return (fd);
 }
 
-int check_inactive_user(client_list_t *client, int fd)
+int check_inactive_user(client_list_t *client,
+cli_subscribe_t subscribe_payload,int fd)
 {
     server_team_user_t tmp;
     int read_ret = 0;
@@ -42,6 +43,8 @@ int check_inactive_user(client_list_t *client, int fd)
         if (tmp.is_active == 0) {
             lseek(fd, -sizeof(server_team_user_t), SEEK_CUR);
             tmp = get_team_user(client->pseudo, client->uid);
+            server_event_user_subscribed(subscribe_payload.team_uuid,
+            client->uid);
             write(fd, &tmp, sizeof(server_team_user_t));
             return (1);
         }
@@ -63,10 +66,11 @@ void subscribe(teams_t *server, client_list_t *client)
     if (fd == -1)
         write(client->fd, &subscribe_res, sizeof(server_sub_t));
     subscribe_res.exist = 1;
-    if (check_inactive_user(client, fd))
+    if (check_inactive_user(client, subscribe_payload, fd))
         return;
     tmp = get_team_user(client->pseudo, client->uid);
     lseek(fd, 0, SEEK_END);
+    server_event_user_subscribed(subscribe_payload.team_uuid, client->uid);
     write(fd, &tmp, sizeof(server_team_user_t));
     write(client->fd, &subscribe_res, sizeof(server_sub_t));
 }
