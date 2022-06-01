@@ -36,6 +36,9 @@ int get_cmd(client_t *client, char *buff)
         command = parse_cmd(buff, client);
         if (command == 84)
             printf("Error: Invalid Command\n");
+        if (client->log_status == LOGGED)
+            write(1, client->pseudo, sizeof(MAX_NAME_LENGTH));
+        write(1, " > ", 3);
     }
     return (command);
 }
@@ -47,11 +50,11 @@ void loop(client_t *client)
     int ret_sel = 0;
 
     memset(client->user_uuid, 0, MAX_NAME_LENGTH);
-    printf("%s > ", client->log_status == LOGGED ? client->pseudo : "");
+    //printf("%s > ", client->log_status == LOGGED ? client->pseudo : "");
+    if (client->log_status == LOGGED)
+        write(1, client->pseudo, sizeof(MAX_NAME_LENGTH));
+    write(1, " > ", 3);
     while (command != LOGOUT) {
-        if (client->log_status == LOGGED)
-            write(1, client->pseudo, sizeof(MAX_NAME_LENGTH));
-        write(1, " > ", 3);
         clear_fds(client);
         ret_sel =
         select(FD_SETSIZE, &client->client_rd, NULL, NULL, NULL);
