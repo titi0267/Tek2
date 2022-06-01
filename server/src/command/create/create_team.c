@@ -11,10 +11,11 @@ server_team_info_t create_team_info(cli_create_t payload, char *id)
 {
     server_team_info_t team_info;
 
-    team_info.is_valid = 1;
+    memset(&team_info, 0, sizeof(team_info));
     memset(team_info.name, 0, MAX_NAME_LENGTH);
     memset(team_info.team_uuid, 0, MAX_NAME_LENGTH);
     memset(team_info.description, 0, MAX_DESCRIPTION_LENGTH);
+    team_info.is_valid = 1;
     strcpy(team_info.name, payload.name);
     strcpy(team_info.team_uuid, id);
     strcpy(team_info.description, payload.description);
@@ -65,7 +66,7 @@ void create_team(client_list_t *client, cli_create_t payload)
     DIR *dir = opendir("./saves/teams");
     char *buff = "";
 
-    while (ep = readdir(dir)) {
+    while ((ep = readdir(dir))) {
         if (strncmp(ep->d_name, "t_", 2) == 0)
             buff = ep->d_name;
     }

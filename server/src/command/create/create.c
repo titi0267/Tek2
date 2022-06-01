@@ -13,7 +13,11 @@ void create_command(teams_t *server, client_list_t *client)
 
     read(client->fd, &client_payload, sizeof(cli_create_t));
     switch (client_payload.args_nbr) {
+        case TEAMS:
+            create_chanel(client, client_payload);
+            break;
         default:
             create_team(client, client_payload);
+            break;
     }
 }

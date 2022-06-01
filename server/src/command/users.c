@@ -18,7 +18,7 @@ void users(teams_t *server, client_list_t *client)
     while ((read_ret = read(fd, &tmp, sizeof(server_user_t))) != 0
     && read_ret != -1) {
         user.found = FOUND;
-        user.connected = isConnected(server, tmp.uid);
+        user.connected = is_connected(server, tmp.uid);
         strcpy(user.pseudo, tmp.pseudo);
         strcpy(user.uid, tmp.uid);
         write(client->fd, &user, sizeof(server_get_user_t));

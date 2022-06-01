@@ -39,7 +39,7 @@ void user(teams_t *server, client_list_t *client)
     && read_ret != -1) {
         if (strcmp(tmp.uid, user_to_find.user_uuid) == 0) {
             user.found = FOUND;
-            user.connected = isConnected(server, user_to_find.user_uuid);
+            user.connected = is_connected(server, user_to_find.user_uuid);
             strcpy(user.pseudo, tmp.pseudo);
             strcpy(user.uid, tmp.uid);
             write(client->fd, &user, sizeof(server_get_user_t));
