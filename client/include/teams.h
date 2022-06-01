@@ -43,6 +43,7 @@ enum use {
 
 typedef struct client_s {
     int socket_fd;
+    int client_fd;
     enum use use_status;
     char pseudo[MAX_NAME_LENGTH];
     char user_uuid[MAX_NAME_LENGTH];
@@ -50,9 +51,11 @@ typedef struct client_s {
     char channel_uuid[MAX_NAME_LENGTH];
     char thread_uuid[MAX_NAME_LENGTH];
     enum user_status log_status;
+    fd_set client_rd;
 } client_t;
 
 client_t *init_struct(char **av);
 int parse_cmd(char *buff, client_t *client);
+void get_server_recv(client_t *client, message_t msg);
 void loop(client_t *client);
 void free_all(client_t *client, char *buff);

@@ -45,6 +45,19 @@ SRC_CLIENT	=	client/src/main.c		\
 				client/src/commands/use.c \
 				client/src/commands/user.c \
 				client/src/check_valid_args.c \
+				client/src/get_server_reply.c	\
+				client/src/server_reply/create.c	\
+				client/src/server_reply/info.c		\
+				client/src/server_reply/list.c	\
+				client/src/server_reply/login.c		\
+				client/src/server_reply/logout.c	\
+				client/src/server_reply/messages.c	\
+				client/src/server_reply/send.c		\
+				client/src/server_reply/subscribe.c	\
+				client/src/server_reply/subscribed.c	\
+				client/src/server_reply/unsubscribe.c	\
+				client/src/server_reply/user.c		\
+				client/src/server_reply/users.c		\
 
 OBJ_SERVER		=	$(SRC_SERVER:.c=.o)
 
