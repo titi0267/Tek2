@@ -87,5 +87,7 @@ void create_chanel(client_list_t *client, cli_create_t payload);
 int create_save(void);
 void create_thread(client_list_t *client, cli_create_t payload);
 void create_reply(client_list_t *client, cli_create_t payload);
-void send_to_everyone(teams_t *server,
-int command_id, void *buff, size_t size);
+void send_to_everyone(teams_t *server, int command_id, void *buff);
+void send_to_uid(teams_t *server, int command_id, void *buff, char *uid);
+void send_to_everyone_except(teams_t *server, int command_id,
+void *buff, char *except);

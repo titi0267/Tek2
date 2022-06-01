@@ -19,7 +19,8 @@ int get_open_team_users_unsub(cli_unsubscribe_t unsubscribe_payload)
     return (fd);
 }
 
-int unsub_user(client_list_t *client, cli_unsubscribe_t unsub_payload, int fd)
+int unsub_user(client_list_t *client, teams_t *server,
+cli_unsubscribe_t unsub_payload, int fd)
 {
     int read_ret = 0;
     server_team_user_t tmp;
@@ -34,7 +35,8 @@ int unsub_user(client_list_t *client, cli_unsubscribe_t unsub_payload, int fd)
             server_event_user_unsubscribed(unsub_payload.team_uuid,
             client->uid);
             write(fd, &tmp, sizeof(server_team_user_t));
-            write(client->fd, &res_payload, sizeof(server_sub_t));
+            send_to_everyone_except(server,
+            (int)UNSUBSCRIBE, &res_payload, client->uid);
             return (1);
         }
     }
@@ -55,8 +57,9 @@ void unsubscribe(teams_t *server, client_list_t *client)
         write(client->fd, &res_payload, sizeof(server_sub_t));
         return;
     }
-    if (unsub_user(client, unsub_payload, fd))
+    if (unsub_user(client, server, unsub_payload, fd))
         return;
     server_event_user_unsubscribed(unsub_payload.team_uuid, client->uid);
-    write(client->fd, &res_payload, sizeof(server_sub_t));
+    send_to_everyone_except(server, (int)UNSUBSCRIBE,
+    &res_payload, client->uid);
 }

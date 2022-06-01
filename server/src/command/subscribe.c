@@ -72,5 +72,6 @@ void subscribe(teams_t *server, client_list_t *client)
     lseek(fd, 0, SEEK_END);
     server_event_user_subscribed(subscribe_payload.team_uuid, client->uid);
     write(fd, &tmp, sizeof(server_team_user_t));
-    write(client->fd, &subscribe_res, sizeof(server_sub_t));
+    send_to_everyone_except(server,
+    (int)SUBSCRIBE, &subscribe_res, client->uid);
 }
