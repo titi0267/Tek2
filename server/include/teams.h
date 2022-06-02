@@ -101,3 +101,11 @@ void send_to_uid(teams_t *server, int command_id, send_payload_t payload,
 char *uid);
 void send_to_everyone_except(teams_t *server, int command_id,
 send_payload_t payload, char *except);
+void send_last_subscribed_user(client_list_t *client);
+void send_subscribed_error(client_list_t *client);
+void subscribed_command(teams_t *server, client_list_t *client);
+void send_user_as_subscribed_payload(client_list_t *client,
+server_team_user_t team_user);
+int is_subscribed(int team_id, int uid);
+void send_team_as_subscribed_payload(client_list_t *client,
+server_team_info_t team_info);
