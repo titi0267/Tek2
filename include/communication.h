@@ -152,13 +152,18 @@ typedef struct cli_create_s {
 } cli_create_t;
 
 typedef struct cli_list_s {
+    char team_uuid[MAX_NAME_LENGTH];
+    char channel_uuid[MAX_NAME_LENGTH];
+    char thread_uuid[MAX_NAME_LENGTH];
     int use_arg;
 } cli_list_t;
 
 typedef struct cli_info_s {
+    char team_uuid[MAX_NAME_LENGTH];
+    char channel_uuid[MAX_NAME_LENGTH];
+    char thread_uuid[MAX_NAME_LENGTH];
     int use_arg;
 } cli_info_t;
-
 typedef struct message_s {
     short command;
 } message_t;
