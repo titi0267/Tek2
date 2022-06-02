@@ -41,6 +41,16 @@ enum use {
     THREADS
 };
 
+typedef struct server_subscribed_info_s {
+    char name[MAX_NAME_LENGTH];
+    char id[MAX_NAME_LENGTH];
+    char description[MAX_DESCRIPTION_LENGTH];
+    int is_user;
+    int error;
+    int last;
+    int connected;
+} server_subscribed_info_t;
+
 typedef struct server_team_info_s {
     char name[MAX_NAME_LENGTH];
     char description[MAX_DESCRIPTION_LENGTH];
@@ -86,6 +96,7 @@ typedef struct server_team_user_s {
     int is_active;
     char pseudo[MAX_NAME_LENGTH];
     char uid[MAX_NAME_LENGTH];
+    int error;
 } server_team_user_t;
 
 typedef struct server_user_s {
