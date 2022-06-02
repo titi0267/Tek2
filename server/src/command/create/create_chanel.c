@@ -41,7 +41,7 @@ server_create_info_t create_chanel_info(cli_create_t payload, char *id)
     return (chanel_info);
 }
 
-void create_first_chanel(client_list_t *client, cli_create_t payload)
+void create_first_chanel(teams_t *server, cli_create_t payload)
 {
     int fd = 0;
     server_create_info_t chanel_info;
@@ -56,12 +56,13 @@ void create_first_chanel(client_list_t *client, cli_create_t payload)
         return;
     chanel_info = create_chanel_info(payload, "1");
     write(fd, &chanel_info, sizeof(server_create_info_t));
-    write(client->fd, &chanel_info, sizeof(server_create_info_t));
+    send_to_team(server, &chanel_info, sizeof(server_create_info_t),
+    chanel_info.team_uuid);
     server_event_channel_created(chanel_info.team_uuid,
     chanel_info.channel_uuid, chanel_info.name);
 }
 
-void create_next_chanel(client_list_t *client,
+void create_next_chanel(teams_t *server, client_list_t *client,
 cli_create_t payload, char *last_id)
 {
     char *path = malloc(100);
@@ -78,7 +79,8 @@ cli_create_t payload, char *last_id)
         return;
     chanel_info = create_chanel_info(payload, increment_str(atoi(last_id)));
     write(fd, &chanel_info, sizeof(server_create_info_t));
-    write(client->fd, &chanel_info, sizeof(server_create_info_t));
+    send_to_team(server, &chanel_info, sizeof(server_create_info_t),
+    chanel_info.team_uuid);
     server_event_team_created(chanel_info.team_uuid,
     chanel_info.name, client->uid);
     server_event_channel_created(chanel_info.team_uuid,
@@ -102,7 +104,7 @@ cli_create_t payload)
             buff = ep->d_name;
     }
     if (strlen(buff) == 0)
-        return (create_first_chanel(client, payload));
+        return (create_first_chanel(server, payload));
     buff += 2;
-    create_next_chanel(client, payload, buff);
+    create_next_chanel(server, client, payload, buff);
 }

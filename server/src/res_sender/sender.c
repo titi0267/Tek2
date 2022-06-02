@@ -7,6 +7,20 @@
 
 #include "../../include/teams.h"
 
+void send_to_team(teams_t *server, void *buff, size_t size, char *team_id)
+{
+    client_list_t *loop = server->head;
+    message_t message;
+
+    message.command = CREATE;
+    for (; loop; loop = loop->next) {
+        if (is_subscribed(team_id, loop->uid)) {
+            write(loop->fd, &message, sizeof(message_t));
+            write(loop->fd, buff, size);
+        }
+    }
+}
+
 void send_to_uid(teams_t *server, int command_id, send_payload_t payload,
 char *uid)
 {

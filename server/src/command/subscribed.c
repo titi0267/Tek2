@@ -26,7 +26,7 @@ void check_if_user_in_team(client_list_t *client, struct dirent *ep)
     }
 }
 
-void list_all_my_teams(teams_t *server, client_list_t *client)
+void list_all_my_teams(client_list_t *client)
 {
     DIR *dir;
     char *path = malloc(100);
@@ -73,6 +73,6 @@ void subscribed_command(teams_t *server, client_list_t *client)
 
     read(client->fd, &req, sizeof(cli_subscribed_t));
     if (strlen(req.team_uuid) == 0)
-        return (list_all_my_teams(server, client));
+        return (list_all_my_teams(client));
     list_user_in_team(server, client, req);
 }
