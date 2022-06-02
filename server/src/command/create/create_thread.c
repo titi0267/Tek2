@@ -42,12 +42,12 @@ server_create_info_t create_thread_info(cli_create_t payload, char *id)
     return (thread_info);
 }
 
-void create_first_thread(client_list_t *client, cli_create_t payload)
+void create_first_thread(teams_t *server,
+client_list_t *client, cli_create_t payload)
 {
     int fd = 0;
     server_create_info_t thread_info;
     char *path = malloc(100);
-
     sprintf(path, "./saves/teams/t_%d/c_%d/th_1",
     atoi(payload.team_uuid), atoi(payload.channel_uuid));
     mkdir(path, 0777);
@@ -58,7 +58,8 @@ void create_first_thread(client_list_t *client, cli_create_t payload)
         return;
     thread_info = create_thread_info(payload, "1");
     write(fd, &thread_info, sizeof(server_create_info_t));
-    write(client->fd, &thread_info, sizeof(server_create_info_t));
+    send_to_team(server, &thread_info, sizeof(server_create_info_t),
+    thread_info.team_uuid);
     server_event_team_created(thread_info.team_uuid,
     thread_info.name, client->uid);
     server_event_thread_created(thread_info.channel_uuid,
@@ -66,7 +67,7 @@ void create_first_thread(client_list_t *client, cli_create_t payload)
     thread_info.name, thread_info.description);
 }
 
-void create_next_thread(client_list_t *client,
+void create_next_thread(teams_t *server, client_list_t *client,
 cli_create_t payload, char *last_id)
 {
     char *path = malloc(100);
@@ -83,7 +84,8 @@ cli_create_t payload, char *last_id)
         return;
     thread_info = create_thread_info(payload, increment_str(atoi(last_id)));
     write(fd, &thread_info, sizeof(server_create_info_t));
-    write(client->fd, &thread_info, sizeof(server_create_info_t));
+    send_to_team(server, &thread_info, sizeof(server_create_info_t),
+    thread_info.team_uuid);
     server_event_thread_created(thread_info.channel_uuid,
     thread_info.team_uuid, client->uid,
     thread_info.name, thread_info.description);
@@ -107,7 +109,7 @@ cli_create_t payload)
             buff = ep->d_name;
     }
     if (strlen(buff) == 0)
-        return (create_first_thread(client, payload));
+        return (create_first_thread(server, client, payload));
     buff += 2;
-    create_next_thread(client, payload, buff);
+    create_next_thread(server, client, payload, buff);
 }
