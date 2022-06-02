@@ -46,6 +46,8 @@ int create_thread(char *buff, cli_create_t *create)
 {
     int i = 0;
 
+    if (check_is_arg(buff) == CMD_ERROR)
+        return (CMD_ERROR);
     buff += 2;
     for (; buff[i] != '"' && buff[i] != 0; i++) {
         create->comment_body[i] = buff[i];
@@ -61,7 +63,6 @@ int create_right_params(char *buff, client_t *client, cli_create_t *create)
 {
     int ret_val = 0;
 
-    //buff += 2;
     if (client->use_status != THREADS)
         ret_val = create_uuid(buff, create);
     else
