@@ -23,10 +23,11 @@ server_team_user_t get_team_user(char *pseudo, char *uid)
 
 int get_open_team_users(cli_subscribe_t subscribe_payload)
 {
-    char *path = malloc(MAX_NAME_LENGTH);
+    char *path = malloc(100);
     int fd = 0;
 
-    sprintf(path, "./saves/teams/t_%s/users.txt", subscribe_payload.team_uuid);
+    sprintf(path, "./saves/teams/t_%d/users.txt",
+    atoi(subscribe_payload.team_uuid));
     fd = open(path, O_RDWR | O_CREAT, 0777);
     free(path);
     return (fd);
@@ -72,6 +73,6 @@ void subscribe(teams_t *server, client_list_t *client)
     lseek(fd, 0, SEEK_END);
     server_event_user_subscribed(subscribe_payload.team_uuid, client->uid);
     write(fd, &tmp, sizeof(server_team_user_t));
-    send_to_everyone_except(server,
-    (int)SUBSCRIBE, &subscribe_res, client->uid);
+    send_to_everyone_except(server, (int)SUBSCRIBE,
+    (send_payload_t){&subscribe_res, sizeof(send_payload_t)}, client->uid);
 }

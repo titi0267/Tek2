@@ -9,11 +9,11 @@
 
 int get_open_team_users_unsub(cli_unsubscribe_t unsubscribe_payload)
 {
-    char *path = malloc(MAX_NAME_LENGTH);
+    char *path = malloc(100);
     int fd = 0;
 
-    sprintf(path, "./saves/teams/t_%s/users.txt",
-    unsubscribe_payload.team_uuid);
+    sprintf(path, "./saves/teams/t_%d/users.txt",
+    atoi(unsubscribe_payload.team_uuid));
     fd = open(path, O_RDWR | O_CREAT, 0777);
     free(path);
     return (fd);
@@ -35,8 +35,8 @@ cli_unsubscribe_t unsub_payload, int fd)
             server_event_user_unsubscribed(unsub_payload.team_uuid,
             client->uid);
             write(fd, &tmp, sizeof(server_team_user_t));
-            send_to_everyone_except(server,
-            (int)UNSUBSCRIBE, &res_payload, client->uid);
+            send_to_everyone_except(server, (int)UNSUBSCRIBE,
+            (send_payload_t){&res_payload, sizeof(server_sub_t)}, client->uid);
             return (1);
         }
     }
@@ -61,5 +61,5 @@ void unsubscribe(teams_t *server, client_list_t *client)
         return;
     server_event_user_unsubscribed(unsub_payload.team_uuid, client->uid);
     send_to_everyone_except(server, (int)UNSUBSCRIBE,
-    &res_payload, client->uid);
+    (send_payload_t){&res_payload, sizeof(server_sub_t)}, client->uid);
 }
