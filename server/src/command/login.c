@@ -62,7 +62,7 @@ client_list_t *client, cli_login_t login, int fd)
     if (last_id == -2)
         return;
     if (last_id == -1)
-        return(write_first_user(server, client, login, fd));
+        return (write_first_user(server, client, login, fd));
     strcpy(tmp.uid, increment_str(last_id));
     strcpy(tmp.pseudo, login.name);
     write(fd, &tmp, sizeof(server_user_t));

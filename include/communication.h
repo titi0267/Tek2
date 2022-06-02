@@ -59,14 +59,20 @@ typedef struct server_create_info_s {
     char thread_uid[MAX_NAME_LENGTH];
     int is_valid;
     int create_type;
+    long int time;
+    char creator_uuid[MAX_NAME_LENGTH];
 } server_create_info_t;
 
 typedef struct server_unsub_s {
     int valid;
+    char user_uuid[MAX_NAME_LENGTH];
+    char team_uid[MAX_NAME_LENGTH];
 } server_unsub_t;
 
 typedef struct server_sub_s {
     int exist;
+    char user_uuid[MAX_NAME_LENGTH];
+    char team_uid[MAX_NAME_LENGTH];
 } server_sub_t;
 
 typedef struct server_team_user_s {

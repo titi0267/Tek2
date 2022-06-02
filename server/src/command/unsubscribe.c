@@ -7,6 +7,18 @@
 
 #include "../../include/teams.h"
 
+void send_unsub_error(client_list_t *client)
+{
+    server_unsub_t subscribe_res;
+    message_t command = {UNSUBSCRIBE};
+
+    subscribe_res.valid = 0;
+    memset(subscribe_res.team_uid, 0, MAX_NAME_LENGTH);
+    memset(subscribe_res.user_uuid, 0, MAX_NAME_LENGTH);
+    write(client->fd, &command, sizeof(message_t));
+    write(client->fd, &subscribe_res, sizeof(server_sub_t));
+}
+
 int get_open_team_users_unsub(cli_unsubscribe_t unsubscribe_payload)
 {
     char *path = malloc(100);
@@ -49,17 +61,14 @@ void unsubscribe(teams_t *server, client_list_t *client)
     server_sub_t res_payload;
     int fd = 0;
 
-    UNUSED(server);
     res_payload.exist = 0;
     read(client->fd, &unsub_payload, sizeof(cli_unsubscribe_t));
     fd = get_open_team_users_unsub(unsub_payload);
-    if (fd == -1) {
-        write(client->fd, &res_payload, sizeof(server_sub_t));
-        return;
-    }
+    if (fd == -1)
+        return (send_unsub_error(client));
     if (unsub_user(client, server, unsub_payload, fd))
         return;
     server_event_user_unsubscribed(unsub_payload.team_uuid, client->uid);
-    send_to_everyone_except(server, (int)UNSUBSCRIBE,
-    (send_payload_t){&res_payload, sizeof(server_sub_t)}, client->uid);
+    send_to_everyone(server, (int)UNSUBSCRIBE, &res_payload,
+    sizeof(server_sub_t));
 }

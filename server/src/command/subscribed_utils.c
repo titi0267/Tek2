@@ -24,6 +24,7 @@ void send_last_subscribed_user(client_list_t *client)
 void send_subscribed_error(client_list_t *client)
 {
     server_subscribed_info_t error;
+    message_t command = {SUBSCRIBED};
 
     error.error = 1;
     error.last = 1;
@@ -32,6 +33,7 @@ void send_subscribed_error(client_list_t *client)
     memset(error.name, 0, MAX_NAME_LENGTH);
     memset(error.id, 0, MAX_NAME_LENGTH);
     memset(error.description, 0, MAX_DESCRIPTION_LENGTH);
+    write(client->fd, &command, sizeof(message_t));
     write(client->fd, &error, sizeof(server_subscribed_info_t));
 }
 
