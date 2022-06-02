@@ -9,7 +9,7 @@
 
 void ret_reply_error(client_list_t *client)
 {
-    server_reply_info_t reply_info;
+    server_create_info_t reply_info;
 
     memset(&reply_info, 0, sizeof(reply_info));
     memset(reply_info.name, 0, MAX_NAME_LENGTH);
@@ -18,12 +18,13 @@ void ret_reply_error(client_list_t *client)
     memset(reply_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(reply_info.thread_uid, 0, MAX_NAME_LENGTH);
     reply_info.is_valid = 0;
-    write(client->fd, &reply_info, sizeof(server_reply_info_t));
+    reply_info.create_type = THREADS;
+    write(client->fd, &reply_info, sizeof(server_create_info_t));
 }
 
-server_reply_info_t create_reply_info(cli_create_t payload)
+server_create_info_t create_reply_info(cli_create_t payload)
 {
-    server_reply_info_t reply_info;
+    server_create_info_t reply_info;
 
     memset(&reply_info, 0, sizeof(reply_info));
     memset(reply_info.name, 0, MAX_NAME_LENGTH);
@@ -43,7 +44,7 @@ server_reply_info_t create_reply_info(cli_create_t payload)
 void create_reply(teams_t *server, client_list_t *client, cli_create_t payload)
 {
     char *path = malloc(100);
-    server_reply_info_t reply_info;
+    server_create_info_t reply_info;
     int fd = 0;
 
     sprintf(path, "./saves/teams/t_%d/c_%d/th_%d/reply.txt",
@@ -53,8 +54,8 @@ void create_reply(teams_t *server, client_list_t *client, cli_create_t payload)
     if (fd == -1)
         return (ret_reply_error(client));
     reply_info = create_reply_info(payload);
-    write(fd, &reply_info, sizeof(server_reply_info_t));
-    write(client->fd, &reply_info, sizeof(server_reply_info_t));
+    write(fd, &reply_info, sizeof(server_create_info_t));
+    write(client->fd, &reply_info, sizeof(server_create_info_t));
     server_event_reply_created(reply_info.thread_uid, client->uid,
     reply_info.description);
 }
