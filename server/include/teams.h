@@ -110,3 +110,5 @@ int is_subscribed(char *team_id, char *uid);
 void send_team_as_subscribed_payload(client_list_t *client,
 server_create_info_t team_info);
 void send_to_team(teams_t *server, void *buff, size_t size, char *team_id);
+int get_thread_error_level(cli_create_t payload);
+int get_reply_error_level(cli_create_t payload);
