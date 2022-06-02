@@ -6,10 +6,12 @@
 */
 
 #include "../../../include/teams.h"
+#include <time.h>
 
-void ret_thread_error(client_list_t *client)
+void ret_thread_error(client_list_t *client, cli_create_t payload)
 {
     server_create_info_t thread_info;
+    message_t message = {CREATE};
 
     memset(&thread_info, 0, sizeof(thread_info));
     memset(thread_info.name, 0, MAX_NAME_LENGTH);
@@ -17,12 +19,21 @@ void ret_thread_error(client_list_t *client)
     memset(thread_info.description, 0, MAX_DESCRIPTION_LENGTH);
     memset(thread_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(thread_info.thread_uid, 0, MAX_NAME_LENGTH);
+    memset(thread_info.creator_uuid, 0, MAX_NAME_LENGTH);
     thread_info.is_valid = 0;
     thread_info.create_type = CHANNEL;
+    thread_info.time = time(NULL);
+    strcpy(thread_info.name, payload.name);
+    strcpy(thread_info.team_uuid, payload.team_uuid);
+    strcpy(thread_info.description, payload.description);
+    strcpy(thread_info.channel_uuid,payload.channel_uuid);
+    strcpy(thread_info.creator_uuid, client->uid);
+    write(client->fd, &message, sizeof(message_t));
     write(client->fd, &thread_info, sizeof(server_create_info_t));
 }
 
-server_create_info_t create_thread_info(cli_create_t payload, char *id)
+server_create_info_t create_thread_info(client_list_t *client,
+cli_create_t payload, char *id)
 {
     server_create_info_t thread_info;
 
@@ -32,12 +43,15 @@ server_create_info_t create_thread_info(cli_create_t payload, char *id)
     memset(thread_info.description, 0, MAX_DESCRIPTION_LENGTH);
     memset(thread_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(thread_info.thread_uid, 0, MAX_NAME_LENGTH);
+    memset(thread_info.creator_uuid, 0, MAX_NAME_LENGTH);
     thread_info.is_valid = 1;
+    thread_info.time = time(NULL);
     thread_info.create_type = CHANNEL;
     strcpy(thread_info.name, payload.name);
     strcpy(thread_info.team_uuid, payload.team_uuid);
     strcpy(thread_info.description, payload.description);
     strcpy(thread_info.channel_uuid,payload.channel_uuid);
+    strcpy(thread_info.creator_uuid, client->uid);
     strcpy(thread_info.thread_uid, id);
     return (thread_info);
 }
@@ -56,7 +70,7 @@ client_list_t *client, cli_create_t payload)
     fd = open(path, O_RDWR | O_CREAT, 0777);
     if (fd == -1)
         return;
-    thread_info = create_thread_info(payload, "1");
+    thread_info = create_thread_info(client, payload, "1");
     write(fd, &thread_info, sizeof(server_create_info_t));
     send_to_team(server, &thread_info, sizeof(server_create_info_t),
     thread_info.team_uuid);
@@ -82,7 +96,8 @@ cli_create_t payload, char *last_id)
     fd = open(path, O_RDWR | O_CREAT, 0777);
     if (fd == -1)
         return;
-    thread_info = create_thread_info(payload, increment_str(atoi(last_id)));
+    thread_info = create_thread_info(client,
+    payload, increment_str(atoi(last_id)));
     write(fd, &thread_info, sizeof(server_create_info_t));
     send_to_team(server, &thread_info, sizeof(server_create_info_t),
     thread_info.team_uuid);
@@ -103,7 +118,7 @@ cli_create_t payload)
     atoi(payload.team_uuid), atoi(payload.channel_uuid));
     dir = opendir(path);
     if (!dir)
-        return (ret_thread_error(client));
+        return (ret_thread_error(client, payload));
     while ((ep = readdir(dir))) {
         if (strncmp(ep->d_name, "th_", 3) == 0)
             buff = ep->d_name;

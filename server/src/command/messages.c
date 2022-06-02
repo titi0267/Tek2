@@ -7,6 +7,15 @@
 
 #include "../../include/teams.h"
 
+void write_message_error(client_list_t *client)
+{
+    server_message_t message = get_default_message();
+    message_t command = {MESSAGES};
+
+    write(client->fd, &command, sizeof(message_t));
+    write(client->fd, &message, sizeof(server_message_t));
+}
+
 int open_good_fd(client_list_t *client, cli_messages_t message)
 {
     int me = atoi(client->uid);
@@ -32,10 +41,8 @@ void messages(teams_t *server, client_list_t *client)
     read(client->fd, &messages, sizeof(cli_messages_t));
     fd = open_good_fd(client, messages);
     write(client->fd, &command, sizeof(message_t));
-    if (fd == -1) {
-        write(client->fd, &server_message, sizeof(server_message_t));
-        return;
-    }
+    if (fd == -1)
+        return (write_message_error(client));
     while ((read_ret = read(fd, &server_message, sizeof(server_message_t)))
     != 0 && read_ret != -1)
         write(client->fd, &server_message, sizeof(server_message_t));

@@ -6,10 +6,12 @@
 */
 
 #include "../../../include/teams.h"
+#include <time.h>
 
-void ret_channel_error(client_list_t *client)
+void ret_channel_error(client_list_t *client, cli_create_t payload)
 {
     server_create_info_t chanel_info;
+    message_t message = {CREATE};
 
     memset(&chanel_info, 0, sizeof(chanel_info));
     memset(chanel_info.name, 0, MAX_NAME_LENGTH);
@@ -17,8 +19,13 @@ void ret_channel_error(client_list_t *client)
     memset(chanel_info.description, 0, MAX_DESCRIPTION_LENGTH);
     memset(chanel_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(chanel_info.thread_uid, 0, MAX_NAME_LENGTH);
+    strcpy(chanel_info.name, payload.name);
+    strcpy(chanel_info.team_uuid, payload.team_uuid);
+    strcpy(chanel_info.description, payload.description);
+    strcpy(chanel_info.creator_uuid, client->uid);
     chanel_info.create_type = TEAMS;
     chanel_info.is_valid = 0;
+    write(client->fd, &message, sizeof(message_t));
     write(client->fd, &chanel_info, sizeof(server_create_info_t));
 }
 
@@ -34,6 +41,7 @@ server_create_info_t create_chanel_info(cli_create_t payload, char *id)
     memset(chanel_info.thread_uid, 0, MAX_NAME_LENGTH);
     chanel_info.is_valid = 1;
     chanel_info.create_type = TEAMS;
+    chanel_info.time = time(NULL);
     strcpy(chanel_info.name, payload.name);
     strcpy(chanel_info.team_uuid, payload.team_uuid);
     strcpy(chanel_info.description, payload.description);
@@ -98,7 +106,7 @@ cli_create_t payload)
     sprintf(path, "./saves/teams/t_%d", atoi(payload.team_uuid));
     dir = opendir(path);
     if (!dir)
-        return (ret_channel_error(client));
+        return (ret_channel_error(client, payload));
     while ((ep = readdir(dir))) {
         if (strncmp(ep->d_name, "c_", 2) == 0)
             buff = ep->d_name;

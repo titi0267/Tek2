@@ -8,6 +8,7 @@
 #include "../../include/teams.h"
 #include <time.h>
 
+
 server_message_t get_default_message(void)
 {
     server_message_t message;
@@ -18,6 +19,15 @@ server_message_t get_default_message(void)
     memset(message.to, 0, MAX_NAME_LENGTH);
     memset(message.body, 0, MAX_BODY_LENGTH);
     return (message);
+}
+
+void write_send_error(client_list_t *client)
+{
+    server_message_t message = get_default_message();
+    message_t command = {SEND};
+
+    write(client->fd, &command, sizeof(message_t));
+    write(client->fd, &message, sizeof(server_message_t));
 }
 
 int get_message_save_fd(client_list_t *client, cli_send_t message)
@@ -41,10 +51,8 @@ void send_message(teams_t *server, client_list_t *client)
 
     read(client->fd, &message, sizeof(cli_send_t));
     fd = get_message_save_fd(client, message);
-    if (fd == -1) {
-        write(client->fd, &server_message, sizeof(server_message_t));
-        return;
-    }
+    if (fd == -1)
+        return (write_send_error(client));
     server_message.is_valid = 1;
     strcpy(server_message.body, message.body);
     strcpy(server_message.to, message.user_uuid);
