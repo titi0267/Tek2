@@ -9,6 +9,18 @@
 #include <sys/types.h>
 #include <dirent.h>
 
+void send_sub_error(client_list_t *client)
+{
+    server_sub_t subscribe_res;
+    message_t command = {SUBSCRIBE};
+
+    subscribe_res.exist = 0;
+    memset(subscribe_res.team_uid, 0, MAX_NAME_LENGTH);
+    memset(subscribe_res.user_uuid, 0, MAX_NAME_LENGTH);
+    write(client->fd, &command, sizeof(message_t));
+    write(client->fd, &subscribe_res, sizeof(server_sub_t));
+}
+
 server_team_user_t get_team_user(char *pseudo, char *uid)
 {
     server_team_user_t team_user;
@@ -60,19 +72,16 @@ void subscribe(teams_t *server, client_list_t *client)
     server_sub_t subscribe_res;
     int fd = 0;
 
-    UNUSED(server);
-    subscribe_res.exist = 0;
     read(client->fd, &subscribe_payload, sizeof(cli_subscribe_t));
     fd = get_open_team_users(subscribe_payload);
     if (fd == -1)
-        write(client->fd, &subscribe_res, sizeof(server_sub_t));
-    subscribe_res.exist = 1;
-    if (check_inactive_user(client, subscribe_payload, fd))
-        return;
-    tmp = get_team_user(client->pseudo, client->uid);
-    lseek(fd, 0, SEEK_END);
-    server_event_user_subscribed(subscribe_payload.team_uuid, client->uid);
-    write(fd, &tmp, sizeof(server_team_user_t));
-    send_to_everyone_except(server, (int)SUBSCRIBE,
-    (send_payload_t){&subscribe_res, sizeof(send_payload_t)}, client->uid);
+        send_sub_error(client);
+    if (!check_inactive_user(client, subscribe_payload, fd)) {
+        tmp = get_team_user(client->pseudo, client->uid);
+        lseek(fd, 0, SEEK_END);
+        server_event_user_subscribed(subscribe_payload.team_uuid, client->uid);
+        write(fd, &tmp, sizeof(server_team_user_t));
+    }
+    send_to_everyone(server, (int)SUBSCRIBE, &subscribe_res,
+    sizeof(send_payload_t));
 }
