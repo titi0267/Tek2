@@ -9,27 +9,31 @@
 
 void ret_channel_error(client_list_t *client)
 {
-    server_chanel_info_t chanel_info;
+    server_create_info_t chanel_info;
 
     memset(&chanel_info, 0, sizeof(chanel_info));
     memset(chanel_info.name, 0, MAX_NAME_LENGTH);
     memset(chanel_info.team_uuid, 0, MAX_NAME_LENGTH);
     memset(chanel_info.description, 0, MAX_DESCRIPTION_LENGTH);
     memset(chanel_info.channel_uuid, 0, MAX_NAME_LENGTH);
+    memset(chanel_info.thread_uid, 0, MAX_NAME_LENGTH);
+    chanel_info.create_type = TEAMS;
     chanel_info.is_valid = 0;
-    write(client->fd, &chanel_info, sizeof(server_chanel_info_t));
+    write(client->fd, &chanel_info, sizeof(server_create_info_t));
 }
 
-server_chanel_info_t create_chanel_info(cli_create_t payload, char *id)
+server_create_info_t create_chanel_info(cli_create_t payload, char *id)
 {
-    server_chanel_info_t chanel_info;
+    server_create_info_t chanel_info;
 
     memset(&chanel_info, 0, sizeof(chanel_info));
     memset(chanel_info.name, 0, MAX_NAME_LENGTH);
     memset(chanel_info.team_uuid, 0, MAX_NAME_LENGTH);
     memset(chanel_info.description, 0, MAX_DESCRIPTION_LENGTH);
     memset(chanel_info.channel_uuid, 0, MAX_NAME_LENGTH);
+    memset(chanel_info.thread_uid, 0, MAX_NAME_LENGTH);
     chanel_info.is_valid = 1;
+    chanel_info.create_type = TEAMS;
     strcpy(chanel_info.name, payload.name);
     strcpy(chanel_info.team_uuid, payload.team_uuid);
     strcpy(chanel_info.description, payload.description);
@@ -40,7 +44,7 @@ server_chanel_info_t create_chanel_info(cli_create_t payload, char *id)
 void create_first_chanel(client_list_t *client, cli_create_t payload)
 {
     int fd = 0;
-    server_chanel_info_t chanel_info;
+    server_create_info_t chanel_info;
     char *path = malloc(100);
 
     sprintf(path, "./saves/teams/t_%d/c_1", atoi(payload.team_uuid));
@@ -51,8 +55,8 @@ void create_first_chanel(client_list_t *client, cli_create_t payload)
     if (fd == -1)
         return;
     chanel_info = create_chanel_info(payload, "1");
-    write(fd, &chanel_info, sizeof(server_chanel_info_t));
-    write(client->fd, &chanel_info, sizeof(server_chanel_info_t));
+    write(fd, &chanel_info, sizeof(server_create_info_t));
+    write(client->fd, &chanel_info, sizeof(server_create_info_t));
     server_event_channel_created(chanel_info.team_uuid,
     chanel_info.channel_uuid, chanel_info.name);
 }
@@ -61,7 +65,7 @@ void create_next_chanel(client_list_t *client,
 cli_create_t payload, char *last_id)
 {
     char *path = malloc(100);
-    server_chanel_info_t chanel_info;
+    server_create_info_t chanel_info;
     int fd = 0;
 
     sprintf(path, "./saves/teams/t_%d/c_%d", atoi(payload.team_uuid)
@@ -73,8 +77,8 @@ cli_create_t payload, char *last_id)
     if (fd == -1)
         return;
     chanel_info = create_chanel_info(payload, increment_str(atoi(last_id)));
-    write(fd, &chanel_info, sizeof(server_chanel_info_t));
-    write(client->fd, &chanel_info, sizeof(server_chanel_info_t));
+    write(fd, &chanel_info, sizeof(server_create_info_t));
+    write(client->fd, &chanel_info, sizeof(server_create_info_t));
     server_event_team_created(chanel_info.team_uuid,
     chanel_info.name, client->uid);
     server_event_channel_created(chanel_info.team_uuid,
