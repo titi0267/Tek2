@@ -42,6 +42,7 @@ int c_subscribed(char *buff, client_t *client)
         printf("you are subscribed to ...\n");
         msg.command = SUBSCRIBED;
         write(client->socket_fd, &msg, sizeof(message_t));
+        write(client->socket_fd, &subed, sizeof(cli_subscribed_t));
         return (SUBSCRIBED);
     }
     return (users_sub_to_team(buff, client, subed, msg));

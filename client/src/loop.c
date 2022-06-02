@@ -14,9 +14,19 @@ static void clear_fds(client_t *client)
     FD_SET(0, &client->client_rd);
 }
 
-int parse_recv(client_t *client)
+static int get_server(client_t *client, char *buff)
 {
-    printf("recieved\n");
+    message_t msg;
+
+    if (FD_ISSET(client->socket_fd, &client->client_rd)) {
+        if (read(client->socket_fd, &msg, sizeof(message_t)) == 0)
+            return (-1);
+        get_server_recv(client, msg);
+        if (client->log_status == LOGGED)
+            write(1, client->pseudo, MAX_NAME_LENGTH);
+        write(1, " > ", 3);
+    }
+    return (0);
 }
 
 int get_cmd(client_t *client, char *buff)
@@ -26,20 +36,13 @@ int get_cmd(client_t *client, char *buff)
     message_t msg;
 
     memset(buff, 0, 1024);
-    if (FD_ISSET(client->socket_fd, &client->client_rd)) {
-        if (read(client->socket_fd, &msg, sizeof(message_t)) == 0)
-            return (-1);
-        get_server_recv(client, msg);
-        if (client->log_status == LOGGED)
-            write(1, client->pseudo, MAX_NAME_LENGTH);
-        write(1, " > ", 3);
-
-    }
+    get_server(client, buff);
+    if (get_server(client, buff) == -1)
+        return (-1);
     if (FD_ISSET(0, &client->client_rd)) {
         if (read(0, buff, 1024) == 0)
             return (-1);
-        command = parse_cmd(buff, client);
-        if (command == 84)
+        if ((command = parse_cmd(buff, client)) == 84)
             printf("Error: Invalid Command\n");
         if (client->log_status == LOGGED)
             write(1, client->pseudo, MAX_NAME_LENGTH);
@@ -56,7 +59,6 @@ void loop(client_t *client)
 
     memset(client->user_uuid, 0, MAX_NAME_LENGTH);
     memset(client->tmp_login, 0, MAX_NAME_LENGTH);
-    //printf("%s > ", client->log_status == LOGGED ? client->pseudo : "");
     if (client->log_status == LOGGED)
         write(1, client->pseudo, MAX_NAME_LENGTH);
     write(1, " > ", 3);

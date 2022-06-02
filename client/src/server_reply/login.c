@@ -9,7 +9,7 @@
 #include "../../include/reply.h"
 #include "../../include/command.h"
 
-int r_login(client_t *client)
+void r_login(client_t *client)
 {
     server_user_t user;
 

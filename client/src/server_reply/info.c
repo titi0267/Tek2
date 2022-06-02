@@ -9,7 +9,7 @@
 #include "../../include/reply.h"
 #include "../../include/command.h"
 
-int r_info(client_t *client)
+void r_info(client_t *client)
 {
     
 }
