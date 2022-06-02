@@ -34,7 +34,8 @@ client_list_t *client, cli_create_t payload)
         return;
     team_info = create_team_info(payload, "1");
     write(fd, &team_info, sizeof(server_team_info_t));
-    send_to_everyone_except(server, (int)CREATE, &team_info, client->uid);
+    send_to_everyone_except(server, (int)CREATE,
+    (send_payload_t){&team_info, sizeof(server_team_info_t)}, client->uid);
     server_event_team_created(team_info.team_uuid,
     team_info.name, client->uid);
 }
@@ -56,7 +57,8 @@ cli_create_t payload, char *last_id)
         return;
     team_info = create_team_info(payload, increment_str(atoi(last_id)));
     write(fd, &team_info, sizeof(server_team_info_t));
-    send_to_everyone_except(server, (int)CREATE, &team_info, client->uid);
+    send_to_everyone_except(server, (int)CREATE,
+    (send_payload_t){&team_info, sizeof(server_team_info_t)}, client->uid);
     server_event_team_created(team_info.team_uuid,
     team_info.name, client->uid);
 }

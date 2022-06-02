@@ -35,6 +35,11 @@ enum user_status {
     LOGGED
 };
 
+typedef struct send_payload_s {
+    void *buff;
+    size_t size;
+} send_payload_t;
+
 typedef struct client_list_s {
     struct client_list_s *next;
     enum user_status status;
@@ -92,6 +97,7 @@ void create_reply(teams_t *server, client_list_t *client,
 cli_create_t payload);
 void send_to_everyone(teams_t *server, int command_id,
 void *buff, size_t size);
-void send_to_uid(teams_t *server, int command_id, void *buff, char *uid);
+void send_to_uid(teams_t *server, int command_id, send_payload_t payload,
+char *uid);
 void send_to_everyone_except(teams_t *server, int command_id,
-void *buff, char *except);
+send_payload_t payload, char *except);
