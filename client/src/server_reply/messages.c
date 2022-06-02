@@ -9,7 +9,15 @@
 #include "../../include/reply.h"
 #include "../../include/command.h"
 
-int r_messages(client_t *client)
+void r_messages(client_t *client)
 {
-    
+    server_message_t serv_msg;
+
+    while (1) {
+        read(client->socket_fd, &serv_msg, sizeof(server_message_t));
+        if (serv_msg.is_valid == 0)
+            break;
+        client_private_message_print_messages(serv_msg.from,
+            serv_msg.time, serv_msg.body);
+    }
 }

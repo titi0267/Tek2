@@ -21,7 +21,7 @@ int c_subscribe(char *buff, client_t *client)
         return (CMD_ERROR);
     buff += 2;
     printf("Subscribe to ");
-    for (int i = 0; i < strlen(buff) - 2; i++)
+    for (size_t i = 0; i < strlen(buff) - 2; i++)
         cli_sub.team_uuid[i] = buff[i];
     printf("%s\n", cli_sub.team_uuid);
     msg.command = SUBSCRIBE;

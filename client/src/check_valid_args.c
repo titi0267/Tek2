@@ -27,7 +27,7 @@ int check_valid_cmd_type(char *buff)
 int check_valid_uuid(char *buff)
 {
     buff++;
-    for (int i = 1; i < strlen(buff) - 2; i++) {
+    for (size_t i = 1; i < strlen(buff) - 2; i++) {
         if (buff[i] < 48 || buff[i] > 57)
             return (CMD_ERROR);
     }
