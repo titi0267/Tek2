@@ -41,5 +41,6 @@ int c_help(char *buff, client_t *client)
     printf("    /subscribed ?[\"team_uuid\"] : list all subscribed teams or ");
     printf(" list all users subscribed to a team\n");
     provide_help();
+    UNUSED(client);
     return (HELP);
 }

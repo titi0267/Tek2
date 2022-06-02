@@ -21,7 +21,7 @@ int c_unsubscribe(char *buff, client_t *client)
         return (CMD_ERROR);
     buff += 2;
     printf("Unsubscribe to ");
-    for (int i = 0; i < strlen(buff) - 2; i++) {
+    for (size_t i = 0; i < strlen(buff) - 2; i++) {
         printf("%c", buff[i]);
         unsub.team_uuid[i] = buff[i];
     }

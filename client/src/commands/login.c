@@ -18,7 +18,7 @@ int c_login(char *buff, client_t *client)
         check_valid_cmd_type(buff) == CMD_ERROR)
         return (CMD_ERROR);
     buff += 2;
-    for (int i = 0; i < strlen(buff) - 2; i++)
+    for (size_t i = 0; i < strlen(buff) - 2; i++)
         login.name[i] = buff[i];
     msg.command = LOGIN;
     write(client->socket_fd, &msg, (sizeof(message_t)));

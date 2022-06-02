@@ -11,5 +11,5 @@
 
 void r_create(client_t *client)
 {
-    
+    UNUSED(client);
 }

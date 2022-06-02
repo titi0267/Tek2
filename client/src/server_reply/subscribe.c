@@ -11,5 +11,5 @@
 
 void r_subscribe(client_t *client)
 {
-    
+    UNUSED(client);
 }
