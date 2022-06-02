@@ -36,7 +36,7 @@ void *buff, char *except)
     }
 }
 
-void send_to_everyone(teams_t *server, int command_id, void *buff)
+void send_to_everyone(teams_t *server, int command_id, void *buff, size_t size)
 {
     client_list_t *loop = server->head;
     message_t message;

@@ -9,11 +9,11 @@
 
 int get_open_team_users_unsub(cli_unsubscribe_t unsubscribe_payload)
 {
-    char *path = malloc(MAX_NAME_LENGTH);
+    char *path = malloc(100);
     int fd = 0;
 
-    sprintf(path, "./saves/teams/t_%s/users.txt",
-    unsubscribe_payload.team_uuid);
+    sprintf(path, "./saves/teams/t_%d/users.txt",
+    atoi(unsubscribe_payload.team_uuid));
     fd = open(path, O_RDWR | O_CREAT, 0777);
     free(path);
     return (fd);

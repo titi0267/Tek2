@@ -34,7 +34,7 @@ client_list_t *client, cli_create_t payload)
         return;
     team_info = create_team_info(payload, "1");
     write(fd, &team_info, sizeof(server_team_info_t));
-    send_to_everyone_except(server, (int)CREATE, &team_info, client->fd);
+    send_to_everyone_except(server, (int)CREATE, &team_info, client->uid);
     server_event_team_created(team_info.team_uuid,
     team_info.name, client->uid);
 }
@@ -42,7 +42,7 @@ client_list_t *client, cli_create_t payload)
 void create_next_team(client_list_t *client, teams_t *server,
 cli_create_t payload, char *last_id)
 {
-    char *path = malloc(MAX_NAME_LENGTH);
+    char *path = malloc(100);
     server_team_info_t team_info;
     int fd = 0;
 

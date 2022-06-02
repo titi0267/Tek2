@@ -23,10 +23,11 @@ server_team_user_t get_team_user(char *pseudo, char *uid)
 
 int get_open_team_users(cli_subscribe_t subscribe_payload)
 {
-    char *path = malloc(MAX_NAME_LENGTH);
+    char *path = malloc(100);
     int fd = 0;
 
-    sprintf(path, "./saves/teams/t_%s/users.txt", subscribe_payload.team_uuid);
+    sprintf(path, "./saves/teams/t_%d/users.txt",
+    atoi(subscribe_payload.team_uuid));
     fd = open(path, O_RDWR | O_CREAT, 0777);
     free(path);
     return (fd);
