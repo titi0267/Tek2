@@ -41,6 +41,13 @@ enum use {
     THREADS
 };
 
+enum error_reason {
+    NO_ERROR,
+    TEAM_ERROR,
+    CHANNEL_ERROR,
+    THREAD_ERROR
+};
+
 typedef struct server_subscribed_info_s {
     char name[MAX_NAME_LENGTH];
     char id[MAX_NAME_LENGTH];
@@ -57,7 +64,7 @@ typedef struct server_create_info_s {
     char team_uuid[MAX_NAME_LENGTH];
     char channel_uuid[MAX_NAME_LENGTH];
     char thread_uid[MAX_NAME_LENGTH];
-    int is_valid;
+    int error;
     int create_type;
     long int time;
     char creator_uuid[MAX_NAME_LENGTH];
@@ -152,10 +159,16 @@ typedef struct cli_create_s {
 } cli_create_t;
 
 typedef struct cli_list_s {
+    char team_uuid[MAX_NAME_LENGTH];
+    char channel_uuid[MAX_NAME_LENGTH];
+    char thread_uuid[MAX_NAME_LENGTH];
     int use_arg;
 } cli_list_t;
 
 typedef struct cli_info_s {
+    char team_uuid[MAX_NAME_LENGTH];
+    char channel_uuid[MAX_NAME_LENGTH];
+    char thread_uuid[MAX_NAME_LENGTH];
     int use_arg;
 } cli_info_t;
 
