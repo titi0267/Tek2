@@ -8,10 +8,6 @@
 #include "../../include/teams.h"
 #include "../../include/command.h"
 
-void get_users(client_t *client)
-{
-}
-
 int c_users(char *buff, client_t *client)
 {
     message_t msg;
@@ -22,6 +18,5 @@ int c_users(char *buff, client_t *client)
         return (CMD_ERROR);
     msg.command = USERS;
     write(client->socket_fd, &msg, sizeof(message_t));
-    get_users(client);
     return (USERS);
 }

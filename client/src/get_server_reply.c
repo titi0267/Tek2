@@ -8,16 +8,14 @@
 #include "../include/teams.h"
 #include "../include/reply.h"
 
-int r_help(client_t *client)
+void r_help(client_t *client)
 {
     UNUSED(client);
-    return (0);
 }
 
-int r_use(client_t *client)
+void r_use(client_t *client)
 {
     UNUSED(client);
-    return (0);
 }
 
 void get_server_recv(client_t *client, message_t msg)

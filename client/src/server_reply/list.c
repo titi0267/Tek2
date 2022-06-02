@@ -11,5 +11,5 @@
 
 void r_list(client_t *client)
 {
-    
+    UNUSED(client);
 }

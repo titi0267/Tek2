@@ -21,7 +21,7 @@ int c_user(char *buff, client_t *client)
         check_valid_uuid(buff) == CMD_ERROR)
         return (CMD_ERROR);
     buff += 2;
-    for (int i = 0; i < strlen(buff) - 2; i++)
+    for (size_t i = 0; i < strlen(buff) - 2; i++)
         usrs.user_uuid[i] = buff[i];
     msg.command = USER;
     write(client->socket_fd, &msg, sizeof(message_t));

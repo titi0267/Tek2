@@ -14,7 +14,7 @@ static void clear_fds(client_t *client)
     FD_SET(0, &client->client_rd);
 }
 
-static int get_server(client_t *client, char *buff)
+static int get_server(client_t *client)
 {
     message_t msg;
 
@@ -32,12 +32,9 @@ static int get_server(client_t *client, char *buff)
 int get_cmd(client_t *client, char *buff)
 {
     int command = 0;
-    size_t n = 0;
-    message_t msg;
 
     memset(buff, 0, 1024);
-    get_server(client, buff);
-    if (get_server(client, buff) == -1)
+    if (get_server(client) == -1)
         return (-1);
     if (FD_ISSET(0, &client->client_rd)) {
         if (read(0, buff, 1024) == 0)
