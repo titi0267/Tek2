@@ -23,6 +23,7 @@ int open_good_fd(client_list_t *client, cli_messages_t message)
 void messages(teams_t *server, client_list_t *client)
 {
     cli_messages_t messages;
+    message_t command = {MESSAGES};
     server_message_t server_message = get_default_message();
     int fd = 0;
     int read_ret = 0;
@@ -30,6 +31,7 @@ void messages(teams_t *server, client_list_t *client)
     UNUSED(server);
     read(client->fd, &messages, sizeof(cli_messages_t));
     fd = open_good_fd(client, messages);
+    write(client->fd, &command, sizeof(message_t));
     if (fd == -1) {
         write(client->fd, &server_message, sizeof(server_message_t));
         return;

@@ -11,10 +11,12 @@ void users(teams_t *server, client_list_t *client)
 {
     server_get_user_t user = default_get_user();
     server_user_t tmp = get_default_user();
+    message_t message = {MESSAGES};
     int read_ret = 0;
     int fd = 0;
 
     fd = open("./saves/users.txt", O_RDWR | O_APPEND | O_CREAT, 0777);
+    write(client->fd, &message, sizeof(message_t));
     while ((read_ret = read(fd, &tmp, sizeof(server_user_t))) != 0
     && read_ret != -1) {
         user.found = FOUND;
