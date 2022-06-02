@@ -19,7 +19,7 @@ void r_subscribed(client_t *client)
 
     while (1) {
         read(client->socket_fd, &subed, sizeof(server_subscribed_info_t));
-        if (subed.last == NOT_FOUND)
+        if (subed.last == NOT_FOUND || (subed.is_user == 1 && subed.error == 1))
             break;
         if (subed.is_user == 0 && subed.error == 1) {
             client_error_unknown_team(subed.id);
