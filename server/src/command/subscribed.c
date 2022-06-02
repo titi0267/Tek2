@@ -7,15 +7,31 @@
 
 #include "../../include/teams.h"
 
+void check_if_user_in_team(client_list_t *client, struct dirent *ep)
+{
+    int fd = 0;
+    server_team_info_t team_info;
+    char *tmp = "";
+    char *path = malloc(100);
+
+    if (strncmp(ep->d_name, "t_", 2) == 0) {
+        tmp = ep->d_name;
+        tmp += 2;
+        if (is_subscribed(tmp, client->uid)) {
+            sprintf(path, "./saves/teams/t_%d/team_info.txt", atoi(tmp));
+            fd = open(path, O_RDONLY);
+            read(fd, &team_info, sizeof(server_team_info_t));
+            send_team_as_subscribed_payload(client, team_info);
+        }
+    }
+}
+
 void list_all_my_teams(teams_t *server, client_list_t *client)
 {
     DIR *dir;
     char *path = malloc(100);
-    server_team_info_t team_info;
     message_t message;
     struct dirent *ep;
-    char *tmp = "";
-    int fd = 0;
 
     message.command = SUBSCRIBED;
     sprintf(path, "./saves/teams");
@@ -23,18 +39,8 @@ void list_all_my_teams(teams_t *server, client_list_t *client)
     if (!dir)
         return (send_subscribed_error(client));
     write(client->fd, &message, sizeof(message_t));
-    while ((ep = readdir(dir))) {
-        if (strncmp(ep->d_name, "t_", 2) == 0) {
-            tmp = ep->d_name;
-            tmp += 2;
-            if (is_subscribed(atoi(tmp), client->uid)) {
-                sprintf(path, "./saves/teams/t_%d/team_info.txt", tmp);
-                fd = open(path, O_RDONLY);
-                read(fd, &team_info, sizeof(server_team_info_t));
-                send_team_as_subscribed_payload(client, team_info);
-            }
-        }
-    }
+    while ((ep = readdir(dir)))
+        check_if_user_in_team(client, ep);
     send_last_subscribed_user(client);
 }
 
@@ -56,7 +62,7 @@ cli_subscribed_t req)
     while ((read_ret = read(fd, &tmp, sizeof(server_team_user_t))) != 0
     && read_ret != -1) {
         if (tmp.is_active)
-            send_user_as_subscribed_payload(client, tmp);
+            send_user_as_subscribed_payload(server, client, tmp);
     }
     send_last_subscribed_user(client);
 }
