@@ -9,7 +9,7 @@
 #include "../../include/reply.h"
 #include "../../include/command.h"
 
-int r_logout(client_t *client)
+void r_logout(client_t *client)
 {
     server_user_t usr_logout;
 

@@ -9,7 +9,7 @@
 #include "../../include/reply.h"
 #include "../../include/command.h"
 
-int r_subscribed(client_t *client)
+void r_subscribed(client_t *client)
 {
     
 }
