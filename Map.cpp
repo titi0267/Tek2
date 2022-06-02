@@ -195,6 +195,11 @@ void Map::setCellsAt(int x, int y, int val)
     _map[x + y * _width] = val;
 }
 
+std::vector<int> Map::getMap()
+{
+    return _map;
+}
+
 
 void Map::save(std::string name)
 {

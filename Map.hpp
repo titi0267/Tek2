@@ -28,7 +28,7 @@ class Map {
         void print();
         void save(std::string name);
         void load(std::string filename);
-        std::vector<int> sendMap();
+        std::vector<int> getMap();
     protected:
         int _height;
         int _width;
