@@ -24,7 +24,7 @@ void ret_channel_error(client_list_t *client, cli_create_t payload)
     strcpy(chanel_info.description, payload.description);
     strcpy(chanel_info.creator_uuid, client->uid);
     chanel_info.create_type = TEAMS;
-    chanel_info.is_valid = 0;
+    chanel_info.error = TEAM_ERROR;
     write(client->fd, &message, sizeof(message_t));
     write(client->fd, &chanel_info, sizeof(server_create_info_t));
 }
@@ -39,7 +39,7 @@ server_create_info_t create_chanel_info(cli_create_t payload, char *id)
     memset(chanel_info.description, 0, MAX_DESCRIPTION_LENGTH);
     memset(chanel_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(chanel_info.thread_uid, 0, MAX_NAME_LENGTH);
-    chanel_info.is_valid = 1;
+    chanel_info.error = NO_ERROR;
     chanel_info.create_type = TEAMS;
     chanel_info.time = time(NULL);
     strcpy(chanel_info.name, payload.name);

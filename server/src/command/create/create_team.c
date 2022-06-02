@@ -20,7 +20,7 @@ cli_create_t payload, char *id)
     memset(team_info.thread_uid, 0, MAX_NAME_LENGTH);
     memset(team_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(team_info.creator_uuid, 0, MAX_NAME_LENGTH);
-    team_info.is_valid = 1;
+    team_info.error = NO_ERROR;
     team_info.create_type = DEFAULT;
     team_info.time = time(NULL);
     strcpy(team_info.name, payload.name);
@@ -65,8 +65,8 @@ cli_create_t payload, char *last_id)
     team_info = create_team_info(client,
     payload, increment_str(atoi(last_id)));
     write(fd, &team_info, sizeof(server_create_info_t));
-    send_to_everyone_except(server, (int)CREATE,
-    (send_payload_t){&team_info, sizeof(server_create_info_t)}, client->uid);
+    send_to_everyone(server, (int)CREATE,
+    &team_info, sizeof(server_create_info_t));
     server_event_team_created(team_info.team_uuid,
     team_info.name, client->uid);
 }

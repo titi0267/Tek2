@@ -19,7 +19,7 @@ void ret_reply_error(client_list_t *client, cli_create_t payload)
     memset(reply_info.description, 0, MAX_DESCRIPTION_LENGTH);
     memset(reply_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(reply_info.thread_uid, 0, MAX_NAME_LENGTH);
-    reply_info.is_valid = 0;
+    reply_info.error = get_reply_error_level(payload);
     reply_info.create_type = THREADS;
     reply_info.time = time(NULL);
     strcpy(reply_info.name, payload.name);
@@ -44,7 +44,7 @@ cli_create_t payload)
     memset(reply_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(reply_info.thread_uid, 0, MAX_NAME_LENGTH);
     memset(reply_info.creator_uuid, 0, MAX_NAME_LENGTH);
-    reply_info.is_valid = 1;
+    reply_info.error = NO_ERROR;
     reply_info.create_type = THREADS;
     reply_info.time = time(NULL);
     strcpy(reply_info.name, payload.name);

@@ -20,7 +20,7 @@ void ret_thread_error(client_list_t *client, cli_create_t payload)
     memset(thread_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(thread_info.thread_uid, 0, MAX_NAME_LENGTH);
     memset(thread_info.creator_uuid, 0, MAX_NAME_LENGTH);
-    thread_info.is_valid = 0;
+    thread_info.error = get_thread_error_level(payload);
     thread_info.create_type = CHANNEL;
     thread_info.time = time(NULL);
     strcpy(thread_info.name, payload.name);
@@ -44,7 +44,7 @@ cli_create_t payload, char *id)
     memset(thread_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(thread_info.thread_uid, 0, MAX_NAME_LENGTH);
     memset(thread_info.creator_uuid, 0, MAX_NAME_LENGTH);
-    thread_info.is_valid = 1;
+    thread_info.error = NO_ERROR;
     thread_info.time = time(NULL);
     thread_info.create_type = CHANNEL;
     strcpy(thread_info.name, payload.name);
