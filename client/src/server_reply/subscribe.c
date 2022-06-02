@@ -11,5 +11,9 @@
 
 void r_subscribe(client_t *client)
 {
+    server_sub_t sub;
+
+    read(client->socket_fd, &sub, sizeof(server_sub_t));
+    //client_print_subscribed(sub.)
     UNUSED(client);
 }

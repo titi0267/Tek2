@@ -19,7 +19,5 @@ int c_logout(char *buff, client_t *client)
         return (CMD_ERROR);
     write(client->socket_fd, &msg, sizeof(message_t));
     write(client->socket_fd, &logout, sizeof(cli_logout_t));
-    if (client->user_uuid[0] != 0)
-        client_event_logged_out(client->user_uuid, client->pseudo);
     return (LOGOUT);
 }
