@@ -22,7 +22,8 @@ server_team_info_t create_team_info(cli_create_t payload, char *id)
     return (team_info);
 }
 
-void create_first_team(client_list_t *client, cli_create_t payload)
+void create_first_team(teams_t *server,
+client_list_t *client, cli_create_t payload)
 {
     int fd = 0;
     server_team_info_t team_info;
@@ -33,15 +34,16 @@ void create_first_team(client_list_t *client, cli_create_t payload)
         return;
     team_info = create_team_info(payload, "1");
     write(fd, &team_info, sizeof(server_team_info_t));
-    write(client->fd, &team_info, sizeof(server_team_info_t));
+    send_to_everyone_except(server, (int)CREATE,
+    (send_payload_t){&team_info, sizeof(server_team_info_t)}, client->uid);
     server_event_team_created(team_info.team_uuid,
     team_info.name, client->uid);
 }
 
-void create_next_team(client_list_t *client,
+void create_next_team(client_list_t *client, teams_t *server,
 cli_create_t payload, char *last_id)
 {
-    char *path = malloc(MAX_NAME_LENGTH);
+    char *path = malloc(100);
     server_team_info_t team_info;
     int fd = 0;
 
@@ -55,12 +57,13 @@ cli_create_t payload, char *last_id)
         return;
     team_info = create_team_info(payload, increment_str(atoi(last_id)));
     write(fd, &team_info, sizeof(server_team_info_t));
-    write(client->fd, &team_info, sizeof(server_team_info_t));
+    send_to_everyone_except(server, (int)CREATE,
+    (send_payload_t){&team_info, sizeof(server_team_info_t)}, client->uid);
     server_event_team_created(team_info.team_uuid,
     team_info.name, client->uid);
 }
 
-void create_team(client_list_t *client, cli_create_t payload)
+void create_team(teams_t *server, client_list_t *client, cli_create_t payload)
 {
     struct dirent *ep;
     DIR *dir = opendir("./saves/teams");
@@ -71,7 +74,7 @@ void create_team(client_list_t *client, cli_create_t payload)
             buff = ep->d_name;
     }
     if (strlen(buff) == 0)
-        return (create_first_team(client, payload));
+        return (create_first_team(server, client, payload));
     buff += 2;
-    create_next_team(client, payload, buff);
+    create_next_team(client, server, payload, buff);
 }

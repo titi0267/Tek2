@@ -35,6 +35,11 @@ enum user_status {
     LOGGED
 };
 
+typedef struct send_payload_s {
+    void *buff;
+    size_t size;
+} send_payload_t;
+
 typedef struct client_list_s {
     struct client_list_s *next;
     enum user_status status;
@@ -81,10 +86,18 @@ void subscribe(teams_t *server, client_list_t *client);
 void unsubscribe(teams_t *server, client_list_t *client);
 void logout(teams_t *server, client_list_t *client);
 void print_all_user(void);
-void create_team(client_list_t *client, cli_create_t payload);
+void create_team(teams_t *server, client_list_t *client, cli_create_t payload);
 void create_command(teams_t *server, client_list_t *client);
-void create_chanel(client_list_t *client, cli_create_t payload);
+void create_chanel(teams_t *server, client_list_t *client,
+cli_create_t payload);
 int create_save(void);
-void create_thread(client_list_t *client, cli_create_t payload);
-void create_reply(client_list_t *client, cli_create_t payload);
-
+void create_thread(teams_t *server, client_list_t *client,
+cli_create_t payload);
+void create_reply(teams_t *server, client_list_t *client,
+cli_create_t payload);
+void send_to_everyone(teams_t *server, int command_id,
+void *buff, size_t size);
+void send_to_uid(teams_t *server, int command_id, send_payload_t payload,
+char *uid);
+void send_to_everyone_except(teams_t *server, int command_id,
+send_payload_t payload, char *except);

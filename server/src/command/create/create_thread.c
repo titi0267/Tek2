@@ -87,7 +87,8 @@ cli_create_t payload, char *last_id)
     thread_info.name, thread_info.description);
 }
 
-void create_thread(client_list_t *client, cli_create_t payload)
+void create_thread(teams_t *server, client_list_t *client,
+cli_create_t payload)
 {
     struct dirent *ep;
     DIR *dir;
