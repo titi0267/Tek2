@@ -10,7 +10,7 @@
 void check_if_user_in_team(client_list_t *client, struct dirent *ep)
 {
     int fd = 0;
-    server_team_info_t team_info;
+    server_create_info_t team_info;
     char *tmp = "";
     char *path = malloc(100);
 
@@ -20,7 +20,7 @@ void check_if_user_in_team(client_list_t *client, struct dirent *ep)
         if (is_subscribed(tmp, client->uid)) {
             sprintf(path, "./saves/teams/t_%d/team_info.txt", atoi(tmp));
             fd = open(path, O_RDONLY);
-            read(fd, &team_info, sizeof(server_team_info_t));
+            read(fd, &team_info, sizeof(server_create_info_t));
             send_team_as_subscribed_payload(client, team_info);
         }
     }

@@ -108,4 +108,4 @@ void send_user_as_subscribed_payload(teams_t *server, client_list_t *client,
 server_team_user_t team_user);
 int is_subscribed(char *team_id, char *uid);
 void send_team_as_subscribed_payload(client_list_t *client,
-server_team_info_t team_info);
+server_create_info_t team_info);

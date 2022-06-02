@@ -53,7 +53,7 @@ server_team_user_t team_user)
 }
 
 void send_team_as_subscribed_payload(client_list_t *client,
-server_team_info_t team_info)
+server_create_info_t team_info)
 {
     server_subscribed_info_t sub_payload;
 
