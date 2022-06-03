@@ -11,6 +11,7 @@ server_get_user_t default_get_user(void)
 {
     server_get_user_t user;
 
+    memset(&user, 0, sizeof(user));
     user.found = NOT_FOUND;
     user.connected = NOT_LOGGED;
     memset(user.uid, 0, MAX_NAME_LENGTH);
