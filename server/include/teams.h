@@ -116,3 +116,4 @@ int team_name_already_exist(char *new_team_name);
 int channel_name_already_exist(char *team_uid, char *new_team_name);
 int thread_name_already_exist(char *team_uid, char *channel_uid,
 char *new_team_name);
+int is_bigger_id(char *folder_first, char *folder_second);
