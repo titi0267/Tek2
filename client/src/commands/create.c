@@ -82,9 +82,13 @@ int c_create(char *buff, client_t *client)
     message_t msg;
     cli_create_t create;
 
+    memset(&create, 0, sizeof(cli_create_t));
     memset(create.comment_body, 0, MAX_BODY_LENGTH);
     memset(create.name, 0, MAX_NAME_LENGTH);
-    memset(create.description, 0, MAX_NAME_LENGTH);
+    memset(create.description, 0, MAX_DESCRIPTION_LENGTH);
+    memset(create.channel_uuid, 0, MAX_NAME_LENGTH);
+    memset(create.thread_uuid, 0, MAX_NAME_LENGTH);
+    memset(create.team_uuid, 0, MAX_NAME_LENGTH);
     create.args_nbr = DEFAULT;
     if (not_logged(client) == 0)
         return (0);

@@ -11,10 +11,10 @@
 
 void default_print(server_create_info_t create, client_t *client)
 {
-    if (create.is_valid == 0) {
+    /*if (create.is_valid == 0) {
         client_error_already_exist();
         return;
-    }
+    }*/
     client_event_team_created(create.team_uuid,
         create.name, create.description);
     printf("creator = %s - %s = current\n", create.creator_uuid, client->user_uuid);
@@ -25,7 +25,7 @@ void default_print(server_create_info_t create, client_t *client)
 
 void team_print(server_create_info_t create, client_t *client)
 {
-    if (create.is_valid == 0) {
+    if (create.error == TEAM_ERROR) {
         client_error_unknown_team(create.team_uuid);
         return;
     }
@@ -39,7 +39,7 @@ void team_print(server_create_info_t create, client_t *client)
 
 void channel_print(server_create_info_t create, client_t *client)
 {
-    if (create.is_valid == 0) {
+    if (create.error == CHANNEL_ERROR) {
         client_error_unknown_channel(create.channel_uuid);
         return;
     }
@@ -53,7 +53,7 @@ void channel_print(server_create_info_t create, client_t *client)
 
 void thread_print(server_create_info_t create, client_t *client)
 {
-    if (create.is_valid == 0) {
+    if (create.error == THREAD_ERROR) {
         client_error_unknown_thread(create.thread_uid);
         return;
     }
