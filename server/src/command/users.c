@@ -11,7 +11,7 @@ void users(teams_t *server, client_list_t *client)
 {
     server_get_user_t user = default_get_user();
     server_user_t tmp = get_default_user();
-    message_t message = {MESSAGES};
+    message_t message = {USERS};
     int read_ret = 0;
     int fd = 0;
 
