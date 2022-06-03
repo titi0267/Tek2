@@ -13,6 +13,7 @@ server_message_t get_default_message(void)
 {
     server_message_t message;
 
+    memset(&message, 0, sizeof(message));
     message.is_valid = 0;
     message.time = time(NULL);
     memset(message.from, 0, MAX_NAME_LENGTH);
