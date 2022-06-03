@@ -59,6 +59,7 @@ void unsubscribe(teams_t *server, client_list_t *client)
 {
     cli_unsubscribe_t unsub_payload;
     server_sub_t res_payload;
+    message_t command = {UNSUBSCRIBE};
     int fd = 0;
 
     res_payload.exist = 0;
@@ -69,6 +70,6 @@ void unsubscribe(teams_t *server, client_list_t *client)
     if (unsub_user(client, server, unsub_payload, fd))
         return;
     server_event_user_unsubscribed(unsub_payload.team_uuid, client->uid);
-    send_to_everyone(server, (int)UNSUBSCRIBE, &res_payload,
-    sizeof(server_sub_t));
+    write(client->fd, &command, sizeof(message_t));
+    write(client->fd, &subscribe_res, sizeof(server_sub_t));
 }
