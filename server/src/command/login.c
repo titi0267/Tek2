@@ -27,6 +27,7 @@ client_list_t *client, cli_login_t login, int fd)
     write(fd, &new_user, sizeof(server_user_t));
     send_to_everyone(server, (int)LOGIN, &new_user, sizeof(server_user_t));
     server_event_user_created(new_user.uid, new_user.pseudo);
+    server_event_user_logged_in(new_user.uid);
     client->uid = strdup(new_user.uid);
     client->pseudo = strdup(new_user.pseudo);
 }
@@ -68,6 +69,7 @@ client_list_t *client, cli_login_t login, int fd)
     write(fd, &tmp, sizeof(server_user_t));
     send_to_everyone(server, (int)LOGIN, &tmp, sizeof(server_user_t));
     server_event_user_created(tmp.uid, tmp.pseudo);
+    server_event_user_logged_in(tmp.uid);
     client->uid = strdup(tmp.uid);
     client->pseudo = strdup(tmp.pseudo);
 }
