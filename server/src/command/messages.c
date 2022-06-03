@@ -12,6 +12,7 @@ void write_message_error(client_list_t *client)
     server_message_t message = get_default_message();
     message_t command = {MESSAGES};
 
+    message.is_valid = -1;
     write(client->fd, &command, sizeof(message_t));
     write(client->fd, &message, sizeof(server_message_t));
 }
