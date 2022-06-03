@@ -44,6 +44,7 @@ server_team_user_t team_user)
 {
     server_subscribed_info_t sub_payload;
 
+    memset(&sub_payload, 0, sizeof(server_subscribed_info_t));
     sub_payload.error = 0;
     sub_payload.last = 0;
     sub_payload.is_user = 1;
@@ -61,6 +62,7 @@ server_create_info_t team_info)
 {
     server_subscribed_info_t sub_payload;
 
+    memset(&sub_payload, 0, sizeof(server_subscribed_info_t));
     sub_payload.error = 0;
     sub_payload.last = 0;
     sub_payload.is_user = 1;
