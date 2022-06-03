@@ -7,11 +7,26 @@
 
 #include "../../include/teams.h"
 
+server_unsub_t get_unsub_payload(client_list_t *client,
+cli_unsubscribe_t unsub_payload)
+{
+    server_unsub_t subscribe_res;
+
+    memset(&subscribe_res, 0, sizeof(server_unsub_t));
+    subscribe_res.valid = 1;
+    memset(subscribe_res.team_uid, 0, MAX_NAME_LENGTH);
+    memset(subscribe_res.user_uuid, 0, MAX_NAME_LENGTH);
+    strcpy(subscribe_res.user_uuid, client->uid);
+    strcpy(subscribe_res.team_uid, unsub_payload.team_uuid);
+    return (subscribe_res);
+}
+
 void send_unsub_error(client_list_t *client)
 {
     server_unsub_t subscribe_res;
     message_t command = {UNSUBSCRIBE};
 
+    memset(&subscribe_res, 0, sizeof(server_unsub_t));
     subscribe_res.valid = 0;
     memset(subscribe_res.team_uid, 0, MAX_NAME_LENGTH);
     memset(subscribe_res.user_uuid, 0, MAX_NAME_LENGTH);
@@ -38,7 +53,7 @@ int unsub_user(client_list_t *client, cli_unsubscribe_t unsub_payload, int fd)
     server_unsub_t res_payload;
     message_t command = {UNSUBSCRIBE};
 
-    res_payload.valid = 1;
+    res_payload = get_unsub_payload(client, unsub_payload);
     while ((read_ret = read(fd, &tmp, sizeof(server_team_user_t))) != 0
     && read_ret != -1) {
         if (strcmp(tmp.uid, client->uid) == 0) {
