@@ -37,7 +37,7 @@ void list_all_my_teams(client_list_t *client)
     sprintf(path, "./saves/teams");
     dir = opendir(path);
     if (!dir)
-        return (send_subscribed_error(client));
+        return (send_subscribed_error(client, 1));
     write(client->fd, &message, sizeof(message_t));
     while ((ep = readdir(dir)))
         check_if_user_in_team(client, ep);
@@ -57,7 +57,9 @@ cli_subscribed_t req)
     sprintf(path, "./saves/teams/t_%d/users.txt", atoi(req.team_uuid));
     fd = open(path, O_RDONLY);
     if (fd == -1)
-        return (send_subscribed_error(client));
+        return (send_subscribed_error(client, 1));
+    if (!is_subscribed(req.team_uuid, client->uid))
+        return (send_subscribed_error(client, UNAUTHORIZED));
     write(client->fd, &message, sizeof(message_t));
     while ((read_ret = read(fd, &tmp, sizeof(server_team_user_t))) != 0
     && read_ret != -1) {
