@@ -65,7 +65,7 @@ server_create_info_t team_info)
     memset(&sub_payload, 0, sizeof(server_subscribed_info_t));
     sub_payload.error = 0;
     sub_payload.last = 0;
-    sub_payload.is_user = 1;
+    sub_payload.is_user = 0;
     sub_payload.connected = 0;
     memset(sub_payload.name, 0, MAX_NAME_LENGTH);
     memset(sub_payload.id, 0, MAX_NAME_LENGTH);

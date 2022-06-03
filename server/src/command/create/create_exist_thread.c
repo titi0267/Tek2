@@ -11,7 +11,7 @@ int thread_check_loop(struct dirent *ep, char *team_uid, char *channel_uid,
 char *new_name)
 {
     int fd = 0;
-    char *path = malloc(100);
+    char path[500];
     server_create_info_t info;
 
     if (strncmp(ep->d_name, "th_", 3) == 0) {

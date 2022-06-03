@@ -46,6 +46,7 @@ typedef struct client_s {
     enum user_status log_status;
     fd_set client_rd;
     char tmp_login[MAX_NAME_LENGTH];
+    int logout;
 } client_t;
 
 client_t *init_struct(char **av);
