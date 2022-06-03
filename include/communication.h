@@ -71,6 +71,7 @@ typedef struct server_create_info_s {
     int error;
     int create_type;
     long int time;
+    char comment_body[MAX_BODY_LENGTH];
     char creator_uuid[MAX_NAME_LENGTH];
 } server_create_info_t;
 

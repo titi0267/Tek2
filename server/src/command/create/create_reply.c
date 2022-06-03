@@ -19,6 +19,7 @@ void ret_reply_error(client_list_t *client, cli_create_t payload, int error)
     memset(reply_info.description, 0, MAX_DESCRIPTION_LENGTH);
     memset(reply_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(reply_info.thread_uid, 0, MAX_NAME_LENGTH);
+    memset(reply_info.comment_body, 0, MAX_BODY_LENGTH);
     reply_info.error = error;
     reply_info.create_type = THREADS;
     reply_info.time = time(NULL);
@@ -28,6 +29,7 @@ void ret_reply_error(client_list_t *client, cli_create_t payload, int error)
     strcpy(reply_info.channel_uuid,payload.channel_uuid);
     strcpy(reply_info.thread_uid, payload.thread_uuid);
     strcpy(reply_info.creator_uuid, client->uid);
+    strcpy(reply_info.comment_body, payload.comment_body);
     write(client->fd, &message, sizeof(message_t));
     write(client->fd, &reply_info, sizeof(server_create_info_t));
 }
@@ -44,6 +46,7 @@ cli_create_t payload)
     memset(reply_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(reply_info.thread_uid, 0, MAX_NAME_LENGTH);
     memset(reply_info.creator_uuid, 0, MAX_NAME_LENGTH);
+    memset(reply_info.comment_body, 0, MAX_BODY_LENGTH);
     reply_info.error = NO_ERROR;
     reply_info.create_type = THREADS;
     reply_info.time = time(NULL);
@@ -53,6 +56,7 @@ cli_create_t payload)
     strcpy(reply_info.channel_uuid,payload.channel_uuid);
     strcpy(reply_info.thread_uid, payload.thread_uuid);
     strcpy(reply_info.creator_uuid, client->uid);
+    strcpy(reply_info.comment_body, payload.comment_body);
     return (reply_info);
 }
 

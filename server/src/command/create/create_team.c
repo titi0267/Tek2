@@ -21,6 +21,7 @@ cli_create_t payload)
     memset(team_info.thread_uid, 0, MAX_NAME_LENGTH);
     memset(team_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(team_info.creator_uuid, 0, MAX_NAME_LENGTH);
+    memset(team_info.comment_body, 0, MAX_BODY_LENGTH);
     team_info.error = TEAM_NAME_ALREADY_TAKEN;
     team_info.create_type = DEFAULT;
     team_info.time = time(NULL);
@@ -43,6 +44,7 @@ cli_create_t payload, char *id)
     memset(team_info.thread_uid, 0, MAX_NAME_LENGTH);
     memset(team_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(team_info.creator_uuid, 0, MAX_NAME_LENGTH);
+    memset(team_info.comment_body, 0, MAX_BODY_LENGTH);
     team_info.error = NO_ERROR;
     team_info.create_type = DEFAULT;
     team_info.time = time(NULL);
@@ -103,7 +105,8 @@ void create_team(teams_t *server, client_list_t *client, cli_create_t payload)
     if (team_name_already_exist(payload.name))
         return (send_team_error(client, payload));
     while ((ep = readdir(dir))) {
-        if (strncmp(ep->d_name, "t_", 2) == 0)
+        if (strncmp(ep->d_name, "t_", 2) == 0 &&
+        is_bigger_id(ep->d_name, buff))
             buff = ep->d_name;
     }
     if (strlen(buff) == 0)
