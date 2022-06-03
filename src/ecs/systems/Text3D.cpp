@@ -150,8 +150,6 @@ void ecs::Draw3DTextSystem::update(ecs::World &world)
         raylib::RlMatrixPush push;
         raylib::rlMultMatrix(mat);
 
-        DrawSphere({0}, 0.1, RED);
-
         drawText3D(text.text, *font.font, text.fontSize, text.fontSpacing, text.color);
     }
     cam.end3DMode();
