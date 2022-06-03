@@ -7,23 +7,20 @@
 
 #include "../../include/teams.h"
 
-void write_user_does_not_exist(client_list_t *client)
+void write_user_does_not_exist(client_list_t *client, cli_messages_t msg)
 {
     server_message_t message = get_default_message();
-    message_t command = {MESSAGES};
 
     message.is_valid = -1;
-    write(client->fd, &command, sizeof(message_t));
+    strcpy(message.to, msg.user_uuid);
     write(client->fd, &message, sizeof(server_message_t));
 }
 
 void write_message_error(client_list_t *client)
 {
     server_message_t message = get_default_message();
-    message_t command = {MESSAGES};
 
     message.is_valid = 0;
-    write(client->fd, &command, sizeof(message_t));
     write(client->fd, &message, sizeof(server_message_t));
 }
 
@@ -55,7 +52,7 @@ void messages(teams_t *server, client_list_t *client)
     if (fd == -1)
         return (write_message_error(client));
     if (fd == -2)
-        return (write_user_does_not_exist(client));
+        return (write_user_does_not_exist(client, messages));
     while ((read_ret = read(fd, &server_message, sizeof(server_message_t)))
     != 0 && read_ret != -1)
         write(client->fd, &server_message, sizeof(server_message_t));

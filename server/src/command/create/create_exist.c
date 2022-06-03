@@ -10,7 +10,7 @@
 int team_check_loop(struct dirent *ep, char *new_team_name)
 {
     int fd = 0;
-    char *path = malloc(100);
+    char path[400];
     server_create_info_t info;
 
     if (strncmp(ep->d_name, "t_", 2) == 0) {
@@ -27,7 +27,7 @@ int team_check_loop(struct dirent *ep, char *new_team_name)
 
 int team_name_already_exist(char *new_team_name)
 {
-    char *path = malloc(100);
+    char path[100];
     DIR *dir;
     struct dirent *ep;
 
@@ -45,7 +45,7 @@ int team_name_already_exist(char *new_team_name)
 int channel_check_loop(struct dirent *ep, char *team_uid, char *new_name)
 {
     int fd = 0;
-    char *path = malloc(100);
+    char path[500];
     server_create_info_t info;
 
     if (strncmp(ep->d_name, "c_", 2) == 0) {
