@@ -10,6 +10,7 @@
 #include "raylib/Camera.hpp"
 #include "raylib/Matrix.hpp"
 #include "raylib/GL.hpp"
+#include "raylib/Vectors.hpp"
 
 void ecs::Draw3DTextSystem::drawText3D(const std::string &str, raylib::Font &font, float fontSize, float fontSpacing, Color color)
 {
@@ -96,6 +97,35 @@ void ecs::Draw3DTextSystem::drawTextCodepoint3D(int codepoint, raylib::Font &fon
     raylib::rlSetTexture(0);
 }
 
+Vector2 ecs::Draw3DTextSystem::measure3DText(const std::string &str, raylib::Font &font, float fontSize, float fontSpacing)
+{
+    float scale = fontSize / ((float) font.getBaseSize());
+    int bytesProcessed = 0;
+    float width = 0;
+    float height = 0;
+    float lastOffset = 0;
+
+    for (int i = 0; i < str.length();) {
+        int codepoint = font.getCodepoint(&str.c_str()[i], &bytesProcessed);
+        int glyphIndex = font.getGlyphIndex(codepoint);
+        GlyphInfo &glyph = font.getGlyph(glyphIndex);
+
+        if (codepoint != ' ' && codepoint != '\t' && codepoint != '\n')
+            lastOffset = (glyph.offsetX - font.getPadding()) / (float) font.getBaseSize() * scale;
+
+        if (glyph.advanceX == 0)
+            width += (fontSpacing + font.getRect(glyphIndex).width) / (float) font.getBaseSize() * scale;
+        else
+            width += (fontSpacing + glyph.advanceX) / (float) font.getBaseSize() * scale;
+
+        height = font.getRect(glyphIndex).height / (float) font.getBaseSize() * scale;
+
+        i += bytesProcessed;
+    }
+
+    return Vector2 {width, height};
+}
+
 void ecs::Draw3DTextSystem::setSignature(ecs::ComponentManager &component)
 {
     _signature = component.generateSignature<Transform, Text3D, FontRef>();
@@ -110,10 +140,18 @@ void ecs::Draw3DTextSystem::update(ecs::World &world)
         Transform &transform = world.getComponent<Transform>(entity);
         Text3D &text = world.getComponent<Text3D>(entity);
         FontRef &font = world.getComponent<FontRef>(entity);
-        raylib::Matrix mat = raylib::Matrix::fromTransform(transform) * raylib::Matrix::fromTranslate(text.offset);
+
+        Vector2 size = measure3DText(text.text, *font.font, text.fontSize, text.fontSpacing);
+        raylib::Matrix transformMat = raylib::Matrix::fromScale(transform.scale) * raylib::Matrix::fromQuaternion(transform.rotation);
+
+        Vector3 trueOffset = text.offset * transformMat + Vector3 {-size.x / 2, -size.y / 2, 0} * transformMat;
+        raylib::Matrix mat = raylib::Matrix::fromTransform(transform) * raylib::Matrix::fromTranslate(trueOffset);
 
         raylib::RlMatrixPush push;
         raylib::rlMultMatrix(mat);
+
+        DrawSphere({0}, 0.1, RED);
+
         drawText3D(text.text, *font.font, text.fontSize, text.fontSpacing, text.color);
     }
     cam.end3DMode();

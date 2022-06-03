@@ -35,6 +35,7 @@ namespace ecs {
     class Draw3DTextSystem : public ecs::ASystem {
         void drawText3D(const std::string &str, raylib::Font &font, float fontSize, float fontSpacing, Color color);
         void drawTextCodepoint3D(int codepoint, raylib::Font &font, float offset, float fontSize, Color color);
+        Vector2 measure3DText(const std::string &str, raylib::Font &font, float fontSize, float fontSpacing);
 
         public:
         Draw3DTextSystem() { _stage = ecs::Stages::DRAW_WORLD; };

@@ -57,7 +57,7 @@ void testClick(ecs::World &world, ecs::Entity entity)
     world.getComponent<ecs::Tint>(entity) = RED;
 }
 
-ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, float buttonSize, float textOffset, ecs::World &world)
+ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, float buttonSize, ecs::World &world)
 {
     Quaternion quat = QuaternionFromEuler(rot.x, rot.y, rot.z);
     Transform transform = {pos, quat, {1, 1, 1}};
@@ -65,8 +65,8 @@ ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, floa
     raylib::Texture &woodPlanks = world.getRessource<raylib::TextureManager>().loadTexture("./assets/textures/planks.png");
 
     return world.spawn().insert(transform,
-    ecs::Text3D {text, BLACK, {textOffset, -0.125, 0}, 12}, ecs::FontRef {&font},
-    ecs::DrawableCube {{0, 0, -0.1}, {buttonSize, 0.8, 0.1}}, ecs::TextureRef {&woodPlanks}, WHITE,
+    ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {&font},
+    ecs::DrawableCube {{0, 0, -0.05}, {buttonSize, 0.8, 0.1}}, ecs::TextureRef {&woodPlanks}, WHITE,
     ecs::Hitbox{{-buttonSize / 2, -0.4, -0.05}, {buttonSize / 2, 0.4, 0.05}},
     ecs::Hoverable {}, ecs::Clickable {testClick});
 }
@@ -85,6 +85,9 @@ class RotationTest : public ecs::ASystem {
             Vector3 rot = QuaternionToEuler(transform.rotation);
 
             rot.x += PI / 16.0 / 30;
+            rot.z += PI / 32.0 / 30;
+            if (rot.y >= PI / 2 - 0.01)
+                rot.y = -PI / 2;
             transform.rotation = QuaternionFromEuler(rot.x, rot.y, rot.z);
         }
     }
@@ -111,8 +114,8 @@ int main()
 
 // ---------------------------------
 
-    spawnButton({1, -0.75, -2}, {0, 0, 0}, "Test", 3, -0.5, world);
-    spawnButton({1, 0.75, -2}, {0, 0, 0}, "Test 2", 4, -0.8, world);
+    spawnButton({1, -0.75, -2}, {0, 0, 0}, "Test", 3, world);
+    spawnButton({1, 0.75, -2}, {0, 0, 0}, "Test 2", 4, world);
 
 // ---------------------------------
 
