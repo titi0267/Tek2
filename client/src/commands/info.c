@@ -8,6 +8,28 @@
 #include "../../include/teams.h"
 #include "../../include/command.h"
 
+static int copy_right_uuids(client_t *client, cli_info_t info)
+{
+    info.use_arg = client->use_status;
+    switch (info.use_arg)
+    {
+    case DEFAULT:
+        strcpy(info.team_uuid, client->team_uuid);
+        break;
+    case TEAMS:
+        strcpy(info.team_uuid, client->team_uuid);
+        strcpy(info.channel_uuid, client->channel_uuid);
+        break;
+    case CHANNEL:
+        strcpy(info.team_uuid, client->team_uuid);
+        strcpy(info.channel_uuid, client->channel_uuid);
+        strcpy(info.thread_uuid, client->thread_uuid);
+        break;
+    }
+    write(client->socket_fd, &info, sizeof(cli_info_t));
+    return (INFO);
+}
+
 int c_info(char *buff, client_t *client)
 {
     message_t msg;
@@ -17,10 +39,7 @@ int c_info(char *buff, client_t *client)
         return (0);
     if (buff[0] != '\n')
         return (CMD_ERROR);
-    printf("info based on what /use defined earlier\n");
     msg.command = INFO;
     write(client->socket_fd, &msg, sizeof(message_t));
-    info.use_arg = client->use_status;
-    write(client->socket_fd, &info, sizeof(cli_info_t));
-    return (INFO);
+    return (copy_right_uuids(client, info));
 }

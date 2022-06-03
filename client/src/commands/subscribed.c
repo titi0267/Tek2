@@ -19,7 +19,6 @@ int users_sub_to_team(char *buff, client_t *client,
         if (buff[i] == '\n' || i > MAX_NAME_LENGTH)
             return (CMD_ERROR);
     }
-    printf("users subscribed to %s\n", subed.team_uuid);
     msg.command = SUBSCRIBED;
     write(client->socket_fd, &msg, sizeof(message_t));
     write(client->socket_fd, &subed, sizeof(cli_subscribed_t));
@@ -39,7 +38,6 @@ int c_subscribed(char *buff, client_t *client)
         check_valid_uuid(buff) == CMD_ERROR))
         return (CMD_ERROR);
     if (buff[0] == '\n') {
-        printf("you are subscribed to ...\n");
         msg.command = SUBSCRIBED;
         write(client->socket_fd, &msg, sizeof(message_t));
         write(client->socket_fd, &subed, sizeof(cli_subscribed_t));

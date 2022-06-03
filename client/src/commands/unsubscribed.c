@@ -20,12 +20,8 @@ int c_unsubscribe(char *buff, client_t *client)
         == CMD_ERROR || check_valid_uuid(buff) == CMD_ERROR)
         return (CMD_ERROR);
     buff += 2;
-    printf("Unsubscribe to ");
-    for (size_t i = 0; i < strlen(buff) - 2; i++) {
-        printf("%c", buff[i]);
+    for (size_t i = 0; i < strlen(buff) - 2; i++)
         unsub.team_uuid[i] = buff[i];
-    }
-    puts("");
     msg.command = UNSUBSCRIBE;
     write(client->socket_fd, &msg, sizeof(message_t));
     write(client->socket_fd, &unsub, sizeof(cli_unsubscribe_t));

@@ -171,7 +171,6 @@ typedef struct cli_info_s {
     char thread_uuid[MAX_NAME_LENGTH];
     int use_arg;
 } cli_info_t;
-
 typedef struct message_s {
     short command;
 } message_t;

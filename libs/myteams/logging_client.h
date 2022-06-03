@@ -45,7 +45,7 @@
 ** Commands:
 ** /login "user_name"
 **/
-int client_event_logged_in(char const *user_uuid, const char *user_name);
+int client_event_logged_in(char const *user_uuid, const char *user_name); //done
 
 /**
 ** @brief Must be called when a user logged out (/logout or lost connexion).
@@ -56,7 +56,7 @@ int client_event_logged_in(char const *user_uuid, const char *user_name);
 ** Commands:
 ** /logout
 **/
-int client_event_logged_out(char const *user_uuid, const char *user_name);
+int client_event_logged_out(char const *user_uuid, const char *user_name);  //done
 
 /**
 ** @brief Must be called when the current logged user receives a private message
@@ -68,7 +68,7 @@ int client_event_logged_out(char const *user_uuid, const char *user_name);
 **/
 int client_event_private_message_received(
     char const *user_uuid,
-    char const *message_body);
+    char const *message_body); //done
 
 /**
 ** @brief Must be called when a new reply is posted in a thread
@@ -78,7 +78,7 @@ int client_event_private_message_received(
 ** @param reply_body The reply body
 **
 ** Commands:
-** /create "reply_body"
+** /create "reply_body" //TODO:
 **/
 int client_event_thread_reply_received(
     char const *team_uuid,
@@ -94,7 +94,7 @@ int client_event_thread_reply_received(
 ** @param team_description The description of the created team
 **
 ** Commands:
-** /create "team_name" "team_description"
+** /create "team_name" "team_description" //done
 **/
 int client_event_team_created(
     char const *team_uuid,
@@ -108,7 +108,7 @@ int client_event_team_created(
 ** @param channel_description The description of the created channel
 **
 ** Commands:
-** /create "channel_name" "channel_description"
+** /create "channel_name" "channel_description" //done
 **/
 int client_event_channel_created(
     char const *channel_uuid,
@@ -124,7 +124,7 @@ int client_event_channel_created(
 ** @param thread_body The body of the created thread
 **
 ** Commands:
-** /create "thread_title" "thread_body"
+** /create "thread_title" "thread_body" //done
 **/
 int client_event_thread_created(
     char const *thread_uuid,
@@ -144,8 +144,8 @@ int client_event_thread_created(
 ** user_status is NOT the number of simultaneous connexion of a user
 **
 ** Commands:
-** /users
-** /subscribed "team_uuid"
+** /users                                                       //done
+** /subscribed "team_uuid"                                      //done
 **/
 int client_print_users(
     char const *user_uuid,
@@ -162,8 +162,8 @@ int client_print_users(
 ** @param team_description The description of a team
 **
 ** Commands:
-** /list
-** /subscribed
+** /list    //TODO:
+** /subscribed //done
 **/
 int client_print_teams(
     char const *team_uuid,
@@ -180,7 +180,7 @@ int client_print_teams(
 ** @param channel_description The description of a channel
 **
 ** Commands:
-** /list
+** /list //TODO:
 **/
 int client_team_print_channels(
     char const *channel_uuid,
@@ -199,7 +199,7 @@ int client_team_print_channels(
 ** @param thread_body The body of a thread
 **
 ** Commands:
-** /list
+** /list //TODO:
 **/
 int client_channel_print_threads(
     char const *thread_uuid,
@@ -219,7 +219,7 @@ int client_channel_print_threads(
 ** @param reply_body The body of a reply
 **
 ** Commands:
-** /list
+** /list //TODO:
 **/
 int client_thread_print_replies(
     char const *thread_uuid,
@@ -237,7 +237,7 @@ int client_thread_print_replies(
 ** @param message_body The content of a private message
 **
 ** Commands:
-** /messages "user_uuid"
+** /messages "user_uuid" //done
 **/
 int client_private_message_print_messages(
     char const *sender_uuid,
@@ -250,14 +250,14 @@ int client_private_message_print_messages(
 ** @param team_uuid The id that was given and does not exist
 **
 ** Commands:
-** /subscribe "team_uuid"
-** /unsubscribe "team_uuid"
-** /subscribed "team_uuid"
-** /list
-** /create "channel_name" "channel_description"
-** /create "thread_title" "thread_body"
-** /create "reply_body"
-** /info
+** /subscribe "team_uuid" //done
+** /unsubscribe "team_uuid" //done
+** /subscribed "team_uuid" //done
+** /list //TODO:
+** /create "channel_name" "channel_description" //TODO:
+** /create "thread_title" "thread_body" TODO:
+** /create "reply_body" TODO:
+** /info TODO:
 **/
 int client_error_unknown_team(char const *team_uuid);
 
@@ -267,10 +267,10 @@ int client_error_unknown_team(char const *team_uuid);
 ** @param channel_uuid The id that was given and does not exist
 **
 ** Commands:
-** /list
-** /create "thread_title" "thread_body"
-** /create "reply_body"
-** /info
+** /list TODO:
+** /create "thread_title" "thread_body" TODO:
+** /create "reply_body" TODO:
+** /info TODO:
 **/
 int client_error_unknown_channel(char const *channel_uuid);
 
@@ -280,9 +280,9 @@ int client_error_unknown_channel(char const *channel_uuid);
 ** @param thread_uuid The id that was given and does not exist
 **
 ** Commands:
-** /list
-** /create "reply_body"
-** /info
+** /list TODO:
+** /create "reply_body" //done
+** /info TODO:
 **/
 int client_error_unknown_thread(char const *thread_uuid);
 
@@ -292,9 +292,9 @@ int client_error_unknown_thread(char const *thread_uuid);
 ** @param user_uuid The id that was given and does not exist
 **
 ** Commands:
-** /send "user_uuid" "message_body"
-** /user "user_uuid"
-** /messages "user_uuid"
+** /send "user_uuid" "message_body" //done
+** /user "user_uuid" //done
+** /messages "user_uuid" TODO:
 **/
 int client_error_unknown_user(char const *user_uuid);
 
@@ -305,9 +305,9 @@ int client_error_unknown_user(char const *user_uuid);
 ** Ex: create a team when he is not logged in
 **
 ** Commands:
-** Everything except /login
+** Everything except /login //done
 **/
-int client_error_unauthorized(void);
+int client_error_unauthorized(void); //done
 
 /**
 ** @brief Must be called when the user try to do an action and the resource
@@ -316,9 +316,9 @@ int client_error_unauthorized(void);
 ** This error based itself on the name/title of the object created
 **
 ** Commands:
-** /create "team_name" "team_description"
-** /create "channel_name" "channel_description"
-** /create "thread_title" "thread_body"
+** /create "team_name" "team_description" //done
+** /create "channel_name" "channel_description" //done
+** /create "thread_title" "thread_body" //done
 **/
 int client_error_already_exist(void);
 
@@ -330,8 +330,8 @@ int client_error_already_exist(void);
 ** @param user_status The status of the user (0: not connected; 1: connected)
 **
 ** Commands:
-** /user "user_uuid"
-** /info
+** /user "user_uuid" //done
+** /info TODO:
 **/
 int client_print_user(
     char const *user_uuid,
@@ -346,7 +346,7 @@ int client_print_user(
 ** @param team_description The description of the team
 **
 ** Commands:
-** /info
+** /info TODO:
 **/
 int client_print_team(
     char const *team_uuid,
@@ -361,7 +361,7 @@ int client_print_team(
 ** @param channel_description The description of the channel
 **
 ** Commands:
-** /info
+** /info TODO:
 **/
 int client_print_channel(
     char const *channel_uuid,
@@ -378,7 +378,7 @@ int client_print_channel(
 ** @param thread_body The body of the thread
 **
 ** Commands:
-** /info
+** /info TODO:
 **/
 int client_print_thread(
     char const *thread_uuid,
@@ -394,7 +394,7 @@ int client_print_thread(
 ** @param team_description The description of the team that was created
 **
 ** Commands:
-** /create "team_name" "team_description"
+** /create "team_name" "team_description" //done
 **/
 int client_print_team_created(
     char const *team_uuid,
@@ -408,7 +408,7 @@ int client_print_team_created(
 ** @param channel_description The description of the channel that was created
 **
 ** Commands:
-** /create "channel_name" "channel_description"
+** /create "channel_name" "channel_description" //done
 **/
 int client_print_channel_created(
     char const *channel_uuid,
@@ -424,7 +424,7 @@ int client_print_channel_created(
 ** @param thread_body The body of the thread that was created
 **
 ** Commands:
-** /create "thread_title" "thread_body"
+** /create "thread_title" "thread_body" TODO:
 **/
 int client_print_thread_created(
     char const *thread_uuid,
@@ -441,7 +441,7 @@ int client_print_thread_created(
 ** @param reply_body The body of the created reply
 **
 ** Commands:
-** /create "reply_body"
+** /create "reply_body" TODO:
 **/
 int client_print_reply_created(
     char const *thread_uuid,
@@ -455,7 +455,7 @@ int client_print_reply_created(
 ** @param team_uuid The id of the team the user subscribed to
 **
 ** Commands:
-** /subscribe "team_uuid"
+** /subscribe "team_uuid" //done
 **/
 int client_print_subscribed(char const *user_uuid, char const *team_uuid);
 
@@ -465,6 +465,6 @@ int client_print_subscribed(char const *user_uuid, char const *team_uuid);
 ** @param team_uuid The id of the team the user unsubscribed from
 **
 ** Commands:
-** /unsubscribe "team_uuid"
+** /unsubscribe "team_uuid" //done
 **/
 int client_print_unsubscribed(char const *user_uuid, char const *team_uuid);
