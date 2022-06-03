@@ -22,13 +22,13 @@ void send_last_subscribed_user(client_list_t *client)
     write(client->fd, &last, sizeof(server_subscribed_info_t));
 }
 
-void send_subscribed_error(client_list_t *client)
+void send_subscribed_error(client_list_t *client, int error_status)
 {
     server_subscribed_info_t error;
     message_t command = {SUBSCRIBED};
 
     memset(&error, 0, sizeof(error));
-    error.error = 1;
+    error.error = error_status;
     error.last = 1;
     error.is_user = 1;
     error.connected = 0;

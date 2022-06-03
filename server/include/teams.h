@@ -102,7 +102,7 @@ char *uid);
 void send_to_everyone_logged(teams_t *server, int command_id,
 void *buff, size_t size);
 void send_last_subscribed_user(client_list_t *client);
-void send_subscribed_error(client_list_t *client);
+void send_subscribed_error(client_list_t *client, int error_status);
 void subscribed_command(teams_t *server, client_list_t *client);
 void send_user_as_subscribed_payload(teams_t *server, client_list_t *client,
 server_team_user_t team_user);
