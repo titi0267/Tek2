@@ -112,3 +112,7 @@ server_create_info_t team_info);
 void send_to_team(teams_t *server, void *buff, size_t size, char *team_id);
 int get_thread_error_level(cli_create_t payload);
 int get_reply_error_level(cli_create_t payload);
+int team_name_already_exist(char *new_team_name);
+int channel_name_already_exist(char *team_uid, char *new_team_name);
+int thread_name_already_exist(char *team_uid, char *channel_uid,
+char *new_team_name);

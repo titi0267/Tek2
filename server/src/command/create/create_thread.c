@@ -8,7 +8,8 @@
 #include "../../../include/teams.h"
 #include <time.h>
 
-void ret_thread_error(client_list_t *client, cli_create_t payload)
+void ret_thread_error(client_list_t *client, cli_create_t payload,
+int error_status)
 {
     server_create_info_t thread_info;
     message_t message = {CREATE};
@@ -21,7 +22,7 @@ void ret_thread_error(client_list_t *client, cli_create_t payload)
     memset(thread_info.thread_uid, 0, MAX_NAME_LENGTH);
     memset(thread_info.creator_uuid, 0, MAX_NAME_LENGTH);
     thread_info.error = get_thread_error_level(payload);
-    thread_info.create_type = CHANNEL;
+    thread_info.create_type = error_status;
     thread_info.time = time(NULL);
     strcpy(thread_info.name, payload.name);
     strcpy(thread_info.team_uuid, payload.team_uuid);
@@ -118,12 +119,14 @@ cli_create_t payload)
     atoi(payload.team_uuid), atoi(payload.channel_uuid));
     dir = opendir(path);
     if (!dir)
-        return (ret_thread_error(client, payload));
+        return (ret_thread_error(client, payload, CHANNEL_ERROR));
+    if (thread_name_already_exist(payload.team_uuid, payload.channel_uuid,
+    payload.name))
+        return (ret_thread_error(client, payload, THREAD_NAME_ALREADY_TAKEN));
     while ((ep = readdir(dir))) {
         if (strncmp(ep->d_name, "th_", 3) == 0)
             buff = ep->d_name;
-    }
-    if (strlen(buff) == 0)
+    }if (strlen(buff) == 0)
         return (create_first_thread(server, client, payload));
     buff += 2;
     create_next_thread(server, client, payload, buff);

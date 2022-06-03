@@ -8,7 +8,8 @@
 #include "../../../include/teams.h"
 #include <time.h>
 
-void ret_channel_error(client_list_t *client, cli_create_t payload)
+void ret_channel_error(client_list_t *client, cli_create_t payload,
+int error_code)
 {
     server_create_info_t chanel_info;
     message_t message = {CREATE};
@@ -24,7 +25,7 @@ void ret_channel_error(client_list_t *client, cli_create_t payload)
     strcpy(chanel_info.description, payload.description);
     strcpy(chanel_info.creator_uuid, client->uid);
     chanel_info.create_type = TEAMS;
-    chanel_info.error = TEAM_ERROR;
+    chanel_info.error = error_code;
     write(client->fd, &message, sizeof(message_t));
     write(client->fd, &chanel_info, sizeof(server_create_info_t));
 }
@@ -106,7 +107,10 @@ cli_create_t payload)
     sprintf(path, "./saves/teams/t_%d", atoi(payload.team_uuid));
     dir = opendir(path);
     if (!dir)
-        return (ret_channel_error(client, payload));
+        return (ret_channel_error(client, payload, TEAM_ERROR));
+    if (channel_name_already_exist(payload.team_uuid, payload.name))
+        return (ret_channel_error(client, payload,
+        CHANNEL_NAME_ALREADY_TAKEN));
     while ((ep = readdir(dir))) {
         if (strncmp(ep->d_name, "c_", 2) == 0)
             buff = ep->d_name;

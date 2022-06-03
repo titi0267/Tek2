@@ -8,6 +8,29 @@
 #include "../../../include/teams.h"
 #include <time.h>
 
+void send_team_error(client_list_t *client,
+cli_create_t payload)
+{
+    server_create_info_t team_info;
+    message_t message = {CREATE};
+
+    memset(&team_info, 0, sizeof(team_info));
+    memset(team_info.name, 0, MAX_NAME_LENGTH);
+    memset(team_info.description, 0, MAX_DESCRIPTION_LENGTH);
+    memset(team_info.team_uuid, 0, MAX_NAME_LENGTH);
+    memset(team_info.thread_uid, 0, MAX_NAME_LENGTH);
+    memset(team_info.channel_uuid, 0, MAX_NAME_LENGTH);
+    memset(team_info.creator_uuid, 0, MAX_NAME_LENGTH);
+    team_info.error = TEAM_NAME_ALREADY_TAKEN;
+    team_info.create_type = DEFAULT;
+    team_info.time = time(NULL);
+    strcpy(team_info.name, payload.name);
+    strcpy(team_info.description, payload.description);
+    strcpy(team_info.creator_uuid, client->uid);
+    write(client->fd, &message, sizeof(message_t));
+    write(client->fd, &team_info, sizeof(server_create_info_t));
+}
+
 server_create_info_t create_team_info(client_list_t *client,
 cli_create_t payload, char *id)
 {
@@ -77,6 +100,8 @@ void create_team(teams_t *server, client_list_t *client, cli_create_t payload)
     DIR *dir = opendir("./saves/teams");
     char *buff = "";
 
+    if (team_name_already_exist(payload.name))
+        return (send_team_error(client, payload));
     while ((ep = readdir(dir))) {
         if (strncmp(ep->d_name, "t_", 2) == 0)
             buff = ep->d_name;
