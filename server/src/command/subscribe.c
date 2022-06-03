@@ -86,6 +86,7 @@ void subscribe(teams_t *server, client_list_t *client)
     message_t command = {SUBSCRIBE};
     int fd = 0;
 
+    UNUSED(server);
     read(client->fd, &subscribe_payload, sizeof(cli_subscribe_t));
     fd = get_open_team_users(subscribe_payload);
     if (fd == -1)
