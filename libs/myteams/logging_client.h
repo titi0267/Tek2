@@ -94,7 +94,7 @@ int client_event_thread_reply_received(
 ** @param team_description The description of the created team
 **
 ** Commands:
-** /create "team_name" "team_description" //TODO:
+** /create "team_name" "team_description" //done
 **/
 int client_event_team_created(
     char const *team_uuid,
@@ -108,7 +108,7 @@ int client_event_team_created(
 ** @param channel_description The description of the created channel
 **
 ** Commands:
-** /create "channel_name" "channel_description" //TODO:
+** /create "channel_name" "channel_description" //done
 **/
 int client_event_channel_created(
     char const *channel_uuid,
@@ -124,7 +124,7 @@ int client_event_channel_created(
 ** @param thread_body The body of the created thread
 **
 ** Commands:
-** /create "thread_title" "thread_body" //TODO:
+** /create "thread_title" "thread_body" //done
 **/
 int client_event_thread_created(
     char const *thread_uuid,
@@ -145,7 +145,7 @@ int client_event_thread_created(
 **
 ** Commands:
 ** /users                                                       //done
-** /subscribed "team_uuid"                                      //TODO:
+** /subscribed "team_uuid"                                      //done
 **/
 int client_print_users(
     char const *user_uuid,
@@ -163,7 +163,7 @@ int client_print_users(
 **
 ** Commands:
 ** /list    //TODO:
-** /subscribed //TODO:
+** /subscribed //done
 **/
 int client_print_teams(
     char const *team_uuid,
@@ -250,9 +250,9 @@ int client_private_message_print_messages(
 ** @param team_uuid The id that was given and does not exist
 **
 ** Commands:
-** /subscribe "team_uuid" //TODO:
-** /unsubscribe "team_uuid" //TODO:
-** /subscribed "team_uuid" //TODO:
+** /subscribe "team_uuid" //done
+** /unsubscribe "team_uuid" //done
+** /subscribed "team_uuid" //done
 ** /list //TODO:
 ** /create "channel_name" "channel_description" //TODO:
 ** /create "thread_title" "thread_body" TODO:
@@ -281,7 +281,7 @@ int client_error_unknown_channel(char const *channel_uuid);
 **
 ** Commands:
 ** /list TODO:
-** /create "reply_body" TODO:
+** /create "reply_body" //done
 ** /info TODO:
 **/
 int client_error_unknown_thread(char const *thread_uuid);
@@ -316,9 +316,9 @@ int client_error_unauthorized(void); //done
 ** This error based itself on the name/title of the object created
 **
 ** Commands:
-** /create "team_name" "team_description" TODO:
-** /create "channel_name" "channel_description" TODO:
-** /create "thread_title" "thread_body" TODO:
+** /create "team_name" "team_description" //done
+** /create "channel_name" "channel_description" //done
+** /create "thread_title" "thread_body" //done
 **/
 int client_error_already_exist(void);
 
@@ -394,7 +394,7 @@ int client_print_thread(
 ** @param team_description The description of the team that was created
 **
 ** Commands:
-** /create "team_name" "team_description" TODO:
+** /create "team_name" "team_description" //done
 **/
 int client_print_team_created(
     char const *team_uuid,
@@ -408,7 +408,7 @@ int client_print_team_created(
 ** @param channel_description The description of the channel that was created
 **
 ** Commands:
-** /create "channel_name" "channel_description" TODO:
+** /create "channel_name" "channel_description" //done
 **/
 int client_print_channel_created(
     char const *channel_uuid,
@@ -455,7 +455,7 @@ int client_print_reply_created(
 ** @param team_uuid The id of the team the user subscribed to
 **
 ** Commands:
-** /subscribe "team_uuid" TODO:
+** /subscribe "team_uuid" //done
 **/
 int client_print_subscribed(char const *user_uuid, char const *team_uuid);
 
@@ -465,6 +465,6 @@ int client_print_subscribed(char const *user_uuid, char const *team_uuid);
 ** @param team_uuid The id of the team the user unsubscribed from
 **
 ** Commands:
-** /unsubscribe "team_uuid" TODO:
+** /unsubscribe "team_uuid" //done
 **/
 int client_print_unsubscribed(char const *user_uuid, char const *team_uuid);
