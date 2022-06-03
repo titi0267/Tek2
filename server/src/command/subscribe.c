@@ -14,6 +14,7 @@ void send_sub_error(client_list_t *client)
     server_sub_t subscribe_res;
     message_t command = {SUBSCRIBE};
 
+    memset(&subscribe_res, 0, sizeof(subscribe_res));
     subscribe_res.exist = 0;
     memset(subscribe_res.team_uid, 0, MAX_NAME_LENGTH);
     memset(subscribe_res.user_uuid, 0, MAX_NAME_LENGTH);
@@ -26,6 +27,7 @@ cli_subscribe_t subscribe_payload)
 {
     server_sub_t sub;
 
+    memset(&sub, 0, sizeof(sub));
     sub.exist = 1;
     memset(sub.team_uid, 0, MAX_NAME_LENGTH);
     memset(sub.user_uuid, 0, MAX_NAME_LENGTH);
@@ -38,6 +40,7 @@ server_team_user_t get_team_user(char *pseudo, char *uid)
 {
     server_team_user_t team_user;
 
+    memset(&team_user, 0, sizeof(team_user));
     team_user.is_active = 1;
     memset(team_user.pseudo, 0, MAX_NAME_LENGTH);
     strcpy(team_user.pseudo, pseudo);
