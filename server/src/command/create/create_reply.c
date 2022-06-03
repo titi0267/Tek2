@@ -66,8 +66,6 @@ void create_reply(teams_t *server, client_list_t *client, cli_create_t payload)
     server_create_info_t reply_info;
     int fd = 0;
 
-    if (!is_subscribed(payload.team_uuid, client->uid))
-        return (ret_reply_error(client, payload, UNAUTHORIZED));
     sprintf(path, "./saves/teams/t_%d/c_%d/th_%d/reply.txt",
     atoi(payload.team_uuid), atoi(payload.channel_uuid),
     atoi(payload.thread_uuid));
@@ -75,6 +73,8 @@ void create_reply(teams_t *server, client_list_t *client, cli_create_t payload)
     if (fd == -1)
         return (ret_reply_error(client, payload,
         get_reply_error_level(payload)));
+    if (!is_subscribed(payload.team_uuid, client->uid))
+        return (ret_reply_error(client, payload, UNAUTHORIZED));
     reply_info = create_reply_info(client, payload);
     write(fd, &reply_info, sizeof(server_create_info_t));
     send_to_team(server, &reply_info, sizeof(server_create_info_t),

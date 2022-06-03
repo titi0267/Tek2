@@ -110,12 +110,12 @@ cli_create_t payload)
     char *path = malloc(MAX_NAME_LENGTH);
     char *buff = "";
 
-    if (!is_subscribed(payload.team_uuid, client->uid))
-        return (ret_channel_error(client, payload, UNAUTHORIZED));
     sprintf(path, "./saves/teams/t_%d", atoi(payload.team_uuid));
     dir = opendir(path);
     if (!dir)
         return (ret_channel_error(client, payload, TEAM_ERROR));
+    if (!is_subscribed(payload.team_uuid, client->uid))
+        return (ret_channel_error(client, payload, UNAUTHORIZED));
     if (channel_name_already_exist(payload.team_uuid, payload.name))
         return (ret_channel_error(client, payload,
         CHANNEL_NAME_ALREADY_TAKEN));
