@@ -99,8 +99,8 @@ void send_to_everyone(teams_t *server, int command_id,
 void *buff, size_t size);
 void send_to_uid(teams_t *server, int command_id, send_payload_t payload,
 char *uid);
-void send_to_everyone_except(teams_t *server, int command_id,
-send_payload_t payload, char *except);
+void send_to_everyone_logged(teams_t *server, int command_id,
+void *buff, size_t size);
 void send_last_subscribed_user(client_list_t *client);
 void send_subscribed_error(client_list_t *client);
 void subscribed_command(teams_t *server, client_list_t *client);

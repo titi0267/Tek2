@@ -88,7 +88,7 @@ cli_create_t payload, char *last_id)
     team_info = create_team_info(client,
     payload, increment_str(atoi(last_id)));
     write(fd, &team_info, sizeof(server_create_info_t));
-    send_to_everyone(server, (int)CREATE,
+    send_to_everyone_logged(server, (int)CREATE,
     &team_info, sizeof(server_create_info_t));
     server_event_team_created(team_info.team_uuid,
     team_info.name, client->uid);
