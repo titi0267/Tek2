@@ -36,17 +36,17 @@ char *uid)
     }
 }
 
-void send_to_everyone_except(teams_t *server, int command_id,
-send_payload_t payload, char *except)
+void send_to_everyone_logged(teams_t *server, int command_id,
+void *buff, size_t size)
 {
     client_list_t *loop = server->head;
     message_t message;
 
     message.command = command_id;
     for (; loop; loop = loop->next) {
-        if (strcmp(loop->uid, except)) {
+        if (is_connected(server, loop->uid)) {
             write(loop->fd, &message, sizeof(message_t));
-            write(loop->fd, payload.buff, payload.size);
+            write(loop->fd, buff, size);
         }
     }
 }

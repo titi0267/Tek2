@@ -7,11 +7,22 @@
 
 #include "../../include/teams.h"
 
+void write_user_does_not_exist(client_list_t *client)
+{
+    server_message_t message = get_default_message();
+    message_t command = {MESSAGES};
+
+    message.is_valid = -1;
+    write(client->fd, &command, sizeof(message_t));
+    write(client->fd, &message, sizeof(server_message_t));
+}
+
 void write_message_error(client_list_t *client)
 {
     server_message_t message = get_default_message();
     message_t command = {MESSAGES};
 
+    message.is_valid = 0;
     write(client->fd, &command, sizeof(message_t));
     write(client->fd, &message, sizeof(server_message_t));
 }
@@ -23,7 +34,7 @@ int open_good_fd(client_list_t *client, cli_messages_t message)
     char *buff = malloc(MAX_NAME_LENGTH);
 
     if (to_send == 0 || !user_exist(message.user_uuid))
-        return (-1);
+        return (-2);
     sprintf(buff, "./saves/message/conv%d_%d.txt",
     (me <= to_send) ? me : to_send, (me <= to_send) ? to_send : me);
     return (open(buff, O_RDWR | O_APPEND | O_CREAT, 0777));
@@ -43,6 +54,8 @@ void messages(teams_t *server, client_list_t *client)
     write(client->fd, &command, sizeof(message_t));
     if (fd == -1)
         return (write_message_error(client));
+    if (fd == -2)
+        return (write_user_does_not_exist(client));
     while ((read_ret = read(fd, &server_message, sizeof(server_message_t)))
     != 0 && read_ret != -1)
         write(client->fd, &server_message, sizeof(server_message_t));

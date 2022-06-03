@@ -32,7 +32,9 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/res_sender/sender.c		\
 				server/src/command/subscribed_utils.c		\
 				server/src/command/subscribed.c		\
-				server/src/command/create/create_error.c
+				server/src/command/create/create_error.c		\
+				server/src/command/create/create_exist.c		\
+				server/src/command/create/create_exist_thread.c
 
 SRC_CLIENT	=	client/src/main.c		\
 				client/src/setup.c		\

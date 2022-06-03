@@ -8,7 +8,7 @@
 #include "../../../include/teams.h"
 #include <time.h>
 
-void ret_reply_error(client_list_t *client, cli_create_t payload)
+void ret_reply_error(client_list_t *client, cli_create_t payload, int error)
 {
     server_create_info_t reply_info;
     message_t message = {CREATE};
@@ -19,7 +19,7 @@ void ret_reply_error(client_list_t *client, cli_create_t payload)
     memset(reply_info.description, 0, MAX_DESCRIPTION_LENGTH);
     memset(reply_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(reply_info.thread_uid, 0, MAX_NAME_LENGTH);
-    reply_info.error = get_reply_error_level(payload);
+    reply_info.error = error;
     reply_info.create_type = THREADS;
     reply_info.time = time(NULL);
     strcpy(reply_info.name, payload.name);
@@ -62,12 +62,15 @@ void create_reply(teams_t *server, client_list_t *client, cli_create_t payload)
     server_create_info_t reply_info;
     int fd = 0;
 
+    if (!is_subscribed(payload.team_uuid, client->uid))
+        return (ret_reply_error(client, payload, UNAUTHORIZED));
     sprintf(path, "./saves/teams/t_%d/c_%d/th_%d/reply.txt",
     atoi(payload.team_uuid), atoi(payload.channel_uuid),
     atoi(payload.thread_uuid));
     fd = open(path, O_CREAT | O_RDWR | O_APPEND, 0777);
     if (fd == -1)
-        return (ret_reply_error(client, payload));
+        return (ret_reply_error(client, payload,
+        get_reply_error_level(payload)));
     reply_info = create_reply_info(client, payload);
     write(fd, &reply_info, sizeof(server_create_info_t));
     send_to_team(server, &reply_info, sizeof(server_create_info_t),

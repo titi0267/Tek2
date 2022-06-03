@@ -99,8 +99,8 @@ void send_to_everyone(teams_t *server, int command_id,
 void *buff, size_t size);
 void send_to_uid(teams_t *server, int command_id, send_payload_t payload,
 char *uid);
-void send_to_everyone_except(teams_t *server, int command_id,
-send_payload_t payload, char *except);
+void send_to_everyone_logged(teams_t *server, int command_id,
+void *buff, size_t size);
 void send_last_subscribed_user(client_list_t *client);
 void send_subscribed_error(client_list_t *client);
 void subscribed_command(teams_t *server, client_list_t *client);
@@ -112,3 +112,7 @@ server_create_info_t team_info);
 void send_to_team(teams_t *server, void *buff, size_t size, char *team_id);
 int get_thread_error_level(cli_create_t payload);
 int get_reply_error_level(cli_create_t payload);
+int team_name_already_exist(char *new_team_name);
+int channel_name_already_exist(char *team_uid, char *new_team_name);
+int thread_name_already_exist(char *team_uid, char *channel_uid,
+char *new_team_name);
