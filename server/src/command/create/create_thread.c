@@ -21,8 +21,8 @@ int error_status)
     memset(thread_info.channel_uuid, 0, MAX_NAME_LENGTH);
     memset(thread_info.thread_uid, 0, MAX_NAME_LENGTH);
     memset(thread_info.creator_uuid, 0, MAX_NAME_LENGTH);
-    thread_info.error = get_thread_error_level(payload);
-    thread_info.create_type = error_status;
+    thread_info.error = error_status;
+    thread_info.create_type = CHANNEL;
     thread_info.time = time(NULL);
     strcpy(thread_info.name, payload.name);
     strcpy(thread_info.team_uuid, payload.team_uuid);
@@ -108,26 +108,25 @@ cli_create_t payload, char *last_id)
 }
 
 void create_thread(teams_t *server, client_list_t *client,
-cli_create_t payload)
+cli_create_t req)
 {
     struct dirent *ep;
     DIR *dir;
     char *path = malloc(MAX_NAME_LENGTH);
     char *buff = "";
 
-    sprintf(path, "./saves/teams/t_%d/c_%d",
-    atoi(payload.team_uuid), atoi(payload.channel_uuid));
+    if (!is_subscribed(req.team_uuid, client->uid))
+        return (ret_thread_error(client, req, UNAUTHORIZED));
+    sprintf(path, "./saves/teams/t_%d/c_%d", atoi(req.team_uuid),
+    atoi(req.channel_uuid));
     dir = opendir(path);
     if (!dir)
-        return (ret_thread_error(client, payload, CHANNEL_ERROR));
-    if (thread_name_already_exist(payload.team_uuid, payload.channel_uuid,
-    payload.name))
-        return (ret_thread_error(client, payload, THREAD_NAME_ALREADY_TAKEN));
-    while ((ep = readdir(dir))) {
-        if (strncmp(ep->d_name, "th_", 3) == 0)
-            buff = ep->d_name;
-    }if (strlen(buff) == 0)
-        return (create_first_thread(server, client, payload));
-    buff += 2;
-    create_next_thread(server, client, payload, buff);
+        return (ret_thread_error(client, req, get_thread_error_level(req)));
+    if (thread_name_already_exist(req.team_uuid, req.channel_uuid, req.name))
+        return (ret_thread_error(client, req, THREAD_NAME_ALREADY_TAKEN));
+    while ((ep = readdir(dir)))
+        strncmp(ep->d_name, "th_", 3) == 0 ?  buff = ep->d_name : 0;
+    if (strlen(buff++) == 0)
+        return (create_first_thread(server, client, req));
+    create_next_thread(server, client, req, ++buff);
 }

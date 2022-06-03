@@ -48,7 +48,8 @@ enum error_reason {
     THREAD_ERROR,
     TEAM_NAME_ALREADY_TAKEN,
     CHANNEL_NAME_ALREADY_TAKEN,
-    THREAD_NAME_ALREADY_TAKEN
+    THREAD_NAME_ALREADY_TAKEN,
+    UNAUTHORIZED
 };
 
 typedef struct server_subscribed_info_s {

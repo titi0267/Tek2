@@ -26,6 +26,7 @@ int error_code)
     strcpy(chanel_info.creator_uuid, client->uid);
     chanel_info.create_type = TEAMS;
     chanel_info.error = error_code;
+    chanel_info.time = time(NULL);
     write(client->fd, &message, sizeof(message_t));
     write(client->fd, &chanel_info, sizeof(server_create_info_t));
 }
@@ -104,6 +105,8 @@ cli_create_t payload)
     char *path = malloc(MAX_NAME_LENGTH);
     char *buff = "";
 
+    if (!is_subscribed(payload.team_uuid, client->uid))
+        return (ret_channel_error(client, payload, UNAUTHORIZED));
     sprintf(path, "./saves/teams/t_%d", atoi(payload.team_uuid));
     dir = opendir(path);
     if (!dir)
@@ -111,12 +114,9 @@ cli_create_t payload)
     if (channel_name_already_exist(payload.team_uuid, payload.name))
         return (ret_channel_error(client, payload,
         CHANNEL_NAME_ALREADY_TAKEN));
-    while ((ep = readdir(dir))) {
-        if (strncmp(ep->d_name, "c_", 2) == 0)
-            buff = ep->d_name;
-    }
-    if (strlen(buff) == 0)
+    while ((ep = readdir(dir)))
+        strncmp(ep->d_name, "c_", 2) == 0 ?  buff = ep->d_name : 0;
+    if (strlen(buff++) == 0)
         return (create_first_chanel(server, payload));
-    buff += 2;
-    create_next_chanel(server, client, payload, buff);
+    create_next_chanel(server, client, payload, ++buff);
 }
