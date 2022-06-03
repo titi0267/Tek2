@@ -31,14 +31,14 @@ int get_open_team_users_unsub(cli_unsubscribe_t unsubscribe_payload)
     return (fd);
 }
 
-int unsub_user(client_list_t *client, teams_t *server,
-cli_unsubscribe_t unsub_payload, int fd)
+int unsub_user(client_list_t *client, cli_unsubscribe_t unsub_payload, int fd)
 {
     int read_ret = 0;
     server_team_user_t tmp;
-    server_sub_t res_payload;
+    server_unsub_t res_payload;
+    message_t command = {UNSUBSCRIBE};
 
-    res_payload.exist = 1;
+    res_payload.valid = 1;
     while ((read_ret = read(fd, &tmp, sizeof(server_team_user_t))) != 0
     && read_ret != -1) {
         if (strcmp(tmp.uid, client->uid) == 0) {
@@ -47,8 +47,8 @@ cli_unsubscribe_t unsub_payload, int fd)
             server_event_user_unsubscribed(unsub_payload.team_uuid,
             client->uid);
             write(fd, &tmp, sizeof(server_team_user_t));
-            send_to_everyone_except(server, (int)UNSUBSCRIBE,
-            (send_payload_t){&res_payload, sizeof(server_sub_t)}, client->uid);
+            write(client->fd, &command, sizeof(message_t));
+            write(client->fd, &res_payload, sizeof(server_unsub_t));
             return (1);
         }
     }
@@ -58,17 +58,14 @@ cli_unsubscribe_t unsub_payload, int fd)
 void unsubscribe(teams_t *server, client_list_t *client)
 {
     cli_unsubscribe_t unsub_payload;
-    server_sub_t res_payload;
     int fd = 0;
 
-    res_payload.exist = 0;
+    UNUSED(server);
     read(client->fd, &unsub_payload, sizeof(cli_unsubscribe_t));
     fd = get_open_team_users_unsub(unsub_payload);
     if (fd == -1)
         return (send_unsub_error(client));
-    if (unsub_user(client, server, unsub_payload, fd))
+    if (unsub_user(client, unsub_payload, fd))
         return;
-    server_event_user_unsubscribed(unsub_payload.team_uuid, client->uid);
-    send_to_everyone(server, (int)UNSUBSCRIBE, &res_payload,
-    sizeof(server_sub_t));
+    send_unsub_error(client);
 }
