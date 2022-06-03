@@ -83,8 +83,10 @@ void subscribe(teams_t *server, client_list_t *client)
     cli_subscribe_t subscribe_payload;
     server_team_user_t tmp;
     server_sub_t subscribe_res;
+    message_t command = {SUBSCRIBE};
     int fd = 0;
 
+    UNUSED(server);
     read(client->fd, &subscribe_payload, sizeof(cli_subscribe_t));
     fd = get_open_team_users(subscribe_payload);
     if (fd == -1)
@@ -96,6 +98,6 @@ void subscribe(teams_t *server, client_list_t *client)
         write(fd, &tmp, sizeof(server_team_user_t));
     }
     subscribe_res = get_sub_res(client, subscribe_payload);
-    send_to_everyone(server, (int)SUBSCRIBE, &subscribe_res,
-    sizeof(server_sub_t));
+    write(client->fd, &command, sizeof(message_t));
+    write(client->fd, &subscribe_res, sizeof(server_sub_t));
 }
