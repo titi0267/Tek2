@@ -130,3 +130,8 @@ int error_status);
 void ret_reply_error(client_list_t *client, cli_create_t payload, int error);
 void ret_channel_error(client_list_t *client, cli_create_t payload,
 int error_code);
+void info_command(teams_t *server, client_list_t *client);
+void info_user(client_list_t *client, cli_create_t payload);
+void info_thread(client_list_t *client, cli_create_t payload);
+void info_team(client_list_t *client, cli_create_t payload);
+void info_channel(client_list_t *client, cli_create_t payload);
