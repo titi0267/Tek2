@@ -11,16 +11,9 @@
 void ret_thread_error(client_list_t *client, cli_create_t payload,
 int error_status)
 {
-    server_create_info_t thread_info;
+    server_create_info_t thread_info = get_create_info_struct();
     message_t message = {CREATE};
-    memset(&thread_info, 0, sizeof(thread_info));
-    memset(thread_info.name, 0, MAX_NAME_LENGTH);
-    memset(thread_info.team_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.description, 0, MAX_DESCRIPTION_LENGTH);
-    memset(thread_info.channel_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.thread_uid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.creator_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.comment_body, 0, MAX_BODY_LENGTH);
+
     thread_info.error = error_status;
     thread_info.create_type = CHANNEL;
     thread_info.time = time(NULL);
@@ -36,16 +29,8 @@ int error_status)
 server_create_info_t create_thread_info(client_list_t *client,
 cli_create_t payload, char *id)
 {
-    server_create_info_t thread_info;
+    server_create_info_t thread_info = get_create_info_struct();
 
-    memset(&thread_info, 0, sizeof(thread_info));
-    memset(thread_info.name, 0, MAX_NAME_LENGTH);
-    memset(thread_info.team_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.description, 0, MAX_DESCRIPTION_LENGTH);
-    memset(thread_info.channel_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.thread_uid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.creator_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.comment_body, 0, MAX_BODY_LENGTH);
     thread_info.error = NO_ERROR;
     thread_info.time = time(NULL);
     thread_info.create_type = CHANNEL;
