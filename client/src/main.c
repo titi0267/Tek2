@@ -7,7 +7,7 @@
 
 #include "../include/teams.h"
 
-int usage()
+int usage(void)
 {
     printf("USAGE: ./myteams_cli ip port\n");
     printf("    ip is the server ip address"

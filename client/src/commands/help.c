@@ -8,7 +8,7 @@
 #include "../../include/teams.h"
 #include "../../include/command.h"
 
-void provide_help()
+void provide_help(void)
 {
     printf("    /unsubscribe [\"team_uuid\"] : unsubscribe from a team\n");
     printf("    /use ?[\"team_uuid\"] ?[\"channel_uuid\"] ?[\"thread_uuid\"] ");
