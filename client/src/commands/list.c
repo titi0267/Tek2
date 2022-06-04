@@ -8,10 +8,10 @@
 #include "../../include/teams.h"
 #include "../../include/command.h"
 
-static int copy_right_uuids(client_t *client, cli_list_t list)
+static int copy_right_uuids(client_t *client, cli_create_t list)
 {
-    list.use_arg = client->use_status;
-    switch (list.use_arg)
+    list.args_nbr = client->use_status;
+    switch (list.args_nbr)
     {
     case DEFAULT:
         strcpy(list.team_uuid, client->team_uuid);
@@ -26,18 +26,22 @@ static int copy_right_uuids(client_t *client, cli_list_t list)
         strcpy(list.thread_uuid, client->thread_uuid);
         break;
     }
-    write(client->socket_fd, &list, sizeof(cli_list_t));
+    write(client->socket_fd, &list, sizeof(cli_create_t));
     return (LIST);
 }
 
 int c_list(char *buff, client_t *client)
 {
     message_t msg;
-    cli_list_t list;
+    cli_create_t list;
 
+    memset(&list, 0, sizeof(cli_create_t));
     memset(list.thread_uuid, 0, MAX_NAME_LENGTH);
     memset(list.team_uuid, 0, MAX_NAME_LENGTH);
     memset(list.channel_uuid, 0, MAX_NAME_LENGTH);
+    memset(list.description, 0, MAX_DESCRIPTION_LENGTH);
+    memset(list.name, 0, MAX_NAME_LENGTH);
+    memset(list.comment_body, 0, MAX_BODY_LENGTH);
     if (not_logged(client) == 0)
         return (0);
     if (buff[0] != '\n')

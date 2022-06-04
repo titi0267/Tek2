@@ -60,6 +60,7 @@ int inside_loop(client_t *client, char *buff, int command)
         return (-1);
     if (command == LOGOUT)
         return (-2);
+    return (0);
 }
 
 void loop(client_t *client)
