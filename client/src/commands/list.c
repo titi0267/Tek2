@@ -13,14 +13,14 @@ static int copy_right_uuids(client_t *client, cli_create_t list)
     list.args_nbr = client->use_status;
     switch (list.args_nbr)
     {
-    case DEFAULT:
+    case TEAMS:
         strcpy(list.team_uuid, client->team_uuid);
         break;
-    case TEAMS:
+    case CHANNEL:
         strcpy(list.team_uuid, client->team_uuid);
         strcpy(list.channel_uuid, client->channel_uuid);
         break;
-    case CHANNEL:
+    case THREADS:
         strcpy(list.team_uuid, client->team_uuid);
         strcpy(list.channel_uuid, client->channel_uuid);
         strcpy(list.thread_uuid, client->thread_uuid);
