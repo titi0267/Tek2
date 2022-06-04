@@ -41,7 +41,12 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/command/list/list_thread.c		\
 				server/src/command/list/list_team.c		\
 				server/src/command/list/list_reply.c		\
-				server/src/command/list/list_channel.c
+				server/src/command/list/list_channel.c		\
+				server/src/command/info/info.c		\
+				server/src/command/info/info_user.c		\
+				server/src/command/info/info_thread.c		\
+				server/src/command/info/info_team.c		\
+				server/src/command/info/info_channel.c
 
 SRC_CLIENT	=	client/src/main.c		\
 				client/src/setup.c		\
