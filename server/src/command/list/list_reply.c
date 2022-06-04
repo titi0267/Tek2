@@ -20,7 +20,7 @@ void send_reply_list(client_list_t *client, cli_create_t payload)
     fd = open(path, O_RDONLY);
     if (fd == -1)
         return;
-    while ((read_ret = read(fd, &info, sizeof(server_team_user_t))) != 0
+    while ((read_ret = read(fd, &info, sizeof(server_create_info_t))) != 0
     && read_ret != -1)
         write(client->fd, &info, sizeof(server_create_info_t));
 }
