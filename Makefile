@@ -35,7 +35,8 @@ SRC_SERVER		=	server/src/main.c		\
 				server/src/command/create/create_error.c		\
 				server/src/command/create/create_exist.c		\
 				server/src/command/create/create_exist_thread.c		\
-				server/src/utils/is_bigger_id.c
+				server/src/utils/is_bigger_id.c		\
+				server/src/command/subscribe_utils.c
 
 SRC_CLIENT	=	client/src/main.c		\
 				client/src/setup.c		\
