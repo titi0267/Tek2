@@ -44,7 +44,7 @@ void *buff, size_t size)
 
     message.command = command_id;
     for (; loop; loop = loop->next) {
-        if (is_connected(server, loop->uid)) {
+        if (strlen(loop->uid) != 0) {
             write(loop->fd, &message, sizeof(message_t));
             write(loop->fd, buff, size);
         }

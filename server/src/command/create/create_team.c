@@ -51,7 +51,7 @@ client_list_t *client, cli_create_t payload)
         return;
     team_info = create_team_info(client, payload, "1");
     write(fd, &team_info, sizeof(server_create_info_t));
-    send_to_everyone(server, (int)CREATE,
+    send_to_everyone_logged(server, (int)CREATE,
     &team_info, sizeof(server_create_info_t));
     server_event_team_created(team_info.team_uuid,
     team_info.name, client->uid);
