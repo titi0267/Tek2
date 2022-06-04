@@ -21,6 +21,7 @@ void info_team(client_list_t *client, cli_create_t payload)
     if (!is_subscribed(payload.team_uuid, client->uid))
         return (ret_channel_error(client, payload, UNAUTHORIZED));
     read(fd, &team, sizeof(server_create_info_t));
+    team.create_type = TEAMS;
     write(client->fd, &message, sizeof(message_t));
     write(client->fd, &team, sizeof(server_create_info_t));
 }

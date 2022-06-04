@@ -24,6 +24,7 @@ void info_thread(client_list_t *client, cli_create_t payload)
     if (!is_subscribed(payload.team_uuid, client->uid))
         return (ret_reply_error(client, payload, UNAUTHORIZED));
     read(fd, &thread, sizeof(server_create_info_t));
+    thread.create_type = THREADS;
     write(client->fd, &message, sizeof(message_t));
     write(client->fd, &thread, sizeof(server_create_info_t));
 }

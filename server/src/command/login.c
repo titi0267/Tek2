@@ -25,12 +25,12 @@ client_list_t *client, cli_login_t login, int fd)
     strcpy(new_user.pseudo, login.name);
     strcpy(new_user.uid, "1");
     write(fd, &new_user, sizeof(server_user_t));
+    client->uid = strdup(new_user.uid);
+    client->pseudo = strdup(new_user.pseudo);
     send_to_everyone_logged(server, (int)LOGIN, &new_user,
     sizeof(server_user_t));
     server_event_user_created(new_user.uid, new_user.pseudo);
     server_event_user_logged_in(new_user.uid);
-    client->uid = strdup(new_user.uid);
-    client->pseudo = strdup(new_user.pseudo);
 }
 
 int check_if_user_exist(teams_t *server,
@@ -69,11 +69,11 @@ client_list_t *client, cli_login_t login, int fd)
     strcpy(tmp.uid, increment_str(last_id));
     strcpy(tmp.pseudo, login.name);
     write(fd, &tmp, sizeof(server_user_t));
+    client->uid = strdup(tmp.uid);
+    client->pseudo = strdup(tmp.pseudo);
     send_to_everyone_logged(server, (int)LOGIN, &tmp, sizeof(server_user_t));
     server_event_user_created(tmp.uid, tmp.pseudo);
     server_event_user_logged_in(tmp.uid);
-    client->uid = strdup(tmp.uid);
-    client->pseudo = strdup(tmp.pseudo);
 }
 
 void login(teams_t *server, client_list_t *client)
