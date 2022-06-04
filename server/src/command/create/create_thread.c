@@ -11,16 +11,9 @@
 void ret_thread_error(client_list_t *client, cli_create_t payload,
 int error_status)
 {
-    server_create_info_t thread_info;
+    server_create_info_t thread_info = get_create_info_struct();
     message_t message = {CREATE};
-    memset(&thread_info, 0, sizeof(thread_info));
-    memset(thread_info.name, 0, MAX_NAME_LENGTH);
-    memset(thread_info.team_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.description, 0, MAX_DESCRIPTION_LENGTH);
-    memset(thread_info.channel_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.thread_uid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.creator_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.comment_body, 0, MAX_BODY_LENGTH);
+
     thread_info.error = error_status;
     thread_info.create_type = CHANNEL;
     thread_info.time = time(NULL);
@@ -36,16 +29,8 @@ int error_status)
 server_create_info_t create_thread_info(client_list_t *client,
 cli_create_t payload, char *id)
 {
-    server_create_info_t thread_info;
+    server_create_info_t thread_info = get_create_info_struct();
 
-    memset(&thread_info, 0, sizeof(thread_info));
-    memset(thread_info.name, 0, MAX_NAME_LENGTH);
-    memset(thread_info.team_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.description, 0, MAX_DESCRIPTION_LENGTH);
-    memset(thread_info.channel_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.thread_uid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.creator_uuid, 0, MAX_NAME_LENGTH);
-    memset(thread_info.comment_body, 0, MAX_BODY_LENGTH);
     thread_info.error = NO_ERROR;
     thread_info.time = time(NULL);
     thread_info.create_type = CHANNEL;
@@ -64,6 +49,7 @@ client_list_t *client, cli_create_t payload)
     int fd = 0;
     server_create_info_t thread_info;
     char *path = malloc(100);
+
     sprintf(path, "./saves/teams/t_%d/c_%d/th_1",
     atoi(payload.team_uuid), atoi(payload.channel_uuid));
     mkdir(path, 0777);
@@ -76,10 +62,8 @@ client_list_t *client, cli_create_t payload)
     write(fd, &thread_info, sizeof(server_create_info_t));
     send_to_team(server, &thread_info, sizeof(server_create_info_t),
     thread_info.team_uuid);
-    server_event_team_created(thread_info.team_uuid,
-    thread_info.name, client->uid);
     server_event_thread_created(thread_info.channel_uuid,
-    thread_info.team_uuid, client->uid,
+    thread_info.thread_uid, client->uid,
     thread_info.name, thread_info.description);
 }
 
@@ -91,7 +75,7 @@ cli_create_t payload, char *last_id)
     int fd = 0;
 
     sprintf(path, "./saves/teams/t_%d/c_%d/th_%d", atoi(payload.team_uuid)
-    , atoi(payload.channel_uuid), atoi(last_id) + 1);
+    , atoi(payload.channel_uuid), atoi(++last_id) + 1);
     mkdir(path, 0777);
     sprintf(path, "./saves/teams/t_%d/c_%d/th_%d/thread_info.txt"
     , atoi(payload.team_uuid), atoi(payload.channel_uuid), atoi(last_id) + 1);
@@ -104,7 +88,7 @@ cli_create_t payload, char *last_id)
     send_to_team(server, &thread_info, sizeof(server_create_info_t),
     thread_info.team_uuid);
     server_event_thread_created(thread_info.channel_uuid,
-    thread_info.team_uuid, client->uid,
+    thread_info.thread_uid, client->uid,
     thread_info.name, thread_info.description);
 }
 
@@ -127,7 +111,7 @@ cli_create_t req)
         return (ret_thread_error(client, req, THREAD_NAME_ALREADY_TAKEN));
     while ((ep = readdir(dir)))
         (strncmp(ep->d_name, "th_", 3) == 0 && is_bigger_id(ep->d_name, buff))
-        ?  buff = ep->d_name : 0;
+        ? buff = ep->d_name : 0;
     if (strlen(buff++) == 0)
         return (create_first_thread(server, client, req));
     create_next_thread(server, client, req, ++buff);

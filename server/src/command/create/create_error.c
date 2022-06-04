@@ -18,6 +18,7 @@ int get_thread_error_level(cli_create_t payload)
         return (TEAM_ERROR);
     sprintf(path, "./saves/teams/t_%d/c_%d",
     atoi(payload.team_uuid), atoi(payload.channel_uuid));
+    dir = opendir(path);
     if (!dir)
         return (CHANNEL_ERROR);
     return (NO_ERROR);

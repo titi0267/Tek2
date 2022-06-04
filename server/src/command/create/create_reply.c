@@ -10,16 +10,9 @@
 
 void ret_reply_error(client_list_t *client, cli_create_t payload, int error)
 {
-    server_create_info_t reply_info;
+    server_create_info_t reply_info = get_create_info_struct();
     message_t message = {CREATE};
 
-    memset(&reply_info, 0, sizeof(reply_info));
-    memset(reply_info.name, 0, MAX_NAME_LENGTH);
-    memset(reply_info.team_uuid, 0, MAX_NAME_LENGTH);
-    memset(reply_info.description, 0, MAX_DESCRIPTION_LENGTH);
-    memset(reply_info.channel_uuid, 0, MAX_NAME_LENGTH);
-    memset(reply_info.thread_uid, 0, MAX_NAME_LENGTH);
-    memset(reply_info.comment_body, 0, MAX_BODY_LENGTH);
     reply_info.error = error;
     reply_info.create_type = THREADS;
     reply_info.time = time(NULL);
@@ -37,16 +30,8 @@ void ret_reply_error(client_list_t *client, cli_create_t payload, int error)
 server_create_info_t create_reply_info(client_list_t *client,
 cli_create_t payload)
 {
-    server_create_info_t reply_info;
+    server_create_info_t reply_info = get_create_info_struct();
 
-    memset(&reply_info, 0, sizeof(reply_info));
-    memset(reply_info.name, 0, MAX_NAME_LENGTH);
-    memset(reply_info.team_uuid, 0, MAX_NAME_LENGTH);
-    memset(reply_info.description, 0, MAX_DESCRIPTION_LENGTH);
-    memset(reply_info.channel_uuid, 0, MAX_NAME_LENGTH);
-    memset(reply_info.thread_uid, 0, MAX_NAME_LENGTH);
-    memset(reply_info.creator_uuid, 0, MAX_NAME_LENGTH);
-    memset(reply_info.comment_body, 0, MAX_BODY_LENGTH);
     reply_info.error = NO_ERROR;
     reply_info.create_type = THREADS;
     reply_info.time = time(NULL);
