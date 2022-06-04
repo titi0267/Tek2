@@ -64,7 +64,6 @@ void create_reply(teams_t *server, client_list_t *client, cli_create_t payload)
     write(fd, &reply_info, sizeof(server_create_info_t));
     send_to_team(server, &reply_info, sizeof(server_create_info_t),
     reply_info.team_uuid);
-    write(client->fd, &reply_info, sizeof(server_create_info_t));
     server_event_reply_created(reply_info.thread_uid, client->uid,
     reply_info.description);
 }
