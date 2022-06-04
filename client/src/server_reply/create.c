@@ -45,34 +45,53 @@ void team_print(server_create_info_t create, client_t *client)
 
 void channel_print(server_create_info_t create, client_t *client)
 {
-    if (create.error == CHANNEL_ERROR) {
-        client_error_unknown_channel(create.channel_uuid);
-        return;
+    switch (create.error) {
+        case TEAM_ERROR:
+            client_error_unknown_team(create.team_uuid);
+            break;
+        case CHANNEL_ERROR:
+            client_error_unknown_channel(create.channel_uuid);
+            break;
+        case THREAD_NAME_ALREADY_TAKEN:
+            client_error_already_exist();
+            break;
+        case UNAUTHORIZED:
+            client_error_unauthorized();
+            break;
+        default:
+            client_event_thread_created(create.thread_uid, create.creator_uuid,
+                create.time, create.name, create.description);
+            if (strcmp(create.creator_uuid, client->user_uuid) == 0)
+                client_print_thread_created(create.thread_uid,
+                create.creator_uuid, create.time, create.name,
+                create.description);
+            break;
     }
-    if (create.error == THREAD_NAME_ALREADY_TAKEN) {
-        client_error_already_exist();
-        return;
-    }
-    if (create.error == UNAUTHORIZED) {
-        client_error_unauthorized();
-        return;
-    }
-    client_event_thread_created(create.thread_uid, create.creator_uuid,
-        create.time, create.name, create.description);
-    if (strcmp(create.creator_uuid, client->user_uuid) == 0)
-        client_print_thread_created(create.thread_uid, create.creator_uuid,
-            create.time, create.name, create.description);
 }
 
 void thread_print(server_create_info_t create, client_t *client)
 {
-    if (create.error == THREAD_ERROR) {
+        switch (create.error) {
+        case TEAM_ERROR:
+            client_error_unknown_team(create.team_uuid);
+            break;
+        case CHANNEL_ERROR:
+            client_error_unknown_channel(create.channel_uuid);
+            break;
+        case THREAD_ERROR:
         client_error_unknown_thread(create.thread_uid);
-        return;
-    }
-    //client_event_thread_reply_received(create.team_uuid, create.thread_uid, create.creator_uuid, create.);
-    //if (strcmp(create.creator_uuid, client->user_uuid) == 0)
-        ;//client_print_reply_created(create.thread_uid, create.creator_uuid, create.time, create.)
+            break;
+        case UNAUTHORIZED:
+            client_error_unauthorized();
+            break;
+        default:
+            client_event_thread_reply_received(create.team_uuid,
+                create.thread_uid, create.creator_uuid, create.comment_body);
+            if (strcmp(create.creator_uuid, client->user_uuid) == 0)
+                client_print_reply_created(create.thread_uid,
+                    create.creator_uuid, create.time, create.comment_body);
+            break;
+        }
 }
 
 void r_create(client_t *client)

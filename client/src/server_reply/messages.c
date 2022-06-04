@@ -15,12 +15,12 @@ void r_messages(client_t *client)
 
     while (1) {
         read(client->socket_fd, &serv_msg, sizeof(server_message_t));
+        if (serv_msg.is_valid == 0)
+            break;
         if (serv_msg.is_valid == -1) {
             client_error_unknown_user(serv_msg.to);
             break;
         }
-        if (serv_msg.is_valid == 0)
-            break;
         client_private_message_print_messages(serv_msg.from,
             serv_msg.time, serv_msg.body);
     }
