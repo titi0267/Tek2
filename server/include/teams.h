@@ -119,3 +119,14 @@ char *new_team_name);
 int is_bigger_id(char *folder_first, char *folder_second);
 server_create_info_t get_create_info_struct(void);
 void send_sub_error(client_list_t *client);
+void list_command(teams_t *server, client_list_t *client);
+void list_thread(client_list_t *client, cli_create_t payload);
+void list_team(client_list_t *client, cli_create_t payload);
+void list_reply(client_list_t *client, cli_create_t payload);
+void list_channel(client_list_t *client, cli_create_t payload);
+void send_last_item(client_list_t *client);
+void ret_thread_error(client_list_t *client, cli_create_t payload,
+int error_status);
+void ret_reply_error(client_list_t *client, cli_create_t payload, int error);
+void ret_channel_error(client_list_t *client, cli_create_t payload,
+int error_code);
