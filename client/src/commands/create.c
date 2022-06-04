@@ -62,6 +62,7 @@ int create_thread(char *buff, cli_create_t *create)
 int create_right_params(char *buff, client_t *client, cli_create_t *create)
 {
     int ret_val = 0;
+    message_t msg;
 
     if (client->use_status != THREADS)
         ret_val = create_uuid(buff, create);
@@ -72,6 +73,8 @@ int create_right_params(char *buff, client_t *client, cli_create_t *create)
     strcpy(create->team_uuid, client->team_uuid);
     strcpy(create->channel_uuid, client->channel_uuid);
     strcpy(create->thread_uuid, client->thread_uuid);
+    msg.command = CREATE;
+    write(client->socket_fd, &msg, sizeof(message_t));
     create->args_nbr = client->use_status;
     write(client->socket_fd, create, sizeof(cli_create_t));
     return (CREATE);
@@ -79,7 +82,6 @@ int create_right_params(char *buff, client_t *client, cli_create_t *create)
 
 int c_create(char *buff, client_t *client)
 {
-    message_t msg;
     cli_create_t create;
 
     memset(&create, 0, sizeof(cli_create_t));
@@ -92,7 +94,5 @@ int c_create(char *buff, client_t *client)
     create.args_nbr = DEFAULT;
     if (not_logged(client) == 0)
         return (0);
-    msg.command = CREATE;
-    write(client->socket_fd, &msg, sizeof(message_t));
     return (create_right_params(buff, client, &create));
 }
