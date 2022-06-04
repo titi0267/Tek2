@@ -18,7 +18,7 @@ void info_team(client_list_t *client, cli_create_t payload)
     fd = open(path, O_RDONLY);
     if (fd == -1)
         return (ret_channel_error(client, payload, TEAM_ERROR));
-    if (!is_subscribed(payload.channel_uuid, client->uid))
+    if (!is_subscribed(payload.team_uuid, client->uid))
         return (ret_channel_error(client, payload, UNAUTHORIZED));
     read(fd, &team, sizeof(server_create_info_t));
     write(client->fd, &message, sizeof(message_t));
