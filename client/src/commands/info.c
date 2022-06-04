@@ -26,7 +26,6 @@ static int copy_right_uuids(client_t *client, cli_create_t info)
         strcpy(info.thread_uuid, client->thread_uuid);
         break;
     }
-    printf("tm = %s | ch = %s | th = %s\n", info.team_uuid, info.channel_uuid, info.thread_uuid);
     write(client->socket_fd, &info, sizeof(cli_create_t));
     return (INFO);
 }
