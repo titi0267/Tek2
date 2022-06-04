@@ -13,19 +13,20 @@ static int copy_right_uuids(client_t *client, cli_create_t info)
     info.args_nbr = client->use_status;
     switch (info.args_nbr)
     {
-    case DEFAULT:
+    case TEAMS:
         strcpy(info.team_uuid, client->team_uuid);
         break;
-    case TEAMS:
+    case CHANNEL:
         strcpy(info.team_uuid, client->team_uuid);
         strcpy(info.channel_uuid, client->channel_uuid);
         break;
-    case CHANNEL:
+    case THREADS:
         strcpy(info.team_uuid, client->team_uuid);
         strcpy(info.channel_uuid, client->channel_uuid);
         strcpy(info.thread_uuid, client->thread_uuid);
         break;
     }
+    printf("tm = %s | ch = %s | th = %s\n", info.team_uuid, info.channel_uuid, info.thread_uuid);
     write(client->socket_fd, &info, sizeof(cli_create_t));
     return (INFO);
 }
