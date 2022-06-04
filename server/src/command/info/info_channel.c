@@ -11,7 +11,7 @@ void info_channel(client_list_t *client, cli_create_t payload)
 {
     char path[100];
     int fd = 0;
-    message_t message = {LIST};
+    message_t message = {INFO};
     server_create_info_t channel;
 
     sprintf(path, "./saves/teams/t_%d/c_%d/channel_info.txt",
