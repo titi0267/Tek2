@@ -16,7 +16,7 @@ int print_subed(server_subscribed_info_t subed)
             client_error_unauthorized();
             return(-1);
         }
-        client_print_user(subed.id, subed.name, subed.connected);
+        client_print_users(subed.id, subed.name, subed.connected);
     }
     else {
         client_print_teams(subed.id, subed.name, subed.description);

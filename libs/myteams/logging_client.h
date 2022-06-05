@@ -78,7 +78,7 @@ int client_event_private_message_received(
 ** @param reply_body The reply body
 **
 ** Commands:
-** /create "reply_body" //TODO:
+** /create "reply_body" //done
 **/
 int client_event_thread_reply_received(
     char const *team_uuid,
@@ -162,7 +162,7 @@ int client_print_users(
 ** @param team_description The description of a team
 **
 ** Commands:
-** /list    //TODO:
+** /list    //done
 ** /subscribed //done
 **/
 int client_print_teams(
@@ -180,7 +180,7 @@ int client_print_teams(
 ** @param channel_description The description of a channel
 **
 ** Commands:
-** /list //TODO:
+** /list //done
 **/
 int client_team_print_channels(
     char const *channel_uuid,
@@ -199,7 +199,7 @@ int client_team_print_channels(
 ** @param thread_body The body of a thread
 **
 ** Commands:
-** /list //TODO:
+** /list //done
 **/
 int client_channel_print_threads(
     char const *thread_uuid,
@@ -219,7 +219,7 @@ int client_channel_print_threads(
 ** @param reply_body The body of a reply
 **
 ** Commands:
-** /list //TODO:
+** /list //done
 **/
 int client_thread_print_replies(
     char const *thread_uuid,
@@ -253,11 +253,11 @@ int client_private_message_print_messages(
 ** /subscribe "team_uuid" //done
 ** /unsubscribe "team_uuid" //done
 ** /subscribed "team_uuid" //done
-** /list //TODO:
-** /create "channel_name" "channel_description" //TODO:
-** /create "thread_title" "thread_body" TODO:
-** /create "reply_body" TODO:
-** /info TODO:
+** /list //done
+** /create "channel_name" "channel_description" //done
+** /create "thread_title" "thread_body" done
+** /create "reply_body" done
+** /info done
 **/
 int client_error_unknown_team(char const *team_uuid);
 
@@ -267,10 +267,10 @@ int client_error_unknown_team(char const *team_uuid);
 ** @param channel_uuid The id that was given and does not exist
 **
 ** Commands:
-** /list TODO:
-** /create "thread_title" "thread_body" TODO:
-** /create "reply_body" TODO:
-** /info TODO:
+** /list done
+** /create "thread_title" "thread_body" done
+** /create "reply_body" done
+** /info done
 **/
 int client_error_unknown_channel(char const *channel_uuid);
 
@@ -280,9 +280,9 @@ int client_error_unknown_channel(char const *channel_uuid);
 ** @param thread_uuid The id that was given and does not exist
 **
 ** Commands:
-** /list TODO:
+** /list done
 ** /create "reply_body" //done
-** /info TODO:
+** /info done
 **/
 int client_error_unknown_thread(char const *thread_uuid);
 
@@ -294,7 +294,7 @@ int client_error_unknown_thread(char const *thread_uuid);
 ** Commands:
 ** /send "user_uuid" "message_body" //done
 ** /user "user_uuid" //done
-** /messages "user_uuid" TODO:
+** /messages "user_uuid" done
 **/
 int client_error_unknown_user(char const *user_uuid);
 
@@ -331,7 +331,7 @@ int client_error_already_exist(void);
 **
 ** Commands:
 ** /user "user_uuid" //done
-** /info TODO:
+** /info done
 **/
 int client_print_user(
     char const *user_uuid,
@@ -346,7 +346,7 @@ int client_print_user(
 ** @param team_description The description of the team
 **
 ** Commands:
-** /info TODO:
+** /info done
 **/
 int client_print_team(
     char const *team_uuid,
@@ -361,7 +361,7 @@ int client_print_team(
 ** @param channel_description The description of the channel
 **
 ** Commands:
-** /info TODO:
+** /info done
 **/
 int client_print_channel(
     char const *channel_uuid,
@@ -378,7 +378,7 @@ int client_print_channel(
 ** @param thread_body The body of the thread
 **
 ** Commands:
-** /info TODO:
+** /info done
 **/
 int client_print_thread(
     char const *thread_uuid,
@@ -424,7 +424,7 @@ int client_print_channel_created(
 ** @param thread_body The body of the thread that was created
 **
 ** Commands:
-** /create "thread_title" "thread_body" TODO:
+** /create "thread_title" "thread_body" done
 **/
 int client_print_thread_created(
     char const *thread_uuid,
@@ -441,7 +441,7 @@ int client_print_thread_created(
 ** @param reply_body The body of the created reply
 **
 ** Commands:
-** /create "reply_body" TODO:
+** /create "reply_body" done
 **/
 int client_print_reply_created(
     char const *thread_uuid,
