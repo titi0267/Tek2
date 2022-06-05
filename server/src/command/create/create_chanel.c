@@ -82,8 +82,6 @@ cli_create_t req, char *last_id)
     write(fd, &chanel_info, sizeof(server_create_info_t));
     send_to_team(server, &chanel_info, sizeof(server_create_info_t),
     chanel_info.team_uuid);
-    server_event_team_created(chanel_info.team_uuid,
-    chanel_info.name, cli->uid);
     server_event_channel_created(chanel_info.team_uuid,
     chanel_info.channel_uuid, chanel_info.name);
 }
