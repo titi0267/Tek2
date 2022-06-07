@@ -9,6 +9,8 @@ find_package(raylib REQUIRED)
 add_executable(bomberman
     "src/main.cpp"
 
+    "src/Menu.cpp"
+
     "src/ecs/World.cpp"
 
     "src/ecs/systems/ClickUpdate.cpp"

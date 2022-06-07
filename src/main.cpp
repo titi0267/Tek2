@@ -27,7 +27,7 @@
 #include "ecs/components/HoverTint.hpp"
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
-#include "Menu.cpp"
+#include "Menu.hpp"
 
 void registerBasicComponents(ecs::World &world)
 {
@@ -100,17 +100,6 @@ int main()
 
     menu.setTextureToModel(world, "./assets/textures/button_txt.png", "./assets/mesh/button.iqm");
     menu.mainScene(world);
-    /*raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
-    raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
-
-    raylib::Model &buttonModel = modelMan.loadModel("./assets/mesh/button.iqm");
-    raylib::Texture &buttonText = textureMan.loadTexture("./assets/textures/button_txt.png");
-    buttonModel.getMaterialView(0).setTexture(MATERIAL_MAP_DIFFUSE, buttonText);
-*/
-    spawnButton({1, 2.75, -2}, {0, 0, 0}, "Start", 3, world);
-    spawnButton({1, 1.75, -2}, {0, 0, 0}, "Settings", 3, world);
-    spawnButton({1, 0.75, -2}, {0, 0, 0}, "Tutorial", 3, world);
-    spawnButton({1, -0.75, -2}, {0, 0, 0}, "Quit", 3, world);
 
 // ---------------------------------
 

@@ -69,8 +69,8 @@ ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, floa
 
 void bomberman::Menu::mainScene(ecs::World &world)
 {
-    spawnButton({1, 2.75, -2}, {0, 0, 0}, "Start", 3, world);
-    spawnButton({1, 1.75, -2}, {0, 0, 0}, "Settings", 3, world);
-    spawnButton({1, 0.75, -2}, {0, 0, 0}, "Tutorial", 3, world);
-    spawnButton({1, -0.75, -2}, {0, 0, 0}, "Quit", 3, world);
+    spawnButton({0, 2.75, -2}, {0, 0, 0}, "Start", 3, world);
+    spawnButton({0, 1.75, -2}, {0, 0, 0}, "Settings", 3, world);
+    spawnButton({0, 0.75, -2}, {0, 0, 0}, "Tutorial", 3, world);
+    spawnButton({0, -0.75, -2}, {0, 0, 0}, "Quit", 3, world);
 }
