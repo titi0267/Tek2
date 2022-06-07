@@ -22,6 +22,7 @@ int elf_64_nm(Elf64_Ehdr *elf, nm_t *nm)
 {
     Elf64_Shdr *shdr = (Elf64_Shdr *)((void *)elf + elf->e_shoff);
     Elf64_Sym *sym;
+    shdr->sh_flags
     char *str;
     node_t list = NULL;
 

@@ -13,12 +13,17 @@ int use_mmap(int open_ret, nm_t *nm, struct stat buffer)
     int is_64 = 0;
     int status;
 
-    if (nm->multiple_files == 1)
-        printf("\n%s:\n", nm->flags[0]);
     elf = mmap(NULL, buffer.st_size, PROT_READ, MAP_PRIVATE, open_ret, 0);
     nm->elf = (void *)elf;
-    if (elf->e_ident[EI_CLASS] == ELFCLASSNONE)
+    if (elf == MAP_FAILED || elf->e_ident[EI_CLASS] == ELFCLASSNONE ||
+        (elf->e_ident[EI_CLASS] != ELFCLASS32 &&
+        elf->e_ident[EI_CLASS] != ELFCLASS64)) {
+        printf("nm : %s: file format not recognized\n",
+            nm->flags[nm->flag_nbr]);
         return (ERROR);
+    }
+    if (nm->multiple_files == 1)
+        printf("\n%s:\n", nm->flags[0]);
     (elf->e_ident[EI_CLASS] == ELFCLASS64) ?
         elf_64_nm(elf, nm) : elf_32_nm(buffer, open_ret, nm);
     return (0);
