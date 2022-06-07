@@ -1,12 +1,12 @@
 cmake_minimum_required(VERSION 3.12)
 
-project(indiestudio CXX)
+project(bomberman CXX)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 include("${CMAKE_SOURCE_DIR}/cmake/Findraylib.cmake")
 find_package(raylib REQUIRED)
 
-add_executable(indiestudio
+add_executable(bomberman
     "src/main.cpp"
 
     "src/ecs/World.cpp"
@@ -18,13 +18,13 @@ add_executable(indiestudio
     "src/ecs/systems/Text3D.cpp"
 )
 
-target_link_libraries(indiestudio raylib)
-target_include_directories(indiestudio
+target_link_libraries(bomberman raylib)
+target_include_directories(bomberman
     PRIVATE
         "${CMAKE_SOURCE_DIR}/include"
         "${raylib_SOURCE_DIR}/"
 )
-set_target_properties(indiestudio
+set_target_properties(bomberman
     PROPERTIES
         CXX_STANDARD 17
         CXX_STANDARD_REQUIRED ON
