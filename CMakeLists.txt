@@ -16,6 +16,15 @@ add_executable(indiestudio
     "src/ecs/systems/DrawModel.cpp"
     "src/ecs/systems/Hoverable.cpp"
     "src/ecs/systems/Text3D.cpp"
+
+    "src/network/client/LinuxClient.cpp"
+    "src/network/client/WinClient.cpp"
+    "src/network/server/LinuxServer.cpp"
+    "src/network/server/WinServer.cpp"
+    "src/network/sockets/CPSocket.cpp"
+    "src/network/sockets/SocketError.cpp"
+    "src/network/sockets/LinuxSocket.cpp"
+    "src/network/sockets/WinSocket.cpp"
 )
 
 target_link_libraries(indiestudio raylib)
