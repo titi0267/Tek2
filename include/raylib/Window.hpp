@@ -38,8 +38,15 @@ namespace raylib {
             return getWindowSize();
         }
 
+        void toggleClose()
+        {
+            _close = true;
+        }
+
         bool shouldClose()
         {
+            if (_close)
+                return (true);
             return WindowShouldClose();
         }
 
@@ -67,5 +74,7 @@ namespace raylib {
         {
             ClearBackground(color);
         }
+        private:
+            bool _close;
     };
 }

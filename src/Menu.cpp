@@ -53,10 +53,14 @@ void testClick(ecs::World &world, ecs::Entity entity)
     world.getComponent<ecs::Tint>(entity) = RED;
 }
 
-ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, float buttonSize, ecs::World &world, Color base, Color onHover)
+void quitFunction(ecs::World &world, ecs::Entity entity)
 {
-    Quaternion quat = QuaternionFromEuler(rot.x, rot.y, rot.z);
-    Transform transform = {pos, quat, {1, 1, 1}};
+    world.getComponent<ecs::Tint>(entity) = RED;
+    world.getRessource<raylib::Window>().toggleClose();
+}
+
+ecs::EntityCommands bomberman::Menu::spawnButton(ecs::World &world, Transform transform, std::string text, float buttonSize, ecs::HoverTint hoverTint, ClickCallbackFct doOnClick)
+{
     raylib::Font &font = world.getRessource<raylib::FontManager>().loadFont("./assets/fonts/emulogic.ttf");
     raylib::Model &model = world.getRessource<raylib::ModelManager>().loadModel("./assets/mesh/button.iqm");
 
@@ -64,13 +68,13 @@ ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, floa
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {&font},
     ecs::DrawableCube {{0, 0, -0.05}, {buttonSize, 0.8, 0.1}}, ecs::ModelRef {&model}, WHITE,
     ecs::Hitbox{{-buttonSize / 2, -0.4, -0.05}, {buttonSize / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, ecs::HoverTint {base, onHover}, ecs::HoverRotate {}, ecs::Clickable {testClick});
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick});
 }
 
 void bomberman::Menu::mainScene(ecs::World &world)
 {
-    spawnButton({0, 2.75, -2}, {0, 0, 0}, "Start", 3, world, WHITE, GREEN);
-    spawnButton({0, 1.75, -2}, {0, 0, 0}, "Settings", 3, world, WHITE, GRAY);
-    spawnButton({0, 0.75, -2}, {0, 0, 0}, "Tutorial", 3, world, WHITE, GRAY);
-    spawnButton({0, -0.75, -2}, {0, 0, 0}, "Quit", 3, world, WHITE, RED);
+    spawnButton(world, {{0, 2.75, -2}, QuaternionFromEuler(0, 0, 0), {1, 1, 1}}, "Start", 3, {WHITE, GREEN}, testClick);
+    spawnButton(world, {{0, 1.75, -2}, QuaternionFromEuler(0, 0, 0), {1, 1, 1}}, "Tutorial", 3, {WHITE, GRAY}, testClick);
+    spawnButton(world, {{0, 0.75, -2}, QuaternionFromEuler(0, 0, 0), {1, 1, 1}}, "Settings", 3, {WHITE, GRAY}, testClick);
+    spawnButton(world, {{0, -0.75, -2}, QuaternionFromEuler(0, 0, 0), {1, 1, 1}}, "Quit", 3, {WHITE, RED}, quitFunction);
 }

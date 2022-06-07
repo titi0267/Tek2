@@ -88,8 +88,6 @@ void ecs::HoverRotateUpdateSystem::update(ecs::World &world)
         if (rotate.inRotation) {
             rot.x += PI / 4.0 / 15;
             transform.rotation = QuaternionFromEuler(rot.x, rot.y, rot.z);
-
-            std::cout << rot.x << std::endl;
             if (!hover.isHover && rot.x <= 1e-04 && rot.x >= -1e-04) {
                 rot.x = 0;
                 rotate.inRotation = false;

@@ -30,12 +30,14 @@
 #include "ecs/components/ColorTexture.hpp"
 
 namespace bomberman {
+    using ClickCallbackFct = void (*)(ecs::World &world, ecs::Entity entity);
     class Menu {
         public:
             Menu();
             ~Menu();
             void setTextureToModel(ecs::World &world, const std::string &texturePath, const std::string &modelPath);
             void mainScene(ecs::World &world);
+            ecs::EntityCommands spawnButton(ecs::World &world, Transform transform, std::string text, float buttonSize, ecs::HoverTint hoverTint, ClickCallbackFct doOnClick);
 
         protected:
         private:
