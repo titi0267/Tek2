@@ -7,7 +7,7 @@
 
 #include "Map.hpp"
 
-Map::Map(int height, int width, int nbrPlayer, int complexity) : _height(height), _width(width), _nbrPlayer(nbrPlayer), _map(height * width, 0), _complexity(complexity)
+Map::Map::Map(int height, int width, int nbrPlayer, int complexity) : _height(height), _width(width), _nbrPlayer(nbrPlayer), _map(height * width, VOID), _complexity(complexity)
 {
     if (!(_height % 2 && _width % 2))
         throw std::invalid_argument("x and y size must be odd");
@@ -16,11 +16,21 @@ Map::Map(int height, int width, int nbrPlayer, int complexity) : _height(height)
     setDestructible();
 }
 
-Map::~Map()
+Map::Map::~Map()
 {
 }
 
-void Map::setWall()
+int Map::Map::getHeight()
+{
+    return (_height);
+}
+
+int Map::Map::getWidth()
+{
+    return (_width);
+}
+
+void Map::Map::setWall()
 {
     int layer = 1;
 
@@ -45,116 +55,119 @@ void Map::setWall()
     return;
 }
 
-void Map::cruxGen()
+void Map::Map::cruxGen()
 {
     for (int i = 1; i < MAP_Y; i++) {
         for (int j = 1; j < MAP_X; j++) {
             if (i % 2 != 0 && j % 2 != 0)
-                setCellsAt(j, i, 1);
+                setCellsAt(j, i, WALL);
         }
     }
 }
 
-void Map::squareGen()
+void Map::Map::squareGen()
 {
     //UP LEFT
-    setCellsAt(1, 1, 1);
-    setCellsAt(2, 1, 1);
-    setCellsAt(1, 2, 1);
+    setCellsAt(1, 1, WALL);
+    setCellsAt(2, 1, WALL);
+    setCellsAt(1, 2, WALL);
 
     //UP RIGHT
-    setCellsAt(MAP_X - 2, 1, 1);
-    setCellsAt(MAP_X - 3, 1, 1);
-    setCellsAt(MAP_X - 2, 2, 1);
+    setCellsAt(MAP_X - 2, 1, WALL);
+    setCellsAt(MAP_X - 3, 1, WALL);
+    setCellsAt(MAP_X - 2, 2, WALL);
 
     // DOWN LEFT
-    setCellsAt(1, MAP_Y - 2, 1);
-    setCellsAt(2, MAP_Y - 2, 1);
-    setCellsAt(1, MAP_Y - 3, 1);
+    setCellsAt(1, MAP_Y - 2, WALL);
+    setCellsAt(2, MAP_Y - 2, WALL);
+    setCellsAt(1, MAP_Y - 3, WALL);
 
     // DOWN RIGHT
-    setCellsAt(MAP_X - 2, MAP_Y - 2, 1);
-    setCellsAt(MAP_X - 3, MAP_Y - 2, 1);
-    setCellsAt(MAP_X - 2, MAP_Y - 3, 1);
+    setCellsAt(MAP_X - 2, MAP_Y - 2, WALL);
+    setCellsAt(MAP_X - 3, MAP_Y - 2, WALL);
+    setCellsAt(MAP_X - 2, MAP_Y - 3, WALL);
 
     // CENTRE
     for (int i = 3; i < MAP_Y - 3; i++) {
         for (int j = 3; j < MAP_X - 3; j++) {
-            setCellsAt(j, i, 1);
+            setCellsAt(j, i, WALL);
         }
     }
 }
 
-void Map::addGen()
+void Map::Map::addGen()
 {
     for (int i = 1; i < MAP_Y - 1; i++) {
-        setCellsAt(MAP_X / 2, i, 1);
-        setCellsAt(i, MAP_Y / 2, 1);
+        setCellsAt(MAP_X / 2, i, WALL);
+        setCellsAt(i, MAP_Y / 2, WALL);
     }
 
     //UP LEFT
-    setCellsAt(2, 2, 1);
-    setCellsAt(2, 1, 1);
-    setCellsAt(1, 2, 1);
+    setCellsAt(2, 2, WALL);
+    setCellsAt(2, 1, WALL);
+    setCellsAt(1, 2, WALL);
 
     //UP RIGHT
-    setCellsAt(MAP_X - 3, 2, 1);
-    setCellsAt(MAP_X - 3, 1, 1);
-    setCellsAt(MAP_X - 2, 2, 1);
+    setCellsAt(MAP_X - 3, 2, WALL);
+    setCellsAt(MAP_X - 3, 1, WALL);
+    setCellsAt(MAP_X - 2, 2, WALL);
 
     // DOWN LEFT
-    setCellsAt(2, MAP_Y - 3, 1);
-    setCellsAt(2, MAP_Y - 2, 1);
-    setCellsAt(1, MAP_Y - 3, 1);
+    setCellsAt(2, MAP_Y - 3, WALL);
+    setCellsAt(2, MAP_Y - 2, WALL);
+    setCellsAt(1, MAP_Y - 3, WALL);
 
     // DOWN RIGHT
-    setCellsAt(MAP_X - 3, MAP_Y - 3, 1);
-    setCellsAt(MAP_X - 3, MAP_Y - 2, 1);
-    setCellsAt(MAP_X - 2, MAP_Y - 3, 1);
+    setCellsAt(MAP_X - 3, MAP_Y - 3, WALL);
+    setCellsAt(MAP_X - 3, MAP_Y - 2, WALL);
+    setCellsAt(MAP_X - 2, MAP_Y - 3, WALL);
 }
 
-void Map::setDestructible()
+void Map::Map::setDestructible()
 {
     for (int i = 0; i < MAP_Y; i++) {
         for (int j = 2; j < MAP_X - 2; j++) {
-            if (getCellsAt(j, i) == 0 && std::rand() % _complexity)
-                setCellsAt(j, i, 3);
+            if (getCellsAt(j, i) == VOID && std::rand() % _complexity)
+                setCellsAt(j, i, DESTRUCTIBLE);
             continue;
         }
     }
     for (int i = 2; i < MAP_Y - 2; i++) {
         if (std::rand() % _complexity)
-            setCellsAt(0, i, 3);
+            setCellsAt(0, i, DESTRUCTIBLE);
         if (std::rand() % _complexity)
-            setCellsAt(MAP_X - 1, i, 3);
+            setCellsAt(MAP_X - 1, i, DESTRUCTIBLE);
     }
 }
 
-void Map::setPlayer()
+void Map::Map::setPlayer()
 {
-    setCellsAt(0, 0, 2);
-    setCellsAt(MAP_X - 1, MAP_Y - 1, 2);
+    setCellsAt(0, 0, SPAWN);
+    setCellsAt(MAP_X - 1, MAP_Y - 1, SPAWN);
     if (_nbrPlayer >= 3)
-        setCellsAt(0, MAP_Y - 1, 2);
+        setCellsAt(0, MAP_Y - 1, SPAWN);
     if (_nbrPlayer >= 4)
-        setCellsAt(MAP_X - 1, 0, 2);
+        setCellsAt(MAP_X - 1, 0, SPAWN);
 }
 
-void Map::print()
+void Map::Map::print()
 {
     for (int i = 0; i < MAP_Y; i++) {
         for (int j = 0; j < MAP_X; j++) {
             switch (_map[j + i * _width]) {
-            case 0:
+            case VOID:
                 std::cout << " ";
                 break;
-            case 1:
+            case WALL:
                 std::cout << "#";
                 break;
-            case 2:
+            case SPAWN:
                 std::cout << "P";
                 break;
-            case 3:
+            case DESTRUCTIBLE:
+                std::cout << "x";
+                break;
+            case BOMB:
                 std::cout << "o";
                 break;
             default:
@@ -166,7 +179,7 @@ void Map::print()
     }
 }
 
-void Map::dump()
+void Map::Map::dump()
 {
     std::cout << "DUMP MAP OBJECT" << std::endl;
     std::cout << "Height: " << _height << std::endl;
@@ -185,23 +198,23 @@ void Map::dump()
     std::cout << std::endl;
 }
 
-int Map::getCellsAt(int x, int y)
+int Map::Map::getCellsAt(int x, int y)
 {
     return (_map[x + y * _width]);
 }
 
-void Map::setCellsAt(int x, int y, int val)
+void Map::Map::setCellsAt(int x, int y, int val)
 {
     _map[x + y * _width] = val;
 }
 
-std::vector<int> Map::getMap()
+std::vector<int> Map::Map::getMap()
 {
     return _map;
 }
 
 
-void Map::save(std::string name)
+void Map::Map::save(std::string name)
 {
     std::ofstream saving(name + ".mbt");
     saving << _height << "\n" << _width << "\n";
@@ -209,7 +222,7 @@ void Map::save(std::string name)
     std::copy(_map.begin(), _map.end(), saving_it);
 }
 
-void Map::load(std::string filename)
+void Map::Map::load(std::string filename)
 {
     std::ifstream filestr(filename);
     std::string str;

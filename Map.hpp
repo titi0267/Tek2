@@ -17,31 +17,41 @@
 
 #define MAP_X _width
 #define MAP_Y _height
+#define VOID -1
+#define WALL -2
+#define SPAWN -3
+#define DESTRUCTIBLE -4
+#define BOMB -5
+#define DANGEROUS -6
 
-class Map {
-    public:
-        Map(int _height, int _width, int nbrPlayer, int complexity);
-        ~Map();
-        int getCellsAt(int x, int y);
-        void setCellsAt(int x, int y, int val);
-        void dump();
-        void print();
-        void save(std::string name);
-        void load(std::string filename);
-        std::vector<int> getMap();
-    protected:
-        int _height;
-        int _width;
-        int _nbrPlayer;
-        int _complexity;
-        std::vector<int> _map;
-    private:
-        void setPlayer();
-        void setWall();
-        void setDestructible();
-        void cruxGen();
-        void squareGen();
-        void addGen();
-};
+namespace Map {
+    class Map {
+        public:
+            Map(int _height, int _width, int nbrPlayer, int complexity);
+            ~Map();
+            int getCellsAt(int x, int y);
+            int getHeight();
+            int getWidth();
+            void setCellsAt(int x, int y, int val);
+            void dump();
+            void print();
+            void save(std::string name);
+            void load(std::string filename);
+            std::vector<int> getMap();
+        protected:
+            int _height;
+            int _width;
+            int _nbrPlayer;
+            int _complexity;
+            std::vector<int> _map;
+        private:
+            void setPlayer();
+            void setWall();
+            void setDestructible();
+            void cruxGen();
+            void squareGen();
+            void addGen();
+    };
+}
 
 #endif /* !MAP_HPP_ */
