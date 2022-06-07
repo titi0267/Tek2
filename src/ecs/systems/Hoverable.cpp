@@ -7,10 +7,13 @@
 
 #include "ecs/components/Hoverable.hpp"
 #include "ecs/components/HoverTint.hpp"
+#include "ecs/components/HoverRotate.hpp"
 #include "ecs/components/ColorTexture.hpp"
 
 #include "raylib/Window.hpp"
 #include "raylib/Camera.hpp"
+
+#include <iostream>
 
 void ecs::HoverUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
@@ -59,12 +62,40 @@ void ecs::HoverTintUpdateSystem::update(ecs::World &world)
 {
     for (ecs::Entity entity : _entities) {
         Hoverable &hover = world.getComponent<Hoverable>(entity);
-
+        HoverTint &hoverTint = world.getComponent<HoverTint>(entity);
         if (!hover.updated)
             continue;
         if (hover.isHover)
-            world.getComponent<Tint>(entity) = SKYBLUE;
+            world.getComponent<Tint>(entity) = hoverTint.onHover;
         else
-            world.getComponent<Tint>(entity) = WHITE;
+            world.getComponent<Tint>(entity) = hoverTint.base;
+    }
+}
+
+void ecs::HoverRotateUpdateSystem::setSignature(ecs::ComponentManager &component)
+{
+    _signature = component.generateSignature<Hoverable, Transform, HoverRotate>();
+}
+
+void ecs::HoverRotateUpdateSystem::update(ecs::World &world)
+{
+    for (ecs::Entity entity : _entities) {
+        Hoverable &hover = world.getComponent<Hoverable>(entity);
+        Transform &transform = world.getComponent<Transform>(entity);
+        HoverRotate &rotate = world.getComponent<HoverRotate>(entity);
+        Vector3 rot = QuaternionToEuler(transform.rotation);
+
+        if (rotate.inRotation) {
+            rot.x += PI / 4.0 / 15;
+            transform.rotation = QuaternionFromEuler(rot.x, rot.y, rot.z);
+
+            std::cout << rot.x << std::endl;
+            if (!hover.isHover && rot.x <= 1e-04 && rot.x >= -1e-04) {
+                rot.x = 0;
+                rotate.inRotation = false;
+            }
+        }
+        else if (hover.isHover)
+            rotate.inRotation = true;
     }
 }

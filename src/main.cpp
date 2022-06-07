@@ -25,6 +25,7 @@
 #include "ecs/components/Clickable.hpp"
 #include "ecs/components/Hoverable.hpp"
 #include "ecs/components/HoverTint.hpp"
+#include "ecs/components/HoverRotate.hpp"
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "Menu.hpp"
@@ -48,8 +49,8 @@ void registerRender(ecs::World &world)
 
 void registerMouseInputs(ecs::World &world)
 {
-    world.registerComponents<ecs::Clickable, ecs::Hoverable>();
-    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem>();
+    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate>();
+    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem>();
 }
 
 

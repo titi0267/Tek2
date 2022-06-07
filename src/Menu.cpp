@@ -25,6 +25,7 @@
 #include "ecs/components/Clickable.hpp"
 #include "ecs/components/Hoverable.hpp"
 #include "ecs/components/HoverTint.hpp"
+#include "ecs/components/HoverRotate.hpp"
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "../include/Menu.hpp"
@@ -49,11 +50,10 @@ void bomberman::Menu::setTextureToModel(ecs::World &world, const std::string &te
 
 void testClick(ecs::World &world, ecs::Entity entity)
 {
-    puts("CLICK !");
     world.getComponent<ecs::Tint>(entity) = RED;
 }
 
-ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, float buttonSize, ecs::World &world)
+ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, float buttonSize, ecs::World &world, Color base, Color onHover)
 {
     Quaternion quat = QuaternionFromEuler(rot.x, rot.y, rot.z);
     Transform transform = {pos, quat, {1, 1, 1}};
@@ -64,13 +64,13 @@ ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, floa
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {&font},
     ecs::DrawableCube {{0, 0, -0.05}, {buttonSize, 0.8, 0.1}}, ecs::ModelRef {&model}, WHITE,
     ecs::Hitbox{{-buttonSize / 2, -0.4, -0.05}, {buttonSize / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, ecs::Clickable {testClick});
+    ecs::Hoverable {}, ecs::HoverTint {base, onHover}, ecs::HoverRotate {}, ecs::Clickable {testClick});
 }
 
 void bomberman::Menu::mainScene(ecs::World &world)
 {
-    spawnButton({0, 2.75, -2}, {0, 0, 0}, "Start", 3, world);
-    spawnButton({0, 1.75, -2}, {0, 0, 0}, "Settings", 3, world);
-    spawnButton({0, 0.75, -2}, {0, 0, 0}, "Tutorial", 3, world);
-    spawnButton({0, -0.75, -2}, {0, 0, 0}, "Quit", 3, world);
+    spawnButton({0, 2.75, -2}, {0, 0, 0}, "Start", 3, world, WHITE, GREEN);
+    spawnButton({0, 1.75, -2}, {0, 0, 0}, "Settings", 3, world, WHITE, GRAY);
+    spawnButton({0, 0.75, -2}, {0, 0, 0}, "Tutorial", 3, world, WHITE, GRAY);
+    spawnButton({0, -0.75, -2}, {0, 0, 0}, "Quit", 3, world, WHITE, RED);
 }
