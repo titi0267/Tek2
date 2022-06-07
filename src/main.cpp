@@ -27,6 +27,7 @@
 #include "ecs/components/HoverTint.hpp"
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
+#include "Menu.cpp"
 
 void registerBasicComponents(ecs::World &world)
 {
@@ -51,25 +52,6 @@ void registerMouseInputs(ecs::World &world)
     world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem>();
 }
 
-void testClick(ecs::World &world, ecs::Entity entity)
-{
-    puts("CLICK !");
-    world.getComponent<ecs::Tint>(entity) = RED;
-}
-
-ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, float buttonSize, ecs::World &world)
-{
-    Quaternion quat = QuaternionFromEuler(rot.x, rot.y, rot.z);
-    Transform transform = {pos, quat, {1, 1, 1}};
-    raylib::Font &font = world.getRessource<raylib::FontManager>().loadFont("./assets/fonts/emulogic.ttf");
-    raylib::Texture &woodPlanks = world.getRessource<raylib::TextureManager>().loadTexture("./assets/textures/planks.png");
-
-    return world.spawn().insert(transform,
-    ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {&font},
-    ecs::DrawableCube {{0, 0, -0.05}, {buttonSize, 0.8, 0.1}}, ecs::TextureRef {&woodPlanks}, WHITE,
-    ecs::Hitbox{{-buttonSize / 2, -0.4, -0.05}, {buttonSize / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, ecs::Clickable {testClick});
-}
 
 class RotationTest : public ecs::ASystem {
     public:
@@ -101,7 +83,7 @@ int main()
     registerRender(world);
     registerMouseInputs(world);
 
-    world.registerSystem<RotationTest>();
+    //world.registerSystem<RotationTest>();
 
 // ---------------------------------
 
@@ -114,8 +96,21 @@ int main()
 
 // ---------------------------------
 
-    spawnButton({1, -0.75, -2}, {0, 0, 0}, "Test", 3, world);
-    spawnButton({1, 0.75, -2}, {0, 0, 0}, "Test 2", 4, world);
+    bomberman::Menu menu;
+
+    menu.setTextureToModel(world, "./assets/textures/button_txt.png", "./assets/mesh/button.iqm");
+    menu.mainScene(world);
+    /*raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
+    raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
+
+    raylib::Model &buttonModel = modelMan.loadModel("./assets/mesh/button.iqm");
+    raylib::Texture &buttonText = textureMan.loadTexture("./assets/textures/button_txt.png");
+    buttonModel.getMaterialView(0).setTexture(MATERIAL_MAP_DIFFUSE, buttonText);
+*/
+    spawnButton({1, 2.75, -2}, {0, 0, 0}, "Start", 3, world);
+    spawnButton({1, 1.75, -2}, {0, 0, 0}, "Settings", 3, world);
+    spawnButton({1, 0.75, -2}, {0, 0, 0}, "Tutorial", 3, world);
+    spawnButton({1, -0.75, -2}, {0, 0, 0}, "Quit", 3, world);
 
 // ---------------------------------
 
