@@ -18,6 +18,7 @@ add_executable(bomberman
     "src/ecs/systems/DrawModel.cpp"
     "src/ecs/systems/Hoverable.cpp"
     "src/ecs/systems/Text3D.cpp"
+    "src/ecs/systems/MenuElement.cpp"
 )
 
 target_link_libraries(bomberman raylib)

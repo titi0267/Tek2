@@ -26,22 +26,25 @@
 #include "ecs/components/Hoverable.hpp"
 #include "ecs/components/HoverTint.hpp"
 #include "ecs/components/HoverRotate.hpp"
+#include "ecs/components/MenuElement.hpp"
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "../include/Menu.hpp"
 
-bomberman::Menu::Menu()
+bomberman::Menu::Menu(ecs::World &world) : _world(world)
 {
+    actual = ecs::MainMenu;
+    change = false;
 }
 
 bomberman::Menu::~Menu()
 {
 }
 
-void bomberman::Menu::setTextureToModel(ecs::World &world, const std::string &texturePath, const std::string &modelPath)
+void bomberman::Menu::setTextureToModel(const std::string &texturePath, const std::string &modelPath)
 {
-    raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
-    raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
+    raylib::TextureManager &textureMan = _world.getRessource<raylib::TextureManager>();
+    raylib::ModelManager &modelMan = _world.getRessource<raylib::ModelManager>();
 
     raylib::Model &buttonModel = modelMan.loadModel(modelPath);
     raylib::Texture &buttonText = textureMan.loadTexture(texturePath);
@@ -53,28 +56,101 @@ void testClick(ecs::World &world, ecs::Entity entity)
     world.getComponent<ecs::Tint>(entity) = RED;
 }
 
+void graphicalFunction(ecs::World &world, ecs::Entity entity)
+{
+    world.getComponent<ecs::Tint>(entity) = RED;
+    *(world.getComponent<ecs::MenuElement>(entity).actual) = ecs::Graphical;
+    *(world.getComponent<ecs::MenuElement>(entity).change) = true;
+}
+
+void optionFunction(ecs::World &world, ecs::Entity entity)
+{
+    world.getComponent<ecs::Tint>(entity) = RED;
+    *(world.getComponent<ecs::MenuElement>(entity).actual) = ecs::Settings;
+    *(world.getComponent<ecs::MenuElement>(entity).change) = true;
+}
+
 void quitFunction(ecs::World &world, ecs::Entity entity)
 {
     world.getComponent<ecs::Tint>(entity) = RED;
     world.getRessource<raylib::Window>().toggleClose();
 }
 
-ecs::EntityCommands bomberman::Menu::spawnButton(ecs::World &world, Transform transform, std::string text, float buttonSize, ecs::HoverTint hoverTint, ClickCallbackFct doOnClick)
+void mainMenuFunction(ecs::World &world, ecs::Entity entity)
 {
-    raylib::Font &font = world.getRessource<raylib::FontManager>().loadFont("./assets/fonts/emulogic.ttf");
-    raylib::Model &model = world.getRessource<raylib::ModelManager>().loadModel("./assets/mesh/button.iqm");
+    world.getComponent<ecs::Tint>(entity) = RED;
+    *(world.getComponent<ecs::MenuElement>(entity).actual) = ecs::MainMenu;
+    *(world.getComponent<ecs::MenuElement>(entity).change) = true;
+}
 
-    return world.spawn().insert(transform,
+ecs::EntityCommands bomberman::Menu::spawnMainMenuButton(ecs::MenuMovement pos, std::string text, float buttonSize, ecs::HoverTint hoverTint, ClickCallbackFct doOnClick)
+{
+    raylib::Font &font = _world.getRessource<raylib::FontManager>().loadFont("./assets/fonts/emulogic.ttf");
+    raylib::Model &model = _world.getRessource<raylib::ModelManager>().loadModel("./assets/mesh/button.iqm");
+    Transform transform = pos.actual ? pos.active : pos.passive;
+
+    return _world.spawn().insert(transform,
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {&font},
     ecs::DrawableCube {{0, 0, -0.05}, {buttonSize, 0.8, 0.1}}, ecs::ModelRef {&model}, WHITE,
     ecs::Hitbox{{-buttonSize / 2, -0.4, -0.05}, {buttonSize / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick});
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::MenuElement {&actual, ecs::MainMenu, &change, pos});
 }
 
-void bomberman::Menu::mainScene(ecs::World &world)
+ecs::EntityCommands bomberman::Menu::spawnSettingsButton(ecs::MenuMovement pos, std::string text, float buttonSize, ecs::HoverTint hoverTint, ClickCallbackFct doOnClick)
 {
-    spawnButton(world, {{0, 2.75, -2}, QuaternionFromEuler(0, 0, 0), {1, 1, 1}}, "Start", 3, {WHITE, GREEN}, testClick);
-    spawnButton(world, {{0, 1.75, -2}, QuaternionFromEuler(0, 0, 0), {1, 1, 1}}, "Tutorial", 3, {WHITE, GRAY}, testClick);
-    spawnButton(world, {{0, 0.75, -2}, QuaternionFromEuler(0, 0, 0), {1, 1, 1}}, "Settings", 3, {WHITE, GRAY}, testClick);
-    spawnButton(world, {{0, -0.75, -2}, QuaternionFromEuler(0, 0, 0), {1, 1, 1}}, "Quit", 3, {WHITE, RED}, quitFunction);
+    raylib::Font &font = _world.getRessource<raylib::FontManager>().loadFont("./assets/fonts/emulogic.ttf");
+    raylib::Model &model = _world.getRessource<raylib::ModelManager>().loadModel("./assets/mesh/button.iqm");
+    Transform transform = pos.actual ? pos.active : pos.passive;
+
+    return _world.spawn().insert(transform,
+    ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {&font},
+    ecs::DrawableCube {{0, 0, -0.05}, {buttonSize, 0.8, 0.1}}, ecs::ModelRef {&model}, WHITE,
+    ecs::Hitbox{{-buttonSize / 2, -0.4, -0.05}, {buttonSize / 2, 0.4, 0.05}},
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::MenuElement {&actual, ecs::Settings, &change, pos});
+}
+
+void bomberman::Menu::generateMainMenu()
+{
+    Transform active = {{0, 2.75, -2}, QuaternionFromEuler(0, 0, 0), {1, 1, 1}};
+    Transform passive = active;
+    passive.translation.x += 10;
+    bool actual = true;
+    bool right = false;
+    float move = 0.1;
+    ecs::MenuMovement pos = {active, passive, actual, right, move};
+
+    spawnMainMenuButton(pos, "Start", 3, {WHITE, GREEN}, testClick);
+    pos.active.translation.y -= 1;
+    pos.passive.translation.y -= 1;
+    spawnMainMenuButton(pos, "Tutorial", 3, {WHITE, GRAY}, testClick);
+    pos.active.translation.y -= 1;
+    pos.passive.translation.y -= 1;
+    spawnMainMenuButton(pos, "Settings", 3, {WHITE, GRAY}, optionFunction);
+    pos.active.translation.y = -0.75;
+    pos.passive.translation.y = -0.75;
+    spawnMainMenuButton(pos, "Quit", 3, {WHITE, RED}, quitFunction);
+}
+
+void bomberman::Menu::generateSettingsMenu()
+{
+    Transform active = {{0, 2.75, -2}, QuaternionFromEuler(0, 0, 0), {1, 1, 1}};
+    Transform passive = active;
+    passive.translation.x -= 10;
+    bool actual = false;
+    bool right = true;
+    float move = 0.1;
+    ecs::MenuMovement pos = {active, passive, actual, right, move};
+
+    spawnSettingsButton(pos, "Graphical", 3, {WHITE, GRAY}, quitFunction);
+    pos.active.translation.y -= 1;
+    pos.passive.translation.y -= 1;
+    spawnSettingsButton(pos, "Main Menu", 3, {WHITE, GRAY}, mainMenuFunction);
+}
+
+void bomberman::Menu::mainScene()
+{
+    generateMainMenu();
+    generateSettingsMenu();
 }

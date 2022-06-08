@@ -49,8 +49,8 @@ void registerRender(ecs::World &world)
 
 void registerMouseInputs(ecs::World &world)
 {
-    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate>();
-    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem>();
+    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate, ecs::MenuElement>();
+    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::MenuElementSystem>();
 }
 
 
@@ -97,10 +97,10 @@ int main()
 
 // ---------------------------------
 
-    bomberman::Menu menu;
+    bomberman::Menu menu(world);
 
-    menu.setTextureToModel(world, "./assets/textures/button_txt.png", "./assets/mesh/button.iqm");
-    menu.mainScene(world);
+    menu.setTextureToModel("./assets/textures/button_txt.png", "./assets/mesh/button.iqm");
+    menu.mainScene();
 
 // ---------------------------------
 
