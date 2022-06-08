@@ -28,7 +28,6 @@
 #include "ecs/components/HoverTint.hpp"
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
-#include "ecs/components/MenuElement.hpp"
 
 namespace bomberman {
     using ClickCallbackFct = void (*)(ecs::World &world, ecs::Entity entity);
@@ -38,14 +37,16 @@ namespace bomberman {
             ~Menu();
             void setTextureToModel(const std::string &texturePath, const std::string &modelPath);
             void mainScene();
-            ecs::EntityCommands spawnMainMenuButton(ecs::MenuMovement pos, std::string text, float buttonSize, ecs::HoverTint hoverTint, ClickCallbackFct doOnClick);
-            ecs::EntityCommands spawnSettingsButton(ecs::MenuMovement pos, std::string text, float buttonSize, ecs::HoverTint hoverTint, ClickCallbackFct doOnClick);
+            ecs::EntityCommands spawnMainMenuButton(Transform transform, std::string text, float buttonSize, ecs::HoverTint hoverTint, ClickCallbackFct doOnClick);
+            ecs::EntityCommands spawnSettingsButton(Transform transform, std::string text, float buttonSize, ecs::HoverTint hoverTint, ClickCallbackFct doOnClick);
             void generateMainMenu();
             void generateSettingsMenu();
 
         protected:
-            ecs::MenuType actual;
-            bool change;
+            bool right;
+            bool left;
+            bool up;
+            bool down;
             ecs::World &_world;
         private:
     };
