@@ -7,12 +7,12 @@
 
 #pragma once
 
+#ifdef __linux__
+
 #include "network/IClient.hpp"
-#include "../sockets/ISocket.hpp"
+#include "network/ISocket.hpp"
 #include <string>
 #include <memory>
-
-#ifdef __linux__
 
 namespace network {
     class LinuxClient : public IClient {

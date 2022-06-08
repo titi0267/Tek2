@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "ISocket.hpp"
-
 #ifdef __linux__
+
+#include "network/ISocket.hpp"
 
 namespace network {
     class LinuxSocket : public ISocket {

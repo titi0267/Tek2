@@ -7,9 +7,9 @@
 
 #pragma once
 
-#include "ISocket.hpp"
-
 #ifdef _WIN32
+
+#include "network/ISocket.hpp"
 
 namespace network {
     class WinSocket : public ISocket {

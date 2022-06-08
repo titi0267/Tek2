@@ -10,7 +10,7 @@
 #include "WinServer.hpp"
 #include "../sockets/SocketError.hpp"
 #include "../sockets/SocketInclude.hpp"
-#include "../sockets/CPSocket.hpp"
+#include "network/CPSocket.hpp"
 #include "network/Utils.hpp"
 #include <iostream>
 #include <vector>
@@ -41,22 +41,6 @@ network::WinServer::WinServer(const std::string &ip, const std::string &portStri
     std::cout << "WinServer created successfully with IP: " << _ip << " and Port: "  << _port << std::endl;
 }
 
-network::WinServer::WinServer(const std::string &port, const int maxClient) : WinServer::WinServer("", port, maxClient)
-{
-}
-
-network::WinServer::WinServer(const int maxClient) : WinServer::WinServer("", "", maxClient)
-{
-}
-
-network::WinServer::WinServer() : WinServer::WinServer("", "", 10)
-{
-}
-
-network::WinServer::~WinServer()
-{
-}
-
 void network::WinServer::setPortFromSocket()
 {
     struct sockaddr_in sin;
@@ -67,7 +51,7 @@ void network::WinServer::setPortFromSocket()
     _port = ntohs(sin.sin_port);
 }
 
-void network::LinuxServer::updateRWStates()
+void network::WinServer::updateRWStates()
 {
     unsigned int socket = _socket->getSocket();
     struct timeval timeout = {0, 1};
@@ -84,26 +68,30 @@ void network::LinuxServer::updateRWStates()
         if (_clients[i] > fdMax)
             fdMax = _clients[i];
     }
-    if (select(socket + 1, &_readSet, &_writeSet, NULL, &timeout) < 0)
+    if (select(fdMax + 1, &_readSet, &_writeSet, NULL, &timeout) < 0)
         throw (SocketError("WinServer", "select() call failed"));
 }
 
-bool network::LinuxServer::canAcceptConn()
+bool network::WinServer::canAcceptConn()
 {
+    updateRWStates();
     return (FD_ISSET(_socket->getSocket(), &_readSet));
 }
 
-bool network::LinuxServer::canRead(ConnId id)
+bool network::WinServer::canRead(ConnId id)
 {
+    updateRWStates();
     return (FD_ISSET(_clients[id], &_readSet));
 }
 
-bool network::LinuxServer::canWrite(ConnId id)
+bool network::WinServer::canWrite(ConnId id)
 {
+
+    updateRWStates();
     return (FD_ISSET(_clients[id], &_writeSet));
 }
 
-network::ConnId network::LinuxServer::acceptClient()
+network::ConnId network::WinServer::acceptClient()
 {
     static ConnId id = 0;
     SocketFd clientFd = 0;
@@ -114,12 +102,12 @@ network::ConnId network::LinuxServer::acceptClient()
     if (clientFd == -1)
         throw (SocketError("LinuxServer", "accept() call failed"));
     std::cout << "Connection from " << inet_ntoa(clientAddr.sin_addr) <<":" << ntohs(clientAddr.sin_port) << std::endl;
-    _clients.insert(std::pair<ConnId, SocketFd>(id++, clientFd));
-    return (clientFd);
+    _clients.insert({id, clientFd});
+    return (id++);
 }
 
 //Needs testing
-int network::LinuxServer::read(ConnId id, void *buf, std::size_t size)
+int network::WinServer::read(ConnId id, void *buf, std::size_t size)
 {
     SocketFd fd = _clients[id];
 
@@ -127,7 +115,7 @@ int network::LinuxServer::read(ConnId id, void *buf, std::size_t size)
 }
 
 //Needs testing
-void network::LinuxServer::write(ConnId id, void *data, std::size_t size)
+void network::WinServer::write(ConnId id, void *data, std::size_t size)
 {
     SocketFd fd = _clients[id];
 

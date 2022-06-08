@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.12)
 
 project(indiestudio CXX)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
 include("${CMAKE_SOURCE_DIR}/cmake/Findraylib.cmake")
 find_package(raylib REQUIRED)
@@ -9,7 +11,11 @@ find_package(raylib REQUIRED)
 add_executable(indiestudio
     "src/main.cpp"
 
-    "src/ecs/World.cpp"
+    "src/ecs/engine/World.cpp"
+    "src/ecs/engine/Network.cpp"
+    "src/ecs/engine/ClientManager.cpp"
+    "src/ecs/engine/ServerManager.cpp"
+
 
     "src/ecs/systems/ClickUpdate.cpp"
     "src/ecs/systems/DrawCube.cpp"

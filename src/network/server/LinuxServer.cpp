@@ -10,7 +10,7 @@
 #include "LinuxServer.hpp"
 #include "../sockets/SocketError.hpp"
 #include "../sockets/SocketInclude.hpp"
-#include "../sockets/CPSocket.hpp"
+#include "network/CPSocket.hpp"
 #include "network/Utils.hpp"
 #include <iostream>
 #include <vector>
@@ -62,28 +62,31 @@ void network::LinuxServer::updateRWStates()
     FD_SET(socket, &_readSet);
     if (socket > fdMax)
         fdMax = socket;
-    for (unsigned int i = 0; i < _clients.size(); i++) {
-        FD_SET(_clients[i], &_readSet);
-        FD_SET(_clients[i], &_writeSet);
-        if (_clients[i] > fdMax)
-            fdMax = _clients[i];
+    for (auto &[conn, socket] : _clients) {
+        FD_SET(socket, &_readSet);
+        FD_SET(socket, &_writeSet);
+        if (socket > fdMax)
+            fdMax = socket;
     }
-    if (select(socket + 1, &_readSet, &_writeSet, NULL, &timeout) < 0)
+    if (select(fdMax + 1, &_readSet, &_writeSet, NULL, &timeout) < 0)
         throw (SocketError("LinuxServer", "select() call failed"));
 }
 
 bool network::LinuxServer::canAcceptConn()
 {
+    updateRWStates();
     return (FD_ISSET(_socket->getSocket(), &_readSet));
 }
 
 bool network::LinuxServer::canRead(ConnId id)
 {
+    updateRWStates();
     return (FD_ISSET(_clients[id], &_readSet));
 }
 
 bool network::LinuxServer::canWrite(ConnId id)
 {
+    updateRWStates();
     return (FD_ISSET(_clients[id], &_writeSet));
 }
 
@@ -98,8 +101,8 @@ network::ConnId network::LinuxServer::acceptClient()
     if (clientFd == -1)
         throw (SocketError("LinuxServer", "accept() call failed"));
     std::cout << "Connection from " << inet_ntoa(clientAddr.sin_addr) <<":" << ntohs(clientAddr.sin_port) << std::endl;
-    _clients.insert(std::pair<ConnId, SocketFd>(id++, clientFd));
-    return (clientFd);
+    _clients.insert({id, clientFd});
+    return (id++);
 }
 
 //Needs testing
@@ -121,13 +124,14 @@ void network::LinuxServer::write(ConnId id, void *data, std::size_t size)
 //Needs testing on other computer
 std::string network::LinuxServer::findIp()
 {
-    std::ifstream ifs;
-    std::string line;
+    // std::ifstream ifs;
+    // std::string line;
 
-    system("hostname -I | awk '{print $1}' > ip" );
-    ifs.open("ip", std::ifstream::in);
-    std::getline(ifs, line);
-    return (line);
+    // system("hostname -I | awk '{print $1}' > ip" );
+    // ifs.open("ip", std::ifstream::in);
+    // std::getline(ifs, line);
+    // return (line);
+    return "THIS IS AN IP";
 }
 
 #endif

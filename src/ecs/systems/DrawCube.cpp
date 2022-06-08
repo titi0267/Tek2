@@ -29,6 +29,8 @@ void ecs::DrawTextureCubeSystem::setSignature(ecs::ComponentManager &component)
     _signature = component.generateSignature<Transform, DrawableCube, TextureRef>();
 }
 
+#include <iostream>
+
 void ecs::DrawTextureCubeSystem::update(ecs::World &world)
 {
     raylib::Camera &camera = world.getRessource<raylib::Camera>();
@@ -38,8 +40,7 @@ void ecs::DrawTextureCubeSystem::update(ecs::World &world)
         Transform &transform = world.getComponent<Transform>(entity);
         DrawableCube &cube = world.getComponent<DrawableCube>(entity);
         TextureRef &textRef = world.getComponent<TextureRef>(entity);
-        raylib::Matrix mat = raylib::Matrix::fromTransform(transform)
-        * raylib::Matrix::fromTranslate(cube.offset);
+        raylib::Matrix mat = raylib::Matrix::fromTransform(transform);
         Tint tint = WHITE;
 
         if (world.hasComponent<Tint>(entity))

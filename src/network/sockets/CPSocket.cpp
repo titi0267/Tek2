@@ -5,7 +5,7 @@
 ** CPSocket
 */
 
-#include "CPSocket.hpp"
+#include "network/CPSocket.hpp"
 #ifdef __linux__
     #include "LinuxSocket.hpp"
     #include "../server/LinuxServer.hpp"

@@ -28,14 +28,16 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 
+#include "ecs/engine/Network.hpp"
+
 void registerBasicComponents(ecs::World &world)
 {
-    world.registerComponents<Transform, ecs::Hitbox>();
+    world.registerComponents<Transform, ecs::Tint, ecs::MirrorEntity, ecs::Hitbox>();
 }
 
 void registerRender(ecs::World &world)
 {
-    world.registerComponents<ecs::DrawableCube, ecs::Tint, ecs::TextureRef>();
+    world.registerComponents<ecs::DrawableCube, ecs::TextureRef>();
     world.registerSystem<ecs::DrawTextureCubeSystem>();
 
     world.registerComponent<ecs::ModelRef>();
@@ -51,59 +53,93 @@ void registerMouseInputs(ecs::World &world)
     world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem>();
 }
 
-void testClick(ecs::World &world, ecs::Entity entity)
+void runServer(ecs::World &world)
 {
-    puts("CLICK !");
-    world.getComponent<ecs::Tint>(entity) = RED;
+    world.insertRessource<ecs::ServerManager>();
+    world.registerSystem<ecs::NetworkUpdateSystem<ecs::ServerManager>>();
+
+    while (true)
+        world.updateServer();
 }
 
-ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, float buttonSize, ecs::World &world)
-{
-    Quaternion quat = QuaternionFromEuler(rot.x, rot.y, rot.z);
-    Transform transform = {pos, quat, {1, 1, 1}};
-    raylib::Font &font = world.getRessource<raylib::FontManager>().loadFont("./assets/fonts/emulogic.ttf");
-    raylib::Texture &woodPlanks = world.getRessource<raylib::TextureManager>().loadTexture("./assets/textures/planks.png");
-
-    return world.spawn().insert(transform,
-    ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {&font},
-    ecs::DrawableCube {{0, 0, -0.05}, {buttonSize, 0.8, 0.1}}, ecs::TextureRef {&woodPlanks}, WHITE,
-    ecs::Hitbox{{-buttonSize / 2, -0.4, -0.05}, {buttonSize / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, ecs::Clickable {testClick});
-}
-
-class RotationTest : public ecs::ASystem {
+class InputSystem : public ecs::ASystem {
     public:
-    void setSignature(ecs::ComponentManager &component)
+    void setSignature(ecs::ComponentManager &man)
     {
-        _signature = component.generateSignature<Transform>();
+        _signature = man.generateSignature<Transform, ecs::MirrorEntity>();
     }
 
     void update(ecs::World &world)
     {
         for (ecs::Entity entity : _entities) {
             Transform &transform = world.getComponent<Transform>(entity);
-            Vector3 rot = QuaternionToEuler(transform.rotation);
+            Vector3 &pos = transform.translation;
 
-            rot.x += PI / 16.0 / 30;
-            rot.z += PI / 32.0 / 30;
-            if (rot.y >= PI / 2 - 0.01)
-                rot.y = -PI / 2;
-            transform.rotation = QuaternionFromEuler(rot.x, rot.y, rot.z);
+            if (IsKeyDown(KEY_W))
+                pos.z -= 0.05;
+            else if (IsKeyDown(KEY_S))
+                pos.z += 0.05;
+
+            if (IsKeyDown(KEY_A))
+                pos.x -= 0.05;
+            else if (IsKeyDown(KEY_D))
+                pos.x += 0.05;
+
+            if (IsKeyDown(KEY_Q))
+                pos.y += 0.05;
+            else if (IsKeyDown(KEY_E))
+                pos.y -= 0.05;
+
+            if (world.hasComponent<ecs::Tint>(entity)) {
+                if (IsKeyDown(KEY_R))
+                    world.getComponent<ecs::Tint>(entity) = RED;
+                if (IsKeyDown(KEY_G))
+                    world.getComponent<ecs::Tint>(entity) = GREEN;
+                if (IsKeyDown(KEY_B))
+                    world.getComponent<ecs::Tint>(entity) = BLUE;
+            }
         }
     }
 };
 
-int main()
+#include "raylib/GL.hpp"
+
+class DrawCubeTest : public ecs::ASystem {
+    public:
+    DrawCubeTest() { _stage = ecs::DRAW_WORLD; };
+
+    void setSignature(ecs::ComponentManager &man)
+    {
+        _signature = man.generateSignature<Transform, ecs::Tint>();
+    }
+
+    void update(ecs::World &world)
+    {
+        raylib::Camera &cam = world.getRessource<raylib::Camera>();
+    int i = 0;
+
+        cam.begin3DMode();
+        for (ecs::Entity entity : _entities) {
+            Transform &transform = world.getComponent<Transform>(entity);
+            ecs::Tint &tint = world.getComponent<ecs::Tint>(entity);
+            raylib::Matrix mat = raylib::Matrix::fromTransform(transform);
+
+            raylib::RlMatrixPush push;
+            raylib::rlMultMatrix(mat);
+            DrawCube({0}, 1, 1, 1, tint);
+            std::cout << "Render cube " << i << std::endl;
+            i++;
+        }
+        cam.end3DMode();
+    }
+};
+
+void runClient(ecs::World &world)
 {
-    ecs::World world{};
-
-    registerBasicComponents(world);
-    registerRender(world);
-    registerMouseInputs(world);
-
-    world.registerSystem<RotationTest>();
-
 // ---------------------------------
+
+    // registerRender(world);
+    // registerMouseInputs(world);
 
     world.insertRessource<raylib::Window>();
     world.insertRessource<raylib::Camera>(Vector3 {0.0, 0.0, 2.0}, Vector3 {0.0, 0.0, -4.0});
@@ -111,18 +147,39 @@ int main()
     world.insertRessource<raylib::ModelManager>();
     world.insertRessource<raylib::AnimationManager>();
     world.insertRessource<raylib::FontManager>();
+    world.insertRessource<ecs::ClientManager>();
+
+    world.registerSystem<ecs::NetworkUpdateSystem<ecs::ClientManager>>();
+
+    world.registerSystems<InputSystem, DrawCubeTest>();
 
 // ---------------------------------
 
-    spawnButton({1, -0.75, -2}, {0, 0, 0}, "Test", 3, world);
-    spawnButton({1, 0.75, -2}, {0, 0, 0}, "Test 2", 4, world);
+    raylib::Texture &woodPlanks = world.getRessource<raylib::TextureManager>().loadTexture("./assets/textures/planks.png");
+
+    world.spawn().insert(Transform{{1, 1, -2}, QuaternionIdentity(), {1, 1, 1}}, GREEN, ecs::MirrorEntity{});
 
 // ---------------------------------
 
     raylib::Window &window = world.getRessource<raylib::Window>();
 
     window.setTargetFPS(60);
-    window.resize({1280, 720});
-    while (!window.shouldClose())
-        world.update();
+    window.resize({640, 480});
+    while (!window.shouldClose()) {
+        // if (IsKeyDown(KEY_A))
+        //     world.killAllEntities();
+        world.updateClient();
+    }
+}
+
+int main(int ac, char **av)
+{
+    ecs::World world{};
+
+    registerBasicComponents(world);
+
+    if (ac == 2)
+        runServer(world);
+    else
+        runClient(world);
 }

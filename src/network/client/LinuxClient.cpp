@@ -10,7 +10,7 @@
 #include "LinuxClient.hpp"
 #include "../sockets/SocketInclude.hpp"
 #include "../sockets/SocketError.hpp"
-#include "../sockets/CPSocket.hpp"
+#include "network/CPSocket.hpp"
 #include "network/Utils.hpp"
 #include <iostream>
 
@@ -44,11 +44,13 @@ void network::LinuxClient::updateRWStates()
 
 bool network::LinuxClient::canRead()
 {
+    updateRWStates();
     return (FD_ISSET(_socket->getSocket(), &_readSet));
 }
 
 bool network::LinuxClient::canWrite()
 {
+    updateRWStates();
     return (FD_ISSET(_socket->getSocket(), &_writeSet));
 }
 

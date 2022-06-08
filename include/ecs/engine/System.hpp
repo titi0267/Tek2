@@ -15,8 +15,9 @@
 namespace ecs {
     class World;
 
-    const std::size_t STAGES_NB = 5;
+    const std::size_t STAGES_NB = 6;
     enum Stages {
+        NETWORK_UPDATE,
         INPUT_UPDATE,
         UPDATE,
         RENDER_UPDATE,

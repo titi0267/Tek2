@@ -7,13 +7,13 @@
 
 #pragma once
 
-#include "network/IClient.hpp"
-#include "../sockets/SocketInclude.hpp"
-#include "../sockets/ISocket.hpp"
+#ifdef _WIN32
+
 #include <string>
 #include <memory>
-
-#ifdef _WIN32
+#include "network/IClient.hpp"
+#include "network/ISocket.hpp"
+#include "../sockets/SocketInclude.hpp"
 
 namespace network {
     class WinClient : public IClient {

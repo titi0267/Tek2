@@ -10,7 +10,7 @@
 #include "WinClient.hpp"
 #include "../sockets/SocketInclude.hpp"
 #include "../sockets/SocketError.hpp"
-#include "../sockets/CPSocket.hpp"
+#include "network/CPSocket.hpp"
 #include "network/Utils.hpp"
 #include <iostream>
 
@@ -44,11 +44,13 @@ void network::WinClient::updateRWStates()
 
 bool network::WinClient::canRead()
 {
+    updateRWStates();
     return (FD_ISSET(_socket->getSocket(), &_readSet));
 }
 
 bool network::WinClient::canWrite()
 {
+    updateRWStates();
     return (FD_ISSET(_socket->getSocket(), &_writeSet));
 }
 

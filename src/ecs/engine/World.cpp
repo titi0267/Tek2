@@ -10,10 +10,11 @@
 #include "ecs/engine/EntityCommands.hpp"
 #include "raylib/Window.hpp"
 
-void ecs::World::update()
+void ecs::World::updateClient()
 {
     raylib::Window &window = getRessource<raylib::Window>();
 
+    _systems.updateStage(*this, NETWORK_UPDATE);
     _systems.updateStage(*this, INPUT_UPDATE);
     _systems.updateStage(*this, UPDATE);
     _systems.updateStage(*this, RENDER_UPDATE);
@@ -22,6 +23,16 @@ void ecs::World::update()
     _systems.updateStage(*this, DRAW_WORLD);
     _systems.updateStage(*this, DRAW_HUD);
     window.endDrawing();
+}
+
+#include <unistd.h>
+#warning "usleep() is used, encapsulation and better system required"
+void ecs::World::updateServer()
+{
+    // usleep(5000);
+    _systems.updateStage(*this, NETWORK_UPDATE);
+    _systems.updateStage(*this, INPUT_UPDATE);
+    _systems.updateStage(*this, UPDATE);
 }
 
 void ecs::World::killAllEntities()

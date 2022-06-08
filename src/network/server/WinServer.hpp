@@ -7,18 +7,18 @@
 
 #pragma once
 
-#include "network/IServer.hpp"
-#include "../sockets/ISocket.hpp"
-#include "../sockets/SocketInclude.hpp"
-#include <memory>
-#include <map>
-
 #ifdef _WIN32
+
+#include <memory>
+#include <unordered_map>
+#include "network/IServer.hpp"
+#include "network/ISocket.hpp"
+#include "../sockets/SocketInclude.hpp"
 
 namespace network {
     class WinServer : public IServer {
         std::unique_ptr<ISocket> _socket;
-        std::map<ConnId,uint64_t> _clients;
+        std::unordered_map<ConnId,uint64_t> _clients;
 
         std::string _ip;
         unsigned short _port;
