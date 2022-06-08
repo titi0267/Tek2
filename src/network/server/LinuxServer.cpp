@@ -124,14 +124,13 @@ void network::LinuxServer::write(ConnId id, void *data, std::size_t size)
 //Needs testing on other computer
 std::string network::LinuxServer::findIp()
 {
-    // std::ifstream ifs;
-    // std::string line;
+    std::ifstream ifs;
+    std::string line;
 
-    // system("hostname -I | awk '{print $1}' > ip" );
-    // ifs.open("ip", std::ifstream::in);
-    // std::getline(ifs, line);
-    // return (line);
-    return "THIS IS AN IP";
+    system("hostname -i | awk '{print $1}' > ip" );
+    ifs.open("ip", std::ifstream::in);
+    std::getline(ifs, line);
+    return (line);
 }
 
 #endif

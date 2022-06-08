@@ -86,7 +86,6 @@ bool network::WinServer::canRead(ConnId id)
 
 bool network::WinServer::canWrite(ConnId id)
 {
-
     updateRWStates();
     return (FD_ISSET(_clients[id], &_writeSet));
 }
