@@ -34,3 +34,18 @@ inline Vector3 operator*(const Vector3 &lhs, const raylib::Matrix &mat)
 {
     return Vector3Transform(lhs, mat.getMatrix());
 }
+
+inline Vector3 operator*(const Vector3 &lhs, float scalar)
+{
+    return Vector3Scale(lhs, scalar);
+}
+
+inline float distance(const Vector3 &start, const Vector3 &end)
+{
+    return Vector3Distance(start, end);
+}
+
+inline Vector3 normalize(const Vector3 &vec)
+{
+    return Vector3Normalize(vec);
+}

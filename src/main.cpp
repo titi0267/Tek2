@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "ecs/engine/EntityCommands.hpp"
+#include "ecs/engine/SceneManager.hpp"
 
 #include "raylib/Camera.hpp"
 #include "raylib/Window.hpp"
@@ -28,8 +29,7 @@
 #include "ecs/components/HoverRotate.hpp"
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
-#include "ecs/components/MoveMenu.hpp"
-#include "Menu.hpp"
+#include "ecs/components/SceneMoveElement.hpp"
 
 void registerBasicComponents(ecs::World &world)
 {
@@ -50,32 +50,19 @@ void registerRender(ecs::World &world)
 
 void registerMouseInputs(ecs::World &world)
 {
-    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate, ecs::MoveMenu>();
-    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::MoveMenuElementSystem>();
+    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement>();
+    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem>();
 }
 
+void setTextureToModel(const std::string &texturePath, const std::string &modelPath, ecs::World &world)
+{
+    raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
+    raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
 
-class RotationTest : public ecs::ASystem {
-    public:
-    void setSignature(ecs::ComponentManager &component)
-    {
-        _signature = component.generateSignature<Transform>();
-    }
-
-    void update(ecs::World &world)
-    {
-        for (ecs::Entity entity : _entities) {
-            Transform &transform = world.getComponent<Transform>(entity);
-            Vector3 rot = QuaternionToEuler(transform.rotation);
-
-            rot.x += PI / 16.0 / 30;
-            rot.z += PI / 32.0 / 30;
-            if (rot.y >= PI / 2 - 0.01)
-                rot.y = -PI / 2;
-            transform.rotation = QuaternionFromEuler(rot.x, rot.y, rot.z);
-        }
-    }
-};
+    raylib::Model &buttonModel = modelMan.loadModel(modelPath);
+    raylib::Texture &buttonText = textureMan.loadTexture(texturePath);
+    buttonModel.getMaterialView(0).setTexture(MATERIAL_MAP_DIFFUSE, buttonText);
+}
 
 int main()
 {
@@ -85,8 +72,6 @@ int main()
     registerRender(world);
     registerMouseInputs(world);
 
-    //world.registerSystem<RotationTest>();
-
 // ---------------------------------
 
     world.insertRessource<raylib::Window>();
@@ -95,13 +80,13 @@ int main()
     world.insertRessource<raylib::ModelManager>();
     world.insertRessource<raylib::AnimationManager>();
     world.insertRessource<raylib::FontManager>();
+    world.insertRessource<ecs::SceneManager>();
 
 // ---------------------------------
 
-    bomberman::Menu menu(world);
+    world.getRessource<ecs::SceneManager>().loadDefaultScene(world);
 
-    menu.setTextureToModel("./assets/textures/button_txt.png", "./assets/mesh/button.iqm");
-    menu.mainScene();
+    setTextureToModel("./assets/textures/button_txt.png", "./assets/mesh/button.iqm", world);
 
 // ---------------------------------
 
