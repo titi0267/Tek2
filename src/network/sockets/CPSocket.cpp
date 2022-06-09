@@ -36,12 +36,12 @@ std::unique_ptr<network::IServer> network::CPSocket::createServer(const std::str
     return (nullptr);
 }
 
-std::unique_ptr<network::IClient> network::CPSocket::createClient(const std::string &ip, const std::string &portString)
+std::unique_ptr<network::IClient> network::CPSocket::createClient()
 {
     #ifdef __linux__
-        return (std::make_unique<LinuxClient>(ip, portString));
+        return (std::make_unique<LinuxClient>());
     #elif _WIN32
-        return (std::make_unique<WinClient>(ip, portString));
+        return (std::make_unique<WinClient>());
     #endif
     return (nullptr);
 }

@@ -8,11 +8,15 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 namespace network {
     class IClient {
         public:
         virtual ~IClient() = default;
+
+        virtual void connectTo(const std::string &ip, const std::string &portString) = 0;
+        virtual void disconnect() = 0;
 
         virtual void updateRWStates() = 0;
 

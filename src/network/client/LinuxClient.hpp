@@ -19,10 +19,14 @@ namespace network {
         std::unique_ptr<ISocket> _socket;
         fd_set _readSet;
         fd_set _writeSet;
+        bool _connected;
 
         public:
-        LinuxClient(const std::string &ip, const std::string &portString);
+        LinuxClient();
         ~LinuxClient() = default;
+
+        void connectTo(const std::string &ip, const std::string &portString);
+        void disconnect();
 
         void updateRWStates();
 

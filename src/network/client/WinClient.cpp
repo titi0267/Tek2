@@ -14,8 +14,15 @@
 #include "network/Utils.hpp"
 #include <iostream>
 
-network::WinClient::WinClient(const std::string &ip, const std::string &portString)
+network::WinClient::WinClient()
 {
+    _connected = false;
+}
+
+void network::WinClient::connectTo(const std::string &ip, const std::string &portString)
+{
+    if (_connected)
+        throw (SocketError("WinClient", "client already connected somewhere"));
     _socket = CPSocket::createSocket();
     unsigned port = Utils::portStringToPort(portString);
     struct sockaddr_in serverInfo;
@@ -26,11 +33,22 @@ network::WinClient::WinClient(const std::string &ip, const std::string &portStri
         throw (SocketError("WinClient", "address given for server creation if ill formated"));
     if (connect(_socket->getSocket(), (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR)
         throw (SocketError("WinClient", "connect() call failed"));
+    _connected = true;
     std::cout << "WinClient successfully connected to server with IP: " << ip << " and Port: "  << port << std::endl;
+}
+
+void network::WinClient::disconnect()
+{
+    if (!_connected)
+        throw (SocketError("WinClient", "client is not connected"));
+    _connected = false;
+    _socket = nullptr;
 }
 
 void network::WinClient::updateRWStates()
 {
+    if (!_connected)
+        throw (SocketError("WinClient", "client is not connected"));
     unsigned int socket = _socket->getSocket();
     struct timeval timeout = {0, 1};
 
@@ -56,12 +74,16 @@ bool network::WinClient::canWrite()
 
 int network::WinClient::read(void *buf, std::size_t size)
 {
+    if (!_connected)
+        throw (SocketError("WinClient", "client is not connected"));
     return ::read(_socket->getSocket(), buf, size);
 }
 
 //Needs testing
 void network::WinClient::write(void *data, std::size_t size)
 {
+    if (!_connected)
+        throw (SocketError("WinClient", "client is not connected"));
     ::write(_socket->getSocket(), data, size);
 }
 
