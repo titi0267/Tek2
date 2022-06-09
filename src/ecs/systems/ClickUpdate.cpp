@@ -10,6 +10,8 @@
 #include "raylib/Window.hpp"
 #include "raylib/Camera.hpp"
 
+#include <limits>ù$
+
 void ecs::ClickUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
     _signature = component.generateSignature<Transform, Clickable, Hitbox>();
@@ -26,7 +28,7 @@ void ecs::ClickUpdateSystem::update(ecs::World &world)
     raylib::Ray ray = cam.getMouseRay(window.getMousePos());
 
     Clickable *hitClick = nullptr;
-    float hitDist = MAXFLOAT;
+    float hitDist = std::numeric_limits<float>::max();
     ecs::Entity hitEntity;
 
     for (ecs::Entity entity : _entities) {

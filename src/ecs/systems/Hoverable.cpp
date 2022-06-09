@@ -14,6 +14,7 @@
 #include "raylib/Camera.hpp"
 
 #include <iostream>
+#include <limits>
 
 void ecs::HoverUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
@@ -27,7 +28,7 @@ void ecs::HoverUpdateSystem::update(ecs::World &world)
     raylib::Ray ray = cam.getMouseRay(window.getMousePos());
 
     Hoverable *hitHover = nullptr;
-    float hitDist = MAXFLOAT;
+    float hitDist = std::numeric_limits<float>::max();
     ecs::Entity hitEntity;
 
     for (ecs::Entity entity : _entities) {
