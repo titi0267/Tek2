@@ -103,8 +103,8 @@ int main()
 
 // ---------------------------------
 
-    world.getRessource<raylib::Camera>().setPosition({0, -2, 2});
-    world.getRessource<raylib::Camera>().setTarget({0, 0, -1});
+    world.getRessource<raylib::Camera>().setPosition({0, -2, 1});
+    world.getRessource<raylib::Camera>().setTarget({0, 0, 0});
     raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
 
@@ -112,8 +112,8 @@ int main()
     raylib::Texture &bagText = textureMan.loadTexture("./assets/textures/bottle.png");
     bagModel.getMaterialView(0).setTexture(MATERIAL_MAP_DIFFUSE, bagText);
 
-    raylib::Model &tableModel = modelMan.loadModel("./assets/chair.iqm");
-    raylib::Texture &tableText = textureMan.loadTexture("./assets/textures/chair.png");
+    raylib::Model &tableModel = modelMan.loadModel("./assets/table.iqm");
+    raylib::Texture &tableText = textureMan.loadTexture("./assets/textures/table.png");
     tableModel.getMaterialView(0).setTexture(MATERIAL_MAP_DIFFUSE, tableText);
 
     try {

@@ -178,16 +178,7 @@ ecs::EntityCommands spawnBag(Vector3 pos, ecs::World &world)
 
 ecs::EntityCommands spawnChair(Vector3 pos, ecs::World &world)
 {
-    float pitch = 1;
-    float yaw = 0;
-    float roll = 0;
-    if (pos.x > 0) {
-        pitch = 2.2;
-        yaw = 0;
-        roll = -3;
-    }
-    Quaternion quat = QuaternionFromEuler(pitch, yaw, roll);
-    Transform transform = {pos, quat, {0.5, 0.5, 0.5}};
+    Transform transform = {pos, {0, 0, 0}, {0.5, 0.5, 0.5}};
     raylib::Model &chair = world.getRessource<raylib::ModelManager>().loadModel("./assets/chair.iqm");
 
     return world.spawn().insert(transform, ecs::ModelRef {&chair});
@@ -210,7 +201,7 @@ ecs::EntityCommands spawnWall(Vector3 pos, Vector3 size, ecs::World &world)
 
 void map::Map::print(ecs::World &world)
 {
-    spawnBottom({0, 0, -5.3}, {9 + 1, 9 + 1, 1}, world);
+    spawnBottom({0, 7, -5.3}, {9 + 1, 9 + 1, 1}, world);
     spawnWall({0, 0, 0}, {0, 0, 0}, world);
     for (int i = 0; i < MAP_Y; i++) {
         for (int j = 0; j < MAP_X; j++) {
@@ -219,14 +210,14 @@ void map::Map::print(ecs::World &world)
                 std::cout << " ";
                 break;
             case WALL:
-                spawnChair({static_cast<float>(j - 4), static_cast<float>(i - 4), -5}, world);
+                spawnChair({static_cast<float>(j - 4), static_cast<float>(i + 2), -5}, world);
                 std::cout << "#";
                 break;
             case SPAWN:
                 std::cout << "P";
                 break;
             case DESTRUCTIBLE:
-                spawnBag({static_cast<float>(j - 4), static_cast<float>(i - 4), -5}, world);
+                spawnBag({static_cast<float>(j - 4), static_cast<float>(i + 2), -5}, world);
                 std::cout << "x";
                 break;
             case BOMB:
