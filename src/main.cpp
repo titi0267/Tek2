@@ -29,6 +29,7 @@
 #include "ecs/components/ColorTexture.hpp"
 
 #include "ecs/engine/Network.hpp"
+int WSA(void);
 
 void registerBasicComponents(ecs::World &world)
 {
@@ -174,6 +175,10 @@ void runClient(ecs::World &world)
 
 int main(int ac, char **av)
 {
+    #ifdef _WIN32
+    if (WSA() == 84)
+        return (84);
+    #endif
     ecs::World world{};
 
     registerBasicComponents(world);

@@ -26,7 +26,7 @@ void ecs::ClickUpdateSystem::update(ecs::World &world)
     raylib::Ray ray = cam.getMouseRay(window.getMousePos());
 
     Clickable *hitClick = nullptr;
-    float hitDist = MAXFLOAT;
+    float hitDist = std::numeric_limits<float>::max();
     ecs::Entity hitEntity;
 
     for (ecs::Entity entity : _entities) {

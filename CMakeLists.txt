@@ -10,7 +10,7 @@ find_package(raylib REQUIRED)
 
 add_executable(indiestudio
     "src/main.cpp"
-
+    "src/WSA.cpp"
     "src/ecs/engine/World.cpp"
     "src/ecs/engine/Network.cpp"
     "src/ecs/engine/ClientManager.cpp"

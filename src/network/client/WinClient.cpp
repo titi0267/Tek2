@@ -24,7 +24,7 @@ network::WinClient::WinClient(const std::string &ip, const std::string &portStri
     serverInfo.sin_port = htons(port);
     if (inet_pton(AF_INET, ip.data(), &(&serverInfo)->sin_addr) != 1)
         throw (SocketError("WinClient", "address given for server creation if ill formated"));
-    if (connect(_socket->getSocket(), (struct sockaddr *) &serverInfo, sizeof(serverInfo)))
+    if (connect(_socket->getSocket(), (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR)
         throw (SocketError("WinClient", "connect() call failed"));
     std::cout << "WinClient successfully connected to server with IP: " << ip << " and Port: "  << port << std::endl;
 }

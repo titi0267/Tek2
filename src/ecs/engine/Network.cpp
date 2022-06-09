@@ -10,5 +10,5 @@
 
 const ecs::ComponentHash ecs::MIRROR_COMPONENTS[ecs::NB_MIRROR_COMPONENTS] = {
     typeid(Transform).hash_code(),
-    typeid(Tint).hash_code(),
+    typeid(ecs::Tint).hash_code(),
 };
