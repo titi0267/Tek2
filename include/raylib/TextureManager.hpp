@@ -25,6 +25,8 @@ namespace raylib {
 
         Texture &getTexture(const std::string &id)
         {
+            if (_textures.find(id) == _textures.end())
+                throw std::runtime_error("Texture " + id + " does not exists");
             return _textures.at(id);
         }
     };

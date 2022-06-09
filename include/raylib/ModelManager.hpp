@@ -25,6 +25,8 @@ namespace raylib {
 
         Model &getModel(const std::string &id)
         {
+            if (_models.find(id) == _models.end())
+                throw std::runtime_error("Model " + id + " does not exists");
             return _models.at(id);
         }
     };

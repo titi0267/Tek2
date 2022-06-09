@@ -25,6 +25,9 @@ namespace raylib {
 
         Font &getFont(const std::string &id)
         {
+            for (int i = 0; i < id.size(); i++)
+            if (_fonts.find(id) == _fonts.end())
+                throw std::runtime_error("Font " + id + " does not exists");
             return _fonts.at(id);
         }
     };

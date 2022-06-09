@@ -26,6 +26,8 @@ namespace raylib {
 
         Shader &getShader(const std::string &id)
         {
+            if (_shaders.find(id) == _shaders.end())
+                throw std::runtime_error("Shader " + id + " does not exists");
             return _shaders.at(id);
         }
     };

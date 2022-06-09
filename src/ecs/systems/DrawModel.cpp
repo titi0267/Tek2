@@ -11,6 +11,7 @@
 #include "raylib/Camera.hpp"
 #include "raylib/Matrix.hpp"
 #include "raylib/GL.hpp"
+#include "raylib/ModelManager.hpp"
 
 void ecs::DrawableModelSystem::setSignature(ComponentManager &component)
 {
@@ -20,6 +21,7 @@ void ecs::DrawableModelSystem::setSignature(ComponentManager &component)
 void ecs::DrawableModelSystem::update(ecs::World &world)
 {
     raylib::Camera &camera = world.getRessource<raylib::Camera>();
+    raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
 
     camera.begin3DMode();
     for (auto entity : _entities) {
@@ -32,7 +34,7 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
             tint = world.getComponent<Tint>(entity);
         raylib::RlMatrixPush push;
         raylib::rlMultMatrix(mat);
-        modelRef.model->draw({0}, 1.0f, tint);
+        modelMan.getModel(modelRef.modelId).draw({0}, 1.0f, tint);
     }
     camera.end3DMode();
 }

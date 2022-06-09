@@ -7,15 +7,14 @@
 
 #pragma once
 
-#include "raylib.h"
 #include "raylib/Texture.hpp"
 
 namespace ecs {
     using Tint = ::Color;
 
     struct TextureRef {
-        raylib::Texture *texture;
+        char textureId[255];
 
-        TextureRef(raylib::Texture *texture = nullptr) : texture(texture) {};
+        TextureRef(const std::string &id = "") { id.copy(textureId, 255); textureId[id.size()] = 0;};
     };
 }

@@ -35,6 +35,10 @@ namespace raylib {
 
         Animation &getAnimation(const std::string &id, int index)
         {
+            if (_animations.find(id) == _animations.end())
+                throw std::runtime_error("Animation " + id + " does not exists");
+            else if (_animations[id].size() < index)
+                throw std::runtime_error("Animation " + id + " has not #" + std::to_string(index));
             return _animations[id].at(index);
         }
     };

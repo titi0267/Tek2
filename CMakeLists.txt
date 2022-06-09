@@ -26,7 +26,6 @@ target_link_libraries(bomberman raylib)
 target_include_directories(bomberman
     PRIVATE
         "${CMAKE_SOURCE_DIR}/include"
-        "${raylib_SOURCE_DIR}/"
 )
 set_target_properties(bomberman
     PROPERTIES
