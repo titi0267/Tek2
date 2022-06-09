@@ -10,7 +10,7 @@
 #include "raylib/Window.hpp"
 #include "raylib/Camera.hpp"
 
-#include <limits>ù$
+#include <limits>
 
 void ecs::ClickUpdateSystem::setSignature(ecs::ComponentManager &component)
 {

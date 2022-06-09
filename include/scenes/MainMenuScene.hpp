@@ -44,8 +44,7 @@ namespace bomberman {
         void generateMainMenu(ecs::World &world);
         void generateSettingsMenu(ecs::World &world);
 
-        void spawnMainMenuButton(Transform transform, std::string text, ecs::HoverTint hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
-        void spawnSettingsButton(Transform transform, std::string text, ecs::HoverTint hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
+        void spawnButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
 
         bool &getMovementRequest() { return moveRequest; };
         Vector3 &getMoveDest() { return moveDest; };
