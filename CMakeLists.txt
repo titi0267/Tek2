@@ -11,6 +11,8 @@ add_executable(bomberman
 
     "src/ecs/World.cpp"
 
+    "src/Map.cpp"
+
     "src/ecs/systems/ClickUpdate.cpp"
     "src/ecs/systems/DrawCube.cpp"
     "src/ecs/systems/DrawModel.cpp"

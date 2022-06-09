@@ -28,6 +28,8 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 
+#include "Map.hpp"
+
 void registerBasicComponents(ecs::World &world)
 {
     world.registerComponents<Transform, ecs::Hitbox>();
@@ -57,19 +59,6 @@ void testClick(ecs::World &world, ecs::Entity entity)
     world.getComponent<ecs::Tint>(entity) = RED;
 }
 
-ecs::EntityCommands spawnButton(Vector3 pos, Vector3 rot, std::string text, float buttonSize, ecs::World &world)
-{
-    Quaternion quat = QuaternionFromEuler(rot.x, rot.y, rot.z);
-    Transform transform = {pos, quat, {1, 1, 1}};
-    raylib::Font &font = world.getRessource<raylib::FontManager>().loadFont("./assets/fonts/emulogic.ttf");
-    raylib::Texture &woodPlanks = world.getRessource<raylib::TextureManager>().loadTexture("./assets/textures/planks.png");
-
-    return world.spawn().insert(transform,
-    ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {&font},
-    ecs::DrawableCube {{0, 0, -0.05}, {buttonSize, 0.8, 0.1}}, ecs::TextureRef {&woodPlanks}, WHITE,
-    ecs::Hitbox{{-buttonSize / 2, -0.4, -0.05}, {buttonSize / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, ecs::Clickable {testClick});
-}
 
 class RotationTest : public ecs::ASystem {
     public:
@@ -101,12 +90,12 @@ int main()
     registerRender(world);
     registerMouseInputs(world);
 
-    world.registerSystem<RotationTest>();
+//    world.registerSystem<RotationTest>();
 
 // ---------------------------------
 
     world.insertRessource<raylib::Window>();
-    world.insertRessource<raylib::Camera>(Vector3 {0.0, 0.0, 2.0}, Vector3 {0.0, 0.0, -4.0});
+    world.insertRessource<raylib::Camera>(Vector3 {0.0, 0, 2.0}, Vector3 {0, 0, -4.0});
     world.insertRessource<raylib::TextureManager>();
     world.insertRessource<raylib::ModelManager>();
     world.insertRessource<raylib::AnimationManager>();
@@ -114,8 +103,28 @@ int main()
 
 // ---------------------------------
 
-    spawnButton({1, -0.75, -2}, {0, 0, 0}, "Test", 3, world);
-    spawnButton({1, 0.75, -2}, {0, 0, 0}, "Test 2", 4, world);
+    world.getRessource<raylib::Camera>().setPosition({0, -2, 2});
+    world.getRessource<raylib::Camera>().setTarget({0, 0, -1});
+    raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
+    raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
+
+    raylib::Model &bagModel = modelMan.loadModel("./assets/bottle.iqm");
+    raylib::Texture &bagText = textureMan.loadTexture("./assets/textures/bottle.png");
+    bagModel.getMaterialView(0).setTexture(MATERIAL_MAP_DIFFUSE, bagText);
+
+    raylib::Model &tableModel = modelMan.loadModel("./assets/chair.iqm");
+    raylib::Texture &tableText = textureMan.loadTexture("./assets/textures/chair.png");
+    tableModel.getMaterialView(0).setTexture(MATERIAL_MAP_DIFFUSE, tableText);
+
+    try {
+        map::Map test(9, 9, 4, 2); //width | height | players | complexity
+        test.print(world);
+        std::cout << std::endl;
+    } catch (std::invalid_argument &e) {
+        std::cout << "Construction failed: " << e.what() << std::endl;
+    }
+    //spawnTable({-1, 0, -1}, world);
+    //spawnTable({1, 2, -2}, world);
 
 // ---------------------------------
 
