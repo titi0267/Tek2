@@ -19,6 +19,7 @@
 #include "raylib/ModelManager.hpp"
 #include "raylib/AnimationManager.hpp"
 #include "raylib/FontManager.hpp"
+#include "raylib/ShaderManager.hpp"
 
 #include "ecs/components/DrawableCube.hpp"
 #include "ecs/components/DrawableModel.hpp"
@@ -61,7 +62,8 @@ void setTextureToModel(const std::string &texturePath, const std::string &modelP
 
     raylib::Model &buttonModel = modelMan.loadModel(modelPath);
     raylib::Texture &buttonText = textureMan.loadTexture(texturePath);
-    buttonModel.getMaterialView(0).setTexture(MATERIAL_MAP_DIFFUSE, buttonText);
+
+    buttonModel.getMaterialView(0).setTexture(buttonText).setColor(Color{255, 255, 0, 255});
 }
 
 int main()
@@ -80,13 +82,18 @@ int main()
     world.insertRessource<raylib::ModelManager>();
     world.insertRessource<raylib::AnimationManager>();
     world.insertRessource<raylib::FontManager>();
+    world.insertRessource<raylib::ShaderManager>();
     world.insertRessource<ecs::SceneManager>();
 
 // ---------------------------------
 
     world.getRessource<ecs::SceneManager>().loadDefaultScene(world);
 
+    raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
+    shaderMan.loadShader("button", "./assets/shaders/button.vs", "./assets/shaders/button.fs");
+
     setTextureToModel("./assets/textures/button_txt.png", "./assets/mesh/button.iqm", world);
+    world.getRessource<raylib::ModelManager>().loadModel("./assets/mesh/button.iqm").getMaterialView(0).setShader(shaderMan.getShader("button"));
 
 // ---------------------------------
 
