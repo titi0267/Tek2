@@ -94,11 +94,11 @@ void ecs::HoverRotateUpdateSystem::update(ecs::World &world)
 
         if (rotate.inRotation) {
             rot.x += PI / 4.0 / 15;
-            transform.rotation = QuaternionFromEuler(rot.x, rot.y, rot.z);
             if (!hover.isHover && rot.x <= 1e-04 && rot.x >= -1e-04) {
                 rot.x = 0;
                 rotate.inRotation = false;
             }
+            transform.rotation = QuaternionFromEuler(rot.x, rot.y, rot.z);
         }
         else if (hover.isHover)
             rotate.inRotation = true;
