@@ -48,6 +48,8 @@ namespace network {
         unsigned short getServerPort() const { return _port; };
         const std::string &getServerIp() const { return _ip; };
 
+        void disconnectConn(ConnId conn);
+
         void setPortFromSocket();
         std::string findIp();
     };

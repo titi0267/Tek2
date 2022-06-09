@@ -48,7 +48,7 @@ void network::LinuxClient::disconnect()
 void network::LinuxClient::updateRWStates()
 {
     if (!_connected)
-        throw (SocketError("WinClient", "client is not connected"));
+        throw (SocketError("LinuxClient", "client is not connected"));
     unsigned int socket = _socket->getSocket();
     struct timeval timeout = {0, 1};
 

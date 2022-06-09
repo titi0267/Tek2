@@ -117,7 +117,6 @@ class DrawCubeTest : public ecs::ASystem {
     void update(ecs::World &world)
     {
         raylib::Camera &cam = world.getRessource<raylib::Camera>();
-    int i = 0;
 
         cam.begin3DMode();
         for (ecs::Entity entity : _entities) {
@@ -128,8 +127,6 @@ class DrawCubeTest : public ecs::ASystem {
             raylib::RlMatrixPush push;
             raylib::rlMultMatrix(mat);
             DrawCube({0}, 1, 1, 1, tint);
-            std::cout << "Render cube " << i << std::endl;
-            i++;
         }
         cam.end3DMode();
     }
@@ -167,8 +164,13 @@ void runClient(ecs::World &world)
     window.setTargetFPS(60);
     window.resize({640, 480});
     while (!window.shouldClose()) {
-        // if (IsKeyDown(KEY_A))
-        //     world.killAllEntities();
+        if (IsKeyPressed(KEY_C)) {
+            ecs::ClientManager &client = world.getRessource<ecs::ClientManager>();
+            if (!client.isConnected())
+                client.connectTo();
+            else
+                client.disconnect();
+        }
         world.updateClient();
     }
 }

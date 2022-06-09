@@ -6,22 +6,28 @@
 */
 
 #include <iostream>
+#include <iterator>
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/EntityCommands.hpp"
 
 void ecs::ServerManager::handleNetworkCommands(World &world)
 {
     NetworkCommand cmd;
-    ConnId newConn;
+    ConnId conn;
 
     while (_server->canAcceptConn()) {
-        newConn = _server->acceptClient();
-        _activeConns.push_back(newConn);
-        _clientToServer.insert({newConn, {}});
+        conn = _server->acceptClient();
+        _activeConns.push_back(conn);
+        _clientToServer.insert({conn, {}});
     }
-    for (ConnId conn : _activeConns) {
+    for (int i = 0; i < _activeConns.size(); i++) {
+        conn = _activeConns[i];
         while (_server->canRead(conn)) {
-            _server->read(conn, &cmd, sizeof(NetworkCommand));
+            if (_server->read(conn, &cmd, sizeof(NetworkCommand)) == 0) {
+                _activeConns.erase(_activeConns.begin() + i);
+                i--;
+                break;
+            }
             switch (cmd) {
                 case NetworkCommand::UPDATE_ENTITY:
                 spawnOrUpdateClientEntity(conn, world);

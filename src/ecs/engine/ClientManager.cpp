@@ -15,7 +15,10 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
 
     _client->updateRWStates();
     while (_client->canRead()) {
-        _client->read(&cmd, sizeof(NetworkCommand));
+        if (_client->read(&cmd, sizeof(NetworkCommand)) == 0) {
+            _client->disconnect();
+            break;
+        }
         switch (cmd) {
             case NetworkCommand::UPDATE_ENTITY:
             spawnOrUpdateServerEntity(world);
