@@ -60,28 +60,6 @@ void testClick(ecs::World &world, ecs::Entity entity)
 }
 
 
-class RotationTest : public ecs::ASystem {
-    public:
-    void setSignature(ecs::ComponentManager &component)
-    {
-        _signature = component.generateSignature<Transform>();
-    }
-
-    void update(ecs::World &world)
-    {
-        for (ecs::Entity entity : _entities) {
-            Transform &transform = world.getComponent<Transform>(entity);
-            Vector3 rot = QuaternionToEuler(transform.rotation);
-
-            rot.x += PI / 16.0 / 30;
-            rot.z += PI / 32.0 / 30;
-            if (rot.y >= PI / 2 - 0.01)
-                rot.y = -PI / 2;
-            transform.rotation = QuaternionFromEuler(rot.x, rot.y, rot.z);
-        }
-    }
-};
-
 int main()
 {
     ecs::World world{};
@@ -95,7 +73,7 @@ int main()
 // ---------------------------------
 
     world.insertRessource<raylib::Window>();
-    world.insertRessource<raylib::Camera>(Vector3 {0.0, 0, 2.0}, Vector3 {0, 0, -4.0});
+    world.insertRessource<raylib::Camera>(Vector3 {0.0, 10.0, 7.0}, Vector3 {0, 0, 0});
     world.insertRessource<raylib::TextureManager>();
     world.insertRessource<raylib::ModelManager>();
     world.insertRessource<raylib::AnimationManager>();
@@ -103,8 +81,6 @@ int main()
 
 // ---------------------------------
 
-    world.getRessource<raylib::Camera>().setPosition({0, -2, 1});
-    world.getRessource<raylib::Camera>().setTarget({0, 0, 0});
     raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
 
@@ -115,6 +91,10 @@ int main()
     raylib::Model &tableModel = modelMan.loadModel("./assets/table.iqm");
     raylib::Texture &tableText = textureMan.loadTexture("./assets/textures/table.png");
     tableModel.getMaterialView(0).setTexture(MATERIAL_MAP_DIFFUSE, tableText);
+
+    raylib::Model &chairModel = modelMan.loadModel("./assets/chair.iqm");
+    raylib::Texture &chairText = textureMan.loadTexture("./assets/textures/chair.png");
+    chairModel.getMaterialView(0).setTexture(MATERIAL_MAP_DIFFUSE, chairText);
 
     try {
         map::Map test(9, 9, 4, 2); //width | height | players | complexity

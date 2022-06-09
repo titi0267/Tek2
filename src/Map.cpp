@@ -170,7 +170,7 @@ void map::Map::setPlayer()
 
 ecs::EntityCommands spawnBag(Vector3 pos, ecs::World &world)
 {
-    Transform transform = {pos, {0, 0, 0}, {0.5, 0.5, 0.5}};
+    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
     raylib::Model &bag = world.getRessource<raylib::ModelManager>().loadModel("./assets/bottle.iqm");
 
     return world.spawn().insert(transform, ecs::ModelRef {&bag});
@@ -178,19 +178,19 @@ ecs::EntityCommands spawnBag(Vector3 pos, ecs::World &world)
 
 ecs::EntityCommands spawnChair(Vector3 pos, ecs::World &world)
 {
-    Transform transform = {pos, {0, 0, 0}, {0.5, 0.5, 0.5}};
+    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
     raylib::Model &chair = world.getRessource<raylib::ModelManager>().loadModel("./assets/chair.iqm");
 
     return world.spawn().insert(transform, ecs::ModelRef {&chair});
 }
 
-ecs::EntityCommands spawnBottom(Vector3 pos, Vector3 size, ecs::World &world)
+ecs::EntityCommands spawnFloor(Vector2 mapSize, ecs::World &world)
 {
-    Transform transform = {pos, {0, 0, 0}, size};
+    Transform transform = {{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}};
     raylib::Texture &texBottom = world.getRessource<raylib::TextureManager>().loadTexture("./assets/textures/ground.png");
 
     return world.spawn().insert(transform,
-        ecs::DrawableCube {{0, 0, -0.05}, {1, 1, 0.1}}, ecs::TextureRef(&texBottom)
+        ecs::DrawableCube {{0, 0, 0}, {mapSize.x, 0.1, mapSize.y}}, ecs::TextureRef(&texBottom)
     );
 }
 
@@ -201,23 +201,24 @@ ecs::EntityCommands spawnWall(Vector3 pos, Vector3 size, ecs::World &world)
 
 void map::Map::print(ecs::World &world)
 {
-    spawnBottom({0, 7, -5.3}, {9 + 1, 9 + 1, 1}, world);
+    spawnFloor({MAP_X + 2, MAP_Y + 2}, world);
     spawnWall({0, 0, 0}, {0, 0, 0}, world);
-    for (int i = 0; i < MAP_Y; i++) {
-        for (int j = 0; j < MAP_X; j++) {
-            switch (_map[j + i * _width]) {
+
+    for (int y = 0; y < MAP_Y; y++) {
+        for (int x = 0; x < MAP_X; x++) {
+            switch (_map[x + y * _width]) {
             case VOID:
                 std::cout << " ";
                 break;
             case WALL:
-                spawnChair({static_cast<float>(j - 4), static_cast<float>(i + 2), -5}, world);
+                spawnChair({x - MAP_X / 2.0f, 0, y - MAP_Y / 2.0f}, world);
                 std::cout << "#";
                 break;
             case SPAWN:
                 std::cout << "P";
                 break;
             case DESTRUCTIBLE:
-                spawnBag({static_cast<float>(j - 4), static_cast<float>(i + 2), -5}, world);
+                spawnBag({x - MAP_X / 2.0f, 0, y - MAP_Y / 2.0f}, world);
                 std::cout << "x";
                 break;
             case BOMB:
@@ -226,7 +227,7 @@ void map::Map::print(ecs::World &world)
             default:
                 break;
             }
-            if (j == _width - 1)
+            if (x == _width - 1)
                 std::cout << std::endl;
         }
     }
