@@ -35,6 +35,8 @@ namespace network {
 
         int read(void *buf, std::size_t size);
         void write(void *data, std::size_t size);
+
+        bool isConnected() { return _connected; };
     };
 }
 

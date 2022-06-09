@@ -121,6 +121,12 @@ void network::LinuxServer::write(ConnId id, void *data, std::size_t size)
     ::write(fd, data, size);
 }
 
+void network::LinuxServer::disconnectConn(ConnId conn)
+{
+    close(_clients[conn]);
+    _clients.erase(conn);
+}
+
 //Needs testing on other computer
 std::string network::LinuxServer::findIp()
 {

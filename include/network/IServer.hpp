@@ -30,5 +30,7 @@ namespace network {
 
         virtual unsigned short getServerPort() const = 0;
         virtual const std::string &getServerIp() const = 0;
+
+        virtual void disconnectConn(ConnId conn) = 0;
     };
 }

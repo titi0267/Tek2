@@ -32,6 +32,8 @@ namespace ecs {
 
         virtual void updateLocalEntity(Entity entity, World &world) = 0;
         virtual void killLocalEntity(Entity entity, World &world) = 0;
+
+        virtual bool isConnected() = 0;
     };
 
     class ServerManager : public INetworkManager {
@@ -57,6 +59,8 @@ namespace ecs {
 
         void updateLocalEntity(Entity entity, World &world);
         void killLocalEntity(Entity entity, World &world);
+
+        bool isConnected() { return true; };
     };
 
     class ClientManager : public INetworkManager {
@@ -76,6 +80,10 @@ namespace ecs {
 
         void updateLocalEntity(Entity entity, World &world);
         void killLocalEntity(Entity entity, World &world);
+
+        void connectTo(const std::string &ip = "127.0.0.1", const std::string &port = "4242") { _client->connectTo(ip, port); };
+        void disconnect() { _client->disconnect(); };
+        bool isConnected() { return _client->isConnected(); };
     };
 
     template<class NetworkManagerImpl>
@@ -92,6 +100,8 @@ namespace ecs {
         {
             INetworkManager &man = world.getRessource<NetworkManagerImpl>();
 
+            if (!man.isConnected())
+                return;
             man.handleNetworkCommands(world);
             for (Entity entity : _entities)
                 man.updateLocalEntity(entity, world);

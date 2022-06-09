@@ -25,5 +25,7 @@ namespace network {
 
         virtual int read(void *buf, std::size_t size) = 0;
         virtual void write(void *data, std::size_t size) = 0;
+
+        virtual bool isConnected() = 0;
     };
 }

@@ -121,6 +121,13 @@ void network::WinServer::write(ConnId id, void *data, std::size_t size)
     ::write(fd, data, size);
 }
 
+#warning WinServer::disconnectConn() may not be correct !
+void network::WinServer::disconnectConn(ConnId conn)
+{
+    close(_clients[conn]);
+    _clients.erase(conn);
+}
+
 //TODO//
 std::string network::WinServer::findIp()
 {
