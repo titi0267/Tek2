@@ -16,11 +16,12 @@ namespace raylib {
         std::unordered_map<std::string, Shader> _shaders;
 
         public:
-        void loadShader(const std::string &id, const std::string &vs, const std::string &fs)
+        Shader &loadShader(const std::string &id, const std::string &vs, const std::string &fs)
         {
             if (_shaders.find(id) != _shaders.end())
                 throw std::runtime_error("Shader ID alredy used");
             _shaders.insert({id, Shader(vs, fs)});
+            return _shaders.at(id);
         }
 
         Shader &getShader(const std::string &id)

@@ -18,25 +18,24 @@ namespace raylib {
     class AnimationManager {
         std::unordered_map<std::string, std::vector<Animation>> _animations;
 
-        void loadAnimationFile(const std::string path)
+        public:
+        void loadAnimations(const std::string &id, const std::string path)
         {
             unsigned int animCount = 0;
-            ModelAnimation *anims = LoadModelAnimations(path.c_str(), &animCount);
+            ModelAnimation *anims;
 
-            _animations.insert({path, std::vector<Animation>()});
+            if (_animations.find(id) != _animations.end())
+                throw std::runtime_error("Animation ID already used");
+            _animations.insert({id, std::vector<Animation>()});
+            anims = LoadModelAnimations(path.c_str(), &animCount);
             for (unsigned int i = 0; i < animCount; i++)
-                _animations[path].push_back(Animation(std::move(anims[i])));
+                _animations[id].push_back(Animation(std::move(anims[i])));
             RL_FREE(anims);
         }
 
-        public:
-        Animation &loadAnimation(const std::string path, int index)
+        Animation &getAnimation(const std::string &id, int index)
         {
-            if (_animations.find(path) == _animations.end())
-                loadAnimationFile(path);
-            if (index >= _animations[path].size())
-                throw AnimationInvalidIndex();
-            return _animations.at(path)[index];
+            return _animations[id].at(index);
         }
     };
 }

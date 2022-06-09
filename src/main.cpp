@@ -55,17 +55,6 @@ void registerMouseInputs(ecs::World &world)
     world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem>();
 }
 
-void setTextureToModel(const std::string &texturePath, const std::string &modelPath, ecs::World &world)
-{
-    raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
-    raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
-
-    raylib::Model &buttonModel = modelMan.loadModel(modelPath);
-    raylib::Texture &buttonText = textureMan.loadTexture(texturePath);
-
-    buttonModel.getMaterialView(0).setTexture(buttonText).setColor(Color{255, 255, 0, 255});
-}
-
 int main()
 {
     ecs::World world{};
@@ -87,15 +76,25 @@ int main()
 
 // ---------------------------------
 
-    world.getRessource<ecs::SceneManager>().loadDefaultScene(world);
-
     raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
     shaderMan.loadShader("button", "./assets/shaders/button.vs", "./assets/shaders/button.fs");
 
-    setTextureToModel("./assets/textures/button_txt.png", "./assets/mesh/button.iqm", world);
-    world.getRessource<raylib::ModelManager>().loadModel("./assets/mesh/button.iqm").getMaterialView(0).setShader(shaderMan.getShader("button"));
+    raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
+    textureMan.loadTexture("button", "./assets/textures/button_txt.png");
+
+    raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
+    raylib::Model &buttonModel = modelMan.loadModel("button", "./assets/mesh/button.iqm");
+    buttonModel.getMaterialView(0)
+    .setTexture(textureMan.getTexture("button"))
+    .setColor(Color {125, 255, 125, 255})
+    .setShader(shaderMan.getShader("button"));
+
+    raylib::FontManager &fontMan = world.getRessource<raylib::FontManager>();
+    fontMan.loadFont("emulogic", "./assets/fonts/emulogic.ttf");
 
 // ---------------------------------
+
+    world.getRessource<ecs::SceneManager>().loadDefaultScene(world);
 
     raylib::Window &window = world.getRessource<raylib::Window>();
 
