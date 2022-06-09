@@ -25,7 +25,7 @@ namespace raylib {
             ModelAnimation *anims;
 
             if (_animations.find(id) != _animations.end())
-                throw std::runtime_error("Animation ID already used");
+                throw std::runtime_error("Animation " + id + " already used");
             _animations.insert({id, std::vector<Animation>()});
             anims = LoadModelAnimations(path.c_str(), &animCount);
             for (unsigned int i = 0; i < animCount; i++)

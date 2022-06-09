@@ -19,7 +19,7 @@ namespace raylib {
         Shader &loadShader(const std::string &id, const std::string &vs, const std::string &fs)
         {
             if (_shaders.find(id) != _shaders.end())
-                throw std::runtime_error("Shader ID alredy used");
+                throw std::runtime_error("Shader " + id + " alredy used");
             _shaders.insert({id, Shader(vs, fs)});
             return _shaders.at(id);
         }

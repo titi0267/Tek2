@@ -18,7 +18,7 @@ namespace raylib {
         Font &loadFont(const std::string &id, const std::string &path)
         {
             if (_fonts.find(id) != _fonts.end())
-                throw std::runtime_error("Font ID already used");
+                throw std::runtime_error("Font " + id + " already used");
             _fonts.insert({id, Font(path)});
             return _fonts.at(id);
         }

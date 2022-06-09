@@ -18,7 +18,7 @@ namespace raylib {
         Model &loadModel(const std::string &id, const std::string &path)
         {
             if (_models.find(id) != _models.end())
-                throw std::runtime_error("Model ID already used");
+                throw std::runtime_error("Model " + id + " already used");
             _models.insert({id, Model(path)});
             return _models.at(id);
         }

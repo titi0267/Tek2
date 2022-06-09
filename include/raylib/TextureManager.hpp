@@ -18,7 +18,7 @@ namespace raylib {
         Texture &loadTexture(const std::string &id, const std::string &path)
         {
             if (_textures.find(id) != _textures.end())
-                throw std::runtime_error("Texture ID already used");
+                throw std::runtime_error("Texture " + id + " already used");
             _textures.insert({id, Texture(path)});
             return _textures.at(id);
         }
