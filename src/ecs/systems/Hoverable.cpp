@@ -18,7 +18,7 @@
 
 void ecs::HoverUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Transform, Hoverable, Hitbox>();
+    _signature = component.generateSignature<Transform, Hitbox>();
 }
 
 void ecs::HoverUpdateSystem::update(ecs::World &world)
@@ -34,15 +34,21 @@ void ecs::HoverUpdateSystem::update(ecs::World &world)
     for (ecs::Entity entity : _entities) {
         Transform &transform = world.getComponent<Transform>(entity);
         Hitbox &hitbox = world.getComponent<Hitbox>(entity);
-        Hoverable &hover = world.getComponent<Hoverable>(entity);
 
         BoundingBox box = hitbox.getBoundingBox(transform);
         RayCollision collision = ray.getCollisionBox(box);
 
-        hover.updated = hover.isHover != false;
-        hover.isHover = false;
+        if (world.hasComponent<Hoverable>(entity)) {
+            Hoverable &hover = world.getComponent<Hoverable>(entity);
+
+            hover.updated = hover.isHover != false;
+            hover.isHover = false;
+        }
         if (collision.hit && collision.distance < hitDist) {
-            hitHover = &hover;
+            if (world.hasComponent<Hoverable>(entity))
+                hitHover = &world.getComponent<Hoverable>(entity);
+            else
+                hitHover  = nullptr;
             hitDist = collision.distance;
             hitEntity = entity;
         }

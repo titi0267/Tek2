@@ -14,7 +14,7 @@
 
 void ecs::ClickUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Transform, Clickable, Hitbox>();
+    _signature = component.generateSignature<Transform, Hitbox>();
 }
 
 void ecs::ClickUpdateSystem::update(ecs::World &world)
@@ -38,7 +38,10 @@ void ecs::ClickUpdateSystem::update(ecs::World &world)
         RayCollision collision = ray.getCollisionBox(box);
 
         if (collision.hit && collision.distance < hitDist) {
-            hitClick = &world.getComponent<Clickable>(entity);
+            if (world.hasComponent<Clickable>(entity))
+                hitClick = &world.getComponent<Clickable>(entity);
+            else
+                hitClick  = nullptr;
             hitDist = collision.distance;
             hitEntity = entity;
         }
