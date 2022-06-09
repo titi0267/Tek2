@@ -59,11 +59,13 @@ int main()
 {
     ecs::World world{};
 
+// ---- [COMPONENTS + SYSTEMS] ----
+
     registerBasicComponents(world);
     registerRender(world);
     registerMouseInputs(world);
 
-// ---------------------------------
+// ----- [GLOBAL RESSOURCES] -----
 
     world.insertRessource<raylib::Window>();
     world.insertRessource<raylib::Camera>(Vector3 {0.0, 0.0, 2.0}, Vector3 {0.0, 0.0, -4.0});
@@ -74,7 +76,7 @@ int main()
     world.insertRessource<raylib::ShaderManager>();
     world.insertRessource<ecs::SceneManager>();
 
-// ---------------------------------
+// ----- [INIT RESSOURCES] -----
 
     raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
     shaderMan.loadShader("button", "./assets/shaders/button.vs", "./assets/shaders/button.fs");
@@ -92,7 +94,7 @@ int main()
     raylib::FontManager &fontMan = world.getRessource<raylib::FontManager>();
     fontMan.loadFont("emulogic", "./assets/fonts/emulogic.ttf");
 
-// ---------------------------------
+// ------ [START + RUN GAME] ------
 
     world.getRessource<ecs::SceneManager>().loadDefaultScene(world);
 
