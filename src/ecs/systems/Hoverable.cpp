@@ -62,7 +62,7 @@ void ecs::HoverUpdateSystem::update(ecs::World &world)
 
 void ecs::HoverTintUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Tint, Hoverable>();
+    _signature = component.generateSignature<Tint, Hoverable, HoverTint>();
 }
 
 void ecs::HoverTintUpdateSystem::update(ecs::World &world)
