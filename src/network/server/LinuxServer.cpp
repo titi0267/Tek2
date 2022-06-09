@@ -16,8 +16,15 @@
 #include <vector>
 #include <fstream>
 
-network::LinuxServer::LinuxServer(const std::string &ip, const std::string &portString, const int maxClient)
+network::LinuxServer::LinuxServer()
 {
+    _created = false;
+}
+
+network::LinuxServer::createServer(const std::string &ip, const std::string &portString, const int maxClient)
+{
+    if (_created)
+        throw (SocketError("LinuxServer", "server already has been created"));
     _socket = CPSocket::createSocket();
     unsigned short port = Utils::portStringToPort(portString);
     struct sockaddr_in serverInfo;
@@ -38,11 +45,22 @@ network::LinuxServer::LinuxServer(const std::string &ip, const std::string &port
     if (!_port)
         setPortFromSocket();
     _ip = ip.empty() ? findIp() : ip;
+    _created = true;
     std::cout << "LinuxServer created successfully with IP: " << _ip << " and Port: "  << _port << std::endl;
+}
+
+void network::LinuxServer::closeServer()
+{
+    if (!_created)
+        throw (SocketError("LinuxServer", "server has not been created"));
+    _socket = nullptr;
+    _created = false;
 }
 
 void network::LinuxServer::setPortFromSocket()
 {
+    if (!_created)
+        throw (SocketError("WinServer", "server has not been created"));
     struct sockaddr_in sin;
     socklen_t len = sizeof(sin);
 
@@ -53,6 +71,8 @@ void network::LinuxServer::setPortFromSocket()
 
 void network::LinuxServer::updateRWStates()
 {
+    if (!_created)
+        throw (SocketError("WinServer", "server has not been created"));
     unsigned int socket = _socket->getSocket();
     struct timeval timeout = {0, 1};
     int fdMax = 0;
@@ -92,6 +112,8 @@ bool network::LinuxServer::canWrite(ConnId id)
 
 network::ConnId network::LinuxServer::acceptClient()
 {
+    if (!_created)
+        throw (SocketError("WinServer", "server has not been created"));
     static ConnId id = 0;
     SocketFd clientFd = 0;
     struct sockaddr_in clientAddr;
@@ -108,6 +130,8 @@ network::ConnId network::LinuxServer::acceptClient()
 //Needs testing
 int network::LinuxServer::read(ConnId id, void *buf, std::size_t size)
 {
+    if (!_created)
+        throw (SocketError("WinServer", "server has not been created"));
     SocketFd fd = _clients[id];
 
     return ::read(fd, buf, size);
@@ -116,6 +140,8 @@ int network::LinuxServer::read(ConnId id, void *buf, std::size_t size)
 //Needs testing
 void network::LinuxServer::write(ConnId id, void *data, std::size_t size)
 {
+    if (!_created)
+        throw (SocketError("WinServer", "server has not been created"));
     SocketFd fd = _clients[id];
 
     ::write(fd, data, size);

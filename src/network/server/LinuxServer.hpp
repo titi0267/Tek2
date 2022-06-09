@@ -25,9 +25,14 @@ namespace network {
         fd_set _readSet;
         fd_set _writeSet;
 
+        bool _created;
+
         public:
-        LinuxServer(const std::string &ip = "", const std::string &port = "", const int maxClient = 4);
+        LinuxServer();
         ~LinuxServer() = default;
+
+        void createServer(const std::string &ip = "", const std::string &port = "", const int maxClient = 4);
+        void closeServer();
 
         void updateRWStates();
 

@@ -18,6 +18,9 @@ namespace network {
         public:
         virtual ~IServer() = default;
 
+        virtual void createServer(const std::string &ip = "", const std::string &portString = "", const int maxClient = 4) = 0;
+        virtual void closeServer() = 0;
+
         virtual void updateRWStates() = 0;
 
         virtual bool canAcceptConn() = 0;

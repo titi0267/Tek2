@@ -26,9 +26,14 @@ namespace network {
         fd_set _readSet;
         fd_set _writeSet;
 
+        bool _created;
+
         public:
-        WinServer(const std::string &ip = "", const std::string &port = "", const int maxClient = 4);
+        WinServer();
         ~WinServer() = default;
+
+        void createServer(const std::string &ip = "", const std::string &portString = "", const int maxClient = 4);
+        void closeServer();
 
         void updateRWStates();
 

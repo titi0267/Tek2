@@ -16,8 +16,15 @@
 #include <vector>
 #include <fstream>
 
-network::WinServer::WinServer(const std::string &ip, const std::string &portString, const int maxClient)
+network::WinServer::WinServer()
 {
+    _created = false;
+}
+
+void network::WinServer::createServer(const std::string &ip, const std::string &portString, const int maxClient)
+{
+    if (_created)
+        throw (SocketError("WinServer", "server already has been created"));
     _socket = CPSocket::createSocket();
     unsigned short port = Utils::portStringToPort(portString);
     struct sockaddr_in serverInfo;
@@ -38,7 +45,16 @@ network::WinServer::WinServer(const std::string &ip, const std::string &portStri
     if (!_port)
         setPortFromSocket();
     _ip = ip.empty() ? findIp() : ip;
+    _created  = true;
     std::cout << "WinServer created successfully with IP: " << _ip << " and Port: "  << _port << std::endl;
+}
+
+void network::WinServer::closeServer()
+{
+    if (!_created)
+        throw (SocketError("WinServer", "server has not been created"));
+    _socket = nullptr;
+    _created = false;
 }
 
 void network::WinServer::setPortFromSocket()
@@ -53,6 +69,8 @@ void network::WinServer::setPortFromSocket()
 
 void network::WinServer::updateRWStates()
 {
+    if (!_created)
+        throw (SocketError("WinServer", "server has not been created"));
     unsigned int socket = _socket->getSocket();
     struct timeval timeout = {0, 1};
     int fdMax = 0;
@@ -92,6 +110,8 @@ bool network::WinServer::canWrite(ConnId id)
 
 network::ConnId network::WinServer::acceptClient()
 {
+    if (!_created)
+        throw (SocketError("WinServer", "server has not been created"));
     static ConnId id = 0;
     SocketFd clientFd = 0;
     struct sockaddr_in clientAddr;
@@ -108,6 +128,8 @@ network::ConnId network::WinServer::acceptClient()
 //Needs testing
 int network::WinServer::read(ConnId id, void *buf, std::size_t size)
 {
+    if (!_created)
+        throw (SocketError("WinServer", "server has not been created"));
     SocketFd fd = _clients[id];
 
     return ::read(fd, buf, size);
@@ -116,6 +138,8 @@ int network::WinServer::read(ConnId id, void *buf, std::size_t size)
 //Needs testing
 void network::WinServer::write(ConnId id, void *data, std::size_t size)
 {
+    if (!_created)
+        throw (SocketError("WinServer", "server has not been created"));
     SocketFd fd = _clients[id];
 
     ::write(fd, data, size);

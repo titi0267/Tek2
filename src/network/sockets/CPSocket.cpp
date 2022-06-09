@@ -29,9 +29,9 @@ std::unique_ptr<network::ISocket> network::CPSocket::createSocket(void)
 std::unique_ptr<network::IServer> network::CPSocket::createServer(const std::string &ip, const std::string &port, const int maxClient)
 {
     #ifdef __linux__
-        return (std::make_unique<LinuxServer>(ip, port, maxClient));
+        return (std::make_unique<LinuxServer>());
     #elif _WIN32
-        return (std::make_unique<WinServer>(ip, port, maxClient));
+        return (std::make_unique<WinServer>());
     #endif
     return (nullptr);
 }
