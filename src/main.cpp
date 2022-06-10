@@ -10,10 +10,11 @@
 #include <sstream>
 
 #include "ecs/engine/EntityCommands.hpp"
+#include "ecs/engine/Network.hpp"
+#include "ecs/engine/InternalServer.hpp"
 
 #include "raylib/Camera.hpp"
 #include "raylib/Window.hpp"
-
 #include "raylib/TextureManager.hpp"
 #include "raylib/ModelManager.hpp"
 #include "raylib/AnimationManager.hpp"
@@ -28,7 +29,8 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 
-#include "ecs/engine/Network.hpp"
+#include "network/sockets/SocketError.hpp"
+
 int WSA(void);
 
 void registerBasicComponents(ecs::World &world)
@@ -52,17 +54,6 @@ void registerMouseInputs(ecs::World &world)
 {
     world.registerComponents<ecs::Clickable, ecs::Hoverable>();
     world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem>();
-}
-
-void runServer(ecs::World &world)
-{
-    world.insertRessource<ecs::ServerManager>();
-    world.registerSystem<ecs::NetworkUpdateSystem<ecs::ServerManager>>();
-
-    world.getRessource<ecs::ServerManager>().startServer();
-
-    while (true)
-        world.updateServer();
 }
 
 class InputSystem : public ecs::ASystem {
@@ -141,40 +132,21 @@ void runClient(ecs::World &world)
     // registerRender(world);
     // registerMouseInputs(world);
 
-    world.insertRessource<raylib::Window>();
-    world.insertRessource<raylib::Camera>(Vector3 {0.0, 0.0, 2.0}, Vector3 {0.0, 0.0, -4.0});
-    world.insertRessource<raylib::TextureManager>();
-    world.insertRessource<raylib::ModelManager>();
-    world.insertRessource<raylib::AnimationManager>();
-    world.insertRessource<raylib::FontManager>();
-    world.insertRessource<ecs::ClientManager>();
+}
 
-    world.registerSystem<ecs::NetworkUpdateSystem<ecs::ClientManager>>();
+void serverMain(ecs::World *world, bool *run)
+{
+    std::cerr << " --- Start server !" << std::endl;
+    registerBasicComponents(*world);
 
-    world.registerSystems<InputSystem, DrawCubeTest>();
+    world->insertRessource<ecs::ServerManager>();
+    world->registerSystem<ecs::NetworkUpdateSystem<ecs::ServerManager>>();
 
-// ---------------------------------
+    world->getRessource<ecs::ServerManager>().startServer();
 
-    raylib::Texture &woodPlanks = world.getRessource<raylib::TextureManager>().loadTexture("./assets/textures/planks.png");
-
-    world.spawn().insert(Transform{{1, 1, -2}, QuaternionIdentity(), {1, 1, 1}}, GREEN, ecs::MirrorEntity{});
-
-// ---------------------------------
-
-    raylib::Window &window = world.getRessource<raylib::Window>();
-
-    window.setTargetFPS(60);
-    window.resize({640, 480});
-    while (!window.shouldClose()) {
-        if (IsKeyPressed(KEY_C)) {
-            ecs::ClientManager &client = world.getRessource<ecs::ClientManager>();
-            if (!client.isConnected())
-                client.connectTo();
-            else
-                client.disconnect();
-        }
-        world.updateClient();
-    }
+    std::cerr << "-- Run server !" << std::endl;
+    while (*run)
+        world->updateServer();
 }
 
 int main(int ac, char **av)
@@ -187,8 +159,49 @@ int main(int ac, char **av)
 
     registerBasicComponents(world);
 
+    world.insertRessource<raylib::Window>();
+    world.insertRessource<raylib::Camera>(Vector3 {0.0, 0.0, 2.0}, Vector3 {0.0, 0.0, -4.0});
+    world.insertRessource<raylib::TextureManager>();
+    world.insertRessource<raylib::ModelManager>();
+    world.insertRessource<raylib::AnimationManager>();
+    world.insertRessource<raylib::FontManager>();
+    world.insertRessource<ecs::ClientManager>();
+
+    world.registerSystem<ecs::NetworkUpdateSystem<ecs::ClientManager>>();
+    world.registerSystems<InputSystem, DrawCubeTest>();
+
+    world.insertRessource<ecs::InternalServer>();
+
+// ---------------------------------
+
+    raylib::Texture &woodPlanks = world.getRessource<raylib::TextureManager>().loadTexture("./assets/textures/planks.png");
+
+    world.spawn().insert(Transform{{1, 1, -2}, QuaternionIdentity(), {1, 1, 1}}, GREEN, ecs::MirrorEntity{});
+
+// ---------------------------------
+
     if (ac == 2)
-        runServer(world);
-    else
-        runClient(world);
+        world.getRessource<ecs::InternalServer>().startServer(serverMain);
+
+    int tries = 0;
+    for (; tries < 5; tries++) {
+        try {
+        std::cout << "Try to connect to server" << std::endl;
+            world.getRessource<ecs::ClientManager>().connectTo();
+            break;
+        } catch(network::SocketError) {
+            std::cout << "Failed to connect to server (" << tries + 1 << "/5)" << std::endl;
+            std::this_thread::sleep_for(std::chrono::seconds(1));
+        }
+    }
+
+    if (tries == 5)
+        return 1;
+
+    raylib::Window &window = world.getRessource<raylib::Window>();
+
+    window.setTargetFPS(60);
+    window.resize({640, 480});
+    while (!window.shouldClose())
+        world.updateClient();
 }

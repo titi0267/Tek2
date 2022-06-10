@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "raylib.h"
+#include "raylib/headers/raylib.h"
 #include "raylib/Texture.hpp"
 
 namespace ecs {

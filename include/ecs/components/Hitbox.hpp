@@ -7,7 +7,7 @@
 
 #pragma once
 
-#include "raylib.h"
+#include "raylib/headers/raylib.h"
 #include "raylib/Matrix.hpp"
 #include "raylib/Vectors.hpp"
 
