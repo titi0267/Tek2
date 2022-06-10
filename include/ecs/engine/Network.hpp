@@ -10,6 +10,7 @@
 #include <memory>
 #include <sstream>
 #include <iostream>
+#include <chrono>
 #include <unordered_map>
 #include "network/IClient.hpp"
 #include "network/IServer.hpp"
@@ -27,17 +28,7 @@ namespace ecs {
 
     struct MirrorEntity {};
 
-    class INetworkManager {
-        public:
-        virtual void handleNetworkCommands(World &world) = 0;
-
-        virtual void updateLocalEntity(Entity entity, World &world) = 0;
-        virtual void killLocalEntity(Entity entity, World &world) = 0;
-
-        virtual bool isConnected() = 0;
-    };
-
-    class ServerManager : public INetworkManager {
+    class ServerManager {
         using ConnId = network::ConnId;
 
         std::unique_ptr<network::IServer> _server;
@@ -62,17 +53,27 @@ namespace ecs {
         void startServer() { _server->createServer(); };
         void closeServer() { _server->closeServer(); };
 
+        void acceptNewConns();
         void handleNetworkCommands(World &world);
 
         void updateLocalEntity(Entity entity, World &world);
         void killLocalEntity(Entity entity, World &world);
-
-        bool isConnected() { return true; };
     };
 
-    class ClientManager : public INetworkManager {
+    class ClientManager {
+        using ConnectionSuccessFct = void (*)(ecs::World &world);
+        using ConnectionFailedFct = void (*)(ecs::World &world);
+
         std::unique_ptr<network::IClient> _client;
         std::unordered_map<Entity, Entity> _serverToClient;
+
+        std::string _ip;
+        std::string _port;
+        bool _connAttempted = false;
+        int _tryConnCount = 0;
+        ConnectionSuccessFct _success;
+        ConnectionFailedFct _failed;
+        std::chrono::time_point<std::chrono::system_clock> _lastTry;
 
         bool tryRead(void *buf, std::size_t size);
         bool readServerEntityUpdate(std::stringbuf &buffer);
@@ -86,6 +87,11 @@ namespace ecs {
         ClientManager() : _client(network::CPSocket::createClient()) {};
         ~ClientManager() = default;
 
+        void attemptConnection(const std::string &ip, const std::string &port,
+        ConnectionSuccessFct success, ConnectionFailedFct failed);
+        void tryConnection(ecs::World &world);
+        bool isConnectionAttempt() { return _connAttempted; };
+
         void handleNetworkCommands(World &world);
 
         void updateLocalEntity(Entity entity, World &world);
@@ -96,25 +102,19 @@ namespace ecs {
         bool isConnected() { return _client->isConnected(); };
     };
 
-    template<class NetworkManagerImpl>
-    class NetworkUpdateSystem : public ASystem {
+    class ServerUpdateSystem : public ASystem {
         public:
-        NetworkUpdateSystem() { _stage = NETWORK_UPDATE; };
+        ServerUpdateSystem() { _stage = NETWORK_UPDATE; };
 
-        void setSignature(ComponentManager &component)
-        {
-            _signature = component.generateSignature<MirrorEntity>();
-        }
+        void setSignature(ComponentManager &component);
+        void update(World &world);
+    };
 
-        void update(World &world)
-        {
-            INetworkManager &man = world.getRessource<NetworkManagerImpl>();
+    class ClientUpdateSystem : public ASystem {
+        public:
+        ClientUpdateSystem() { _stage = NETWORK_UPDATE; };
 
-            if (!man.isConnected())
-                return;
-            man.handleNetworkCommands(world);
-            for (Entity entity : _entities)
-                man.updateLocalEntity(entity, world);
-        }
+        void setSignature(ComponentManager &component);
+        void update(World &world);
     };
 }

@@ -21,16 +21,22 @@ bool ecs::ServerManager::tryRead(ConnId conn, void *buf, std::size_t size)
     return false;
 }
 
-void ecs::ServerManager::handleNetworkCommands(World &world)
+void ecs::ServerManager::acceptNewConns()
 {
-    NetworkCommand cmd;
-    ConnId conn;
+    network::ConnId conn;
 
     while (_server->canAcceptConn()) {
         conn = _server->acceptClient();
         _activeConns.push_back(conn);
         _clientToServer.insert({conn, {}});
     }
+}
+
+void ecs::ServerManager::handleNetworkCommands(World &world)
+{
+    NetworkCommand cmd;
+    ConnId conn;
+
     for (int i = 0; i < _activeConns.size(); i++) {
         conn = _activeConns[i];
         while (_server->doesConnExists(conn) && _server->canRead(conn)) {
@@ -221,4 +227,19 @@ void ecs::ServerManager::killLocalEntity(Entity entity, World &world)
     std::cout << "Killing entity to clients" << std::endl;
     for (ConnId conn : _activeConns)
         _server->write(conn, (void*) data.c_str(), data.size());
+}
+
+void ecs::ServerUpdateSystem::setSignature(ComponentManager &component)
+{
+    _signature = component.generateSignature<MirrorEntity>();
+}
+
+void ecs::ServerUpdateSystem::update(World &world)
+{
+    ServerManager &man = world.getRessource<ServerManager>();
+
+    man.acceptNewConns();
+    man.handleNetworkCommands(world);
+    for (Entity entity : _entities)
+        man.updateLocalEntity(entity, world);
 }

@@ -8,7 +8,7 @@
 #ifdef _WIN32
 
 #include "WinServer.hpp"
-#include "../sockets/SocketError.hpp"
+#include "network/SocketError.hpp"
 #include "../sockets/SocketInclude.hpp"
 #include "network/CPSocket.hpp"
 #include "network/Utils.hpp"

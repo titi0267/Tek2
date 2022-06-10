@@ -8,7 +8,7 @@
 #ifdef __linux__
 
 #include "LinuxSocket.hpp"
-#include "SocketError.hpp"
+#include "network/SocketError.hpp"
 #include "SocketInclude.hpp"
 
 network::LinuxSocket::LinuxSocket()

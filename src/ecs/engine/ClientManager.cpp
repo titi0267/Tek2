@@ -9,6 +9,7 @@
 #include <sstream>
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/EntityCommands.hpp"
+#include "network/SocketError.hpp"
 
 bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
 {
@@ -19,6 +20,42 @@ bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
         return true;
     }
     return false;
+}
+
+void ecs::ClientManager::attemptConnection(const std::string &ip,
+const std::string &port, ConnectionSuccessFct success, ConnectionFailedFct failed)
+{
+    _ip = ip;
+    _port = port;
+    _success = success;
+    _failed = failed;
+    _connAttempted = true;
+    _tryConnCount = 0;
+    _lastTry = std::chrono::system_clock::now();
+}
+
+void ecs::ClientManager::tryConnection(ecs::World &world)
+{
+    auto now = std::chrono::system_clock::now();
+
+    if (now - _lastTry < std::chrono::milliseconds(500))
+        return;
+    try {
+        connectTo(_ip, _port);
+        std::cout << "Successfully connected to " << _ip << ":" << _port << std::endl;
+        _connAttempted = false;
+        _success(world);
+    } catch(network::SocketError) {
+        if (_tryConnCount == 5) {
+            std::cout << "Failed all connection attempts" << std::endl;
+            _connAttempted = false;
+            _failed(world);
+            return;
+        }
+        _lastTry = now;
+        _tryConnCount++;
+        std::cout << "Failed connection attempt (" << _tryConnCount << " / 5)" << std::endl;
+    }
 }
 
 void ecs::ClientManager::handleNetworkCommands(World &world)
@@ -162,4 +199,24 @@ void ecs::ClientManager::killLocalEntity(Entity entity, World &world)
     std::cout << "Killing local entity" << std::endl;
     _client->write((void*) &cmd, sizeof(NetworkCommand));
     _client->write(&entity, sizeof(Entity));
+}
+
+void ecs::ClientUpdateSystem::setSignature(ComponentManager &component)
+{
+    _signature = component.generateSignature<MirrorEntity>();
+}
+
+void ecs::ClientUpdateSystem::update(World &world)
+{
+    ClientManager &man = world.getRessource<ClientManager>();
+
+    if (!man.isConnected()) {
+        if (man.isConnectionAttempt())
+            man.tryConnection(world);
+        if (!man.isConnected())
+            return;
+    }
+    man.handleNetworkCommands(world);
+    for (Entity entity : _entities)
+        man.updateLocalEntity(entity, world);
 }

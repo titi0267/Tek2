@@ -5,7 +5,7 @@
 ** SocketError
 */
 
-#include "SocketError.hpp"
+#include "network/SocketError.hpp"
 
 network::SocketError::SocketError(const std::string &type, const std::string &message)
 {

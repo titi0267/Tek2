@@ -9,7 +9,7 @@
 
 #include "LinuxClient.hpp"
 #include "../sockets/SocketInclude.hpp"
-#include "../sockets/SocketError.hpp"
+#include "network/SocketError.hpp"
 #include "network/CPSocket.hpp"
 #include "network/Utils.hpp"
 #include <iostream>

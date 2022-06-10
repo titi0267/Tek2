@@ -8,7 +8,7 @@
 #ifdef _WIN32
 
 #include "WinSocket.hpp"
-#include "SocketError.hpp"
+#include "network/SocketError.hpp"
 #include "SocketInclude.hpp"
 
 network::WinSocket::WinSocket()

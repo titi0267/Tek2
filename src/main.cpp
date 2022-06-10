@@ -29,8 +29,6 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 
-#include "network/sockets/SocketError.hpp"
-
 int WSA(void);
 
 void registerBasicComponents(ecs::World &world)
@@ -140,13 +138,23 @@ void serverMain(ecs::World *world, bool *run)
     registerBasicComponents(*world);
 
     world->insertRessource<ecs::ServerManager>();
-    world->registerSystem<ecs::NetworkUpdateSystem<ecs::ServerManager>>();
+    world->registerSystem<ecs::ServerUpdateSystem>();
 
     world->getRessource<ecs::ServerManager>().startServer();
 
     std::cerr << "-- Run server !" << std::endl;
     while (*run)
         world->updateServer();
+}
+
+void successConn(ecs::World &world)
+{
+    std::cout << "SUCCESS !" << std::endl;
+}
+
+void failedConn(ecs::World &world)
+{
+    std::cout << "FAILED !" << std::endl;
 }
 
 int main(int ac, char **av)
@@ -167,7 +175,7 @@ int main(int ac, char **av)
     world.insertRessource<raylib::FontManager>();
     world.insertRessource<ecs::ClientManager>();
 
-    world.registerSystem<ecs::NetworkUpdateSystem<ecs::ClientManager>>();
+    world.registerSystem<ecs::ClientUpdateSystem>();
     world.registerSystems<InputSystem, DrawCubeTest>();
 
     world.insertRessource<ecs::InternalServer>();
@@ -183,20 +191,7 @@ int main(int ac, char **av)
     if (ac == 2)
         world.getRessource<ecs::InternalServer>().startServer(serverMain);
 
-    int tries = 0;
-    for (; tries < 5; tries++) {
-        try {
-        std::cout << "Try to connect to server" << std::endl;
-            world.getRessource<ecs::ClientManager>().connectTo();
-            break;
-        } catch(network::SocketError) {
-            std::cout << "Failed to connect to server (" << tries + 1 << "/5)" << std::endl;
-            std::this_thread::sleep_for(std::chrono::seconds(1));
-        }
-    }
-
-    if (tries == 5)
-        return 1;
+    world.getRessource<ecs::ClientManager>().attemptConnection("127.0.0.1", "4242", successConn, failedConn);
 
     raylib::Window &window = world.getRessource<raylib::Window>();
 
