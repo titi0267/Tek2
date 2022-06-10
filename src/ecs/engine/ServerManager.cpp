@@ -72,13 +72,14 @@ bool ecs::ServerManager::readClientEntityUpdate(ConnId conn, std::stringbuf &buf
         ||  tryRead(conn, &componentSize, sizeof(std::uint32_t)))
             return true;
 
-        char tmp[componentSize];
+        std::string tmp;
+        tmp.reserve(componentSize);
 
-        if (tryRead(conn, tmp, componentSize))
+        if (tryRead(conn, tmp.data(), componentSize))
             return true;
         buffer.sputn((char*) &componentType, sizeof(ComponentType));
         buffer.sputn((char*) &componentSize, sizeof(std::uint32_t));
-        buffer.sputn(tmp, componentSize);
+        buffer.sputn(tmp.data(), componentSize);
     }
     return false;
 }
