@@ -30,6 +30,8 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/SceneMoveElement.hpp"
+#include "ecs/components/ResolutionButton.hpp"
+#include "ecs/components/FullscreenButton.hpp"
 
 void registerBasicComponents(ecs::World &world)
 {
@@ -50,8 +52,8 @@ void registerRender(ecs::World &world)
 
 void registerMouseInputs(ecs::World &world)
 {
-    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement>();
-    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem>();
+    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement, ecs::ResolutionButton, ecs::FullscreenButton>();
+    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem, ecs::ResolutionButtonSystem, ecs::FullscreenButtonSystem>();
 }
 
 void setTextureToModel(const std::string &texturePath, const std::string &modelPath, ecs::World &world)

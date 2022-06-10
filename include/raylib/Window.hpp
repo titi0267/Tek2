@@ -31,12 +31,15 @@ namespace raylib {
 
         void resize(Vector2 size)
         {
+            if (IsWindowFullscreen())
+                return;
             SetWindowSize(size.x, size.y);
         }
 
         Vector2 getWindowSize()
         {
-            return getWindowSize();
+            Vector2 ret = {(float)GetScreenWidth(), (float)GetScreenHeight()};
+            return (ret);
         }
 
         void toggleClose()
@@ -74,6 +77,25 @@ namespace raylib {
         void clear(Color color)
         {
             ClearBackground(color);
+        }
+
+        void setFullscreen()
+        {
+            if (IsWindowFullscreen())
+                return;
+            resize({(float)1920,(float)1080});
+            ToggleFullscreen();
+        }
+
+        bool isFullscreen()
+        {
+            return (IsWindowFullscreen());
+        }
+        void setWindowed()
+        {
+            if (!IsWindowFullscreen())
+                return;
+            ToggleFullscreen();
         }
         private:
             bool _close;

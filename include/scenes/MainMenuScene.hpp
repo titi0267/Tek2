@@ -29,6 +29,9 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/SceneMoveElement.hpp"
+#include "ecs/components/ResolutionButton.hpp"
+#include "ecs/components/FullscreenButton.hpp"
+
 
 namespace bomberman {
     class MainMenuScene : public ecs::IScene, public ecs::MoveRequesterSceneModule {
@@ -43,8 +46,11 @@ namespace bomberman {
 
         void generateMainMenu(ecs::World &world);
         void generateSettingsMenu(ecs::World &world);
+        void generateGraphicalSettingsMenu(ecs::World &world);
 
         void spawnButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
+        void spawnResolutionButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::ResolutionButton &res);
+        void spawnFullscreenButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::FullscreenButton &but);
 
         bool &getMovementRequest() { return moveRequest; };
         Vector3 &getMoveDest() { return moveDest; };

@@ -18,6 +18,7 @@ add_executable(bomberman
     "src/ecs/systems/Hoverable.cpp"
     "src/ecs/systems/Text3D.cpp"
     "src/ecs/systems/SceneMoveElement.cpp"
+    "src/ecs/systems/Button.cpp"
 
     "src/scenes/MainMenuScene.cpp"
 )
