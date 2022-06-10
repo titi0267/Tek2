@@ -13,8 +13,9 @@ namespace ecs {
     struct ResolutionButton {
         int width;
         int height;
+        bool precedent;
         ResolutionButton () : width(0), height(0) {};
-        ResolutionButton (int width, int height) : width(width), height(height) {};
+        ResolutionButton (int width, int height) : width(width), height(height), precedent(false) {};
     };
 
     class ResolutionButtonSystem : public ecs::ASystem {

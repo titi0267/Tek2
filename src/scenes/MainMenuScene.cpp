@@ -42,6 +42,16 @@ void setResFunction(ecs::World &world, ecs::Entity entity)
     win.resize({(float)res.width,(float)res.height});
 }
 
+void setFPSFunction(ecs::World &world, ecs::Entity entity)
+{
+    ecs::FPSButton &but = world.getComponent<ecs::FPSButton>(entity);
+    raylib::Window &win = world.getRessource<raylib::Window>();
+
+    if (win.getFPS() == but.fps)
+        return;
+    win.setTargetFPS(but.fps);
+}
+
 void windowedFunction(ecs::World &world, ecs::Entity entity)
 {
     world.getRessource<raylib::Window>().setWindowed();
@@ -138,14 +148,17 @@ void bomberman::MainMenuScene::generateGraphicalSettingsMenu(ecs::World &world)
 
     spawnFullscreenButton({{-12.50, 12.75, -2}, rot, {1, 1, 1}}, "Fullscreen", {WHITE, GRAY}, fullscreenFunction, world, {true, false, false});
     spawnFullscreenButton({{-7.50, 12.75, -2}, rot, {1, 1, 1}}, "Windowed", {GREEN, GRAY}, windowedFunction, world, {false, false, false});
-    spawnResolutionButton({{-14, 11.75, -2}, rot, {1, 1, 1}}, "1920x1080", {WHITE, GRAY}, setResFunction, world, {1920, 1080});
+    spawnResolutionButton({{-14, 11.75, -2}, rot, {1, 1, 1}}, "1600x900", {WHITE, GRAY}, setResFunction, world, {1600, 900});
     spawnResolutionButton({{-10, 11.75, -2}, rot, {1, 1, 1}}, "1280x720", {WHITE, GRAY}, setResFunction, world, {1280, 720});
     spawnResolutionButton({{-6, 11.75, -2}, rot, {1, 1, 1}}, "854x480", {WHITE, GRAY}, setResFunction, world, {854, 480});
+    spawnFPSButton({{-14, 10.75, -2}, rot, {1, 1, 1}}, "30FPS", {WHITE, GRAY}, setFPSFunction, world, {30});
+    spawnFPSButton({{-10, 10.75, -2}, rot, {1, 1, 1}}, "60FPS", {WHITE, GRAY}, setFPSFunction, world, {60});
+    spawnFPSButton({{-6, 10.75, -2}, rot, {1, 1, 1}}, "Screen rate", {WHITE, GRAY}, setFPSFunction, world, {GetMonitorRefreshRate(GetCurrentMonitor())});
     //spawnButton({{-12.50, 11.75, -2}, rot, {1, 1, 1}}, "Fullscreen", {WHITE, GRAY}, fullscreenFunction, world);
     //spawnButton({{-10.00, 11.75, -2}, rot, {1, 1, 1}}, "Fullscreen", {WHITE, GRAY}, fullscreenFunction, world);
     //spawnButton({{-7.50, 11.75, -2}, rot, {1, 1, 1}}, "Windowed", {GREEN, GRAY}, windowedFunction, world);
     //spawnButton({{-5, 11.75, -2}, rot, {1, 1, 1}}, "Windowed", {GREEN, GRAY}, windowedFunction, world);
-    spawnButton({{-10, 10.75, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, downFunction, world);
+    spawnButton({{-10, 9.75, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, downFunction, world);
 }
 
 void bomberman::MainMenuScene::generateSettingsMenu(ecs::World &world)
@@ -204,4 +217,19 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {0.7}, res);
+}
+
+void bomberman::MainMenuScene::spawnFPSButton(const Transform &transform, const std::string &text,
+const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::FPSButton &but)
+{
+    const float BUTTON_SIZE = 3;
+    raylib::Font &font = world.getRessource<raylib::FontManager>().loadFont("./assets/fonts/emulogic.ttf");
+    raylib::Model &model = world.getRessource<raylib::ModelManager>().loadModel("./assets/mesh/button.iqm");
+
+    world.spawn().insert(transform,
+    ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {&font},
+    ecs::ModelRef {&model}, hoverTint.base,
+    ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::SceneMoveElement {0.7}, but);
 }

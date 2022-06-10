@@ -31,6 +31,7 @@
 #include "ecs/components/SceneMoveElement.hpp"
 #include "ecs/components/ResolutionButton.hpp"
 #include "ecs/components/FullscreenButton.hpp"
+#include "ecs/components/FPSButton.hpp"
 
 
 namespace bomberman {
@@ -51,6 +52,7 @@ namespace bomberman {
         void spawnButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
         void spawnResolutionButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::ResolutionButton &res);
         void spawnFullscreenButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::FullscreenButton &but);
+        void spawnFPSButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::FPSButton &but);
 
         bool &getMovementRequest() { return moveRequest; };
         Vector3 &getMoveDest() { return moveDest; };

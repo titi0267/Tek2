@@ -59,6 +59,11 @@ namespace raylib {
             return GetMousePosition();
         }
 
+        int getFPS()
+        {
+            return (GetFPS());
+        }
+
         bool isMouseButtonPressed(MouseButton button)
         {
             return IsMouseButtonPressed(button);

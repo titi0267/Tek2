@@ -10,6 +10,7 @@
 #include "ecs/components/HoverTint.hpp"
 #include "ecs/components/ResolutionButton.hpp"
 #include "ecs/components/FullscreenButton.hpp"
+#include "ecs/components/FPSButton.hpp"
 #include <iostream>
 
 void ecs::ResolutionButtonSystem::setSignature(ecs::ComponentManager &component)
@@ -27,20 +28,24 @@ void ecs::ResolutionButtonSystem::update(ecs::World &world)
 
 
         if (win.isFullscreen()) {
+            res.precedent = true;
             tint = RED;
             hTint.base = RED;
             hTint.onHover = RED;
             continue;
         }
         if (win.getWindowSize().x == res.width && win.getWindowSize().y == res.height) {
-            tint = BLUE;
+            res.precedent = true;
             hTint.base = BLUE;
             hTint.onHover = BLUE;
         }
         else {
-            tint = WHITE;
+            if (res.precedent == true) {
+                tint = WHITE;
+            }
+            res.precedent = false;
             hTint.base = WHITE;
-            hTint.onHover = GREEN;
+            hTint.onHover = GRAY;
         }
     }
 }
@@ -88,6 +93,37 @@ void ecs::FullscreenButtonSystem::update(ecs::World &world)
             tint = BLUE;
             hTint.base = BLUE;
             hTint.onHover = BLUE;
+        }
+    }
+}
+
+void ecs::FPSButtonSystem::setSignature(ecs::ComponentManager &component)
+{
+    _signature = component.generateSignature<ecs::FPSButton, ecs::HoverTint>();
+}
+
+void ecs::FPSButtonSystem::update(ecs::World &world)
+{
+    for (ecs::Entity entity: _entities) {
+        ecs::FPSButton &but = world.getComponent<FPSButton>(entity);
+        ecs::HoverTint &hTint = world.getComponent<HoverTint>(entity);
+        ecs::Tint &tint = world.getComponent<Tint>(entity);
+        raylib::Window &win = world.getRessource<raylib::Window>();
+
+        if (win.getFPS() == but.fps) {
+            std::cout << "ok" << std::endl;
+            but.precedent = true;
+            tint = BLUE;
+            hTint.base = BLUE;
+            hTint.onHover = BLUE;
+        }
+        else {
+            if (but.precedent == true) {
+                tint = WHITE;
+            }
+            but.precedent = false;
+            hTint.base = WHITE;
+            hTint.onHover = GRAY;
         }
     }
 }
