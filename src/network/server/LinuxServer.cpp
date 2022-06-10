@@ -21,7 +21,7 @@ network::LinuxServer::LinuxServer()
     _created = false;
 }
 
-network::LinuxServer::createServer(const std::string &ip, const std::string &portString, const int maxClient)
+void network::LinuxServer::createServer(const std::string &ip, const std::string &portString, const int maxClient)
 {
     if (_created)
         throw (SocketError("LinuxServer", "server already has been created"));

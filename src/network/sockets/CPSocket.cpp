@@ -16,7 +16,7 @@
     #include "../client/WinClient.hpp"
 #endif
 
-std::unique_ptr<network::ISocket> network::CPSocket::createSocket(void)
+std::unique_ptr<network::ISocket> network::CPSocket::createSocket()
 {
     #ifdef __linux__
         return (std::make_unique<LinuxSocket>());
@@ -26,7 +26,7 @@ std::unique_ptr<network::ISocket> network::CPSocket::createSocket(void)
     return (nullptr);
 }
 
-std::unique_ptr<network::IServer> network::CPSocket::createServer(const std::string &ip, const std::string &port, const int maxClient)
+std::unique_ptr<network::IServer> network::CPSocket::createServer()
 {
     #ifdef __linux__
         return (std::make_unique<LinuxServer>());

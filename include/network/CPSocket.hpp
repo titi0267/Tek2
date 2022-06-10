@@ -17,8 +17,8 @@ namespace network {
         public:
             CPSocket() = default;
             ~CPSocket() = default;
-            static std::unique_ptr<ISocket> createSocket(void);
-            static std::unique_ptr<IServer> createServer(const std::string &ip = "", const std::string &port = "", const int maxClient = 4);
+            static std::unique_ptr<ISocket> createSocket();
+            static std::unique_ptr<IServer> createServer();
             static std::unique_ptr<IClient> createClient();
 
         protected:

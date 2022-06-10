@@ -59,6 +59,8 @@ void runServer(ecs::World &world)
     world.insertRessource<ecs::ServerManager>();
     world.registerSystem<ecs::NetworkUpdateSystem<ecs::ServerManager>>();
 
+    world.getRessource<ecs::ServerManager>().startServer();
+
     while (true)
         world.updateServer();
 }

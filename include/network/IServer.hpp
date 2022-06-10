@@ -35,5 +35,6 @@ namespace network {
         virtual const std::string &getServerIp() const = 0;
 
         virtual void disconnectConn(ConnId conn) = 0;
+        virtual bool doesConnExists(ConnId conn) = 0;
     };
 }

@@ -6,19 +6,29 @@
 */
 
 #include <iostream>
+#include <sstream>
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/EntityCommands.hpp"
+
+bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
+{
+    if (!_client->isConnected())
+        return true;
+    if( _client->read(buf, size) != size) {
+        _client->disconnect();
+        return true;
+    }
+    return false;
+}
 
 void ecs::ClientManager::handleNetworkCommands(World &world)
 {
     NetworkCommand cmd;
 
     _client->updateRWStates();
-    while (_client->canRead()) {
-        if (_client->read(&cmd, sizeof(NetworkCommand)) == 0) {
-            _client->disconnect();
+    while (_client->isConnected() && _client->canRead()) {
+        if (tryRead(&cmd, sizeof(NetworkCommand)))
             break;
-        }
         switch (cmd) {
             case NetworkCommand::UPDATE_ENTITY:
             spawnOrUpdateServerEntity(world);
@@ -30,18 +40,46 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
     }
 }
 
+bool ecs::ClientManager::readServerEntityUpdate(std::stringbuf &buffer)
+{
+    std::uint32_t nbComponents;
+    ComponentType componentType;
+    std::uint32_t componentSize;
+
+    if (tryRead(&nbComponents, sizeof(std::uint32_t)))
+        return true;
+    buffer.sputn((char*) &nbComponents, sizeof(std::uint32_t));
+    for (std::uint32_t i = 0; i < nbComponents; i++) {
+        if (tryRead(&componentType, sizeof(ComponentType))
+        ||  tryRead(&componentSize, sizeof(std::uint32_t)))
+            return true;
+
+        char tmp[componentSize];
+
+        if (tryRead(tmp, componentSize))
+            return true;
+        buffer.sputn((char*) &componentType, sizeof(ComponentType));
+        buffer.sputn((char*) &componentSize, sizeof(std::uint32_t));
+        buffer.sputn(tmp, componentSize);
+    }
+    return false;
+}
+
 void ecs::ClientManager::spawnOrUpdateServerEntity(World &world)
 {
     Entity serverEntity;
+    std::stringbuf buffer;
 
-    _client->read(&serverEntity, sizeof(Entity));
+    if (tryRead(&serverEntity, sizeof(Entity))
+    || readServerEntityUpdate(buffer))
+        return;
     if (_serverToClient.find(serverEntity) != _serverToClient.end())
-        updateServerEntity(serverEntity, world);
+        updateServerEntity(serverEntity, buffer, world);
     else
-        spawnServerEntity(serverEntity, world);
+        spawnServerEntity(serverEntity, buffer, world);
 }
 
-void ecs::ClientManager::spawnServerEntity(Entity serverEntity, World &world)
+void ecs::ClientManager::spawnServerEntity(Entity serverEntity, std::stringbuf &buffer, World &world)
 {
     EntityCommands entityCmds = world.spawn();
     Entity localEntity = entityCmds.getEntity();
@@ -51,18 +89,16 @@ void ecs::ClientManager::spawnServerEntity(Entity serverEntity, World &world)
 
     std::cout << "--- Creating entity from server ---" << std::endl;
     _serverToClient.insert({serverEntity, localEntity});
-    _client->read(&nbComponents, sizeof(std::uint32_t));
-    std::cout << "- Entity has " << nbComponents << " components ! " << std::endl;
+    buffer.sgetn((char*) &nbComponents, sizeof(std::uint32_t));
     for (std::uint32_t i = 0; i < nbComponents; i++) {
-        _client->read(&componentType, sizeof(ComponentType));
-        _client->read(&componentSize, sizeof(std::uint32_t));
-        std::cout << "- Insert Component " << std::to_string((int) componentType) << std::endl;
+        buffer.sgetn((char*) &componentType, sizeof(ComponentType));
+        buffer.sgetn((char*) &componentSize, sizeof(std::uint32_t));
         entityCmds.insertByType(componentType);
-        _client->read(world.getComponentManager().getComponentByType(componentType, localEntity), componentSize);
+        buffer.sgetn((char*) world.getComponentManager().getComponentByType(componentType, localEntity), componentSize);
     }
 }
 
-void ecs::ClientManager::updateServerEntity(Entity serverEntity, World &world)
+void ecs::ClientManager::updateServerEntity(Entity serverEntity, std::stringbuf &buffer, World &world)
 {
     Entity localEntity = _serverToClient[serverEntity];
     std::uint32_t nbComponents;
@@ -70,11 +106,11 @@ void ecs::ClientManager::updateServerEntity(Entity serverEntity, World &world)
     std::uint32_t componentSize;
 
     std::cout << "Updating entity from server" << std::endl;
-    _client->read(&nbComponents, sizeof(std::uint32_t));
+    buffer.sgetn((char*) &nbComponents, sizeof(std::uint32_t));
     for (std::uint32_t i = 0; i < nbComponents; i++) {
-        _client->read(&componentType, sizeof(ComponentType));
-        _client->read(&componentSize, sizeof(std::uint32_t));
-        _client->read(world.getComponentManager().getComponentByType(componentType, localEntity), componentSize);
+        buffer.sgetn((char*) &componentType, sizeof(ComponentType));
+        buffer.sgetn((char*) &componentSize, sizeof(std::uint32_t));
+        buffer.sgetn((char*) world.getComponentManager().getComponentByType(componentType, localEntity), componentSize);
     }
 }
 
@@ -83,8 +119,9 @@ void ecs::ClientManager::killServerEntity(World &world)
     Entity serverEntity;
     Entity localEntity;
 
+    if (tryRead(&serverEntity, sizeof(Entity)))
+        return;
     std::cout << "Entity killed from server" << std::endl;
-    _client->read(&serverEntity, sizeof(Entity));
     localEntity = _serverToClient[serverEntity];
     world.getEntityCommands(localEntity).despawn();
     _serverToClient.erase(serverEntity);

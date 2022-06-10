@@ -49,6 +49,7 @@ namespace network {
         const std::string &getServerIp() const { return _ip; };
 
         void disconnectConn(ConnId conn);
+        bool doesConnExists(ConnId conn) { return _clients.find(conn) != _clients.end(); };
 
         void setPortFromSocket();
         std::string findIp();

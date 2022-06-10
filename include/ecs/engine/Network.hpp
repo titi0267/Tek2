@@ -8,8 +8,9 @@
 #pragma once
 
 #include <memory>
-#include <unordered_map>
+#include <sstream>
 #include <iostream>
+#include <unordered_map>
 #include "network/IClient.hpp"
 #include "network/IServer.hpp"
 #include "network/CPSocket.hpp"
@@ -43,17 +44,23 @@ namespace ecs {
         std::vector<ConnId> _activeConns;
         std::unordered_map<network::ConnId, std::unordered_map<Entity, Entity>> _clientToServer;
 
+        bool tryRead(ConnId conn, void *buf, std::size_t size);
+        bool readClientEntityUpdate(ConnId conn, std::stringbuf &buffer);
+
         void spawnOrUpdateClientEntity(ConnId conn, World &world);
-        void spawnClientEntity(ConnId conn, Entity serverEntity, World &world);
-        void updateClientEntity(ConnId conn, Entity serverEntity, World &world);
+        void spawnClientEntity(ConnId conn, Entity serverEntity, std::stringbuf &buffer, World &world);
+        void updateClientEntity(ConnId conn, Entity serverEntity, std::stringbuf &buffer, World &world);
         void killClientEntity(ConnId conn, World &world);
 
-        void sendUpdateLocalEntity(ConnId conn, Entity localEntity, std::uint32_t total, World &world);
-        void sendKillLocalEntity(ConnId conn, Entity localEntity);
+        void createUpdateLocalEntityBuffer(Entity entity, World &world, std::stringbuf &buffer);
+        void createKillLocalEntityBuffer(Entity entity, std::stringbuf &buffer);
 
         public:
         ServerManager() : _server(network::CPSocket::createServer()) {};
         ~ServerManager() = default;
+
+        void startServer() { _server->createServer(); };
+        void closeServer() { _server->closeServer(); };
 
         void handleNetworkCommands(World &world);
 
@@ -67,9 +74,12 @@ namespace ecs {
         std::unique_ptr<network::IClient> _client;
         std::unordered_map<Entity, Entity> _serverToClient;
 
+        bool tryRead(void *buf, std::size_t size);
+        bool readServerEntityUpdate(std::stringbuf &buffer);
+
         void spawnOrUpdateServerEntity(World &world);
-        void spawnServerEntity(Entity serverEntity,World &world);
-        void updateServerEntity(Entity serverEntity,World &world);
+        void spawnServerEntity(Entity serverEntity, std::stringbuf &buffer, World &world);
+        void updateServerEntity(Entity serverEntity, std::stringbuf &buffer, World &world);
         void killServerEntity(World &world);
 
         public:
