@@ -32,6 +32,8 @@
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/SceneMoveElement.hpp"
 
+#include "Map.hpp"
+
 void registerBasicComponents(ecs::World &world)
 {
     world.registerComponents<Transform, ecs::Hitbox>();
@@ -68,7 +70,7 @@ int main()
 // ----- [GLOBAL RESSOURCES] -----
 
     world.insertRessource<raylib::Window>();
-    world.insertRessource<raylib::Camera>(Vector3 {0.0, 0.0, 2.0}, Vector3 {0.0, 0.0, -4.0});
+    world.insertRessource<raylib::Camera>(Vector3 {0.0, 0.0, 2.0}, Vector3 {0, 0, 0});
     world.insertRessource<raylib::TextureManager>();
     world.insertRessource<raylib::ModelManager>();
     world.insertRessource<raylib::AnimationManager>();
@@ -78,20 +80,32 @@ int main()
 
 // ----- [INIT RESSOURCES] -----
 
-    raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
-    shaderMan.loadShader("button", "./assets/shaders/button.vs", "./assets/shaders/button.fs");
-
     raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
-    textureMan.loadTexture("button", "./assets/textures/button_txt.png");
-
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
-    raylib::Model &buttonModel = modelMan.loadModel("button", "./assets/mesh/button.iqm");
-    buttonModel.getMaterialView(0)
-    .setTexture(textureMan.getTexture("button"))
-    .setColor(Color {125, 255, 125, 255})
-    .setShader(shaderMan.getShader("button"));
-
     raylib::FontManager &fontMan = world.getRessource<raylib::FontManager>();
+    raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
+
+    raylib::Model &bagModel = modelMan.loadModel("bottle", "./assets/models/bottle.iqm");
+    raylib::Texture &bagText = textureMan.loadTexture("bottle", "./assets/textures/bottle.png");
+    bagModel.getMaterialView(0).setTexture(bagText);
+
+    raylib::Model &tableModel = modelMan.loadModel("table", "./assets/models/table.iqm");
+    raylib::Texture &tableText = textureMan.loadTexture("table", "./assets/textures/table.png");
+    tableModel.getMaterialView(0).setTexture(tableText);
+
+    raylib::Model &chairModel = modelMan.loadModel("chair", "./assets/models/chair.iqm");
+    raylib::Texture &chairText = textureMan.loadTexture("chair", "./assets/textures/chair.png");
+    chairModel.getMaterialView(0).setTexture(chairText);
+
+    raylib::Texture &buttonText = textureMan.loadTexture("button", "./assets/textures/button.png");
+    raylib::Shader &buttonShader = shaderMan.loadShader("button", "./assets/shaders/button.vs", "./assets/shaders/button.fs");
+    raylib::Model &buttonModel = modelMan.loadModel("button", "./assets/models/button.iqm");
+    buttonModel.getMaterialView(0)
+    .setTexture(buttonText);
+    // .setColor(Color {125, 255, 125, 255})
+    // .setShader(buttonShader)
+
+    textureMan.loadTexture("ground", "./assets/textures/ground.png");
     fontMan.loadFont("emulogic", "./assets/fonts/emulogic.ttf");
 
 // ------ [START + RUN GAME] ------
