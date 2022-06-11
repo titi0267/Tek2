@@ -14,5 +14,6 @@ int WSA(void)
     WSADATA wsaData;
     if (WSAStartup(MAKEWORD(2,2), &wsaData))
         return (84);
+    return (0);
     #endif
 }
