@@ -12,6 +12,8 @@ add_executable(bomberman
     "src/ecs/engine/World.cpp"
     "src/ecs/engine/SceneManager.cpp"
 
+    "src/Map.cpp"
+
     "src/ecs/systems/ClickUpdate.cpp"
     "src/ecs/systems/DrawCube.cpp"
     "src/ecs/systems/DrawModel.cpp"
@@ -27,7 +29,6 @@ target_link_libraries(bomberman raylib)
 target_include_directories(bomberman
     PRIVATE
         "${CMAKE_SOURCE_DIR}/include"
-        "${raylib_SOURCE_DIR}/"
 )
 set_target_properties(bomberman
     PROPERTIES

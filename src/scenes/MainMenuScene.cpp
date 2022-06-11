@@ -128,12 +128,10 @@ void bomberman::MainMenuScene::spawnButton(const Transform &transform, const std
 const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world)
 {
     const float BUTTON_SIZE = 3;
-    raylib::Font &font = world.getRessource<raylib::FontManager>().loadFont("./assets/fonts/emulogic.ttf");
-    raylib::Model &model = world.getRessource<raylib::ModelManager>().loadModel("./assets/mesh/button.iqm");
 
     world.spawn().insert(transform,
-    ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {&font},
-    ecs::ModelRef {&model}, WHITE,
+    ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
+    ecs::ModelRef {"button"}, WHITE,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {0.7});

@@ -15,11 +15,19 @@ namespace raylib {
         std::unordered_map<std::string, Texture> _textures;
 
         public:
-        Texture &loadTexture(const std::string &path)
+        Texture &loadTexture(const std::string &id, const std::string &path)
         {
-            if (_textures.find(path) == _textures.end())
-                _textures.insert({path, Texture(path)});
-            return _textures.at(path);
+            if (_textures.find(id) != _textures.end())
+                throw std::runtime_error("Texture " + id + " already used");
+            _textures.insert({id, Texture(path)});
+            return _textures.at(id);
+        }
+
+        Texture &getTexture(const std::string &id)
+        {
+            if (_textures.find(id) == _textures.end())
+                throw std::runtime_error("Texture " + id + " does not exists");
+            return _textures.at(id);
         }
     };
 }

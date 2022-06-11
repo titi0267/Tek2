@@ -16,9 +16,9 @@
 
 namespace ecs {
     struct FontRef {
-        raylib::Font *font;
+        char fontId[255];
 
-        FontRef(raylib::Font *font = nullptr) : font(font) {};
+        FontRef(const std::string &id = "") { id.copy(fontId, 255); fontId[id.size()] = 0; };
     };
 
     struct Text3D {

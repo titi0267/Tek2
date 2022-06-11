@@ -1,22 +1,22 @@
 /*
 ** EPITECH PROJECT, 2022
-** $
+** B-YEP-400-STG-4-1-indiestudio-mathieu.brujan
 ** File description:
-** DrawableMesh
+** DrawableModel
 */
 
 #pragma once
 
-#include "ecs/engine//World.hpp"
+#include "ecs/engine/World.hpp"
 #include "ecs/engine/System.hpp"
 
 #include "raylib/Model.hpp"
 
 namespace ecs {
     struct ModelRef {
-        raylib::Model *model;
+        char modelId[255];
 
-        ModelRef(raylib::Model *model = nullptr) : model(model) {};
+        ModelRef(const std::string &id = "") { id.copy(modelId, 255); modelId[id.size()] = 0; };
     };
 
     class DrawableModelSystem : public ecs::ASystem {

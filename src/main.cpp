@@ -19,6 +19,7 @@
 #include "raylib/ModelManager.hpp"
 #include "raylib/AnimationManager.hpp"
 #include "raylib/FontManager.hpp"
+#include "raylib/ShaderManager.hpp"
 
 #include "ecs/components/DrawableCube.hpp"
 #include "ecs/components/DrawableModel.hpp"
@@ -31,6 +32,8 @@
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/SceneMoveElement.hpp"
 #include "ecs/components/PlayerInputs.hpp"
+
+#include "Map.hpp"
 
 void registerBasicComponents(ecs::World &world)
 {
@@ -64,42 +67,61 @@ void registerKeyboardInput(ecs::World &world)
     //world.registerSystem<ecs::PlayerDoActionUpdateSystem>();
 }
 
-void setTextureToModel(const std::string &texturePath, const std::string &modelPath, ecs::World &world)
-{
-    raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
-    raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
-
-    raylib::Model &buttonModel = modelMan.loadModel(modelPath);
-    raylib::Texture &buttonText = textureMan.loadTexture(texturePath);
-    buttonModel.getMaterialView(0).setTexture(MATERIAL_MAP_DIFFUSE, buttonText);
-}
-
 int main()
 {
     ecs::World world{};
+
+// ---- [COMPONENTS + SYSTEMS] ----
 
     registerBasicComponents(world);
     registerRender(world);
     registerMouseInputs(world);
     registerKeyboardInput(world);
 
-// ---------------------------------
+// ----- [GLOBAL RESSOURCES] -----
 
     world.insertRessource<raylib::Window>();
-    world.insertRessource<raylib::Camera>(Vector3 {0.0, 0.0, 2.0}, Vector3 {0.0, 0.0, -4.0});
+    world.insertRessource<raylib::Camera>(Vector3 {0.0, 0.0, 2.0}, Vector3 {0, 0, 0});
     world.insertRessource<raylib::TextureManager>();
     world.insertRessource<raylib::ModelManager>();
     world.insertRessource<raylib::AnimationManager>();
     world.insertRessource<raylib::FontManager>();
+    world.insertRessource<raylib::ShaderManager>();
     world.insertRessource<ecs::SceneManager>();
 
-// ---------------------------------
+// ----- [INIT RESSOURCES] -----
+
+    raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
+    raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
+    raylib::FontManager &fontMan = world.getRessource<raylib::FontManager>();
+    raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
+
+    raylib::Model &bagModel = modelMan.loadModel("bottle", "./assets/models/bottle.iqm");
+    raylib::Texture &bagText = textureMan.loadTexture("bottle", "./assets/textures/bottle.png");
+    bagModel.getMaterialView(0).setTexture(bagText);
+
+    raylib::Model &tableModel = modelMan.loadModel("table", "./assets/models/table.iqm");
+    raylib::Texture &tableText = textureMan.loadTexture("table", "./assets/textures/table.png");
+    tableModel.getMaterialView(0).setTexture(tableText);
+
+    raylib::Model &chairModel = modelMan.loadModel("chair", "./assets/models/chair.iqm");
+    raylib::Texture &chairText = textureMan.loadTexture("chair", "./assets/textures/chair.png");
+    chairModel.getMaterialView(0).setTexture(chairText);
+
+    raylib::Texture &buttonText = textureMan.loadTexture("button", "./assets/textures/button.png");
+    raylib::Shader &buttonShader = shaderMan.loadShader("button", "./assets/shaders/button.vs", "./assets/shaders/button.fs");
+    raylib::Model &buttonModel = modelMan.loadModel("button", "./assets/models/button.iqm");
+    buttonModel.getMaterialView(0)
+    .setTexture(buttonText);
+    // .setColor(Color {125, 255, 125, 255})
+    // .setShader(buttonShader)
+
+    textureMan.loadTexture("ground", "./assets/textures/ground.png");
+    fontMan.loadFont("emulogic", "./assets/fonts/emulogic.ttf");
+
+// ------ [START + RUN GAME] ------
 
     world.getRessource<ecs::SceneManager>().loadDefaultScene(world);
-
-    setTextureToModel("./assets/textures/button_txt.png", "./assets/mesh/button.iqm", world);
-
-// ---------------------------------
 
     raylib::Window &window = world.getRessource<raylib::Window>();
 
