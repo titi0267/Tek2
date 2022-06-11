@@ -26,6 +26,7 @@ namespace raylib {
 
         void setTargetFPS(int fps)
         {
+            _fps = fps;
             SetTargetFPS(fps);
         }
 
@@ -61,7 +62,12 @@ namespace raylib {
 
         int getFPS()
         {
-            return (GetFPS());
+            return (_fps);
+        }
+
+        void drawFPS(int x, int y)
+        {
+            DrawFPS(x, y);
         }
 
         bool isMouseButtonPressed(MouseButton button)
@@ -104,5 +110,6 @@ namespace raylib {
         }
         private:
             bool _close;
+            int _fps;
     };
 }

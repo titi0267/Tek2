@@ -11,6 +11,7 @@
 #include "ecs/components/ResolutionButton.hpp"
 #include "ecs/components/FullscreenButton.hpp"
 #include "ecs/components/FPSButton.hpp"
+#include "ecs/components/ShowFPSButton.hpp"
 #include <iostream>
 
 void ecs::ResolutionButtonSystem::setSignature(ecs::ComponentManager &component)
@@ -111,7 +112,6 @@ void ecs::FPSButtonSystem::update(ecs::World &world)
         raylib::Window &win = world.getRessource<raylib::Window>();
 
         if (win.getFPS() == but.fps) {
-            std::cout << "ok" << std::endl;
             but.precedent = true;
             tint = BLUE;
             hTint.base = BLUE;
@@ -124,6 +124,36 @@ void ecs::FPSButtonSystem::update(ecs::World &world)
             but.precedent = false;
             hTint.base = WHITE;
             hTint.onHover = GRAY;
+        }
+    }
+}
+
+void ecs::ShowFPSButtonSystem::setSignature(ecs::ComponentManager &component)
+{
+    _signature = component.generateSignature<ecs::ShowFPSButton, ecs::HoverTint>();
+}
+
+void ecs::ShowFPSButtonSystem::update(ecs::World &world)
+{
+    for (ecs::Entity entity: _entities) {
+        ecs::ShowFPSButton &but = world.getComponent<ShowFPSButton>(entity);
+        ecs::HoverTint &hTint = world.getComponent<HoverTint>(entity);
+        ecs::Tint &tint = world.getComponent<Tint>(entity);
+        raylib::Window &win = world.getRessource<raylib::Window>();
+        if (but.show) {
+            if (!but.precedent)
+                tint = BLUE;
+            hTint.base = BLUE;
+            hTint.onHover = GREEN;
+            win.drawFPS(0, 0);
+            but.precedent = true;
+        }
+        else {
+            if (but.precedent)
+                tint = RED;
+            hTint.base = RED;
+            hTint.onHover = GREEN;
+            but.precedent = false;
         }
     }
 }
