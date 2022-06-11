@@ -30,6 +30,8 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/SceneMoveElement.hpp"
+#include "ecs/components/PlayerInputAction.hpp"
+#include "ecs/components/PlayerDoAction.hpp"
 
 void registerBasicComponents(ecs::World &world)
 {
@@ -54,6 +56,15 @@ void registerMouseInputs(ecs::World &world)
     world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem>();
 }
 
+void registerKeyboardInput(ecs::World &world)
+{
+    world.registerComponents<ecs::PlayerInputAction, ecs::PlayerDoAction>();
+    world.registerSystems<ecs::PlayerInputActionUpdateSystem, ecs::PlayerDoActionUpdateSystem>();
+
+    //world.registerComponent<ecs::PlayerDoAction>();
+    //world.registerSystem<ecs::PlayerDoActionUpdateSystem>();
+}
+
 void setTextureToModel(const std::string &texturePath, const std::string &modelPath, ecs::World &world)
 {
     raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
@@ -71,6 +82,7 @@ int main()
     registerBasicComponents(world);
     registerRender(world);
     registerMouseInputs(world);
+    registerKeyboardInput(world);
 
 // ---------------------------------
 
