@@ -30,8 +30,7 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/SceneMoveElement.hpp"
-#include "ecs/components/PlayerInputAction.hpp"
-#include "ecs/components/PlayerDoAction.hpp"
+#include "ecs/components/PlayerInputs.hpp"
 
 void registerBasicComponents(ecs::World &world)
 {
@@ -58,8 +57,8 @@ void registerMouseInputs(ecs::World &world)
 
 void registerKeyboardInput(ecs::World &world)
 {
-    world.registerComponents<ecs::PlayerInputAction, ecs::PlayerDoAction>();
-    world.registerSystems<ecs::PlayerInputActionUpdateSystem, ecs::PlayerDoActionUpdateSystem>();
+    world.registerComponents<ecs::PlayerInputs>();
+    world.registerSystems<ecs::PlayerInputsUpdateSystem>();
 
     //world.registerComponent<ecs::PlayerDoAction>();
     //world.registerSystem<ecs::PlayerDoActionUpdateSystem>();

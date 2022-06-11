@@ -12,10 +12,11 @@
 
 namespace raylib {
     class Window {
+        bool _close = false;
+
         public:
         Window(int width = 640, int height = 480, const std::string &name = "Indie Studio")
         {
-            _close = false;
             InitWindow(width, height, name.c_str());
         };
 
@@ -46,14 +47,22 @@ namespace raylib {
 
         bool shouldClose()
         {
-            if (_close)
-                return (true);
-            return WindowShouldClose();
+            return _close || WindowShouldClose();
         }
 
         Vector2 getMousePos()
         {
             return GetMousePosition();
+        }
+
+        bool isKeyDown(KeyboardKey key)
+        {
+            return IsKeyDown(key);
+        }
+
+        bool isKeyPressed(KeyboardKey key)
+        {
+            return IsKeyPressed(key);
         }
 
         bool isMouseButtonPressed(MouseButton button)
@@ -75,7 +84,5 @@ namespace raylib {
         {
             ClearBackground(color);
         }
-        private:
-            bool _close;
     };
 }

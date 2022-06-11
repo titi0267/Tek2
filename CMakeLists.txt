@@ -11,7 +11,6 @@ add_executable(bomberman
 
     "src/ecs/engine/World.cpp"
     "src/ecs/engine/SceneManager.cpp"
-    "src/ecs/engine/PlayerMovement.cpp"
 
     "src/ecs/systems/ClickUpdate.cpp"
     "src/ecs/systems/DrawCube.cpp"
@@ -19,6 +18,7 @@ add_executable(bomberman
     "src/ecs/systems/Hoverable.cpp"
     "src/ecs/systems/Text3D.cpp"
     "src/ecs/systems/SceneMoveElement.cpp"
+    "src/ecs/systems/PlayerInputs.cpp"
 
     "src/scenes/MainMenuScene.cpp"
 )
