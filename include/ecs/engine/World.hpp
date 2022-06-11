@@ -32,7 +32,8 @@ namespace ecs {
         SystemManager &getSystemManager() { return _systems; };
         RessourcesManager &getRessourceManager() { return _ressources; };
 
-        void update();
+        void updateClient();
+        void updateServer();
         void killAllEntities();
 
         EntityCommands spawn();

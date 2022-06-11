@@ -11,10 +11,10 @@
 
 #include "ecs/engine/EntityCommands.hpp"
 #include "ecs/engine/SceneManager.hpp"
+#include "ecs/engine/Network.hpp"
 
 #include "raylib/Camera.hpp"
 #include "raylib/Window.hpp"
-
 #include "raylib/TextureManager.hpp"
 #include "raylib/ModelManager.hpp"
 #include "raylib/AnimationManager.hpp"
@@ -35,14 +35,16 @@
 
 #include "Map.hpp"
 
+int WSA(void);
+
 void registerBasicComponents(ecs::World &world)
 {
-    world.registerComponents<Transform, ecs::Hitbox>();
+    world.registerComponents<Transform, ecs::Tint, ecs::MirrorEntity, ecs::Hitbox>();
 }
 
 void registerRender(ecs::World &world)
 {
-    world.registerComponents<ecs::DrawableCube, ecs::Tint, ecs::TextureRef>();
+    world.registerComponents<ecs::DrawableCube, ecs::TextureRef>();
     world.registerSystem<ecs::DrawTextureCubeSystem>();
 
     world.registerComponent<ecs::ModelRef>();
@@ -67,8 +69,12 @@ void registerKeyboardInput(ecs::World &world)
     //world.registerSystem<ecs::PlayerDoActionUpdateSystem>();
 }
 
-int main()
+int main(int ac, char **av)
 {
+    #ifdef _WIN32
+    if (WSA() == 84)
+        return (84);
+    #endif
     ecs::World world{};
 
 // ---- [COMPONENTS + SYSTEMS] ----
@@ -121,12 +127,10 @@ int main()
 
 // ------ [START + RUN GAME] ------
 
-    world.getRessource<ecs::SceneManager>().loadDefaultScene(world);
-
     raylib::Window &window = world.getRessource<raylib::Window>();
 
     window.setTargetFPS(60);
-    window.resize({1280, 720});
+    window.resize({640, 480});
     while (!window.shouldClose())
-        world.update();
+        world.updateClient();
 }

@@ -19,6 +19,7 @@ namespace ecs {
 
         public:
         EntityCommands(Entity entity, World &world) : _entity(entity), _world(world) {};
+        EntityCommands(const EntityCommands &other) : _entity(other._entity), _world(other._world) {};
         ~EntityCommands() = default;
 
         template<typename T>
@@ -40,6 +41,16 @@ namespace ecs {
             return *this;
         }
 
+        EntityCommands &insertByType(ComponentType type)
+        {
+            Signature &signature = _world.getEntityManager().getSignature(_entity);
+
+            _world.getComponentManager().addComponentToEntityByType(type, _entity);
+            signature[type] = true;
+            _world.getSystemManager().updateEntitySignature(_entity, signature);
+            return *this;
+        }
+
         template<typename T>
         EntityCommands &remove()
         {
@@ -57,12 +68,15 @@ namespace ecs {
             std::deque<Entity> &living = _world.getLivingEntities();
 
             for (ComponentType i = 0; i < MAX_COMPONENTS; i++) {
-                if (sign[i])
+                printf("Entity %i : %i -> %i\n", _entity, i, sign.test(i));
+                if (sign.test(i))
                     _world.getComponentManager().getIComponentArray(i)->removeEntity(_entity);
             }
             _world.getSystemManager().updateEntitySignature(_entity, sign);
             _world.getEntityManager().destroyEntity(_entity);
             living.erase(std::find(living.begin(), living.end(), _entity));
         }
+
+        Entity getEntity() { return _entity; };
     };
 }
