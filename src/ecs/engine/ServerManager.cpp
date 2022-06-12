@@ -9,6 +9,12 @@
 #include <iterator>
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/EntityCommands.hpp"
+#include "ecs/engine/PlayersManager.hpp"
+
+void ecs::ServerManager::sendCmd(ConnId conn, NetworkCommand cmd)
+{
+    _server->write(conn, (void*) &cmd, sizeof(NetworkCommand));
+}
 
 bool ecs::ServerManager::tryRead(ConnId conn, void *buf, std::size_t size)
 {
@@ -32,6 +38,17 @@ void ecs::ServerManager::acceptNewConns()
     }
 }
 
+void ecs::ServerManager::handleClientDisconnection(ConnId conn, World &world)
+{
+    auto &entitites = _clientToServer[conn];
+
+    for (auto &[client, local] : entitites)
+        world.getEntityCommands(local).despawn();
+    world.getRessource<PlayersManager>().clientDisconnect(conn);
+    _clientToServer.erase(conn);
+    _activeConns.erase(std::find(_activeConns.begin(), _activeConns.end(), conn));
+}
+
 void ecs::ServerManager::handleNetworkCommands(World &world)
 {
     NetworkCommand cmd;
@@ -49,10 +66,13 @@ void ecs::ServerManager::handleNetworkCommands(World &world)
                 case NetworkCommand::KILL_ENTITY:
                 killClientEntity(conn, world);
                 break;
+                case NetworkCommand::INIT_PLAYERS:
+                initPlayers(conn, world);
+                break;
             }
         }
         if (!_server->doesConnExists(conn)) {
-            _activeConns.erase(std::find(_activeConns.begin(), _activeConns.end(), conn));
+            handleClientDisconnection(conn, world);
             i--;
         }
     }
@@ -101,7 +121,6 @@ void ecs::ServerManager::spawnOrUpdateClientEntity(ConnId conn, World &world)
 
 void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity serverEntity, std::stringbuf &buffer, World &world)
 {
-    const NetworkCommand cmd = NetworkCommand::UPDATE_ENTITY;
     EntityCommands entityCmds = world.spawn();
     Entity localEntity = entityCmds.getEntity();
     std::uint32_t nbComponents;
@@ -114,7 +133,7 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity serverEntity, std
     for (ConnId client : _activeConns) {
         if (client == conn)
             continue;
-        _server->write(client, (void*) &cmd, sizeof(NetworkCommand));
+        sendCmd(conn, NetworkCommand::UPDATE_ENTITY);
         _server->write(client, (void*) &serverEntity, sizeof(Entity));
         _server->write(client, (void*) data.c_str(), data.size());
     }
@@ -129,7 +148,6 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity serverEntity, std
 
 void ecs::ServerManager::updateClientEntity(ConnId conn, Entity serverEntity, std::stringbuf &buffer, World &world)
 {
-    const NetworkCommand cmd = NetworkCommand::UPDATE_ENTITY;
     Entity localEntity = _clientToServer[conn][serverEntity];
     std::uint32_t nbComponents;
     ComponentType componentType;
@@ -140,7 +158,7 @@ void ecs::ServerManager::updateClientEntity(ConnId conn, Entity serverEntity, st
     for (ConnId client : _activeConns) {
         if (client == conn)
             continue;
-        _server->write(client, (void*) &cmd, sizeof(NetworkCommand));
+        sendCmd(conn, NetworkCommand::UPDATE_ENTITY);
         _server->write(client, (void*) &serverEntity, sizeof(Entity));
         _server->write(client, (void*) data.c_str(), data.size());
     }
@@ -228,6 +246,25 @@ void ecs::ServerManager::killLocalEntity(Entity entity, World &world)
     std::cout << "Killing entity to clients" << std::endl;
     for (ConnId conn : _activeConns)
         _server->write(conn, (void*) data.c_str(), data.size());
+}
+
+void ecs::ServerManager::initPlayers(ConnId conn, World &world)
+{
+    PlayersManager &man = world.getRessource<PlayersManager>();
+    std::uint32_t nbPlayers;
+    PlayerId id;
+
+    if (tryRead(conn, &nbPlayers, sizeof(std::uint32_t)))
+        return;
+    if (!man.canAcceptPlayers(nbPlayers)) {
+        sendCmd(conn, NetworkCommand::PLAYERS_REJECTED);
+        return;
+    }
+    sendCmd(conn, NetworkCommand::PLAYERS_CREATED);
+    for (int i = 0; i < nbPlayers; i++) {
+        id = man.reservePlayerId(conn);
+        _server->write(conn, &id, sizeof(PlayerId));
+    }
 }
 
 void ecs::ServerUpdateSystem::setSignature(ComponentManager &component)

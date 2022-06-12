@@ -9,6 +9,7 @@
 #include <sstream>
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/EntityCommands.hpp"
+#include "ecs/engine/SceneManager.hpp"
 #include "network/SocketError.hpp"
 
 bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
@@ -20,6 +21,14 @@ bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
         return true;
     }
     return false;
+}
+
+void ecs::ClientManager::handleDisconnect(World &world)
+{
+    ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
+    NetworkSceneModule &scene = dynamic_cast<NetworkSceneModule&>(man.getScene());
+
+    scene.onDisconnect(world);
 }
 
 void ecs::ClientManager::attemptConnection(const std::string &ip, const std::string &port,
@@ -59,6 +68,14 @@ void ecs::ClientManager::tryConnection(ecs::World &world)
     }
 }
 
+void ecs::ClientManager::initPlayers(std::uint32_t nbPlayers)
+{
+    NetworkCommand cmd = NetworkCommand::INIT_PLAYERS;
+
+    _client->write(&cmd, sizeof(NetworkCommand));
+    _client->write(&nbPlayers, sizeof(std::uint32_t));
+}
+
 void ecs::ClientManager::handleNetworkCommands(World &world)
 {
     NetworkCommand cmd;
@@ -74,8 +91,17 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
             case NetworkCommand::KILL_ENTITY:
             killServerEntity(world);
             break;
+            case NetworkCommand::PLAYERS_CREATED:
+            handlePlayersCreated(world);
+            break;
+            case NetworkCommand::DISCONNECT_CLIENT:
+            case NetworkCommand::PLAYERS_REJECTED:
+            _client->disconnect();
+            break;
         }
     }
+    if (!_client->isConnected())
+        handleDisconnect(world);
 }
 
 bool ecs::ClientManager::readServerEntityUpdate(std::stringbuf &buffer)
@@ -168,7 +194,7 @@ void ecs::ClientManager::killServerEntity(World &world)
 
 void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
 {
-    const NetworkCommand cmd = NetworkCommand::UPDATE_ENTITY;
+    NetworkCommand cmd = NetworkCommand::UPDATE_ENTITY;
     ComponentManager &compMan = world.getComponentManager();
     ComponentType type;
     std::uint32_t total = 0;
@@ -180,7 +206,7 @@ void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
         if (world.getComponentManager().hasComponentById(type, entity))
             total++;
     }
-    _client->write((void*) &cmd, sizeof(NetworkCommand));
+    _client->write(&cmd, sizeof(NetworkCommand));
     _client->write(&entity, sizeof(Entity));
     _client->write(&total, sizeof(std::uint32_t));
     for (const ComponentHash hash : MIRROR_COMPONENTS) {
@@ -196,11 +222,25 @@ void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
 
 void ecs::ClientManager::killLocalEntity(Entity entity, World &world)
 {
-    const NetworkCommand cmd = NetworkCommand::KILL_ENTITY;
+    NetworkCommand cmd = NetworkCommand::KILL_ENTITY;
 
     std::cout << "Killing local entity" << std::endl;
-    _client->write((void*) &cmd, sizeof(NetworkCommand));
+    _client->write(&cmd, sizeof(NetworkCommand));
     _client->write(&entity, sizeof(Entity));
+}
+
+void ecs::ClientManager::handlePlayersCreated(World &world)
+{
+    ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
+    NetworkSceneModule &scene = dynamic_cast<NetworkSceneModule&>(man.getScene());
+    int nbPlayers = scene.getNbPlayersOnClient();
+    PlayerId id;
+
+    for (int i = 0; i < nbPlayers; i++) {
+        if (tryRead(&id, sizeof(PlayerId)))
+            return;
+        scene.playerIdAssigned(id, world);
+    }
 }
 
 void ecs::ClientUpdateSystem::setSignature(ComponentManager &component)
@@ -213,8 +253,9 @@ void ecs::ClientUpdateSystem::update(World &world)
     ClientManager &man = world.getRessource<ClientManager>();
 
     if (!man.isConnected()) {
-        if (man.isConnectionAttempt())
-            man.tryConnection(world);
+        if (!man.isConnectionAttempt())
+            return;
+        man.tryConnection(world);
         if (!man.isConnected())
             return;
     }

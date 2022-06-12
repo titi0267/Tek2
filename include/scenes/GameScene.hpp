@@ -8,6 +8,8 @@
 #pragma once
 
 #include "ecs/engine/SceneManager.hpp"
+#include "ecs/engine/Network.hpp"
+#include "ecs/engine/PlayersManager.hpp"
 
 namespace bomberman {
     struct GameSceneArgs {
@@ -17,7 +19,7 @@ namespace bomberman {
         int nbPlayers;
     };
 
-    class GameScene : public ecs::IScene {
+    class GameScene : public ecs::IScene, public ecs::NetworkSceneModule {
         std::string _ip;
         std::string _port;
         bool _startLocalServer;
@@ -32,5 +34,9 @@ namespace bomberman {
 
         void loadScene(ecs::World &world);
         void unloadScene(ecs::World &world);
+
+        int getNbPlayersOnClient() { return _nbPlayers; };
+        void onDisconnect(ecs::World &world);
+        void playerIdAssigned(ecs::PlayerId id, ecs::World &world);
     };
 }

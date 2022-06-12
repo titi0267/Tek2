@@ -9,6 +9,7 @@
 
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/InternalServer.hpp"
+#include "ecs/engine/PlayersManager.hpp"
 
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/Hitbox.hpp"
@@ -22,6 +23,8 @@ static void serverMain(ecs::World *world, bool *run, std::string *port)
     bomberman::registerNetwork(*world, false);
 
     world->insertRessource<ecs::ServerManager>();
+    world->insertRessource<ecs::PlayersManager>(4);
+
     world->getRessource<ecs::ServerManager>().startServer(*port);
 
     while (*run)
@@ -33,6 +36,7 @@ static void serverMain(ecs::World *world, bool *run, std::string *port)
 void bomberman::GameScene::successConn(ecs::World &world)
 {
     std::cout << "success" << std::endl;
+    world.getRessource<ecs::ClientManager>().initPlayers(_nbPlayers);
 }
 
 void bomberman::GameScene::failedConn(ecs::World &world)
@@ -56,4 +60,15 @@ void bomberman::GameScene::unloadScene(ecs::World &world)
     if (_startLocalServer)
         world.getRessource<ecs::InternalServer>().joinAndDestroy();
     world.killAllEntities();
+}
+
+void bomberman::GameScene::onDisconnect(ecs::World &world)
+{
+    std::cout << "disconnect" << std::endl;
+    world.getRessource<ecs::SceneManager>().changeScene(world, ecs::MAIN_MENU_SCENE, nullptr);
+}
+
+void bomberman::GameScene::playerIdAssigned(ecs::PlayerId id, ecs::World &world)
+{
+    std::cout << "player id : " << id << std::endl;
 }

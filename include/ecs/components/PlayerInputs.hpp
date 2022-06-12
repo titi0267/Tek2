@@ -10,6 +10,7 @@
 #include "raylib/Window.hpp"
 #include "ecs/engine/System.hpp"
 #include "ecs/engine/World.hpp"
+#include "ecs/engine/PlayerId.hpp"
 
 namespace ecs {
     using Key = ::KeyboardKey;
@@ -24,6 +25,7 @@ namespace ecs {
     };
 
     struct PlayerInputs {
+        PlayerId id;
         PlayerAction action = DO_NOTHING;
 
         Key upKey;
@@ -33,8 +35,9 @@ namespace ecs {
         Key bombKey;
 
         public:
-        PlayerInputs(Key up = KEY_W, Key down = KEY_S, Key left = KEY_A, Key right = KEY_D, Key bomb = KEY_Q)
-            : upKey(up), downKey(down), leftKey(left), rightKey(right), bombKey(bomb) {};
+        PlayerInputs() : id(-1) {};
+        PlayerInputs(PlayerId id, Key up = KEY_W, Key down = KEY_S, Key left = KEY_A, Key right = KEY_D, Key bomb = KEY_Q)
+            : id(id), upKey(up), downKey(down), leftKey(left), rightKey(right), bombKey(bomb) {};
     };
 
     class PlayerInputsUpdateSystem : public ecs::ASystem {

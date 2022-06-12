@@ -15,27 +15,35 @@
 #include "network/IClient.hpp"
 #include "network/IServer.hpp"
 #include "network/CPSocket.hpp"
-#include "World.hpp"
+#include "ecs/engine/World.hpp"
+#include "ecs/engine/PlayerId.hpp"
 
 namespace ecs {
-    const std::size_t NB_MIRROR_COMPONENTS = 6;
+    using ConnId = network::ConnId;
+
+    const std::size_t NB_MIRROR_COMPONENTS = 7;
     extern const ComponentHash MIRROR_COMPONENTS[NB_MIRROR_COMPONENTS];
 
     enum class NetworkCommand : uint8_t {
         UPDATE_ENTITY,
         KILL_ENTITY,
+        INIT_PLAYERS,
+        PLAYERS_CREATED,
+        PLAYERS_REJECTED,
+        DISCONNECT_CLIENT,
     };
 
     struct MirrorEntity {};
 
     class ServerManager {
-        using ConnId = network::ConnId;
-
         std::unique_ptr<network::IServer> _server;
         std::vector<ConnId> _activeConns;
         std::unordered_map<network::ConnId, std::unordered_map<Entity, Entity>> _clientToServer;
 
+        void sendCmd(ConnId conn, NetworkCommand cmd);
+
         bool tryRead(ConnId conn, void *buf, std::size_t size);
+        void handleClientDisconnection(ConnId conn, World &world);
         bool readClientEntityUpdate(ConnId conn, std::stringbuf &buffer);
 
         void spawnOrUpdateClientEntity(ConnId conn, World &world);
@@ -45,6 +53,8 @@ namespace ecs {
 
         void createUpdateLocalEntityBuffer(Entity entity, World &world, std::stringbuf &buffer);
         void createKillLocalEntityBuffer(Entity entity, std::stringbuf &buffer);
+
+        void initPlayers(ConnId conn, World &world);
 
         public:
         ServerManager() : _server(network::CPSocket::createServer()) {};
@@ -77,12 +87,15 @@ namespace ecs {
         std::chrono::time_point<std::chrono::system_clock> _lastTry;
 
         bool tryRead(void *buf, std::size_t size);
+        void handleDisconnect(World &world);
         bool readServerEntityUpdate(std::stringbuf &buffer);
 
         void spawnOrUpdateServerEntity(World &world);
         void spawnServerEntity(Entity serverEntity, std::stringbuf &buffer, World &world);
         void updateServerEntity(Entity serverEntity, std::stringbuf &buffer, World &world);
         void killServerEntity(World &world);
+
+        void handlePlayersCreated(World &world);
 
         public:
         ClientManager() : _client(network::CPSocket::createClient()) {};
@@ -92,6 +105,7 @@ namespace ecs {
         void *obj, ConnectionSuccessFct success, ConnectionFailedFct failed);
         void tryConnection(ecs::World &world);
         bool isConnectionAttempt() { return _connAttempted; };
+        void initPlayers(std::uint32_t nbPlayers);
 
         void handleNetworkCommands(World &world);
 
@@ -117,5 +131,12 @@ namespace ecs {
 
         void setSignature(ComponentManager &component);
         void update(World &world);
+    };
+
+    class NetworkSceneModule {
+        public:
+        virtual int getNbPlayersOnClient() = 0;
+        virtual void onDisconnect(World &world) = 0;
+        virtual void playerIdAssigned(PlayerId id, World &world) = 0;
     };
 }
