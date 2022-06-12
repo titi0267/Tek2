@@ -12,7 +12,7 @@
 #include "raylib/Texture.hpp"
 #include "raylib/Matrix.hpp"
 #include "raylib/GL.hpp"
-#include "raylib/headers/raylib.h"
+#include "raylib/TextureManager.hpp"
 
 void ecs::DrawableCube::renderColor(Color &color)
 {
@@ -32,21 +32,22 @@ void ecs::DrawTextureCubeSystem::setSignature(ecs::ComponentManager &component)
 void ecs::DrawTextureCubeSystem::update(ecs::World &world)
 {
     raylib::Camera &camera = world.getRessource<raylib::Camera>();
+    raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
 
     camera.begin3DMode();
     for (auto entity : _entities) {
         Transform &transform = world.getComponent<Transform>(entity);
         DrawableCube &cube = world.getComponent<DrawableCube>(entity);
         TextureRef &textRef = world.getComponent<TextureRef>(entity);
-        raylib::Matrix mat = raylib::Matrix::fromTransform(transform)
-        * raylib::Matrix::fromTranslate(cube.offset);
+        raylib::Texture &texture = textureMan.getTexture(textRef.textureId);
+        raylib::Matrix mat = raylib::Matrix::fromTransform(transform);
         Tint tint = WHITE;
 
         if (world.hasComponent<Tint>(entity))
             tint = world.getComponent<Tint>(entity);
         raylib::RlMatrixPush push;
         raylib::rlMultMatrix(mat);
-        cube.renderTexture(*textRef.texture, tint);
+        cube.renderTexture(texture, tint);
     }
     camera.end3DMode();
 }

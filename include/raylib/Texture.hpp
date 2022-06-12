@@ -30,7 +30,7 @@ namespace raylib {
 
         ~Texture() { if (_created) UnloadTexture(_texture); };
         Texture(Texture &texture) = delete;
-        Texture(Texture &&texture) : _created(texture._created), _texture(texture._texture) { texture._texture = { 0 }; };
+        Texture(Texture &&texture) : _created(texture._created), _texture(texture._texture) { texture._created = false; };
 
         RaylibTexture &getTexture() { return _texture; };
         int getWidth() { return _texture.width; };

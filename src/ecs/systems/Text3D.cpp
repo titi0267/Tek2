@@ -11,6 +11,7 @@
 #include "raylib/Matrix.hpp"
 #include "raylib/GL.hpp"
 #include "raylib/Vectors.hpp"
+#include "raylib/FontManager.hpp"
 
 void ecs::Draw3DTextSystem::drawText3D(const std::string &str, raylib::Font &font, float fontSize, float fontSpacing, Color color)
 {
@@ -134,14 +135,16 @@ void ecs::Draw3DTextSystem::setSignature(ecs::ComponentManager &component)
 void ecs::Draw3DTextSystem::update(ecs::World &world)
 {
     raylib::Camera &cam = world.getRessource<raylib::Camera>();
+    raylib::FontManager &fontMan = world.getRessource<raylib::FontManager>();
 
     cam.begin3DMode();
     for (ecs::Entity entity : _entities) {
         Transform &transform = world.getComponent<Transform>(entity);
         Text3D &text = world.getComponent<Text3D>(entity);
-        FontRef &font = world.getComponent<FontRef>(entity);
+        FontRef &fontRef = world.getComponent<FontRef>(entity);
+        raylib::Font &font = fontMan.getFont(fontRef.fontId);
 
-        Vector2 size = measure3DText(text.text, *font.font, text.fontSize, text.fontSpacing);
+        Vector2 size = measure3DText(text.text, font, text.fontSize, text.fontSpacing);
         raylib::Matrix transformMat = raylib::Matrix::fromScale(transform.scale) * raylib::Matrix::fromQuaternion(transform.rotation);
 
         Vector3 trueOffset = text.offset * transformMat + Vector3 {-size.x / 2, -size.y / 2, 0} * transformMat;
@@ -150,7 +153,7 @@ void ecs::Draw3DTextSystem::update(ecs::World &world)
         raylib::RlMatrixPush push;
         raylib::rlMultMatrix(mat);
 
-        drawText3D(text.text, *font.font, text.fontSize, text.fontSpacing, text.color);
+        drawText3D(text.text, font, text.fontSize, text.fontSpacing, text.color);
     }
     cam.end3DMode();
 }
