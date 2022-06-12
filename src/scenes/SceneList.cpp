@@ -9,7 +9,7 @@
 #include "scenes/MainMenuScene.hpp"
 #include "scenes/GameScene.hpp"
 
-std::unordered_map<ecs::Scenes, std::function<std::unique_ptr<ecs::IScene>(void)>> ecs::SCENES_LIST = {
-    {ecs::Scenes::MAIN_MENU_SCENE, [](){ return std::make_unique<bomberman::MainMenuScene>(); }},
-    {ecs::Scenes::GAME_SCENE, [](){ return std::make_unique<bomberman::GameScene>(); }},
+std::unordered_map<ecs::Scenes, std::function<std::unique_ptr<ecs::IScene>(const void*)>> ecs::SCENES_LIST = {
+    {ecs::Scenes::MAIN_MENU_SCENE, [](const void *data){ return std::make_unique<bomberman::MainMenuScene>(data); }},
+    {ecs::Scenes::GAME_SCENE, [](const void *data){ return std::make_unique<bomberman::GameScene>(data); }},
 };

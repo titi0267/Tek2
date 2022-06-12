@@ -40,7 +40,7 @@ void network::WinClient::connectTo(const std::string &ip, const std::string &por
 void network::WinClient::disconnect()
 {
     if (!_connected)
-        throw (SocketError("WinClient", "client is not connected"));
+        return;
     _connected = false;
     _socket = nullptr;
 }

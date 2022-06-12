@@ -50,7 +50,7 @@ namespace ecs {
         ServerManager() : _server(network::CPSocket::createServer()) {};
         ~ServerManager() = default;
 
-        void startServer() { _server->createServer(); };
+        void startServer(const std::string &port) { _server->createServer("127.0.0.1", port); };
         void closeServer() { _server->closeServer(); };
 
         void acceptNewConns();
@@ -60,10 +60,10 @@ namespace ecs {
         void killLocalEntity(Entity entity, World &world);
     };
 
-    class ClientManager {
-        using ConnectionSuccessFct = void (*)(ecs::World &world);
-        using ConnectionFailedFct = void (*)(ecs::World &world);
+    using ConnectionSuccessFct = void (*)(void *obj, ecs::World &world);
+    using ConnectionFailedFct = void (*)(void *obj, ecs::World &world);
 
+    class ClientManager {
         std::unique_ptr<network::IClient> _client;
         std::unordered_map<Entity, Entity> _serverToClient;
 
@@ -71,6 +71,7 @@ namespace ecs {
         std::string _port;
         bool _connAttempted = false;
         int _tryConnCount = 0;
+        void *_obj = nullptr;
         ConnectionSuccessFct _success;
         ConnectionFailedFct _failed;
         std::chrono::time_point<std::chrono::system_clock> _lastTry;
@@ -88,7 +89,7 @@ namespace ecs {
         ~ClientManager() = default;
 
         void attemptConnection(const std::string &ip, const std::string &port,
-        ConnectionSuccessFct success, ConnectionFailedFct failed);
+        void *obj, ConnectionSuccessFct success, ConnectionFailedFct failed);
         void tryConnection(ecs::World &world);
         bool isConnectionAttempt() { return _connAttempted; };
 

@@ -22,11 +22,12 @@ bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
     return false;
 }
 
-void ecs::ClientManager::attemptConnection(const std::string &ip,
-const std::string &port, ConnectionSuccessFct success, ConnectionFailedFct failed)
+void ecs::ClientManager::attemptConnection(const std::string &ip, const std::string &port,
+void *obj, ConnectionSuccessFct success, ConnectionFailedFct failed)
 {
     _ip = ip;
     _port = port;
+    _obj = obj;
     _success = success;
     _failed = failed;
     _connAttempted = true;
@@ -44,12 +45,12 @@ void ecs::ClientManager::tryConnection(ecs::World &world)
         connectTo(_ip, _port);
         std::cout << "Successfully connected to " << _ip << ":" << _port << std::endl;
         _connAttempted = false;
-        _success(world);
+        _success(_obj, world);
     } catch(network::SocketError) {
         if (_tryConnCount == 5) {
             std::cout << "Failed all connection attempts" << std::endl;
             _connAttempted = false;
-            _failed(world);
+            _failed(_obj, world);
             return;
         }
         _lastTry = now;

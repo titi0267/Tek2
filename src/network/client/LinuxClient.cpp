@@ -40,9 +40,9 @@ void network::LinuxClient::connectTo(const std::string &ip, const std::string &p
 void network::LinuxClient::disconnect()
 {
     if (!_connected)
-        throw (SocketError("LinuxClient", "client is not connected"));
+        return;
     _connected = false;
-    _socket = nullptr;
+    _socket.reset();
 }
 
 void network::LinuxClient::updateRWStates()

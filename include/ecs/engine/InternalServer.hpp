@@ -9,30 +9,38 @@
 
 #include <thread>
 #include <memory>
+#include <string>
 #include "ecs/engine/World.hpp"
 
 namespace ecs {
-    using InternalServerMainFct = void (*)(ecs::World *world, bool *run);
+    using InternalServerMainFct = void (*)(ecs::World *world, bool *run, std::string *port);
 
     class InternalServer {
         std::thread _thread;
         std::unique_ptr<ecs::World> _serverWorld = nullptr;
-        bool _run = true;
+        std::string _port;
+        bool _run = false;
 
         public:
-        void startServer(InternalServerMainFct fct)
+        void startServer(InternalServerMainFct fct, const std::string &port)
         {
+            _port = port;
             _run = true;
             _serverWorld = std::make_unique<ecs::World>();
-            _thread = std::thread(fct, _serverWorld.get(), &_run);
+            _thread = std::thread(fct, _serverWorld.get(), &_run, &_port);
         }
 
         void joinAndDestroy()
         {
+            if (!_run)
+                return;
             _run = false;
             _thread.join();
             _serverWorld.reset();
             _thread = std::thread();
+            std::cout << "A" << std::endl;
         }
+
+        bool isRunning() { return _run; };
     };
 }

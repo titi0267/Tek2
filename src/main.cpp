@@ -12,6 +12,7 @@
 #include "ecs/engine/EntityCommands.hpp"
 #include "ecs/engine/SceneManager.hpp"
 #include "ecs/engine/Network.hpp"
+#include "ecs/engine/InternalServer.hpp"
 
 #include "raylib/Camera.hpp"
 #include "raylib/Window.hpp"
@@ -69,6 +70,11 @@ void registerKeyboardInput(ecs::World &world)
     //world.registerSystem<ecs::PlayerDoActionUpdateSystem>();
 }
 
+void registerNetwork(ecs::World &world)
+{
+    world.registerSystem<ecs::ClientUpdateSystem>();
+}
+
 int main(int ac, char **av)
 {
     #ifdef _WIN32
@@ -83,17 +89,22 @@ int main(int ac, char **av)
     registerRender(world);
     registerMouseInputs(world);
     registerKeyboardInput(world);
+    registerNetwork(world);
 
 // ----- [GLOBAL RESSOURCES] -----
 
     world.insertRessource<raylib::Window>();
     world.insertRessource<raylib::Camera>(Vector3 {0.0, 0.0, 2.0}, Vector3 {0, 0, 0});
+
     world.insertRessource<raylib::TextureManager>();
     world.insertRessource<raylib::ModelManager>();
     world.insertRessource<raylib::AnimationManager>();
     world.insertRessource<raylib::FontManager>();
     world.insertRessource<raylib::ShaderManager>();
     world.insertRessource<ecs::SceneManager>();
+
+    world.insertRessource<ecs::ClientManager>();
+    world.insertRessource<ecs::InternalServer>();
 
 // ----- [INIT RESSOURCES] -----
 
@@ -135,4 +146,7 @@ int main(int ac, char **av)
     window.resize({1280, 720});
     while (!window.shouldClose())
         world.updateClient();
+
+    world.getRessource<ecs::ClientManager>().disconnect();
+    world.getRessource<ecs::InternalServer>().joinAndDestroy();
 }

@@ -39,6 +39,9 @@ namespace bomberman {
         Vector3 moveDest = {0};
 
         public:
+        MainMenuScene() {};
+        MainMenuScene(const void *data) {};
+
         void loadScene(ecs::World &world);
         void unloadScene(ecs::World &world);
 

@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "scenes/MainMenuScene.hpp"
+#include "scenes/GameScene.hpp"
 
 #include "ecs/engine/EntityCommands.hpp"
 
@@ -31,6 +32,20 @@
 #include "ecs/components/SceneMoveElement.hpp"
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
+
+void startFunction(ecs::World &world, ecs::Entity entity)
+{
+    bomberman::GameSceneArgs args = {"127.0.0.1", "4242", true, 1};
+
+    world.getRessource<ecs::SceneManager>().changeScene(world, ecs::GAME_SCENE, &args);
+}
+
+void connectFunction(ecs::World &world, ecs::Entity entity)
+{
+    bomberman::GameSceneArgs args = {"127.0.0.1", "4242", false, 1};
+
+    world.getRessource<ecs::SceneManager>().changeScene(world, ecs::GAME_SCENE, &args);
+}
 
 void quitFunction(ecs::World &world, ecs::Entity entity)
 {
@@ -109,8 +124,8 @@ void bomberman::MainMenuScene::generateMainMenu(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
 
-    spawnButton({{0, 2.75, -2}, rot, {1, 1, 1}}, "Start", {WHITE, GREEN}, quitFunction, world);
-    spawnButton({{0, 1.75, -2}, rot, {1, 1, 1}}, "Connect", {WHITE, GREEN}, quitFunction, world);
+    spawnButton({{0, 2.75, -2}, rot, {1, 1, 1}}, "Start", {WHITE, GREEN}, startFunction, world);
+    spawnButton({{0, 1.75, -2}, rot, {1, 1, 1}}, "Connect", {WHITE, GREEN}, connectFunction, world);
     spawnButton({{0, 0.75, -2}, rot, {1, 1, 1}}, "Tutorial", {WHITE, GRAY}, quitFunction, world);
     spawnButton({{0, -0.75, -2}, rot, {1, 1, 1}}, "Settings", {WHITE, GRAY}, rightFunction, world);
     spawnButton({{0, -2.75, -2}, rot, {1, 1, 1}}, "Quit", {WHITE, RED}, quitFunction, world);

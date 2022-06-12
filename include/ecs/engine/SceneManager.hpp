@@ -24,7 +24,7 @@ namespace ecs {
         virtual void unloadScene(ecs::World &world) = 0;
     };
 
-    extern std::unordered_map<Scenes, std::function<std::unique_ptr<IScene>(void)>> SCENES_LIST;
+    extern std::unordered_map<Scenes, std::function<std::unique_ptr<IScene>(const void*)>> SCENES_LIST;
 
     class SceneManager {
         std::unique_ptr<IScene> _actualScene;
@@ -32,7 +32,7 @@ namespace ecs {
 
         public:
         void loadDefaultScene(ecs::World &world);
-        void changeScene(ecs::World &world, Scenes scene);
+        void changeScene(ecs::World &world, Scenes scene, const void *data);
 
         IScene &getScene() { return *_actualScene; };
         Scenes getSceneType() { return _actualSceneType; };
