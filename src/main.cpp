@@ -127,10 +127,12 @@ int main(int ac, char **av)
 
 // ------ [START + RUN GAME] ------
 
+    world.getRessource<ecs::SceneManager>().loadDefaultScene(world);
+
     raylib::Window &window = world.getRessource<raylib::Window>();
 
     window.setTargetFPS(60);
-    window.resize({640, 480});
+    window.resize({1280, 720});
     while (!window.shouldClose())
         world.updateClient();
 }

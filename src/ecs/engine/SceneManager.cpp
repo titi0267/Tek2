@@ -15,7 +15,9 @@ void ecs::SceneManager::loadDefaultScene(ecs::World &world)
     _actualScene->loadScene(world);
 }
 
-void ecs::SceneManager::changeScene(ecs::World &world)
+void ecs::SceneManager::changeScene(ecs::World &world, Scenes scene)
 {
     _actualScene->unloadScene(world);
+    _actualScene = SCENES_LIST[scene]();
+    _actualSceneType = scene;
 }

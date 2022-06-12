@@ -92,6 +92,10 @@ void leftFunction(ecs::World &world, ecs::Entity entity)
 
 void bomberman::MainMenuScene::loadScene(ecs::World &world)
 {
+    raylib::Camera &cam = world.getRessource<raylib::Camera>();
+
+    cam.setPosition({0, 0, 2});
+    cam.setTarget({0, 0, 0});
     generateMainMenu(world);
     generateSettingsMenu(world);
 }
@@ -106,9 +110,10 @@ void bomberman::MainMenuScene::generateMainMenu(ecs::World &world)
     Quaternion rot = QuaternionIdentity();
 
     spawnButton({{0, 2.75, -2}, rot, {1, 1, 1}}, "Start", {WHITE, GREEN}, quitFunction, world);
-    spawnButton({{0, 1.75, -2}, rot, {1, 1, 1}}, "Tutorial", {WHITE, GRAY}, quitFunction, world);
-    spawnButton({{0, 0.75, -2}, rot, {1, 1, 1}}, "Settings", {WHITE, GRAY}, rightFunction, world);
-    spawnButton({{0, -0.75, -2}, rot, {1, 1, 1}}, "Quit", {WHITE, RED}, quitFunction, world);
+    spawnButton({{0, 1.75, -2}, rot, {1, 1, 1}}, "Connect", {WHITE, GREEN}, quitFunction, world);
+    spawnButton({{0, 0.75, -2}, rot, {1, 1, 1}}, "Tutorial", {WHITE, GRAY}, quitFunction, world);
+    spawnButton({{0, -0.75, -2}, rot, {1, 1, 1}}, "Settings", {WHITE, GRAY}, rightFunction, world);
+    spawnButton({{0, -2.75, -2}, rot, {1, 1, 1}}, "Quit", {WHITE, RED}, quitFunction, world);
 }
 
 void bomberman::MainMenuScene::generateSettingsMenu(ecs::World &world)

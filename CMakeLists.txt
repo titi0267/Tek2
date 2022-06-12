@@ -28,7 +28,9 @@ add_executable(bomberman
     "src/ecs/systems/SceneMoveElement.cpp"
     "src/ecs/systems/PlayerInputs.cpp"
 
+    "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"
+    "src/scenes/GameScene.cpp"
 
     "src/network/client/LinuxClient.cpp"
     "src/network/client/WinClient.cpp"
