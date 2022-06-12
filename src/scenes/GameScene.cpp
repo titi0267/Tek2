@@ -12,15 +12,17 @@
 
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/Hitbox.hpp"
+#include "ecs/components/DrawableModel.hpp"
+
+#include "Setup.hpp"
 
 static void serverMain(ecs::World *world, bool *run, std::string *port)
 {
+    bomberman::registerCriticalComponents(*world);
+    bomberman::registerNetwork(*world, false);
+
     world->insertRessource<ecs::ServerManager>();
     world->getRessource<ecs::ServerManager>().startServer(*port);
-
-    world->registerComponents<Transform, ecs::Tint, ecs::MirrorEntity, ecs::Hitbox>();
-
-    world->registerSystem<ecs::ServerUpdateSystem>();
 
     while (*run)
         world->updateServer();

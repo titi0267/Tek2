@@ -18,7 +18,7 @@
 #include "World.hpp"
 
 namespace ecs {
-    const std::size_t NB_MIRROR_COMPONENTS = 2;
+    const std::size_t NB_MIRROR_COMPONENTS = 6;
     extern const ComponentHash MIRROR_COMPONENTS[NB_MIRROR_COMPONENTS];
 
     enum class NetworkCommand : uint8_t {

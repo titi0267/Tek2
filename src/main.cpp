@@ -22,74 +22,25 @@
 #include "raylib/FontManager.hpp"
 #include "raylib/ShaderManager.hpp"
 
-#include "ecs/components/DrawableCube.hpp"
-#include "ecs/components/DrawableModel.hpp"
-#include "ecs/components/Hitbox.hpp"
-#include "ecs/components/Clickable.hpp"
-#include "ecs/components/Hoverable.hpp"
-#include "ecs/components/HoverTint.hpp"
-#include "ecs/components/HoverRotate.hpp"
-#include "ecs/components/Text3D.hpp"
-#include "ecs/components/ColorTexture.hpp"
-#include "ecs/components/SceneMoveElement.hpp"
-#include "ecs/components/PlayerInputs.hpp"
-
+#include "Setup.hpp"
 #include "Map.hpp"
-
-int WSA(void);
-
-void registerBasicComponents(ecs::World &world)
-{
-    world.registerComponents<Transform, ecs::Tint, ecs::MirrorEntity, ecs::Hitbox>();
-}
-
-void registerRender(ecs::World &world)
-{
-    world.registerComponents<ecs::DrawableCube, ecs::TextureRef>();
-    world.registerSystem<ecs::DrawTextureCubeSystem>();
-
-    world.registerComponent<ecs::ModelRef>();
-    world.registerSystem<ecs::DrawableModelSystem>();
-
-    world.registerComponents<ecs::Text3D, ecs::FontRef>();
-    world.registerSystem<ecs::Draw3DTextSystem>();
-}
-
-void registerMouseInputs(ecs::World &world)
-{
-    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement>();
-    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem>();
-}
-
-void registerKeyboardInput(ecs::World &world)
-{
-    world.registerComponents<ecs::PlayerInputs>();
-    world.registerSystems<ecs::PlayerInputsUpdateSystem>();
-
-    //world.registerComponent<ecs::PlayerDoAction>();
-    //world.registerSystem<ecs::PlayerDoActionUpdateSystem>();
-}
-
-void registerNetwork(ecs::World &world)
-{
-    world.registerSystem<ecs::ClientUpdateSystem>();
-}
 
 int main(int ac, char **av)
 {
     #ifdef _WIN32
-    if (WSA() == 84)
+    if (bomberman::WSA())
         return (84);
     #endif
+
     ecs::World world{};
 
 // ---- [COMPONENTS + SYSTEMS] ----
 
-    registerBasicComponents(world);
-    registerRender(world);
-    registerMouseInputs(world);
-    registerKeyboardInput(world);
-    registerNetwork(world);
+    bomberman::registerCriticalComponents(world);
+
+    bomberman::registerInputs(world);
+    bomberman::registerRender(world);
+    bomberman::registerNetwork(world, true);
 
 // ----- [GLOBAL RESSOURCES] -----
 

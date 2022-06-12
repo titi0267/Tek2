@@ -10,7 +10,7 @@ find_package(raylib REQUIRED)
 
 add_executable(bomberman
     "src/main.cpp"
-    "src/WSA.cpp"
+    "src/Setup.cpp"
     "src/Map.cpp"
 
     "src/ecs/engine/World.cpp"

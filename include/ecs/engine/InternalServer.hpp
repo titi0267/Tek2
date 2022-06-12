@@ -38,7 +38,6 @@ namespace ecs {
             _thread.join();
             _serverWorld.reset();
             _thread = std::thread();
-            std::cout << "A" << std::endl;
         }
 
         bool isRunning() { return _run; };
