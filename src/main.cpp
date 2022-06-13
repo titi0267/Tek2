@@ -20,6 +20,7 @@
 #include "raylib/AnimationManager.hpp"
 #include "raylib/FontManager.hpp"
 #include "raylib/ShaderManager.hpp"
+#include "raylib/SoundManager.hpp"
 
 #include "ecs/components/DrawableCube.hpp"
 #include "ecs/components/DrawableModel.hpp"
@@ -80,6 +81,7 @@ int main()
     world.insertRessource<raylib::AnimationManager>();
     world.insertRessource<raylib::FontManager>();
     world.insertRessource<raylib::ShaderManager>();
+    world.insertRessource<raylib::SoundManager>();
     world.insertRessource<ecs::SceneManager>();
 
 // ----- [INIT RESSOURCES] -----
@@ -88,6 +90,7 @@ int main()
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
     raylib::FontManager &fontMan = world.getRessource<raylib::FontManager>();
     raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
+    raylib::SoundManager &soundMan = world.getRessource<raylib::SoundManager>();
 
     raylib::Model &bagModel = modelMan.loadModel("bottle", "./assets/models/bottle.iqm");
     raylib::Texture &bagText = textureMan.loadTexture("bottle", "./assets/textures/bottle.png");
@@ -108,6 +111,8 @@ int main()
     .setTexture(buttonText);
     // .setColor(Color {125, 255, 125, 255})
     // .setShader(buttonShader)
+
+    raylib::Sound &mainMenu = soundMan.loadSound("main_menu_music", "./assets/sounds/main_menu.mp3", true);
 
     textureMan.loadTexture("ground", "./assets/textures/ground.png");
     fontMan.loadFont("emulogic", "./assets/fonts/emulogic.ttf");

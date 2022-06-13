@@ -15,6 +15,9 @@
 
 #include "raylib/Camera.hpp"
 #include "raylib/Window.hpp"
+#include "raylib/Sound.hpp"
+
+#include "raylib/SoundManager.hpp"
 
 #include "raylib/TextureManager.hpp"
 #include "raylib/ModelManager.hpp"
@@ -150,10 +153,18 @@ void bomberman::MainMenuScene::generateMainMenu(ecs::World &world)
     spawnButton({{0, -0.75, -2}, rot, {1, 1, 1}}, "Quit", {WHITE, RED}, quitFunction, world);
 }
 
+void bomberman::MainMenuScene::generateAudioSettingsMenu(ecs::World &world)
+{
+
+}
+
 void bomberman::MainMenuScene::generateGraphicalSettingsMenu(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
+    auto &man = world.getRessource<raylib::SoundManager>();
+    auto &music = man.getSound("main_menu_music");
 
+    music.playSound();
     spawnFullscreenButton({{-12.50, 12.75, -2}, rot, {1, 1, 1}}, "Fullscreen", {WHITE, GRAY}, fullscreenFunction, world, {true, false, false});
     spawnFullscreenButton({{-7.50, 12.75, -2}, rot, {1, 1, 1}}, "Windowed", {GREEN, GRAY}, windowedFunction, world, {false, false, false});
     spawnResolutionButton({{-14, 11.75, -2}, rot, {1, 1, 1}}, "1600x900", {WHITE, GRAY}, setResFunction, world, {1600, 900});
@@ -163,10 +174,6 @@ void bomberman::MainMenuScene::generateGraphicalSettingsMenu(ecs::World &world)
     spawnFPSButton({{-10, 10.75, -2}, rot, {1, 1, 1}}, "60FPS", {WHITE, GRAY}, setFPSFunction, world, {60});
     spawnFPSButton({{-6, 10.75, -2}, rot, {1, 1, 1}}, "Screen rate", {WHITE, GRAY}, setFPSFunction, world, {GetMonitorRefreshRate(GetCurrentMonitor())});
     spawnShowFPSButton({{-10, 9.75, -2}, rot, {1, 1, 1}}, "Show FPS", {RED, RED}, showFPSFunction, world);
-    //spawnButton({{-12.50, 11.75, -2}, rot, {1, 1, 1}}, "Fullscreen", {WHITE, GRAY}, fullscreenFunction, world);
-    //spawnButton({{-10.00, 11.75, -2}, rot, {1, 1, 1}}, "Fullscreen", {WHITE, GRAY}, fullscreenFunction, world);
-    //spawnButton({{-7.50, 11.75, -2}, rot, {1, 1, 1}}, "Windowed", {GREEN, GRAY}, windowedFunction, world);
-    //spawnButton({{-5, 11.75, -2}, rot, {1, 1, 1}}, "Windowed", {GREEN, GRAY}, windowedFunction, world);
     spawnButton({{-10, 8.75, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, downFunction, world);
 }
 

@@ -49,6 +49,7 @@ namespace bomberman {
         void generateMainMenu(ecs::World &world);
         void generateSettingsMenu(ecs::World &world);
         void generateGraphicalSettingsMenu(ecs::World &world);
+        void generateAudioSettingsMenu(ecs::World &world);
 
         void spawnButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
         void spawnResolutionButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::ResolutionButton &res);
