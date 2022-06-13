@@ -47,11 +47,9 @@ void ecs::PlayerActionUpdateSystem::update(ecs::World &world)
     bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
 
     for (ecs::Entity entity : _entities) {
-        std::cout << "In for" << std::endl;
         PlayerAction &action = world.getComponent<PlayerAction>(entity);
 
-        scene.addToMap(action.id, action.action);
-        //scene.setPlayerAction(action.id, action.action);
+        scene.setPlayerAction(action.id, action.action);
     }
 }
 

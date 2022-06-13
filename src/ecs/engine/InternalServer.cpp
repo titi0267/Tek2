@@ -41,9 +41,6 @@ void ecs::InternalServer::serverMain()
     ecs::SceneManager &man = _serverWorld->getRessource<ecs::SceneManager>();
     bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
 
-    for (int i = 0; i <= 3; i++)
-        scene.addToMap(i, ecs::DO_NOTHING);
-
     while (_run) {
         clock.update();
         _serverWorld->updateServer();

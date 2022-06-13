@@ -69,8 +69,11 @@ void bomberman::ServerScene::generateMapProps(ecs::World &world)
 
 void bomberman::ServerScene::loadScene(ecs::World &world)
 {
-    world.spawn().insert(Transform {{0, 0, -3}, QuaternionIdentity(), {1, 1, 1}},
-    ecs::Movement{}, ecs::Player{0}, ecs::ModelRef("button"));
+    for (int i = 0; i < 4; i++)
+        _actions.insert({i, ecs::DO_NOTHING});
+
+    world.spawn().insert(Transform {{0, 2, 0}, QuaternionIdentity(), {1, 1, 1}},
+    ecs::Movement{}, ecs::Player{0}, ecs::ModelRef("button"), ecs::MirrorEntity {});
 
     generateMapProps(world);
 }
@@ -94,9 +97,4 @@ void bomberman::ServerScene::setPlayerAction(ecs::PlayerId id, ecs::Actions acti
 ecs::Actions bomberman::ServerScene::getPlayerAction(ecs::PlayerId id) const
 {
     return _actions.at(id);
-}
-
-void bomberman::ServerScene::addToMap(ecs::PlayerId id, ecs::Actions action)
-{
-    _actions.insert(std::make_pair(id, action));
 }

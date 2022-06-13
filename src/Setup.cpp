@@ -54,8 +54,6 @@ void bomberman::registerInputs(ecs::World &world)
 
     world.registerComponents<ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement>();
     world.registerSystems<ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem>();
-
-    world.registerComponent<ecs::PlayerAction>();
 }
 
 void bomberman::registerNetwork(ecs::World &world, bool client)

@@ -65,11 +65,13 @@ namespace ecs {
         void startServer(const std::string &port) { _server->createServer("127.0.0.1", port); };
         void closeServer() { _server->closeServer(); };
 
-        void acceptNewConns();
+        std::vector<network::ConnId> acceptNewConns();
         void handleNetworkCommands(World &world);
 
         void updateLocalEntity(Entity entity, World &world);
         void killLocalEntity(Entity entity, World &world);
+
+        void sendEntityToNewConns(std::vector<network::ConnId> &newConns, Entity entity, World &world);
     };
 
     using ConnectionSuccessFct = void (*)(void *obj, ecs::World &world);

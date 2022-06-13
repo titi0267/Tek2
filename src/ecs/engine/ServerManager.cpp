@@ -27,18 +27,19 @@ bool ecs::ServerManager::tryRead(ConnId conn, void *buf, std::size_t size)
     return false;
 }
 
-void ecs::ServerManager::acceptNewConns()
+std::vector<network::ConnId> ecs::ServerManager::acceptNewConns()
 {
     network::ConnId conn;
+    std::vector<network::ConnId> newConns;
 
     while (_server->canAcceptConn()) {
         conn = _server->acceptClient();
         _activeConns.push_back(conn);
         _clientToServer.insert({conn, {}});
+        newConns.push_back(conn);
     }
+    return newConns;
 }
-
-// NEW CLIENT DOESN'T HAVE ALREADY EXISTING ENTITIES
 
 void ecs::ServerManager::handleClientDisconnection(ConnId conn, World &world)
 {
@@ -132,7 +133,7 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity serverEntity, std
     std::uint32_t componentSize;
     std::string data = buffer.str();
 
-    // std::cout << "[SERVER] Creating entity from server" << std::endl;
+    std::cout << "[SERVER] Creating entity from server" << std::endl;
     _clientToServer[conn].insert({serverEntity, localEntity});
     for (ConnId client : _activeConns) {
         if (client == conn)
@@ -158,7 +159,7 @@ void ecs::ServerManager::updateClientEntity(ConnId conn, Entity serverEntity, st
     std::uint32_t componentSize;
     std::string data = buffer.str();
 
-    // std::cout << "[SERVER] Updating entity from client" << std::endl;
+    std::cout << "[SERVER] Updating entity from client" << std::endl;
     for (ConnId client : _activeConns) {
         if (client == conn)
             continue;
@@ -257,6 +258,14 @@ void ecs::ServerManager::killLocalEntity(Entity entity, World &world)
         _server->write(conn, (void*) data.c_str(), data.size());
 }
 
+void ecs::ServerManager::sendEntityToNewConns(std::vector<network::ConnId> &newConns, Entity entity, World &world)
+{
+    MirrorEntity &mirror = world.getComponent<MirrorEntity>(entity);
+
+    for (network::ConnId conn : newConns)
+        _server->write(conn, (void*) mirror.prevData.c_str(), mirror.prevData.size());
+}
+
 void ecs::ServerManager::initPlayers(ConnId conn, World &world)
 {
     PlayersManager &man = world.getRessource<PlayersManager>();
@@ -287,9 +296,14 @@ void ecs::ServerUpdateSystem::setSignature(ComponentManager &component)
 void ecs::ServerUpdateSystem::update(World &world)
 {
     ServerManager &man = world.getRessource<ServerManager>();
+    std::vector<network::ConnId> newConns = man.acceptNewConns();
 
-    man.acceptNewConns();
     man.handleNetworkCommands(world);
-    for (Entity entity : _entities)
+    for (Entity entity : _entities) {
+        MirrorEntity &mirror = world.getComponent<MirrorEntity>(entity);
+
+        if (newConns.size() && mirror.prevData != "")
+            man.sendEntityToNewConns(newConns, entity, world);
         man.updateLocalEntity(entity, world);
+    }
 }

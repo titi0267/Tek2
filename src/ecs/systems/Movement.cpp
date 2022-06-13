@@ -22,13 +22,19 @@ void ecs::MovementUpdateSystem::update(ecs::World &world)
         Transform &transform = world.getComponent<Transform>(entity);
         Vector3 &pos = transform.translation;
         Movement &move = world.getComponent<Movement>(entity);
+
+        if (!move.isMoving)
+            return;
+
         Vector3 moveVec = normalize(move.dest - pos);
         float actualDistance = distance(pos, move.dest);
         Vector3 movement = moveVec * move.speed * clock.getDeltaSec();
         float endRange = distance(move.dest, move.dest + movement);
 
-        if (actualDistance <= endRange)
+        if (actualDistance <= endRange) {
             pos = move.dest;
+            move.isMoving = false;
+        }
         pos += movement;
     }
 }

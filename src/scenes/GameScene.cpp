@@ -17,6 +17,8 @@
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/PlayerInputs.hpp"
 
+#include "raylib/Camera.hpp"
+
 #include "Setup.hpp"
 
 void bomberman::GameScene::successConn(ecs::World &world)
@@ -39,6 +41,8 @@ void bomberman::GameScene::loadScene(ecs::World &world)
     if (_startLocalServer)
         world.getRessource<ecs::InternalServer>().startServer(_port);
     world.getRessource<ecs::ClientManager>().attemptConnection(_ip, _port, this, success, failed);
+    world.getRessource<raylib::Camera>().setPosition({0, 10, 8});
+    world.getRessource<raylib::Camera>().setTarget({0, 0, 0});
 }
 
 void bomberman::GameScene::unloadScene(ecs::World &world)

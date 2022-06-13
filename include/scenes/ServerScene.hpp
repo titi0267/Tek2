@@ -34,7 +34,6 @@ namespace bomberman {
         void loadScene(ecs::World &world);
         void unloadScene(ecs::World &world);
         void entityKilled(ecs::Entity entity,ecs::World &world);
-        void addToMap(ecs::PlayerId, ecs::Actions);
 
         void setPlayerAction(ecs::PlayerId id, ecs::Actions action);
         ecs::Actions getPlayerAction(ecs::PlayerId id) const;

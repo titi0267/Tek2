@@ -20,6 +20,7 @@ void ecs::World::updateClient()
     _systems.updateStage(*this, RENDER_UPDATE);
     window.beginDrawing();
     window.clear(SKYBLUE);
+    DrawFPS(10, 10);
     _systems.updateStage(*this, DRAW_WORLD);
     _systems.updateStage(*this, DRAW_HUD);
     window.endDrawing();
