@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Matrix.hpp"
+#include "headers/raylib.h"
 #include "headers/raymath.h"
 
 inline Vector3 operator+(const Vector3 &lhs, const Vector3 &rhs)

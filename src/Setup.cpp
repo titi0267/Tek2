@@ -20,6 +20,7 @@
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/SceneMoveElement.hpp"
 #include "ecs/components/PlayerInputs.hpp"
+#include "ecs/components/Movement.hpp"
 
 #include "network/sockets/SocketInclude.hpp"
 
@@ -27,9 +28,14 @@
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
 void bomberman::registerCriticalComponents(ecs::World &world)
 {
-    world.registerComponents<Transform, ecs::Hitbox, ecs::PlayerAction,
+    world.registerComponents<Transform, ecs::Movement, ecs::Hitbox, ecs::PlayerAction,
     ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint,
     ecs::DrawableCube, ecs::Text3D>();
+}
+
+void bomberman::registerPhysics(ecs::World &world)
+{
+    world.registerSystem<ecs::MovementUpdateSystem>();
 }
 
 void bomberman::registerRender(ecs::World &world)

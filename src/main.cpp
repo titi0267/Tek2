@@ -42,6 +42,7 @@ int main(int ac, char **av)
     bomberman::registerInputs(world);
     bomberman::registerRender(world);
     bomberman::registerNetwork(world, true);
+    bomberman::registerPhysics(world);
 
 // ----- [GLOBAL RESSOURCES] -----
 

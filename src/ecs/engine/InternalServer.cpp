@@ -12,6 +12,8 @@
 #include "ecs/components/Movement.hpp"
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/Clock.hpp"
+#include "ecs/components/Player.hpp"
+#include "scenes/ServerScene.hpp"
 
 #include "Setup.hpp"
 
@@ -25,16 +27,22 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<SceneManager>();
     _serverWorld->insertRessource<ecs::Clock>();
 
+    _serverWorld->registerComponent<ecs::Player>();
+    _serverWorld->registerSystems<ecs::PlayerActionUpdateSystem,
+    ecs::PlayerExecuteActionUpdateSystem, ecs::MovementUpdateSystem>();
+
+// ------
+
     _serverWorld->getRessource<ServerManager>().startServer(_port);
     _serverWorld->getRessource<SceneManager>().loadServerScene(*_serverWorld);
 
-    _serverWorld->registerComponent<ecs::PlayerAction>();
-    _serverWorld->registerSystem<ecs::PlayerActionUpdateSystem>();
-
-    _serverWorld->registerComponent<ecs::Movement>();
-    _serverWorld->registerSystem<ecs::MovementUpdateSystem>();
-
     ecs::Clock &clock = _serverWorld->getRessource<Clock>();
+
+    ecs::SceneManager &man = _serverWorld->getRessource<ecs::SceneManager>();
+    bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
+
+    for (int i = 0; i <= 3; i++)
+        scene.addToMap(i, ecs::DO_NOTHING);
 
     while (_run) {
         clock.update();

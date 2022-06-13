@@ -16,4 +16,5 @@ namespace bomberman {
     void registerRender(ecs::World &world);
     void registerInputs(ecs::World &world);
     void registerNetwork(ecs::World &world, bool client);
+    void registerPhysics(ecs::World &world);
 };

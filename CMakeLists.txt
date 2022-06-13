@@ -28,6 +28,7 @@ add_executable(bomberman
     "src/ecs/systems/Text3D.cpp"
     "src/ecs/systems/SceneMoveElement.cpp"
     "src/ecs/systems/PlayerInputs.cpp"
+    "src/ecs/systems/Movement.cpp"
 
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"

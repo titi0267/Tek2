@@ -25,7 +25,7 @@ namespace ecs {
     };
 
     struct PlayerAction {
-        PlayerId id ;
+        PlayerId id;
         Actions action = DO_NOTHING;
 
         PlayerAction(PlayerId id = -1) : id(id) {};
@@ -53,24 +53,18 @@ namespace ecs {
 
     class PlayerActionUpdateSystem : public ecs::ASystem {
         public:
-            PlayerActionUpdateSystem() { _stage = ecs::Stages::INPUT_UPDATE; };
+        PlayerActionUpdateSystem() { _stage = ecs::Stages::INPUT_UPDATE; };
 
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
-    };
-
-    struct PlayerExecuteAction {
-        Actions _action;
-
-        public:
-            PlayerExecuteAction();
     };
 
     class PlayerExecuteActionUpdateSystem : public ecs::ASystem {
         public:
-            PlayerExecuteActionUpdateSystem() { _stage = ecs::Stages::UPDATE; };
+        PlayerExecuteActionUpdateSystem() { _stage = ecs::Stages::UPDATE; };
 
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
     };
+
 }

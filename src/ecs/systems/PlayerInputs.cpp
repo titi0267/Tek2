@@ -6,8 +6,11 @@
 */
 
 #include "ecs/components/PlayerInputs.hpp"
+#include "ecs/components/Movement.hpp"
 #include "ecs/engine/SceneManager.hpp"
 #include "scenes/ServerScene.hpp"
+#include "ecs/components/Player.hpp"
+#include <iostream>
 
 void ecs::PlayerInputsUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
@@ -44,25 +47,42 @@ void ecs::PlayerActionUpdateSystem::update(ecs::World &world)
     bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
 
     for (ecs::Entity entity : _entities) {
+        std::cout << "In for" << std::endl;
         PlayerAction &action = world.getComponent<PlayerAction>(entity);
 
-        scene.setPlayerAction(action.id, action.action);
+        scene.addToMap(action.id, action.action);
+        //scene.setPlayerAction(action.id, action.action);
     }
 }
 
 void ecs::PlayerExecuteActionUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Transform, PlayerAction>();
+    _signature = component.generateSignature<Transform, Player, Movement>();
 }
 
 void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
 {
-    for (ecs::Entity entity : _entities) {
-        PlayerAction &action = world.getComponent<PlayerAction>(entity);
-        Transform &transform = world.getComponent<Transform>(entity);
+    const std::unordered_map<Actions, Vector3> MOVEMENTS = {
+        {MOVE_UP, {0, 0, -1}},
+        {MOVE_DOWN, {0, 0, 1}},
+        {MOVE_LEFT, {-1, 0, 0}},
+        {MOVE_RIGHT, {1, 0, 0}}
+    };
+    ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
+    bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
 
-        if (action.action == DO_NOTHING) {
-            
+    for (ecs::Entity entity : _entities) {
+        Player &player = world.getComponent<Player>(entity);
+        Transform &transform = world.getComponent<Transform>(entity);
+        Movement &move = world.getComponent<Movement>(entity);
+        Actions action = scene.getPlayerAction(player.id);
+
+        if (action == DO_NOTHING || move.isMoving)
+            continue;
+        if (action == PLACE_BOMB) {
+
+        } else {
+            move.move(transform.translation + MOVEMENTS.at(action), 2);
         }
     }
 }

@@ -12,10 +12,12 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/Hitbox.hpp"
 #include "ecs/components/PlayerInputs.hpp"
+#include "ecs/components/Movement.hpp"
 
 // MirrorEntity should NEVER be registered !
 const ecs::ComponentHash ecs::MIRROR_COMPONENTS[ecs::NB_MIRROR_COMPONENTS] = {
     typeid(Transform).hash_code(),
+    typeid(Movement).hash_code(),
     typeid(Hitbox).hash_code(),
     typeid(PlayerAction).hash_code(),
     typeid(TextureRef).hash_code(),
