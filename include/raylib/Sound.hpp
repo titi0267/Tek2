@@ -26,7 +26,7 @@ namespace raylib {
         Sound(Sound &&other)
             : _created(other._created), _sound(other._sound), _music(other._music) {other._created = false;};
 
-        void setSoundVolume(float volume) { if (volume > 1.0) SetSoundVolume(_sound, volume); };
+        void setSoundVolume(float volume) { if (!(volume > 1.0)) SetSoundVolume(_sound, volume); };
         bool isMusic() { return (_music); };
         bool isCreated() {  return (_created); };
         void playSound() { PlaySound(_sound); };

@@ -64,5 +64,13 @@ namespace raylib {
                     sound.setSoundVolume(_soundVolume);
             }
         }
+        void toggleMusic()
+        {
+            _music = !_music;
+        }
+        void toggleSound()
+        {
+            _sound = !_sound;
+        }
     };
 }

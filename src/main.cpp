@@ -35,7 +35,7 @@
 #include "ecs/components/ResolutionButton.hpp"
 #include "ecs/components/FullscreenButton.hpp"
 #include "ecs/components/FPSButton.hpp"
-#include "ecs/components/ShowFPSButton.hpp"
+#include "ecs/components/ToggleButton.hpp"
 
 #include "Map.hpp"
 
@@ -58,8 +58,8 @@ void registerRender(ecs::World &world)
 
 void registerMouseInputs(ecs::World &world)
 {
-    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement, ecs::ResolutionButton, ecs::FullscreenButton, ecs::FPSButton, ecs::ShowFPSButton>();
-    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem, ecs::ResolutionButtonSystem, ecs::FullscreenButtonSystem, ecs::FPSButtonSystem, ecs::ShowFPSButtonSystem>();
+    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement, ecs::ResolutionButton, ecs::FullscreenButton, ecs::FPSButton, ecs::ToggleButton>();
+    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem, ecs::ResolutionButtonSystem, ecs::FullscreenButtonSystem, ecs::FPSButtonSystem, ecs::ShowFPSButtonSystem, ecs::ToggleMusicButtonSystem, ecs::ToggleSoundButtonSystem>();
 }
 
 int main()

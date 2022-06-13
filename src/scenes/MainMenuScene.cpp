@@ -45,9 +45,9 @@ void setResFunction(ecs::World &world, ecs::Entity entity)
     win.resize({(float)res.width,(float)res.height});
 }
 
-void showFPSFunction(ecs::World &world, ecs::Entity entity)
+void toggleFunction(ecs::World &world, ecs::Entity entity)
 {
-    ecs::ShowFPSButton &but = world.getComponent<ecs::ShowFPSButton>(entity);
+    ecs::ToggleButton &but = world.getComponent<ecs::ToggleButton>(entity);
     raylib::Window &win = world.getRessource<raylib::Window>();
 
     but.show = !but.show;
@@ -155,7 +155,15 @@ void bomberman::MainMenuScene::generateMainMenu(ecs::World &world)
 
 void bomberman::MainMenuScene::generateAudioSettingsMenu(ecs::World &world)
 {
+    Quaternion rot = QuaternionIdentity();
 
+    spawnToggleButton({{-20, 2.75, -2}, rot, {1, 1, 1}}, "Music is on!", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::MUSIC);
+    spawnToggleButton({{-20, 1.75, -2}, rot, {1, 1, 1}}, "Sound is on!", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
+    // CHANGE WITH NUANCER
+    spawnToggleButton({{-20, 0.75, -2}, rot, {1, 1, 1}}, ("Music: 100" ), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
+    spawnToggleButton({{-20, -0.25, -2}, rot, {1, 1, 1}}, ("Sound: 100"), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
+    // CHANGE WITH NUANCER
+    spawnButton({{-20, -1.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
 }
 
 void bomberman::MainMenuScene::generateGraphicalSettingsMenu(ecs::World &world)
@@ -173,7 +181,7 @@ void bomberman::MainMenuScene::generateGraphicalSettingsMenu(ecs::World &world)
     spawnFPSButton({{-14, 10.75, -2}, rot, {1, 1, 1}}, "30FPS", {WHITE, GRAY}, setFPSFunction, world, {30});
     spawnFPSButton({{-10, 10.75, -2}, rot, {1, 1, 1}}, "60FPS", {WHITE, GRAY}, setFPSFunction, world, {60});
     spawnFPSButton({{-6, 10.75, -2}, rot, {1, 1, 1}}, "Screen rate", {WHITE, GRAY}, setFPSFunction, world, {GetMonitorRefreshRate(GetCurrentMonitor())});
-    spawnShowFPSButton({{-10, 9.75, -2}, rot, {1, 1, 1}}, "Show FPS", {RED, RED}, showFPSFunction, world);
+    spawnToggleButton({{-10, 9.75, -2}, rot, {1, 1, 1}}, "Show FPS", {RED, RED}, toggleFunction, world, ecs::ToggleButton::SHOW_FPS);
     spawnButton({{-10, 8.75, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, downFunction, world);
 }
 
@@ -182,11 +190,11 @@ void bomberman::MainMenuScene::generateSettingsMenu(ecs::World &world)
     Quaternion rot = QuaternionIdentity();
 
     generateGraphicalSettingsMenu(world);
+    generateAudioSettingsMenu(world);
     spawnButton({{-10, 2.75, -2}, rot, {1, 1, 1}}, "Graphical", {WHITE, GRAY}, upFunction, world);
     spawnButton({{-10, 1.75, -2}, rot, {1, 1, 1}}, "Audio", {WHITE, GRAY}, rightFunction, world);
     spawnButton({{-10, 0.75, -2}, rot, {1, 1, 1}}, "Keybinds", {WHITE, GRAY}, downFunction, world);
     spawnButton({{-10, -0.75, -2}, rot, {1, 1, 1}}, "Main Menu", {WHITE, GRAY}, leftFunction, world);
-    spawnButton({{-20, 2.75, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
     spawnButton({{-10, -7.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, upFunction, world);
 }
 
@@ -242,8 +250,8 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::SceneMoveElement {0.7}, but);
 }
 
-void bomberman::MainMenuScene::spawnShowFPSButton(const Transform &transform, const std::string &text,
-const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world)
+void bomberman::MainMenuScene::spawnToggleButton(const Transform &transform, const std::string &text,
+const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, ecs::ToggleButton::Usage usage)
 {
     const float BUTTON_SIZE = 3;
 
@@ -252,5 +260,5 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world)
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
-    ecs::SceneMoveElement {0.7}, ecs::ShowFPSButton {});
+    ecs::SceneMoveElement {0.7}, ecs::ToggleButton {usage});
 }

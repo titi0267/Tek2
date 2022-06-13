@@ -33,7 +33,7 @@
 #include "ecs/components/ResolutionButton.hpp"
 #include "ecs/components/FullscreenButton.hpp"
 #include "ecs/components/FPSButton.hpp"
-#include "ecs/components/ShowFPSButton.hpp"
+#include "ecs/components/ToggleButton.hpp"
 
 namespace bomberman {
     class MainMenuScene : public ecs::IScene, public ecs::MoveRequesterSceneModule {
@@ -55,7 +55,7 @@ namespace bomberman {
         void spawnResolutionButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::ResolutionButton &res);
         void spawnFullscreenButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::FullscreenButton &but);
         void spawnFPSButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::FPSButton &but);
-        void spawnShowFPSButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
+        void spawnToggleButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, ecs::ToggleButton::Usage usage);
 
         bool &getMovementRequest() { return moveRequest; };
         Vector3 &getMoveDest() { return moveDest; };
