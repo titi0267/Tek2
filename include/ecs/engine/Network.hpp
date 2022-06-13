@@ -33,7 +33,9 @@ namespace ecs {
         DISCONNECT_CLIENT,
     };
 
-    struct MirrorEntity {};
+    struct MirrorEntity {
+        std::string prevData;
+    };
 
     class ServerManager {
         std::unique_ptr<network::IServer> _server;

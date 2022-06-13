@@ -5,8 +5,7 @@
 ** Map
 */
 
-#ifndef MAP_HPP_
-#define MAP_HPP_
+#pragma once
 
 #include <vector>
 #include <cstdlib>
@@ -23,36 +22,34 @@
 #define DESTRUCTIBLE -4
 #define BOMB -5
 #define DANGEROUS -6
-#include "ecs/engine/World.hpp"
 
 namespace map {
     class Map {
+        int _height;
+        int _width;
+        int _nbrPlayer;
+        int _complexity;
+        std::vector<int> _map;
+
+        void setPlayer();
+        void setWall();
+        void setDestructible();
+        void cruxGen();
+        void squareGen();
+        void addGen();
+
         public:
-            Map(int _height, int _width, int nbrPlayer, int complexity);
-            ~Map();
-            int getCellsAt(int x, int y);
-            int getHeight();
-            int getWidth();
-            void setCellsAt(int x, int y, int val);
-            void dump();
-            void print(ecs::World &world);
-            void save(std::string name);
-            void load(std::string filename);
-            std::vector<int> getMap();
-        protected:
-            int _height;
-            int _width;
-            int _nbrPlayer;
-            int _complexity;
-            std::vector<int> _map;
-        private:
-            void setPlayer();
-            void setWall();
-            void setDestructible();
-            void cruxGen();
-            void squareGen();
-            void addGen();
+        Map(int _height, int _width, int nbrPlayer, int complexity);
+
+        int getHeight() { return _height; };
+        int getWidth() { return _width; };
+        int getCellAt(int x, int y) { return (_map[x + y * _width]); };
+        void setCellAt(int x, int y, int val) { _map[x + y * _width] = val; };
+
+        void dump();
+        void print(ecs::World &world);
+        void save(std::string name);
+        void load(std::string filename);
+        std::vector<int> &getMap() { return _map; };
     };
 }
-
-#endif /* !MAP_HPP_ */

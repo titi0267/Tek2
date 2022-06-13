@@ -38,6 +38,8 @@ void ecs::ServerManager::acceptNewConns()
     }
 }
 
+// NEW CLIENT DOESN'T HAVE ALREADY EXISTING ENTITIES
+
 void ecs::ServerManager::handleClientDisconnection(ConnId conn, World &world)
 {
     auto &entitites = _clientToServer[conn];
@@ -57,6 +59,8 @@ void ecs::ServerManager::handleNetworkCommands(World &world)
     for (int i = 0; i < _activeConns.size(); i++) {
         conn = _activeConns[i];
         while (_server->doesConnExists(conn) && _server->canRead(conn)) {
+            if (!_server->canWrite(conn))
+                break;
             if (tryRead(conn, &cmd, sizeof(NetworkCommand)))
                 break;
             switch (cmd) {
@@ -231,10 +235,15 @@ void ecs::ServerManager::updateLocalEntity(Entity entity, World &world)
     std::stringbuf buffer;
     createUpdateLocalEntityBuffer(entity, world, buffer);
     std::string data = buffer.str();
+    MirrorEntity &mirror = world.getComponent<MirrorEntity>(entity);
 
-    // std::cout << "[SERVER] Updating entity to clients" << std::endl;
+    if (mirror.prevData == data)
+        return;
+    std::cout << "[SERVER] Updating entity to clients" << std::endl;
+    std::cout << "Buffer size: " << data.size() << std::endl;
     for (ConnId conn : _activeConns)
         _server->write(conn, (void*) data.c_str(), data.size());
+    mirror.prevData = data;
 }
 
 void ecs::ServerManager::killLocalEntity(Entity entity, World &world)

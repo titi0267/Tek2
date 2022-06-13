@@ -12,14 +12,24 @@
 #include "ecs/engine/Network.hpp"
 #include "ecs/components/PlayerInputs.hpp"
 #include "ecs/engine/PlayerId.hpp"
+#include "ecs/engine/EntityCommands.hpp"
+#include "raylib/Vectors.hpp"
+#include "Map.hpp"
 
 namespace bomberman {
     class ServerScene : public ecs::IScene {
         std::unordered_map<ecs::PlayerId, ecs::Actions> _actions;
+        map::Map _map;
+
+        void spawnBottle(Vector3 pos, ecs::World &world);
+        void spawnChair(Vector3 pos, ecs::World &world);
+        void spawnWall(Vector3 pos, Vector3 size, ecs::World &world);
+        void spawnFloor(Vector2 mapSize, ecs::World &world);
+        void generateMapProps(ecs::World &world);
 
         public:
-        ServerScene() {};
-        ServerScene(const void *data) {};
+        ServerScene() : _map(9, 9, 4, 1) {};
+        ServerScene(const void *data) : _map(9, 9, 4, 1) {};
 
         void loadScene(ecs::World &world);
         void unloadScene(ecs::World &world);

@@ -85,6 +85,8 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
 
     _client->updateRWStates();
     while (_client->isConnected() && _client->canRead()) {
+        if (!_client->canWrite())
+            break;
         // std::cout << "[CLIENT] Read from server" << std::endl;
         if (tryRead(&cmd, sizeof(NetworkCommand)))
             break;

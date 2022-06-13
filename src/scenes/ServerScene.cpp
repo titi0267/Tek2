@@ -6,18 +6,73 @@
 */
 
 #include "scenes/ServerScene.hpp"
-
+#include "ecs/components/DrawableModel.hpp"
+#include "ecs/components/DrawableCube.hpp"
+#include "ecs/components/ColorTexture.hpp"
 #include "ecs/engine/EntityCommands.hpp"
 #include "ecs/components/PlayerInputs.hpp"
 #include "ecs/components/Movement.hpp"
 #include "ecs/components/Player.hpp"
 #include "ecs/components/DrawableModel.hpp"
+#include "raylib/Matrix.hpp"
 #include <utility>
+
+void bomberman::ServerScene::spawnBottle(Vector3 pos, ecs::World &world)
+{
+    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
+
+    world.spawn().insert(transform, ecs::ModelRef {"bottle"}, ecs::MirrorEntity {});
+}
+
+void bomberman::ServerScene::spawnChair(Vector3 pos, ecs::World &world)
+{
+    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
+
+    world.spawn().insert(transform, ecs::ModelRef {"chair"}, ecs::MirrorEntity {});
+}
+
+void bomberman::ServerScene::spawnWall(Vector3 pos, Vector3 size, ecs::World &world)
+{
+
+}
+
+void bomberman::ServerScene::spawnFloor(Vector2 mapSize, ecs::World &world)
+{
+    Transform transform = {{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}};
+
+    world.spawn().insert(transform,
+    ecs::DrawableCube {{0, 0, 0}, {mapSize.x, 0.1, mapSize.y}},
+    ecs::TextureRef("ground"), ecs::MirrorEntity {});
+}
+
+void bomberman::ServerScene::generateMapProps(ecs::World &world)
+{
+    int width = _map.getWidth();
+    int height = _map.getHeight();
+    Vector3 pos;
+
+    spawnFloor({(float) width, (float) height}, world);
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            pos = {(float) x - width / 2.0f, 0, (float) y - height / 2.0f};
+            switch (_map.getCellAt(x, y)) {
+                case DESTRUCTIBLE:
+                spawnChair(pos, world);
+                break;
+                case WALL:
+                spawnBottle(pos, world);
+                break;
+            }
+        }
+    }
+}
 
 void bomberman::ServerScene::loadScene(ecs::World &world)
 {
     world.spawn().insert(Transform {{0, 0, -3}, QuaternionIdentity(), {1, 1, 1}},
     ecs::Movement{}, ecs::Player{0}, ecs::ModelRef("button"));
+
+    generateMapProps(world);
 }
 
 void bomberman::ServerScene::unloadScene(ecs::World &world)
