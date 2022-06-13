@@ -55,19 +55,19 @@ void ecs::ClientManager::tryConnection(ecs::World &world)
         return;
     try {
         connectTo(_ip, _port);
-        std::cout << "[CLIENT] Successfully connected to " << _ip << ":" << _port << std::endl;
+        // std::cout << "[CLIENT] Successfully connected to " << _ip << ":" << _port << std::endl;
         _connAttempted = false;
         _success(_obj, world);
     } catch(network::SocketError) {
         if (_tryConnCount == 5) {
-            std::cout << "[CLIENT] Failed all connection attempts" << std::endl;
+            // std::cout << "[CLIENT] Failed all connection attempts" << std::endl;
             _connAttempted = false;
             _failed(_obj, world);
             return;
         }
         _lastTryDelta = 0;
         _tryConnCount++;
-        std::cout << "[CLIENT] Failed connection attempt (" << _tryConnCount << " / 5)" << std::endl;
+        // std::cout << "[CLIENT] Failed connection attempt (" << _tryConnCount << " / 5)" << std::endl;
     }
 }
 
@@ -85,10 +85,10 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
 
     _client->updateRWStates();
     while (_client->isConnected() && _client->canRead()) {
-        std::cout << "[CLIENT] Read from server" << std::endl;
+        // std::cout << "[CLIENT] Read from server" << std::endl;
         if (tryRead(&cmd, sizeof(NetworkCommand)))
             break;
-        std::cout << "[CLIENT] CMD " << (int) cmd << " from server" << std::endl;
+        // std::cout << "[CLIENT] CMD " << (int) cmd << " from server" << std::endl;
         switch (cmd) {
             case NetworkCommand::UPDATE_ENTITY:
             spawnOrUpdateServerEntity(world);
@@ -157,7 +157,7 @@ void ecs::ClientManager::spawnServerEntity(Entity serverEntity, std::stringbuf &
     ComponentType componentType;
     std::uint32_t componentSize;
 
-    std::cout << "[CLIENT] Creating entity from server" << std::endl;
+    // std::cout << "[CLIENT] Creating entity from server" << std::endl;
     _serverToClient.insert({serverEntity, localEntity});
     buffer.sgetn((char*) &nbComponents, sizeof(std::uint32_t));
     for (std::uint32_t i = 0; i < nbComponents; i++) {
@@ -175,7 +175,7 @@ void ecs::ClientManager::updateServerEntity(Entity serverEntity, std::stringbuf 
     ComponentType componentType;
     std::uint32_t componentSize;
 
-    std::cout << "[CLIENT] Updating entity from server" << std::endl;
+    // std::cout << "[CLIENT] Updating entity from server" << std::endl;
     buffer.sgetn((char*) &nbComponents, sizeof(std::uint32_t));
     for (std::uint32_t i = 0; i < nbComponents; i++) {
         buffer.sgetn((char*) &componentType, sizeof(ComponentType));
@@ -191,7 +191,7 @@ void ecs::ClientManager::killServerEntity(World &world)
 
     if (tryRead(&serverEntity, sizeof(Entity)))
         return;
-    std::cout << "[CLIENT] Entity killed from server" << std::endl;
+    // std::cout << "[CLIENT] Entity killed from server" << std::endl;
     localEntity = _serverToClient[serverEntity];
     world.getEntityCommands(localEntity).despawn();
     _serverToClient.erase(serverEntity);
@@ -205,7 +205,7 @@ void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
     std::uint32_t total = 0;
     std::uint32_t componentSize;
 
-    std::cout << "[CLIENT] Sending entity to server" << std::endl;
+    // std::cout << "[CLIENT] Sending entity to server" << std::endl;
     for (const ComponentHash hash : MIRROR_COMPONENTS) {
         type = compMan.getComponentTypeByHash(hash);
         if (world.getComponentManager().hasComponentById(type, entity))
@@ -229,7 +229,7 @@ void ecs::ClientManager::killLocalEntity(Entity entity, World &world)
 {
     NetworkCommand cmd = NetworkCommand::KILL_ENTITY;
 
-    std::cout << "[CLIENT] Killing local entity" << std::endl;
+    // std::cout << "[CLIENT] Killing local entity" << std::endl;
     _client->write(&cmd, sizeof(NetworkCommand));
     _client->write(&entity, sizeof(Entity));
 }

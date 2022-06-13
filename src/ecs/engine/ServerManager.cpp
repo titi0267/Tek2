@@ -128,7 +128,7 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity serverEntity, std
     std::uint32_t componentSize;
     std::string data = buffer.str();
 
-    std::cout << "[SERVER] Creating entity from server" << std::endl;
+    // std::cout << "[SERVER] Creating entity from server" << std::endl;
     _clientToServer[conn].insert({serverEntity, localEntity});
     for (ConnId client : _activeConns) {
         if (client == conn)
@@ -154,7 +154,7 @@ void ecs::ServerManager::updateClientEntity(ConnId conn, Entity serverEntity, st
     std::uint32_t componentSize;
     std::string data = buffer.str();
 
-    std::cout << "[SERVER] Updating entity from client" << std::endl;
+    // std::cout << "[SERVER] Updating entity from client" << std::endl;
     for (ConnId client : _activeConns) {
         if (client == conn)
             continue;
@@ -177,7 +177,7 @@ void ecs::ServerManager::killClientEntity(ConnId conn, World &world)
     std::stringbuf buffer;
     std::string data;
 
-    std::cout << "[SERVER] Killing entity from client" << std::endl;
+    // std::cout << "[SERVER] Killing entity from client" << std::endl;
     if (tryRead(conn, &clientEntity, sizeof(Entity)))
         return;
     localEntity = _clientToServer[conn][clientEntity];
@@ -232,7 +232,7 @@ void ecs::ServerManager::updateLocalEntity(Entity entity, World &world)
     createUpdateLocalEntityBuffer(entity, world, buffer);
     std::string data = buffer.str();
 
-    std::cout << "[SERVER] Updating entity to clients" << std::endl;
+    // std::cout << "[SERVER] Updating entity to clients" << std::endl;
     for (ConnId conn : _activeConns)
         _server->write(conn, (void*) data.c_str(), data.size());
 }
@@ -243,7 +243,7 @@ void ecs::ServerManager::killLocalEntity(Entity entity, World &world)
     createKillLocalEntityBuffer(entity, buffer);
     std::string data = buffer.str();
 
-    std::cout << "[SERVER] Killing entity to clients" << std::endl;
+    // std::cout << "[SERVER] Killing entity to clients" << std::endl;
     for (ConnId conn : _activeConns)
         _server->write(conn, (void*) data.c_str(), data.size());
 }
