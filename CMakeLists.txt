@@ -19,6 +19,7 @@ add_executable(bomberman
     "src/ecs/engine/ServerManager.cpp"
     "src/ecs/engine/SceneManager.cpp"
     "src/ecs/engine/PlayersManager.cpp"
+    "src/ecs/engine/InternalServer.cpp"
 
     "src/ecs/systems/ClickUpdate.cpp"
     "src/ecs/systems/DrawCube.cpp"
@@ -31,6 +32,7 @@ add_executable(bomberman
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"
     "src/scenes/GameScene.cpp"
+    "src/scenes/ServerScene.cpp"
 
     "src/network/client/LinuxClient.cpp"
     "src/network/client/WinClient.cpp"

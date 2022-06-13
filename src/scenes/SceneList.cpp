@@ -8,8 +8,10 @@
 #include "ecs/engine/SceneManager.hpp"
 #include "scenes/MainMenuScene.hpp"
 #include "scenes/GameScene.hpp"
+#include "scenes/ServerScene.hpp"
 
 std::unordered_map<ecs::Scenes, std::function<std::unique_ptr<ecs::IScene>(const void*)>> ecs::SCENES_LIST = {
     {ecs::Scenes::MAIN_MENU_SCENE, [](const void *data){ return std::make_unique<bomberman::MainMenuScene>(data); }},
     {ecs::Scenes::GAME_SCENE, [](const void *data){ return std::make_unique<bomberman::GameScene>(data); }},
+    {ecs::Scenes::SERVER_SCENE, [](const void *data){ return std::make_unique<bomberman::ServerScene>(data); }},
 };

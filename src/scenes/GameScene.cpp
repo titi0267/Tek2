@@ -10,28 +10,14 @@
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/InternalServer.hpp"
 #include "ecs/engine/PlayersManager.hpp"
+#include "ecs/engine/EntityCommands.hpp"
 
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/Hitbox.hpp"
 #include "ecs/components/DrawableModel.hpp"
+#include "ecs/components/PlayerInputs.hpp"
 
 #include "Setup.hpp"
-
-static void serverMain(ecs::World *world, bool *run, std::string *port)
-{
-    bomberman::registerCriticalComponents(*world);
-    bomberman::registerNetwork(*world, false);
-
-    world->insertRessource<ecs::ServerManager>();
-    world->insertRessource<ecs::PlayersManager>(4);
-
-    world->getRessource<ecs::ServerManager>().startServer(*port);
-
-    while (*run)
-        world->updateServer();
-
-    world->getRessource<ecs::ServerManager>().closeServer();
-}
 
 void bomberman::GameScene::successConn(ecs::World &world)
 {
@@ -51,7 +37,7 @@ void bomberman::GameScene::loadScene(ecs::World &world)
     ecs::ConnectionFailedFct failed = (ecs::ConnectionFailedFct) &bomberman::GameScene::failedConn;
 
     if (_startLocalServer)
-        world.getRessource<ecs::InternalServer>().startServer(serverMain, _port);
+        world.getRessource<ecs::InternalServer>().startServer(_port);
     world.getRessource<ecs::ClientManager>().attemptConnection(_ip, _port, this, success, failed);
 }
 
@@ -60,6 +46,13 @@ void bomberman::GameScene::unloadScene(ecs::World &world)
     if (_startLocalServer)
         world.getRessource<ecs::InternalServer>().joinAndDestroy();
     world.killAllEntities();
+}
+
+void bomberman::GameScene::entityKilled(ecs::Entity entity, ecs::World &world)
+{
+    if (world.getRessource<ecs::ClientManager>().isConnected()
+    && world.hasComponent<ecs::MirrorEntity>(entity))
+        world.getRessource<ecs::ClientManager>().killLocalEntity(entity, world);
 }
 
 void bomberman::GameScene::onDisconnect(ecs::World &world)
@@ -71,4 +64,5 @@ void bomberman::GameScene::onDisconnect(ecs::World &world)
 void bomberman::GameScene::playerIdAssigned(ecs::PlayerId id, ecs::World &world)
 {
     std::cout << "player id : " << id << std::endl;
+    world.spawn().insert(ecs::PlayerInputs{}, ecs::PlayerAction{id}, ecs::MirrorEntity{});
 }

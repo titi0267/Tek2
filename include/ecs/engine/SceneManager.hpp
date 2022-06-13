@@ -16,12 +16,14 @@ namespace ecs {
     enum Scenes {
         MAIN_MENU_SCENE,
         GAME_SCENE,
+        SERVER_SCENE,
     };
 
     class IScene {
         public:
         virtual void loadScene(ecs::World &world) = 0;
         virtual void unloadScene(ecs::World &world) = 0;
+        virtual void entityKilled(ecs::Entity entity, ecs::World &world) = 0;
     };
 
     extern std::unordered_map<Scenes, std::function<std::unique_ptr<IScene>(const void*)>> SCENES_LIST;
@@ -32,6 +34,7 @@ namespace ecs {
 
         public:
         void loadDefaultScene(ecs::World &world);
+        void loadServerScene(ecs::World &world);
         void changeScene(ecs::World &world, Scenes scene, const void *data);
 
         IScene &getScene() { return *_actualScene; };

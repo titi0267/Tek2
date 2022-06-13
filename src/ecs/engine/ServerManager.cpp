@@ -128,12 +128,12 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity serverEntity, std
     std::uint32_t componentSize;
     std::string data = buffer.str();
 
-    std::cout << "--- Creating entity from server ---" << std::endl;
+    std::cout << "[SERVER] Creating entity from server" << std::endl;
     _clientToServer[conn].insert({serverEntity, localEntity});
     for (ConnId client : _activeConns) {
         if (client == conn)
             continue;
-        sendCmd(conn, NetworkCommand::UPDATE_ENTITY);
+        sendCmd(client, NetworkCommand::UPDATE_ENTITY);
         _server->write(client, (void*) &serverEntity, sizeof(Entity));
         _server->write(client, (void*) data.c_str(), data.size());
     }
@@ -154,11 +154,11 @@ void ecs::ServerManager::updateClientEntity(ConnId conn, Entity serverEntity, st
     std::uint32_t componentSize;
     std::string data = buffer.str();
 
-    std::cout << "Updating entity from server" << std::endl;
+    std::cout << "[SERVER] Updating entity from client" << std::endl;
     for (ConnId client : _activeConns) {
         if (client == conn)
             continue;
-        sendCmd(conn, NetworkCommand::UPDATE_ENTITY);
+        sendCmd(client, NetworkCommand::UPDATE_ENTITY);
         _server->write(client, (void*) &serverEntity, sizeof(Entity));
         _server->write(client, (void*) data.c_str(), data.size());
     }
@@ -177,7 +177,7 @@ void ecs::ServerManager::killClientEntity(ConnId conn, World &world)
     std::stringbuf buffer;
     std::string data;
 
-    std::cout << "Killing entity from client" << std::endl;
+    std::cout << "[SERVER] Killing entity from client" << std::endl;
     if (tryRead(conn, &clientEntity, sizeof(Entity)))
         return;
     localEntity = _clientToServer[conn][clientEntity];
@@ -232,7 +232,7 @@ void ecs::ServerManager::updateLocalEntity(Entity entity, World &world)
     createUpdateLocalEntityBuffer(entity, world, buffer);
     std::string data = buffer.str();
 
-    std::cout << "Updating entity to clients" << std::endl;
+    std::cout << "[SERVER] Updating entity to clients" << std::endl;
     for (ConnId conn : _activeConns)
         _server->write(conn, (void*) data.c_str(), data.size());
 }
@@ -243,7 +243,7 @@ void ecs::ServerManager::killLocalEntity(Entity entity, World &world)
     createKillLocalEntityBuffer(entity, buffer);
     std::string data = buffer.str();
 
-    std::cout << "Killing entity to clients" << std::endl;
+    std::cout << "[SERVER] Killing entity to clients" << std::endl;
     for (ConnId conn : _activeConns)
         _server->write(conn, (void*) data.c_str(), data.size());
 }
@@ -254,12 +254,15 @@ void ecs::ServerManager::initPlayers(ConnId conn, World &world)
     std::uint32_t nbPlayers;
     PlayerId id;
 
+    std::cout << "[SERVER] Creating players" << std::endl;
     if (tryRead(conn, &nbPlayers, sizeof(std::uint32_t)))
         return;
     if (!man.canAcceptPlayers(nbPlayers)) {
+        std::cout << "[SERVER] New players not accepted" << std::endl;
         sendCmd(conn, NetworkCommand::PLAYERS_REJECTED);
         return;
     }
+    std::cout << "[SERVER] New players accepted" << std::endl;
     sendCmd(conn, NetworkCommand::PLAYERS_CREATED);
     for (int i = 0; i < nbPlayers; i++) {
         id = man.reservePlayerId(conn);

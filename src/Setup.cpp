@@ -28,16 +28,14 @@
 void bomberman::registerCriticalComponents(ecs::World &world)
 {
     world.registerComponents<Transform, ecs::Hitbox, ecs::PlayerAction,
-    ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint>();
+    ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint,
+    ecs::DrawableCube, ecs::Text3D>();
 }
 
 void bomberman::registerRender(ecs::World &world)
 {
-    world.registerComponent<ecs::ModelRef>();
-    world.registerSystem<ecs::DrawableModelSystem>();
-
-    world.registerComponents<ecs::Text3D>();
-    world.registerSystem<ecs::Draw3DTextSystem>();
+    world.registerSystems<ecs::DrawTextureCubeSystem,
+    ecs::DrawableModelSystem, ecs::Draw3DTextSystem>();
 }
 
 void bomberman::registerInputs(ecs::World &world)

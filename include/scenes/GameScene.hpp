@@ -34,6 +34,7 @@ namespace bomberman {
 
         void loadScene(ecs::World &world);
         void unloadScene(ecs::World &world);
+        void entityKilled(ecs::Entity entity,ecs::World &world);
 
         int getNbPlayersOnClient() { return _nbPlayers; };
         void onDisconnect(ecs::World &world);

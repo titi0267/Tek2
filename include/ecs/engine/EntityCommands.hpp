@@ -11,6 +11,7 @@
 #include "Entity.hpp"
 #include "Component.hpp"
 #include "World.hpp"
+#include "SceneManager.hpp"
 
 namespace ecs {
     class EntityCommands {
@@ -68,13 +69,13 @@ namespace ecs {
             std::deque<Entity> &living = _world.getLivingEntities();
 
             for (ComponentType i = 0; i < MAX_COMPONENTS; i++) {
-                printf("Entity %i : %i -> %i\n", _entity, i, sign.test(i));
                 if (sign.test(i))
                     _world.getComponentManager().getIComponentArray(i)->removeEntity(_entity);
             }
             sign.reset();
             _world.getSystemManager().updateEntitySignature(_entity, sign);
             _world.getEntityManager().destroyEntity(_entity);
+            _world.getRessource<ecs::SceneManager>().getScene().entityKilled(_entity, _world);
             living.erase(std::find(living.begin(), living.end(), _entity));
         }
 
