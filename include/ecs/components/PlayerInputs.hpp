@@ -50,4 +50,27 @@ namespace ecs {
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
     };
+
+    class PlayerActionUpdateSystem : public ecs::ASystem {
+        public:
+            PlayerActionUpdateSystem() { _stage = ecs::Stages::INPUT_UPDATE; };
+
+        void setSignature(ecs::ComponentManager &component);
+        void update(ecs::World &world);
+    };
+
+    struct PlayerExecuteAction {
+        Actions _action;
+
+        public:
+            PlayerExecuteAction();
+    };
+
+    class PlayerExecuteActionUpdateSystem : public ecs::ASystem {
+        public:
+            PlayerExecuteActionUpdateSystem() { _stage = ecs::Stages::UPDATE; };
+
+        void setSignature(ecs::ComponentManager &component);
+        void update(ecs::World &world);
+    };
 }

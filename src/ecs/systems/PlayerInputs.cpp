@@ -6,6 +6,8 @@
 */
 
 #include "ecs/components/PlayerInputs.hpp"
+#include "ecs/engine/SceneManager.hpp"
+#include "scenes/ServerScene.hpp"
 
 void ecs::PlayerInputsUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
@@ -15,7 +17,7 @@ void ecs::PlayerInputsUpdateSystem::setSignature(ecs::ComponentManager &componen
 void ecs::PlayerInputsUpdateSystem::update(ecs::World &world)
 {
     raylib::Window &window = world.getRessource<raylib::Window>();
-        bool tmp;
+    bool tmp;
 
     for (ecs::Entity entity : _entities) {
         PlayerInputs &input = world.getComponent<PlayerInputs>(entity);
@@ -29,4 +31,38 @@ void ecs::PlayerInputsUpdateSystem::update(ecs::World &world)
         else if ((tmp = window.isKeyDown(input.leftKey)) ^ window.isKeyDown(input.rightKey))
             action.action = tmp ? MOVE_LEFT : MOVE_RIGHT;
    }
+}
+
+void ecs::PlayerActionUpdateSystem::setSignature(ecs::ComponentManager &component)
+{
+    _signature = component.generateSignature<PlayerAction>();
+}
+
+void ecs::PlayerActionUpdateSystem::update(ecs::World &world)
+{
+    ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
+    bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
+
+    for (ecs::Entity entity : _entities) {
+        PlayerAction &action = world.getComponent<PlayerAction>(entity);
+
+        scene.setPlayerAction(action.id, action.action);
+    }
+}
+
+void ecs::PlayerExecuteActionUpdateSystem::setSignature(ecs::ComponentManager &component)
+{
+    _signature = component.generateSignature<Transform, PlayerAction>();
+}
+
+void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
+{
+    for (ecs::Entity entity : _entities) {
+        PlayerAction &action = world.getComponent<PlayerAction>(entity);
+        Transform &transform = world.getComponent<Transform>(entity);
+
+        if (action.action == DO_NOTHING) {
+            
+        }
+    }
 }

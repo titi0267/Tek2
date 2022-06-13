@@ -8,6 +8,8 @@
 #include "ecs/engine/InternalServer.hpp"
 #include "ecs/engine/SceneManager.hpp"
 #include "ecs/engine/PlayersManager.hpp"
+#include "ecs/components/PlayerInputs.hpp"
+#include "ecs/components/Movement.hpp"
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/Clock.hpp"
 
@@ -25,6 +27,12 @@ void ecs::InternalServer::serverMain()
 
     _serverWorld->getRessource<ServerManager>().startServer(_port);
     _serverWorld->getRessource<SceneManager>().loadServerScene(*_serverWorld);
+
+    _serverWorld->registerComponent<ecs::PlayerAction>();
+    _serverWorld->registerSystem<ecs::PlayerActionUpdateSystem>();
+
+    _serverWorld->registerComponent<ecs::Movement>();
+    _serverWorld->registerSystem<ecs::MovementUpdateSystem>();
 
     ecs::Clock &clock = _serverWorld->getRessource<Clock>();
 

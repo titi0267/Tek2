@@ -9,7 +9,6 @@
 
 void bomberman::ServerScene::loadScene(ecs::World &world)
 {
-
 }
 
 void bomberman::ServerScene::unloadScene(ecs::World &world)
@@ -21,4 +20,9 @@ void bomberman::ServerScene::entityKilled(ecs::Entity entity,ecs::World &world)
 {
     if (world.hasComponent<ecs::MirrorEntity>(entity))
         world.getRessource<ecs::ServerManager>().killLocalEntity(entity, world);
+}
+
+void bomberman::ServerScene::setPlayerAction(ecs::PlayerId id, ecs::Actions action)
+{
+    _actions.at(id) = action;
 }
