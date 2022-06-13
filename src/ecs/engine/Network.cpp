@@ -16,7 +16,7 @@
 const ecs::ComponentHash ecs::MIRROR_COMPONENTS[ecs::NB_MIRROR_COMPONENTS] = {
     typeid(Transform).hash_code(),
     typeid(Hitbox).hash_code(),
-    typeid(PlayerInputs).hash_code(),
+    typeid(PlayerAction).hash_code(),
     typeid(TextureRef).hash_code(),
     typeid(ModelRef).hash_code(),
     typeid(FontRef).hash_code(),

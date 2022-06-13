@@ -15,7 +15,7 @@
 namespace ecs {
     using Key = ::KeyboardKey;
 
-    enum PlayerAction {
+    enum Actions {
         DO_NOTHING,
         MOVE_UP,
         MOVE_DOWN,
@@ -24,10 +24,14 @@ namespace ecs {
         PLACE_BOMB,
     };
 
-    struct PlayerInputs {
-        PlayerId id;
-        PlayerAction action = DO_NOTHING;
+    struct PlayerAction {
+        PlayerId id ;
+        Actions action = DO_NOTHING;
 
+        PlayerAction(PlayerId id = -1) : id(id) {};
+    };
+
+    struct PlayerInputs {
         Key upKey;
         Key downKey;
         Key leftKey;
@@ -35,9 +39,8 @@ namespace ecs {
         Key bombKey;
 
         public:
-        PlayerInputs() : id(-1) {};
-        PlayerInputs(PlayerId id, Key up = KEY_W, Key down = KEY_S, Key left = KEY_A, Key right = KEY_D, Key bomb = KEY_Q)
-            : id(id), upKey(up), downKey(down), leftKey(left), rightKey(right), bombKey(bomb) {};
+        PlayerInputs(Key up = KEY_W, Key down = KEY_S, Key left = KEY_A, Key right = KEY_D, Key bomb = KEY_Q)
+            : upKey(up), downKey(down), leftKey(left), rightKey(right), bombKey(bomb) {};
     };
 
     class PlayerInputsUpdateSystem : public ecs::ASystem {

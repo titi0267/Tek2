@@ -27,7 +27,7 @@
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
 void bomberman::registerCriticalComponents(ecs::World &world)
 {
-    world.registerComponents<Transform, ecs::Hitbox, ecs::PlayerInputs,
+    world.registerComponents<Transform, ecs::Hitbox, ecs::PlayerAction,
     ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint>();
 }
 
@@ -45,6 +45,7 @@ void bomberman::registerInputs(ecs::World &world)
     world.registerComponents<ecs::Clickable, ecs::Hoverable>();
     world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem>();
 
+    world.registerComponent<ecs::PlayerInputs>();
     world.registerSystems<ecs::PlayerInputsUpdateSystem>();
 
     world.registerComponents<ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement>();
