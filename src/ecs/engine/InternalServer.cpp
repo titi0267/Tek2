@@ -22,7 +22,7 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<SceneManager>();
 
     _serverWorld->getRessource<ServerManager>().startServer(_port);
-    _serverWorld->getRessource<SceneManager>().loadServerScene(world);
+    _serverWorld->getRessource<SceneManager>().loadServerScene(*_serverWorld);
 
     while (_run)
         _serverWorld->updateServer();

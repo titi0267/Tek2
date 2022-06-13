@@ -14,6 +14,9 @@
 namespace bomberman {
     class ServerScene : public ecs::IScene {
         public:
+        ServerScene() {};
+        ServerScene(const void *data) {};
+
         void loadScene(ecs::World &world);
         void unloadScene(ecs::World &world);
         void entityKilled(ecs::Entity entity,ecs::World &world);

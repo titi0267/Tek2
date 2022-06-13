@@ -19,7 +19,7 @@ void ecs::SceneManager::loadDefaultScene(ecs::World &world)
 void ecs::SceneManager::loadServerScene(ecs::World &world)
 {
     _actualScene = std::make_unique<bomberman::ServerScene>();
-    _actualSceneType = SCENE_SCENE;
+    _actualSceneType = SERVER_SCENE;
     _actualScene->loadScene(world);
 }
 
