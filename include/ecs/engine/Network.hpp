@@ -84,7 +84,7 @@ namespace ecs {
         void *_obj = nullptr;
         ConnectionSuccessFct _success;
         ConnectionFailedFct _failed;
-        std::chrono::time_point<std::chrono::system_clock> _lastTry;
+        float _lastTryDelta = 0;
 
         bool tryRead(void *buf, std::size_t size);
         void handleDisconnect(World &world);

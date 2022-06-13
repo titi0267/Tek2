@@ -9,6 +9,7 @@
 #include "ecs/engine/SceneManager.hpp"
 #include "ecs/engine/PlayersManager.hpp"
 #include "ecs/engine/Network.hpp"
+#include "ecs/engine/Clock.hpp"
 
 #include "Setup.hpp"
 
@@ -20,12 +21,17 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<ServerManager>();
     _serverWorld->insertRessource<PlayersManager>(4);
     _serverWorld->insertRessource<SceneManager>();
+    _serverWorld->insertRessource<ecs::Clock>();
 
     _serverWorld->getRessource<ServerManager>().startServer(_port);
     _serverWorld->getRessource<SceneManager>().loadServerScene(*_serverWorld);
 
-    while (_run)
+    ecs::Clock &clock = _serverWorld->getRessource<Clock>();
+
+    while (_run) {
+        clock.update();
         _serverWorld->updateServer();
+    }
 
     _serverWorld->getRessource<ecs::ServerManager>().closeServer();
 }

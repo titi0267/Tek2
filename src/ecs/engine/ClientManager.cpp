@@ -10,6 +10,7 @@
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/EntityCommands.hpp"
 #include "ecs/engine/SceneManager.hpp"
+#include "ecs/engine/Clock.hpp"
 #include "network/SocketError.hpp"
 
 bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
@@ -41,14 +42,16 @@ void *obj, ConnectionSuccessFct success, ConnectionFailedFct failed)
     _failed = failed;
     _connAttempted = true;
     _tryConnCount = 0;
-    _lastTry = std::chrono::system_clock::now();
+    _lastTryDelta = 0;
 }
 
 void ecs::ClientManager::tryConnection(ecs::World &world)
 {
+    ecs::Clock &clock = world.getRessource<ecs::Clock>();
     auto now = std::chrono::system_clock::now();
 
-    if (now - _lastTry < std::chrono::milliseconds(500))
+    _lastTryDelta += clock.getDeltaSec();
+    if (_lastTryDelta < 0.5)
         return;
     try {
         connectTo(_ip, _port);
@@ -62,7 +65,7 @@ void ecs::ClientManager::tryConnection(ecs::World &world)
             _failed(_obj, world);
             return;
         }
-        _lastTry = now;
+        _lastTryDelta = 0;
         _tryConnCount++;
         std::cout << "[CLIENT] Failed connection attempt (" << _tryConnCount << " / 5)" << std::endl;
     }
