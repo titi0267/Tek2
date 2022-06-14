@@ -15,6 +15,7 @@
 #include "ecs/components/Player.hpp"
 #include "ecs/components/DrawableModel.hpp"
 #include "raylib/Matrix.hpp"
+#include "ecs/components/Bomb.hpp"
 #include <utility>
 
 void bomberman::ServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
@@ -76,7 +77,7 @@ void bomberman::ServerScene::loadScene(ecs::World &world)
 
     world.spawn().insert(Transform {{0, 0, 1}, QuaternionIdentity(), {1, 1, 1}},
     ecs::GridPosition{_map.getWidth() / 2, _map.getHeight() / 2 + 1},
-    ecs::Movement{}, ecs::Player{0}, ecs::ModelRef("bottle"), ecs::MirrorEntity {});
+    ecs::Movement{}, ecs::Player{0}, ecs::ModelRef("bottle"), ecs::MirrorEntity {}, ecs::BombId {{-1, -1, -1}});
 
     generateMapProps(world);
 }
