@@ -22,9 +22,9 @@ namespace bomberman {
         std::unordered_map<ecs::PlayerId, ecs::Actions> _actions;
         map::Map _map;
 
-        void spawnBottle(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
-        void spawnChair(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
-        void spawnWall(Vector3 pos, ecs::GridPosition gPos, Vector3 size, ecs::World &world);
+        void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
+        void spawnDestructible(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
+        void spawnWall(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void spawnFloor(Vector2 mapSize, ecs::World &world);
         void generateMapProps(ecs::World &world);
 
@@ -37,7 +37,8 @@ namespace bomberman {
         void entityKilled(ecs::Entity entity,ecs::World &world);
 
         void setPlayerAction(ecs::PlayerId id, ecs::Actions action);
-        map::Map getMap() const;
         ecs::Actions getPlayerAction(ecs::PlayerId id) const;
+
+        map::Map &getMap();
     };
 }

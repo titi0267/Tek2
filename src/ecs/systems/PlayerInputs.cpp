@@ -68,6 +68,7 @@ void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
     };
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
+    map::Map &map = scene.getMap();
 
     for (ecs::Entity entity : _entities) {
         Player &player = world.getComponent<Player>(entity);
@@ -85,11 +86,15 @@ void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
             Vector3 moveVec =  MOVEMENTS.at(action);
             GridPosition gDest = gPos + GridPosition {(int) moveVec.x, (int) moveVec.z};
 
-            if (scene.getMap().getCellAt(gDest.x, gDest.y) == VOID || scene.getMap().getCellAt(gDest.x, gDest.y) == SPAWN) {
+            if (gDest.x < 0 || gDest.y < 0 || gDest.x > map.getWidth() - 1 || gDest.y > map.getHeight() - 1)
+                return;
+
+            if (map.getCellAt(gDest.x, gDest.y) == VOID || map.getCellAt(gDest.x, gDest.y) == SPAWN) {
+                std::cout << "[MOVE] TO " << gDest.x << ", " << gDest.y << std::endl;
                 gPos = gDest;
                 move.move(pos + moveVec, 2);
             } else
-                std::cerr << "Can't go this way :" << scene.getMap().getCellAt(gDest.x, gDest.y) << std::endl;
+                std::cerr << "Can't go this way :" << map.getCellAt(gDest.x, gDest.y) << std::endl;
         }
     }
 }

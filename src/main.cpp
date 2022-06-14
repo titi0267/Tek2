@@ -67,9 +67,9 @@ int main(int ac, char **av)
     raylib::FontManager &fontMan = world.getRessource<raylib::FontManager>();
     raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
 
-    raylib::Model &bagModel = modelMan.loadModel("bottle", "./assets/models/bottle.iqm");
-    raylib::Texture &bagText = textureMan.loadTexture("bottle", "./assets/textures/bottle.png");
-    bagModel.getMaterialView(0).setTexture(bagText);
+    raylib::Model &bottleModel = modelMan.loadModel("bottle", "./assets/models/bottle.iqm");
+    raylib::Texture &bottleText = textureMan.loadTexture("bottle", "./assets/textures/bottle.png");
+    bottleModel.getMaterialView(0).setTexture(bottleText);
 
     raylib::Model &tableModel = modelMan.loadModel("table", "./assets/models/table.iqm");
     raylib::Texture &tableText = textureMan.loadTexture("table", "./assets/textures/table.png");
@@ -78,6 +78,10 @@ int main(int ac, char **av)
     raylib::Model &chairModel = modelMan.loadModel("chair", "./assets/models/chair.iqm");
     raylib::Texture &chairText = textureMan.loadTexture("chair", "./assets/textures/chair.png");
     chairModel.getMaterialView(0).setTexture(chairText);
+
+    raylib::Model &bagModel = modelMan.loadModel("bag", "./assets/models/bag.iqm");
+    raylib::Texture &bagText = textureMan.loadTexture("bag", "./assets/textures/bag.png");
+    bagModel.getMaterialView(0).setTexture(bagText);
 
     raylib::Texture &buttonText = textureMan.loadTexture("button", "./assets/textures/button.png");
     raylib::Shader &buttonShader = shaderMan.loadShader("button", "./assets/shaders/button.vs", "./assets/shaders/button.fs");

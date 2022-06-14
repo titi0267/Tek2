@@ -159,7 +159,7 @@ void ecs::ClientManager::spawnServerEntity(Entity serverEntity, std::stringbuf &
     ComponentType componentType;
     std::uint32_t componentSize;
 
-    std::cout << "[CLIENT] Creating entity from server" << std::endl;
+    // std::cout << "[CLIENT] Creating entity from server" << std::endl;
     _serverToClient.insert({serverEntity, localEntity});
     buffer.sgetn((char*) &nbComponents, sizeof(std::uint32_t));
     for (std::uint32_t i = 0; i < nbComponents; i++) {
@@ -177,7 +177,7 @@ void ecs::ClientManager::updateServerEntity(Entity serverEntity, std::stringbuf 
     ComponentType componentType;
     std::uint32_t componentSize;
 
-    std::cout << "[CLIENT] Updating entity from server" << std::endl;
+    // std::cout << "[CLIENT] Updating entity from server" << std::endl;
     buffer.sgetn((char*) &nbComponents, sizeof(std::uint32_t));
     for (std::uint32_t i = 0; i < nbComponents; i++) {
         buffer.sgetn((char*) &componentType, sizeof(ComponentType));
@@ -208,8 +208,8 @@ void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
 
     if (mirror.prevData == data)
         return;
-    std::cout << "[CLIENT] Updating entity to server" << std::endl;
-    std::cout << "Buffer size: " << data.size() << std::endl;
+    // std::cout << "[CLIENT] Updating entity to server" << std::endl;
+    // std::cout << "Buffer size: " << data.size() << std::endl;
     _client->write((void*) data.c_str(), data.size());
     mirror.prevData = data;
 }

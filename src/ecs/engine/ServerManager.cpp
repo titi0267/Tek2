@@ -133,7 +133,7 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity serverEntity, std
     std::uint32_t componentSize;
     std::string data = buffer.str();
 
-    std::cout << "[SERVER] Creating entity from server" << std::endl;
+    // std::cout << "[SERVER] Creating entity from server" << std::endl;
     _clientToServer[conn].insert({serverEntity, localEntity});
     for (ConnId client : _activeConns) {
         if (client == conn)
@@ -159,7 +159,7 @@ void ecs::ServerManager::updateClientEntity(ConnId conn, Entity serverEntity, st
     std::uint32_t componentSize;
     std::string data = buffer.str();
 
-    std::cout << "[SERVER] Updating entity from client" << std::endl;
+    // std::cout << "[SERVER] Updating entity from client" << std::endl;
     for (ConnId client : _activeConns) {
         if (client == conn)
             continue;
@@ -205,8 +205,8 @@ void ecs::ServerManager::updateLocalEntity(Entity entity, World &world)
 
     if (mirror.prevData == data)
         return;
-    std::cout << "[SERVER] Updating entity to clients" << std::endl;
-    std::cout << "Buffer size: " << data.size() << std::endl;
+    // std::cout << "[SERVER] Updating entity to clients" << std::endl;
+    // std::cout << "Buffer size: " << data.size() << std::endl;
     for (ConnId conn : _activeConns)
         _server->write(conn, (void*) data.c_str(), data.size());
     mirror.prevData = data;

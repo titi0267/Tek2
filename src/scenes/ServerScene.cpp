@@ -17,23 +17,25 @@
 #include "raylib/Matrix.hpp"
 #include <utility>
 
-void bomberman::ServerScene::spawnBottle(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
+void bomberman::ServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
 
     world.spawn().insert(transform, gPos, ecs::ModelRef {"bottle"}, ecs::MirrorEntity {});
 }
 
-void bomberman::ServerScene::spawnChair(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
+void bomberman::ServerScene::spawnDestructible(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
+{
+    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
+
+    world.spawn().insert(transform, ecs::ModelRef {"bag"}, ecs::MirrorEntity {});
+}
+
+void bomberman::ServerScene::spawnWall(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
 
     world.spawn().insert(transform, ecs::ModelRef {"chair"}, ecs::MirrorEntity {});
-}
-
-void bomberman::ServerScene::spawnWall(Vector3 pos, ecs::GridPosition gPos, Vector3 size, ecs::World &world)
-{
-
 }
 
 void bomberman::ServerScene::spawnFloor(Vector2 mapSize, ecs::World &world)
@@ -54,13 +56,13 @@ void bomberman::ServerScene::generateMapProps(ecs::World &world)
     spawnFloor({(float) width, (float) height}, world);
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            pos = {(float) x - width / 2.0f, 0, (float) y - height / 2.0f};
+            pos = {(float) x - width / 2.0f + 0.5f, 0, (float) y - height / 2.0f + 0.5f};
             switch (_map.getCellAt(x, y)) {
                 case DESTRUCTIBLE:
-                spawnChair(pos, {x, y}, world);
+                spawnDestructible(pos, {x, y}, world);
                 break;
                 case WALL:
-                spawnBottle(pos, {x, y}, world);
+                spawnWall(pos, {x, y}, world);
                 break;
             }
         }
@@ -72,8 +74,9 @@ void bomberman::ServerScene::loadScene(ecs::World &world)
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});
 
-    world.spawn().insert(Transform {{0, 2, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::GridPosition{0, 0},
-    ecs::Movement{}, ecs::Player{0}, ecs::ModelRef("button"), ecs::MirrorEntity {});
+    world.spawn().insert(Transform {{0, 0, 1}, QuaternionIdentity(), {1, 1, 1}},
+    ecs::GridPosition{_map.getWidth() / 2, _map.getHeight() / 2 + 1},
+    ecs::Movement{}, ecs::Player{0}, ecs::ModelRef("bottle"), ecs::MirrorEntity {});
 
     generateMapProps(world);
 }
@@ -89,7 +92,7 @@ void bomberman::ServerScene::entityKilled(ecs::Entity entity,ecs::World &world)
         world.getRessource<ecs::ServerManager>().killLocalEntity(entity, world);
 }
 
-map::Map bomberman::ServerScene::getMap() const
+map::Map &bomberman::ServerScene::getMap()
 {
     return _map;
 }
