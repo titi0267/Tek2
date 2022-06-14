@@ -109,6 +109,16 @@ int main()
     raylib::Model &buttonModel = modelMan.loadModel("button", "./assets/models/button.iqm");
     buttonModel.getMaterialView(0)
     .setTexture(buttonText);
+
+    raylib::Texture &largeButtonText = textureMan.loadTexture("large_button", "./assets/textures/large_button.png");
+    raylib::Model &largeButtonModel = modelMan.loadModel("large_button", "./assets/models/large_button.iqm");
+    largeButtonModel.getMaterialView(0)
+    .setTexture(largeButtonText);
+
+    raylib::Texture &squareButtonText = textureMan.loadTexture("square_button", "./assets/textures/square_button.png");
+    raylib::Model &squareButtonModel = modelMan.loadModel("square_button", "./assets/models/square_button.iqm");
+    squareButtonModel.getMaterialView(0)
+    .setTexture(squareButtonText);
     // .setColor(Color {125, 255, 125, 255})
     // .setShader(buttonShader)
 

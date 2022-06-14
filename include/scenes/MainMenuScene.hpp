@@ -50,12 +50,18 @@ namespace bomberman {
         void generateSettingsMenu(ecs::World &world);
         void generateGraphicalSettingsMenu(ecs::World &world);
         void generateAudioSettingsMenu(ecs::World &world);
+        void generateKeybindsSettingsMenu(ecs::World &world);
+        void generateGamepadPart(ecs::World &world);
+        void generateKeyboardPart(ecs::World &world);
 
         void spawnButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
         void spawnResolutionButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::ResolutionButton &res);
         void spawnFullscreenButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::FullscreenButton &but);
         void spawnFPSButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::FPSButton &but);
         void spawnToggleButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, ecs::ToggleButton::Usage usage);
+        void spawnStaticButton(const Transform &transform, const std::string &text, ecs::World &world);
+        void spawnTitleButton(const Transform &transform, const std::string &text, ecs::World &world);
+        void spawnSquareButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
 
         bool &getMovementRequest() { return moveRequest; };
         Vector3 &getMoveDest() { return moveDest; };
