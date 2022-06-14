@@ -50,8 +50,6 @@ void ecs::InternalServer::serverMain()
 
         std::this_thread::sleep_for(updateDuration - lastUpdateDur);
 
-        std::cout << "SERVER UPDATE" << std::endl;
-
         clock.update();
         _serverWorld->updateServer();
         prevUpdate = now;
