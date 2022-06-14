@@ -17,21 +17,21 @@
 #include "raylib/Matrix.hpp"
 #include <utility>
 
-void bomberman::ServerScene::spawnBottle(Vector3 pos, ecs::World &world)
+void bomberman::ServerScene::spawnBottle(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
 
-    world.spawn().insert(transform, ecs::ModelRef {"bottle"}, ecs::MirrorEntity {});
+    world.spawn().insert(transform, gPos, ecs::ModelRef {"bottle"}, ecs::MirrorEntity {});
 }
 
-void bomberman::ServerScene::spawnChair(Vector3 pos, ecs::World &world)
+void bomberman::ServerScene::spawnChair(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
 
     world.spawn().insert(transform, ecs::ModelRef {"chair"}, ecs::MirrorEntity {});
 }
 
-void bomberman::ServerScene::spawnWall(Vector3 pos, Vector3 size, ecs::World &world)
+void bomberman::ServerScene::spawnWall(Vector3 pos, ecs::GridPosition gPos, Vector3 size, ecs::World &world)
 {
 
 }
@@ -57,10 +57,10 @@ void bomberman::ServerScene::generateMapProps(ecs::World &world)
             pos = {(float) x - width / 2.0f, 0, (float) y - height / 2.0f};
             switch (_map.getCellAt(x, y)) {
                 case DESTRUCTIBLE:
-                spawnChair(pos, world);
+                spawnChair(pos, {x, y}, world);
                 break;
                 case WALL:
-                spawnBottle(pos, world);
+                spawnBottle(pos, {x, y}, world);
                 break;
             }
         }
@@ -72,7 +72,7 @@ void bomberman::ServerScene::loadScene(ecs::World &world)
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});
 
-    world.spawn().insert(Transform {{0, 2, 0}, QuaternionIdentity(), {1, 1, 1}},
+    world.spawn().insert(Transform {{0, 2, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::GridPosition{0, 0},
     ecs::Movement{}, ecs::Player{0}, ecs::ModelRef("button"), ecs::MirrorEntity {});
 
     generateMapProps(world);

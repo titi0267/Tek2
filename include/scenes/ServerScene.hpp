@@ -13,6 +13,7 @@
 #include "ecs/components/PlayerInputs.hpp"
 #include "ecs/engine/PlayerId.hpp"
 #include "ecs/engine/EntityCommands.hpp"
+#include "ecs/components/GridPosition.hpp"
 #include "raylib/Vectors.hpp"
 #include "Map.hpp"
 
@@ -21,9 +22,9 @@ namespace bomberman {
         std::unordered_map<ecs::PlayerId, ecs::Actions> _actions;
         map::Map _map;
 
-        void spawnBottle(Vector3 pos, ecs::World &world);
-        void spawnChair(Vector3 pos, ecs::World &world);
-        void spawnWall(Vector3 pos, Vector3 size, ecs::World &world);
+        void spawnBottle(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
+        void spawnChair(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
+        void spawnWall(Vector3 pos, ecs::GridPosition gPos, Vector3 size, ecs::World &world);
         void spawnFloor(Vector2 mapSize, ecs::World &world);
         void generateMapProps(ecs::World &world);
 

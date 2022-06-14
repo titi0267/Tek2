@@ -27,7 +27,7 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<SceneManager>();
     _serverWorld->insertRessource<ecs::Clock>();
 
-    _serverWorld->registerComponent<ecs::Player>();
+    _serverWorld->registerComponents<ecs::Player, ecs::GridPosition>();
     _serverWorld->registerSystems<ecs::PlayerActionUpdateSystem,
     ecs::PlayerExecuteActionUpdateSystem, ecs::MovementUpdateSystem>();
 

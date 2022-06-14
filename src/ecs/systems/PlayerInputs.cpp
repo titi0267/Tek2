@@ -55,7 +55,7 @@ void ecs::PlayerActionUpdateSystem::update(ecs::World &world)
 
 void ecs::PlayerExecuteActionUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Transform, Player, Movement>();
+    _signature = component.generateSignature<Transform, GridPosition, Player, Movement>();
 }
 
 void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
@@ -72,6 +72,7 @@ void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
     for (ecs::Entity entity : _entities) {
         Player &player = world.getComponent<Player>(entity);
         Transform &transform = world.getComponent<Transform>(entity);
+        GridPosition &gPos = world.getComponent<GridPosition>(entity);
         Vector3 pos = transform.translation;
         Movement &move = world.getComponent<Movement>(entity);
         Actions action = scene.getPlayerAction(player.id);
@@ -81,12 +82,14 @@ void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
         if (action == PLACE_BOMB) {
 
         } else {
-            Vector3 dest = pos + MOVEMENTS.at(action);
+            Vector3 moveVec =  MOVEMENTS.at(action);
+            GridPosition gDest = gPos + GridPosition {(int) moveVec.x, (int) moveVec.z};
 
-            // if (scene.getMap().getCellAt(move.dest.x, move.dest.z) == VOID || scene.getMap().getCellAt(move.dest.x, move.dest.z) == SPAWN)
-                move.move(dest, 2);
-            // else
-            //     std::cerr << "Can't go this way :" << scene.getMap().getCellAt(move.dest.x, move.dest.z) << std::endl;
+            if (scene.getMap().getCellAt(gDest.x, gDest.y) == VOID || scene.getMap().getCellAt(gDest.x, gDest.y) == SPAWN) {
+                gPos = gDest;
+                move.move(pos + moveVec, 2);
+            } else
+                std::cerr << "Can't go this way :" << scene.getMap().getCellAt(gDest.x, gDest.y) << std::endl;
         }
     }
 }
