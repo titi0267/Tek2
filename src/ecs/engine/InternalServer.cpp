@@ -14,6 +14,7 @@
 #include "ecs/engine/Clock.hpp"
 #include "ecs/components/Player.hpp"
 #include "scenes/ServerScene.hpp"
+#include "ecs/components/Bomb.hpp"
 
 #include "Setup.hpp"
 
@@ -27,9 +28,10 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<SceneManager>();
     _serverWorld->insertRessource<ecs::Clock>();
 
-    _serverWorld->registerComponents<ecs::Player, ecs::GridPosition>();
-    _serverWorld->registerSystems<ecs::PlayerActionUpdateSystem,
+    _serverWorld->registerComponents<ecs::BombId, ecs::Player, ecs::GridPosition>();
+    _serverWorld->registerSystems<ecs::BombIdUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::PlayerExecuteActionUpdateSystem, ecs::MovementUpdateSystem>();
+
 
 // ------
 

@@ -9,6 +9,7 @@
 #include "ecs/components/Movement.hpp"
 #include "ecs/engine/SceneManager.hpp"
 #include "scenes/ServerScene.hpp"
+#include "ecs/components/Bomb.hpp"
 #include "ecs/components/Player.hpp"
 #include <iostream>
 
@@ -55,7 +56,7 @@ void ecs::PlayerActionUpdateSystem::update(ecs::World &world)
 
 void ecs::PlayerExecuteActionUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Transform, GridPosition, Player, Movement>();
+    _signature = component.generateSignature<Transform, GridPosition, Player, Movement, BombId>();
 }
 
 void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
@@ -64,12 +65,14 @@ void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
         {MOVE_UP, {0, 0, -1}},
         {MOVE_DOWN, {0, 0, 1}},
         {MOVE_LEFT, {-1, 0, 0}},
-        {MOVE_RIGHT, {1, 0, 0}}
+        {MOVE_RIGHT, {1, 0, 0}},
+        {PLACE_BOMB, {0, 0, 0}}
     };
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
     map::Map &map = scene.getMap();
 
+    std::cout << "Here"<<std::endl;
     for (ecs::Entity entity : _entities) {
         Player &player = world.getComponent<Player>(entity);
         Transform &transform = world.getComponent<Transform>(entity);
@@ -77,11 +80,12 @@ void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
         Vector3 pos = transform.translation;
         Movement &move = world.getComponent<Movement>(entity);
         Actions action = scene.getPlayerAction(player.id);
+        //BombId &bomb = world.getComponent<BombId>(entity);
 
         if (action == DO_NOTHING || move.isMoving)
             continue;
         if (action == PLACE_BOMB) {
-
+            //std::cout << "Time :" << bomb.droppedTime << std::endl;
         } else {
             Vector3 moveVec =  MOVEMENTS.at(action);
             GridPosition gDest = gPos + GridPosition {(int) moveVec.x, (int) moveVec.z};
@@ -94,7 +98,7 @@ void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
                 gPos = gDest;
                 move.move(pos + moveVec, 2);
             } else
-                std::cerr << "Can't go this way :" << map.getCellAt(gDest.x, gDest.y) << std::endl;
+                std::cout << "Can't go this way :" << map.getCellAt(gDest.x, gDest.y) << std::endl;
         }
     }
 }
