@@ -12,6 +12,8 @@
 #include <unordered_map>
 #include <array>
 #include <memory>
+#include <vector>
+#include <algorithm>
 
 #include "Entity.hpp"
 
@@ -97,6 +99,14 @@ namespace ecs {
         bool isEntityRegistered(Entity entity)
         {
             return _entityToIndex.find(entity) != _entityToIndex.end();
+        }
+
+        std::vector<Entity> getEntities()
+        {
+            std::vector<Entity> entities(_entityToIndex.size());
+
+            std::transform(_entityToIndex.begin(), _entityToIndex.end(), entities.begin(), [](auto pair){return pair.first;});
+            return entities;
         }
 
         std::size_t getComponentSize()
@@ -196,6 +206,16 @@ namespace ecs {
             if (_componentTypes.find(hash) == _componentTypes.end())
                 throw UnknownComponent();
             return getComponentArray<T>(_componentTypes[hash])->isEntityRegistered(entity);
+        }
+
+        template<typename T>
+        std::vector<Entity> query()
+        {
+            ComponentHash hash = typeid(T).hash_code();
+
+            if (_componentTypes.find(hash) == _componentTypes.end())
+                throw UnknownComponent();
+            return getComponentArray<T>(_componentTypes[hash])->getEntities();
         }
 
         void addComponentToEntityByType(ComponentType type, Entity entity)

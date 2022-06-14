@@ -70,6 +70,12 @@ namespace ecs {
         }
 
         template<typename T>
+        std::vector<Entity> query()
+        {
+            return _components.query<T>();
+        }
+
+        template<typename T>
         void registerSystem()
         {
             _systems.registerSystem<T>(_components);

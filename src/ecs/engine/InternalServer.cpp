@@ -41,9 +41,20 @@ void ecs::InternalServer::serverMain()
     ecs::SceneManager &man = _serverWorld->getRessource<ecs::SceneManager>();
     bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
 
+    const std::chrono::system_clock::duration updateDuration = std::chrono::milliseconds(50);
+    std::chrono::system_clock::time_point prevUpdate = std::chrono::system_clock::now();
+
     while (_run) {
+        std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
+        std::chrono::system_clock::duration lastUpdateDur = now - prevUpdate;
+
+        std::this_thread::sleep_for(updateDuration - lastUpdateDur);
+
+        std::cout << "SERVER UPDATE" << std::endl;
+
         clock.update();
         _serverWorld->updateServer();
+        prevUpdate = now;
     }
 
     _serverWorld->getRessource<ecs::ServerManager>().closeServer();
