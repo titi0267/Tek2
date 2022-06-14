@@ -196,41 +196,6 @@ void ecs::ServerManager::killClientEntity(ConnId conn, World &world)
     }
 }
 
-void ecs::ServerManager::createUpdateLocalEntityBuffer(Entity entity, World &world, std::stringbuf &buffer)
-{
-    const NetworkCommand cmd = NetworkCommand::UPDATE_ENTITY;
-    ComponentManager &compMan = world.getComponentManager();
-    std::uint32_t total = 0;
-    ComponentType type;
-    std::uint32_t componentSize;
-
-    for (const ComponentHash hash : MIRROR_COMPONENTS) {
-        type = compMan.getComponentTypeByHash(hash);
-        if (world.getComponentManager().hasComponentById(type, entity))
-            total++;
-    }
-    buffer.sputn((char*) &cmd, sizeof(NetworkCommand));
-    buffer.sputn((char*) &entity, sizeof(Entity));
-    buffer.sputn((char*) &total, sizeof(std::uint32_t));
-    for (const ComponentHash hash : MIRROR_COMPONENTS) {
-        type = compMan.getComponentTypeByHash(hash);
-        if (world.getComponentManager().hasComponentById(type, entity)) {
-            componentSize = world.getComponentManager().getComponentSize(type);
-            buffer.sputn((char*) &type, sizeof(ComponentType));
-            buffer.sputn((char*) &componentSize, sizeof(std::uint32_t));
-            buffer.sputn((char*) world.getComponentManager().getComponentByType(type, entity), componentSize);
-        }
-    }
-}
-
-void ecs::ServerManager::createKillLocalEntityBuffer(Entity entity, std::stringbuf &buffer)
-{
-    const NetworkCommand cmd = NetworkCommand::KILL_ENTITY;
-
-    buffer.sputn((char*) &cmd, sizeof(NetworkCommand));
-    buffer.sputn((char*) &entity, sizeof(Entity));
-}
-
 void ecs::ServerManager::updateLocalEntity(Entity entity, World &world)
 {
     std::stringbuf buffer;

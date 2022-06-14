@@ -27,3 +27,38 @@ const ecs::ComponentHash ecs::MIRROR_COMPONENTS[ecs::NB_MIRROR_COMPONENTS] = {
     typeid(DrawableCube).hash_code(),
     typeid(Text3D).hash_code(),
 };
+
+void ecs::createUpdateLocalEntityBuffer(Entity entity, World &world, std::stringbuf &buffer)
+{
+    const NetworkCommand cmd = NetworkCommand::UPDATE_ENTITY;
+    ComponentManager &compMan = world.getComponentManager();
+    std::uint32_t total = 0;
+    ComponentType type;
+    std::uint32_t componentSize;
+
+    for (const ComponentHash hash : MIRROR_COMPONENTS) {
+        type = compMan.getComponentTypeByHash(hash);
+        if (world.getComponentManager().hasComponentById(type, entity))
+            total++;
+    }
+    buffer.sputn((char*) &cmd, sizeof(NetworkCommand));
+    buffer.sputn((char*) &entity, sizeof(Entity));
+    buffer.sputn((char*) &total, sizeof(std::uint32_t));
+    for (const ComponentHash hash : MIRROR_COMPONENTS) {
+        type = compMan.getComponentTypeByHash(hash);
+        if (world.getComponentManager().hasComponentById(type, entity)) {
+            componentSize = world.getComponentManager().getComponentSize(type);
+            buffer.sputn((char*) &type, sizeof(ComponentType));
+            buffer.sputn((char*) &componentSize, sizeof(std::uint32_t));
+            buffer.sputn((char*) world.getComponentManager().getComponentByType(type, entity), componentSize);
+        }
+    }
+}
+
+void ecs::createKillLocalEntityBuffer(Entity entity, std::stringbuf &buffer)
+{
+    const NetworkCommand cmd = NetworkCommand::KILL_ENTITY;
+
+    buffer.sputn((char*) &cmd, sizeof(NetworkCommand));
+    buffer.sputn((char*) &entity, sizeof(Entity));
+}

@@ -81,10 +81,12 @@ void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
         if (action == PLACE_BOMB) {
 
         } else {
-            if (scene.getMap().getCellAt(move.dest.x, move.dest.z) == VOID || scene.getMap().getCellAt(move.dest.x, move.dest.z) == SPAWN)
-                move.move(pos + MOVEMENTS.at(action), 2);
-            else
-                std::cerr << "Can't go this way :" << scene.getMap().getCellAt(move.dest.x, move.dest.z) << std::endl;
+            Vector3 dest = pos + MOVEMENTS.at(action);
+
+            // if (scene.getMap().getCellAt(move.dest.x, move.dest.z) == VOID || scene.getMap().getCellAt(move.dest.x, move.dest.z) == SPAWN)
+                move.move(dest, 2);
+            // else
+            //     std::cerr << "Can't go this way :" << scene.getMap().getCellAt(move.dest.x, move.dest.z) << std::endl;
         }
     }
 }

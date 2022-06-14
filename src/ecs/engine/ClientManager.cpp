@@ -201,40 +201,26 @@ void ecs::ClientManager::killServerEntity(World &world)
 
 void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
 {
-    NetworkCommand cmd = NetworkCommand::UPDATE_ENTITY;
-    ComponentManager &compMan = world.getComponentManager();
-    ComponentType type;
-    std::uint32_t total = 0;
-    std::uint32_t componentSize;
+    std::stringbuf buffer;
+    createUpdateLocalEntityBuffer(entity, world, buffer);
+    std::string data = buffer.str();
+    MirrorEntity &mirror = world.getComponent<MirrorEntity>(entity);
 
-    std::cout << "[CLIENT] Sending entity to server" << std::endl;
-    for (const ComponentHash hash : MIRROR_COMPONENTS) {
-        type = compMan.getComponentTypeByHash(hash);
-        if (world.getComponentManager().hasComponentById(type, entity))
-            total++;
-    }
-    _client->write(&cmd, sizeof(NetworkCommand));
-    _client->write(&entity, sizeof(Entity));
-    _client->write(&total, sizeof(std::uint32_t));
-
-    for (const ComponentHash hash : MIRROR_COMPONENTS) {
-        type = compMan.getComponentTypeByHash(hash);
-        if (world.getComponentManager().hasComponentById(type, entity)) {
-            componentSize = world.getComponentManager().getComponentSize(type);
-            _client->write(&type, sizeof(ComponentType));
-            _client->write(&componentSize, sizeof(std::uint32_t));
-            _client->write(world.getComponentManager().getComponentByType(type, entity), componentSize);
-        }
-    }
+    if (mirror.prevData == data)
+        return;
+    std::cout << "[CLIENT] Updating entity to server" << std::endl;
+    std::cout << "Buffer size: " << data.size() << std::endl;
+    _client->write((void*) data.c_str(), data.size());
+    mirror.prevData = data;
 }
 
 void ecs::ClientManager::killLocalEntity(Entity entity, World &world)
 {
-    NetworkCommand cmd = NetworkCommand::KILL_ENTITY;
+    std::stringbuf buffer;
+    createKillLocalEntityBuffer(entity, buffer);
+    std::string data = buffer.str();
 
-    // std::cout << "[CLIENT] Killing local entity" << std::endl;
-    _client->write(&cmd, sizeof(NetworkCommand));
-    _client->write(&entity, sizeof(Entity));
+    _client->write((void*) data.c_str(), data.size());
 }
 
 void ecs::ClientManager::handlePlayersCreated(World &world)

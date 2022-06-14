@@ -37,6 +37,9 @@ namespace ecs {
         std::string prevData;
     };
 
+    void createUpdateLocalEntityBuffer(Entity entity, World &world, std::stringbuf &buffer);
+    void createKillLocalEntityBuffer(Entity entity, std::stringbuf &buffer);
+
     class ServerManager {
         std::unique_ptr<network::IServer> _server;
         std::vector<ConnId> _activeConns;
@@ -52,9 +55,6 @@ namespace ecs {
         void spawnClientEntity(ConnId conn, Entity serverEntity, std::stringbuf &buffer, World &world);
         void updateClientEntity(ConnId conn, Entity serverEntity, std::stringbuf &buffer, World &world);
         void killClientEntity(ConnId conn, World &world);
-
-        void createUpdateLocalEntityBuffer(Entity entity, World &world, std::stringbuf &buffer);
-        void createKillLocalEntityBuffer(Entity entity, std::stringbuf &buffer);
 
         void initPlayers(ConnId conn, World &world);
 
