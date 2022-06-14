@@ -197,7 +197,22 @@ void bomberman::MainMenuScene::generateGamepadPart(ecs::World &world)
 void bomberman::MainMenuScene::generateKeyboardPart(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
-
+    spawnStaticButton({{-0.5, -7.25, -2}, rot, {1, 1, 1}}, "Up", world);
+    spawnStaticButton({{-0.5, -8.25, -2}, rot, {1, 1, 1}}, "Left", world);
+    spawnStaticButton({{-0.5, -9.25, -2}, rot, {1, 1, 1}}, "Right", world);
+    spawnStaticButton({{-0.5, -10.25, -2}, rot, {1, 1, 1}}, "Down", world);
+    spawnStaticButton({{-0.5, -11.25, -2}, rot, {1, 1, 1}}, "Place a bomb", world);
+    spawnSquareButton({{-3, -7.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
+    spawnSquareButton({{-3, -8.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
+    spawnSquareButton({{-3, -9.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
+    spawnSquareButton({{-3, -10.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
+    spawnSquareButton({{-3, -11.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
+    spawnStaticButton({{3.5, -7.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
+    spawnStaticButton({{4, -8.75, -2}, rot, {1, 1, 1}}, "", world);
+    spawnSquareButton({{2, -8.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, upFunction, world);
+    spawnStaticButton({{3.5, -9.75, -2}, rot, {1, 1, 1}}, "Save to:", world);
+    spawnStaticButton({{4, -10.75, -2}, rot, {1, 1, 1}}, "", world);
+    spawnSquareButton({{2, -10.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, upFunction, world);
     spawnButton({{0, -12.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, rightFunction, world);
 }
 
