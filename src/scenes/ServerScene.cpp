@@ -89,6 +89,11 @@ void bomberman::ServerScene::entityKilled(ecs::Entity entity,ecs::World &world)
         world.getRessource<ecs::ServerManager>().killLocalEntity(entity, world);
 }
 
+map::Map bomberman::ServerScene::getMap() const
+{
+    return _map;
+}
+
 void bomberman::ServerScene::setPlayerAction(ecs::PlayerId id, ecs::Actions action)
 {
     _actions.at(id) = action;

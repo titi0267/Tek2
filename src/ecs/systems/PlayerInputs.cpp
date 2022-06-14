@@ -72,6 +72,7 @@ void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
     for (ecs::Entity entity : _entities) {
         Player &player = world.getComponent<Player>(entity);
         Transform &transform = world.getComponent<Transform>(entity);
+        Vector3 pos = transform.translation;
         Movement &move = world.getComponent<Movement>(entity);
         Actions action = scene.getPlayerAction(player.id);
 
@@ -80,7 +81,10 @@ void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
         if (action == PLACE_BOMB) {
 
         } else {
-            move.move(transform.translation + MOVEMENTS.at(action), 2);
+            if (scene.getMap().getCellAt(move.dest.x, move.dest.z) == VOID || scene.getMap().getCellAt(move.dest.x, move.dest.z) == SPAWN)
+                move.move(pos + MOVEMENTS.at(action), 2);
+            else
+                std::cerr << "Can't go this way :" << scene.getMap().getCellAt(move.dest.x, move.dest.z) << std::endl;
         }
     }
 }

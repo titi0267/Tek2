@@ -7,6 +7,8 @@
 
 #include "ecs/engine/Clock.hpp"
 #include "ecs/components/Movement.hpp"
+#include "ecs/engine/SceneManager.hpp"
+#include "scenes/ServerScene.hpp"
 #include "raylib/Vectors.hpp"
 
 void ecs::MovementUpdateSystem::setSignature(ecs::ComponentManager &component)

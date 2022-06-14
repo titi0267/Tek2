@@ -36,6 +36,7 @@ namespace bomberman {
         void entityKilled(ecs::Entity entity,ecs::World &world);
 
         void setPlayerAction(ecs::PlayerId id, ecs::Actions action);
+        map::Map getMap() const;
         ecs::Actions getPlayerAction(ecs::PlayerId id) const;
     };
 }
