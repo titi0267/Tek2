@@ -19,16 +19,22 @@
 #include "raylib/Matrix.hpp"
 #include <utility>
 
+const float ROTATIONS[4] = {
+    0, PI / 2.0, PI, 3 * PI / 2.0,
+};
+
 void bomberman::ServerScene::spawnDestructible(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
-    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
+    float rot = ROTATIONS[std::rand() % 4] + (PI / 16.0) * ((std::rand() % 100) / 100.0 - 0.5);
+    Transform transform = {pos, QuaternionFromEuler(0, rot, 0), {1, 1, 1}};
 
     world.spawn().insert(transform, ecs::ModelRef {"bag"}, ecs::MirrorEntity {});
 }
 
 void bomberman::ServerScene::spawnWall(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
-    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
+    float rot = ROTATIONS[std::rand() % 4] + (PI / 16.0) * ((std::rand() % 100) / 100.0 - 0.5);
+    Transform transform = {pos, QuaternionFromEuler(0, rot, 0), {1, 1, 1}};
 
     world.spawn().insert(transform, ecs::ModelRef {"chair"}, ecs::MirrorEntity {});
 }

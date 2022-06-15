@@ -33,8 +33,8 @@ namespace bomberman {
         void generateMapProps(ecs::World &world);
 
         public:
-        ServerScene() : _map(9, 9, 4, 1) {};
-        ServerScene(const void *data) : _map(9, 9, 4, 1) {};
+        ServerScene() : _map(9, 9, 4, 4) {};
+        ServerScene(const void *data) : _map(9, 9, 4, 4) {};
 
         void loadScene(ecs::World &world);
         void unloadScene(ecs::World &world);
