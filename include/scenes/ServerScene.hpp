@@ -45,6 +45,8 @@ namespace bomberman {
 
         void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
+        ecs::Entity getBomb(ecs::BombId bombId) const;
+        void spawnWater(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void deleteBomb(ecs::BombId bomb);
 
         map::Map &getMap();

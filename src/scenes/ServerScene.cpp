@@ -20,6 +20,7 @@
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/Bomb.hpp"
 #include "ecs/components/Timer.hpp"
+#include "ecs/components/Water.hpp"
 #include "ecs/components/PlayAnimation.hpp"
 #include "ecs/components/Skin.hpp"
 
@@ -93,6 +94,17 @@ void bomberman::ServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs:
     ecs::ModelRef {"bottle"}, ecs::Timer{}, ecs::MirrorEntity {}).getEntity();
 
     _bombs.insert({world.getComponent<ecs::BombId>(entity), entity});
+}
+ecs::Entity bomberman::ServerScene::getBomb(ecs::BombId bombId) const
+{
+    return _bombs.at(bombId);
+}
+
+void bomberman::ServerScene::spawnWater(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
+{
+    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
+    ecs::Entity entity = world.spawn().insert(transform, gPos,
+    ecs::ModelRef {"water"}, ecs::Timer {}, ecs::Water {},ecs::MirrorEntity {}).getEntity();
 }
 
 void bomberman::ServerScene::deleteBomb(ecs::BombId bomb)

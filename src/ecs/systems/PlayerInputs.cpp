@@ -12,6 +12,7 @@
 #include "ecs/components/Bomb.hpp"
 #include "ecs/components/Player.hpp"
 #include "ecs/components/PlayAnimation.hpp"
+#include "ecs/components/Timer.hpp"
 #include <iostream>
 
 void ecs::PlayerInputsUpdateSystem::setSignature(ecs::ComponentManager &component)
@@ -69,6 +70,39 @@ void ecs::PlayerExecuteActionUpdateSystem::placeBomb(Entity entity, World &world
     if (map.getCellAt(gPos.x, gPos.y) != VOID && map.getCellAt(gPos.x, gPos.y) != SPAWN)
         return;
     scene.spawnBomb(transform.translation, gPos, world);
+    //placWater(scene.getBomb())
+}
+
+void ecs::PlayerExecuteActionUpdateSystem::placeWater(Entity entity, World &world, bomberman::ServerScene &scene)
+{
+    Transform &transform = world.getComponent<Transform>(entity);
+    GridPosition &gPos = world.getComponent<GridPosition>(entity);
+    map::Map &map = scene.getMap();
+    BombId &bomb = world.getComponent<BombId>(entity);
+    Timer &timer = world.getComponent<Timer>(entity);
+    static std::vector<float> counter = {-1.0, -1.0, -1.0, -1.0};
+    const std::unordered_map<Actions, Vector3> DIRECTIONS = {
+        {MOVE_UP, {0, 0, -1 - counter.at(0)}},
+        {MOVE_DOWN, {0, 0, 1 + counter.at(1)}},
+        {MOVE_LEFT, {-1 - counter.at(2), 0, 0}},
+        {MOVE_RIGHT, {1 + counter.at(3), 0, 0}}
+    };
+
+    for (auto itr = DIRECTIONS.begin(); itr != DIRECTIONS.end(); itr++) {
+        Vector3 moveVec =  itr->second;
+        GridPosition gDest = gPos + GridPosition {(int) moveVec.x, (int) moveVec.z};
+
+        if (gDest.x < 0 || gDest.y < 0 || gDest.x > map.getWidth() - 1 || gDest.y > map.getHeight() - 1)
+            continue;
+        if (map.getCellAt(gDest.x, gDest.y) != VOID && map.getCellAt(gDest.x, gDest.y) == SPAWN)
+            continue;
+        if (timer.timeElapsed >= 2) {
+            std::cout << "Bomb explode"<< std::endl;
+            scene.spawnWater(transform.translation, gPos, world);
+            counter.at(itr->first - 1) += 1;
+
+        }
+    }
 }
 
 void ecs::PlayerExecuteActionUpdateSystem::movePlayer(Entity entity, World &world, Actions action, map::Map &map)

@@ -14,7 +14,7 @@
 
 void ecs::BombUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<BombId, Timer, Transform>();
+    _signature = component.generateSignature<BombId, Timer, Transform, GridPosition>();
 }
 
 void ecs::BombUpdateSystem::update(ecs::World &world)

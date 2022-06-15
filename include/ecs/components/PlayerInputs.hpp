@@ -70,6 +70,8 @@ namespace ecs {
         void placeBomb(Entity entity, World &world, bomberman::ServerScene &scene);
         void movePlayer(Entity entity, World &world, Actions action, map::Map &map);
 
+        void placeWater(Entity entity, World &world, bomberman::ServerScene &scene);
+
         public:
         PlayerExecuteActionUpdateSystem() { _stage = ecs::Stages::UPDATE; };
 
