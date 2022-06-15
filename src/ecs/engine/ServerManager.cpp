@@ -135,13 +135,13 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity serverEntity, std
 
     // std::cout << "[SERVER] Creating entity from server" << std::endl;
     _clientToServer[conn].insert({serverEntity, localEntity});
-    for (ConnId client : _activeConns) {
-        if (client == conn)
-            continue;
-        sendCmd(client, NetworkCommand::UPDATE_ENTITY);
-        _server->write(client, (void*) &serverEntity, sizeof(Entity));
-        _server->write(client, (void*) data.c_str(), data.size());
-    }
+    // for (ConnId client : _activeConns) {
+    //     if (client == conn)
+    //         continue;
+    //     sendCmd(client, NetworkCommand::UPDATE_ENTITY);
+    //     _server->write(client, (void*) &serverEntity, sizeof(Entity));
+    //     _server->write(client, (void*) data.c_str(), data.size());
+    // }
     buffer.sgetn((char*) &nbComponents, sizeof(std::uint32_t));
     for (std::uint32_t i = 0; i < nbComponents; i++) {
         buffer.sgetn((char*) &componentType, sizeof(ComponentType));
@@ -160,13 +160,13 @@ void ecs::ServerManager::updateClientEntity(ConnId conn, Entity serverEntity, st
     std::string data = buffer.str();
 
     // std::cout << "[SERVER] Updating entity from client" << std::endl;
-    for (ConnId client : _activeConns) {
-        if (client == conn)
-            continue;
-        sendCmd(client, NetworkCommand::UPDATE_ENTITY);
-        _server->write(client, (void*) &serverEntity, sizeof(Entity));
-        _server->write(client, (void*) data.c_str(), data.size());
-    }
+    // for (ConnId client : _activeConns) {
+    //     if (client == conn)
+    //         continue;
+    //     sendCmd(client, NetworkCommand::UPDATE_ENTITY);
+    //     _server->write(client, (void*) &serverEntity, sizeof(Entity));
+    //     _server->write(client, (void*) data.c_str(), data.size());
+    // }
     buffer.sgetn((char*) &nbComponents, sizeof(std::uint32_t));
     for (std::uint32_t i = 0; i < nbComponents; i++) {
         buffer.sgetn((char*) &componentType, sizeof(ComponentType));
@@ -190,10 +190,10 @@ void ecs::ServerManager::killClientEntity(ConnId conn, World &world)
     _clientToServer[conn].erase(localEntity);
     createKillLocalEntityBuffer(localEntity, buffer);
     data = buffer.str();
-    for (ConnId activeConn : _activeConns) {
-        if (activeConn != conn)
-            _server->write(activeConn, (void*) data.c_str(), data.size());
-    }
+    // for (ConnId activeConn : _activeConns) {
+    //     if (activeConn != conn)
+    //         _server->write(activeConn, (void*) data.c_str(), data.size());
+    // }
 }
 
 void ecs::ServerManager::updateLocalEntity(Entity entity, World &world)

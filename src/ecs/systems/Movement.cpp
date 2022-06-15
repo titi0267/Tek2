@@ -26,7 +26,7 @@ void ecs::MovementUpdateSystem::update(ecs::World &world)
         Movement &move = world.getComponent<Movement>(entity);
 
         if (!move.isMoving)
-            return;
+            continue;
 
         Vector3 moveVec = normalize(move.dest - pos);
         float actualDistance = distance(pos, move.dest);
@@ -36,7 +36,7 @@ void ecs::MovementUpdateSystem::update(ecs::World &world)
         if (actualDistance <= endRange) {
             pos = move.dest;
             move.isMoving = false;
-            return;
+            continue;
         }
         pos += movement;
     }
