@@ -58,15 +58,27 @@ void InputFile::save()
     std::filesystem::create_directory("./inputs");
     file.open(filename, std::ios::out);
     file << (_gamepad ? "Gamepad" : "Keyboard") << std::endl;
-    file << _binds->getUpString() << std::endl;
-    file << _binds->getDownString() << std::endl;
-    file << _binds->getLeftString() << std::endl;
-    file << _binds->getRightString() << std::endl;
-    file << _binds->getPlaceString();
+    for (int i = 0; i < 5; i++)
+        file << _binds->getKeyString((IBind::Binding) i) << std::endl;
     file.close();
 }
 
 void InputFile::setName(const std::string &name)
 {
     _name = name;
+}
+
+void InputFile::setKey(IBind::Binding bind, int keyInt)
+{
+    _binds->setKey(bind, keyInt);
+}
+
+int InputFile::getKey(IBind::Binding bind)
+{
+    return (_binds->getKey(bind));
+}
+
+std::string InputFile::getKeyText(IBind::Binding bind)
+{
+    return (_binds->getKeyText(bind));
 }

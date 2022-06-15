@@ -19,6 +19,9 @@ class InputFile {
         ~InputFile();
         void save();
         void setName(const std::string &name);
+        void setKey(IBind::Binding bind, int keyInt);
+        int getKey(IBind::Binding bind);
+        std::string getKeyText(IBind::Binding bind);
 
     protected:
         std::string _name;

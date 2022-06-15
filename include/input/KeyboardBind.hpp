@@ -11,25 +11,25 @@
 #include "../bomberman/include/raylib/headers/raylib.h"
 #include <vector>
 #include <string>
+#include <unordered_map>
 
 class KeyboardBind : public IBind {
     public:
         KeyboardBind(const std::vector<std::string> &file);
         KeyboardBind();
         ~KeyboardBind();
-        std::string getUpString();
-        std::string getDownString();
-        std::string getLeftString();
-        std::string getRightString();
-        std::string getPlaceString();
+        std::string getKeyText(Binding bind);
+        std::string getKeyString(Binding bind);
+        int getKey(Binding bind);
+        void setKey(Binding bind, int keyInt);
         int stringToKey(const std::string &str);
         std::string keyToString(int keyInt);
+        std::string keyToGameTxt(int keyInt);
 
     protected:
-        KeyboardKey _up;
-        KeyboardKey _down;
-        KeyboardKey _left;
-        KeyboardKey _right;
-        KeyboardKey _place;
+        std::vector<KeyboardKey> _keys;
     private:
 };
+
+extern const std::unordered_map<KeyboardKey, std::string> keyToStringMap;
+extern const std::unordered_map<KeyboardKey, std::string> keyToGameText;

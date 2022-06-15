@@ -29,21 +29,18 @@ class GamepadBind : public IBind {
         GamepadBind(const std::vector<std::string> &file);
         GamepadBind();
         ~GamepadBind();
-        std::string getUpString();
-        std::string getDownString();
-        std::string getLeftString();
-        std::string getRightString();
-        std::string getPlaceString();
+        std::string getKeyText(Binding bind);
+        std::string getKeyString(Binding bind);
+        int getKey(Binding bind);
+        void setKey(Binding bind, int keyInt);
         int stringToKey(const std::string &str);
         std::string keyToString(int keyInt);
+        std::string keyToGameTxt(int keyInt);
 
     protected:
-        GamepadButton _up;
-        GamepadButton _down;
-        GamepadButton _left;
-        GamepadButton _right;
-        GamepadButton _place;
+        std::vector<GamepadButton> _keys;
     private:
 };
 
 extern const std::unordered_map<GamepadButton, std::string> buttonToString;
+extern const std::unordered_map<GamepadButton, std::string> buttonToGameText;

@@ -11,14 +11,21 @@
 
 class IBind {
     public:
+        typedef enum {
+            UP,
+            DOWN,
+            LEFT,
+            RIGHT,
+            PLACE
+        } Binding;
         virtual ~IBind() = default;
-        virtual std::string getUpString() = 0;
-        virtual std::string getDownString() = 0;
-        virtual std::string getLeftString() = 0;
-        virtual std::string getRightString() = 0;
-        virtual std::string getPlaceString() = 0;
+        virtual std::string getKeyText(Binding bind) = 0;
+        virtual std::string getKeyString(Binding bind) = 0;
+        virtual int getKey(Binding bind) = 0;
+        virtual void setKey(Binding bind, int keyInt) = 0;
         virtual int stringToKey(const std::string &str) = 0;
         virtual std::string keyToString(int keyInt) = 0;
+        virtual std::string keyToGameTxt(int keyInt) = 0;
     protected:
     private:
 };
