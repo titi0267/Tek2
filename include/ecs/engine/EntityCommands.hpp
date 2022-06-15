@@ -68,6 +68,7 @@ namespace ecs {
             Signature &sign = _world.getEntityManager().getSignature(_entity);
             std::deque<Entity> &living = _world.getLivingEntities();
 
+            _world.getRessource<ecs::SceneManager>().getScene().entityKilled(_entity, _world);
             for (ComponentType i = 0; i < MAX_COMPONENTS; i++) {
                 if (sign.test(i))
                     _world.getComponentManager().getIComponentArray(i)->removeEntity(_entity);
@@ -75,7 +76,6 @@ namespace ecs {
             sign.reset();
             _world.getSystemManager().updateEntitySignature(_entity, sign);
             _world.getEntityManager().destroyEntity(_entity);
-            _world.getRessource<ecs::SceneManager>().getScene().entityKilled(_entity, _world);
             living.erase(std::find(living.begin(), living.end(), _entity));
         }
 

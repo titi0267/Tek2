@@ -12,6 +12,7 @@
 #include "ecs/engine/SceneManager.hpp"
 #include "ecs/engine/Clock.hpp"
 #include "network/SocketError.hpp"
+#include "raylib/Camera.hpp"
 
 bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
 {
@@ -27,7 +28,7 @@ bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
 void ecs::ClientManager::handleDisconnect(World &world)
 {
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
-    NetworkSceneModule &scene = dynamic_cast<NetworkSceneModule&>(man.getScene());
+    ClientNetworkSceneModule &scene = dynamic_cast<ClientNetworkSceneModule&>(man.getScene());
 
     scene.onDisconnect(world);
 }
@@ -101,6 +102,9 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
             case NetworkCommand::PLAYERS_CREATED:
             handlePlayersCreated(world);
             break;
+            case NetworkCommand::MOVE_CAMERA:
+            handleMoveCamera(world);
+            break;
             case NetworkCommand::DISCONNECT_CLIENT:
             case NetworkCommand::PLAYERS_REJECTED:
             _client->disconnect();
@@ -168,6 +172,7 @@ void ecs::ClientManager::spawnServerEntity(Entity serverEntity, std::stringbuf &
         entityCmds.insertByType(componentType);
         buffer.sgetn((char*) world.getComponentManager().getComponentByType(componentType, localEntity), componentSize);
     }
+    entityCmds.insert(MirroredEntity{0, serverEntity});
 }
 
 void ecs::ClientManager::updateServerEntity(Entity serverEntity, std::stringbuf &buffer, World &world)
@@ -226,7 +231,7 @@ void ecs::ClientManager::killLocalEntity(Entity entity, World &world)
 void ecs::ClientManager::handlePlayersCreated(World &world)
 {
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
-    NetworkSceneModule &scene = dynamic_cast<NetworkSceneModule&>(man.getScene());
+    ClientNetworkSceneModule &scene = dynamic_cast<ClientNetworkSceneModule&>(man.getScene());
     int nbPlayers = scene.getNbPlayersOnClient();
     PlayerId id;
 
@@ -236,6 +241,19 @@ void ecs::ClientManager::handlePlayersCreated(World &world)
             return;
         scene.playerIdAssigned(id, world);
     }
+}
+
+void ecs::ClientManager::handleMoveCamera(ecs::World &world)
+{
+    raylib::Camera &cam = world.getRessource<raylib::Camera>();
+    Vector3 pos;
+    Vector3 target;
+
+    std::cout << "[CLIENT] Move camera" << std::endl;
+    _client->read(&pos, sizeof(Vector3));
+    _client->read(&target, sizeof(Vector3));
+    cam.setPosition(pos);
+    cam.setTarget(target);
 }
 
 void ecs::ClientUpdateSystem::setSignature(ComponentManager &component)

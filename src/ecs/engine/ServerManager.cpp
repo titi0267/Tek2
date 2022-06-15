@@ -27,8 +27,10 @@ bool ecs::ServerManager::tryRead(ConnId conn, void *buf, std::size_t size)
     return false;
 }
 
-std::vector<network::ConnId> ecs::ServerManager::acceptNewConns()
+std::vector<network::ConnId> ecs::ServerManager::acceptNewConns(ecs::World &world)
 {
+    SceneManager &man = world.getRessource<ecs::SceneManager>();
+    ServerNetworkSceneModule &scene = dynamic_cast<ServerNetworkSceneModule&>(man.getScene());
     network::ConnId conn;
     std::vector<network::ConnId> newConns;
 
@@ -37,14 +39,18 @@ std::vector<network::ConnId> ecs::ServerManager::acceptNewConns()
         _activeConns.push_back(conn);
         _clientToServer.insert({conn, {}});
         newConns.push_back(conn);
+        scene.onConnect(conn, world);
     }
     return newConns;
 }
 
 void ecs::ServerManager::handleClientDisconnection(ConnId conn, World &world)
 {
+    SceneManager &man = world.getRessource<ecs::SceneManager>();
+    ServerNetworkSceneModule &scene = dynamic_cast<ServerNetworkSceneModule&>(man.getScene());
     auto &entitites = _clientToServer[conn];
 
+    scene.onDisconnect(conn, world);
     for (auto &[client, local] : entitites)
         world.getEntityCommands(local).despawn();
     world.getRessource<PlayersManager>().clientDisconnect(conn);
@@ -124,7 +130,7 @@ void ecs::ServerManager::spawnOrUpdateClientEntity(ConnId conn, World &world)
         spawnClientEntity(conn, serverEntity, buffer, world);
 }
 
-void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity serverEntity, std::stringbuf &buffer, World &world)
+void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity clientEntity, std::stringbuf &buffer, World &world)
 {
     EntityCommands entityCmds = world.spawn();
     Entity localEntity = entityCmds.getEntity();
@@ -133,8 +139,8 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity serverEntity, std
     std::uint32_t componentSize;
     std::string data = buffer.str();
 
-    // std::cout << "[SERVER] Creating entity from server" << std::endl;
-    _clientToServer[conn].insert({serverEntity, localEntity});
+    std::cout << "[SERVER] Creating entity from server, " << conn << ", " << (int) clientEntity << " -> " << (int) localEntity << std::endl;
+    _clientToServer[conn].insert({clientEntity, localEntity});
     // for (ConnId client : _activeConns) {
     //     if (client == conn)
     //         continue;
@@ -149,11 +155,12 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity serverEntity, std
         entityCmds.insertByType(componentType);
         buffer.sgetn((char*) world.getComponentManager().getComponentByType(componentType, localEntity), componentSize);
     }
+    entityCmds.insert(MirroredEntity{conn, clientEntity});
 }
 
-void ecs::ServerManager::updateClientEntity(ConnId conn, Entity serverEntity, std::stringbuf &buffer, World &world)
+void ecs::ServerManager::updateClientEntity(ConnId conn, Entity clientEntity, std::stringbuf &buffer, World &world)
 {
-    Entity localEntity = _clientToServer[conn][serverEntity];
+    Entity localEntity = _clientToServer[conn][clientEntity];
     std::uint32_t nbComponents;
     ComponentType componentType;
     std::uint32_t componentSize;
@@ -233,6 +240,8 @@ void ecs::ServerManager::sendEntityToNewConns(std::vector<network::ConnId> &newC
 
 void ecs::ServerManager::initPlayers(ConnId conn, World &world)
 {
+    SceneManager &sceneMan = world.getRessource<ecs::SceneManager>();
+    ServerNetworkSceneModule &scene = dynamic_cast<ServerNetworkSceneModule&>(sceneMan.getScene());
     PlayersManager &man = world.getRessource<PlayersManager>();
     std::uint32_t nbPlayers;
     PlayerId id;
@@ -249,8 +258,30 @@ void ecs::ServerManager::initPlayers(ConnId conn, World &world)
     sendCmd(conn, NetworkCommand::PLAYERS_CREATED);
     for (int i = 0; i < nbPlayers; i++) {
         id = man.reservePlayerId(conn);
+        scene.onPlayerIdAttributed(id, world);
         _server->write(conn, &id, sizeof(PlayerId));
     }
+}
+
+void ecs::ServerManager::moveCameras(Vector3 pos, Vector3 target)
+{
+    for (ConnId conn : _activeConns)
+        moveCamera(conn, pos, target);
+}
+
+void ecs::ServerManager::moveCamera(ConnId conn, Vector3 pos, Vector3 target)
+{
+    sendCmd(conn, NetworkCommand::MOVE_CAMERA);
+    _server->write(conn, &pos, sizeof(Vector3));
+    _server->write(conn, &target, sizeof(Vector3));
+}
+
+void ecs::ServerManager::deleteClientEntity(Entity entity, World &world)
+{
+    MirroredEntity &mirrored = world.getComponent<MirroredEntity>(entity);
+
+    std::cout << "Delete " << (int) mirrored.foreignEntity << " from " << mirrored.conn << std::endl;
+    _clientToServer[mirrored.conn].erase(mirrored.foreignEntity);
 }
 
 void ecs::ServerUpdateSystem::setSignature(ComponentManager &component)
@@ -261,7 +292,7 @@ void ecs::ServerUpdateSystem::setSignature(ComponentManager &component)
 void ecs::ServerUpdateSystem::update(World &world)
 {
     ServerManager &man = world.getRessource<ServerManager>();
-    std::vector<network::ConnId> newConns = man.acceptNewConns();
+    std::vector<network::ConnId> newConns = man.acceptNewConns(world);
 
     man.handleNetworkCommands(world);
     for (Entity entity : _entities) {

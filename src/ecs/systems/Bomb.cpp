@@ -10,7 +10,7 @@
 #include "ecs/components/Timer.hpp"
 #include "ecs/engine/Clock.hpp"
 #include "raylib/Vectors.hpp"
-#include "scenes/ServerScene.hpp"
+#include "scenes/GameServerScene.hpp"
 
 void ecs::BombUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
@@ -21,7 +21,7 @@ void ecs::BombUpdateSystem::update(ecs::World &world)
 {
     SceneManager &man = world.getRessource<ecs::SceneManager>();
     Clock &clock = world.getRessource<Clock>();
-    bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
+    bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
 
     for (ecs::Entity entity : _entities) {
         BombId &bomb = world.getComponent<BombId>(entity);

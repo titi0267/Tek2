@@ -17,6 +17,7 @@
 #include "network/CPSocket.hpp"
 #include "ecs/engine/World.hpp"
 #include "ecs/engine/PlayerId.hpp"
+#include "raylib/Vectors.hpp"
 
 namespace ecs {
     using ConnId = network::ConnId;
@@ -31,10 +32,18 @@ namespace ecs {
         PLAYERS_CREATED,
         PLAYERS_REJECTED,
         DISCONNECT_CLIENT,
+        MOVE_CAMERA,
     };
 
     struct MirrorEntity {
         std::string prevData;
+    };
+
+    struct MirroredEntity {
+        ConnId conn;
+        Entity foreignEntity;
+
+        MirroredEntity(ConnId conn = 0,  Entity foreign = (Entity) 0) : conn(conn), foreignEntity(foreign) {};
     };
 
     void createUpdateLocalEntityBuffer(Entity entity, World &world, std::stringbuf &buffer);
@@ -65,13 +74,18 @@ namespace ecs {
         void startServer(const std::string &port) { _server->createServer("127.0.0.1", port); };
         void closeServer() { _server->closeServer(); };
 
-        std::vector<network::ConnId> acceptNewConns();
+        std::vector<network::ConnId> acceptNewConns(World &world);
         void handleNetworkCommands(World &world);
 
         void updateLocalEntity(Entity entity, World &world);
         void killLocalEntity(Entity entity, World &world);
 
         void sendEntityToNewConns(std::vector<network::ConnId> &newConns, Entity entity, World &world);
+
+        void moveCameras(Vector3 pos, Vector3 target);
+        void moveCamera(ConnId conn, Vector3 pos, Vector3 target);
+
+        void deleteClientEntity(Entity entity, World &world);
     };
 
     using ConnectionSuccessFct = void (*)(void *obj, ecs::World &world);
@@ -100,6 +114,7 @@ namespace ecs {
         void killServerEntity(World &world);
 
         void handlePlayersCreated(World &world);
+        void handleMoveCamera(World &world);
 
         public:
         ClientManager() : _client(network::CPSocket::createClient()) {};
@@ -137,10 +152,17 @@ namespace ecs {
         void update(World &world);
     };
 
-    class NetworkSceneModule {
+    class ClientNetworkSceneModule {
         public:
         virtual int getNbPlayersOnClient() = 0;
         virtual void onDisconnect(World &world) = 0;
         virtual void playerIdAssigned(PlayerId id, World &world) = 0;
+    };
+
+    class ServerNetworkSceneModule {
+        public:
+        virtual void onConnect(ConnId conn, World &world) = 0;
+        virtual void onDisconnect(ConnId conn, World &world) = 0;
+        virtual void onPlayerIdAttributed(PlayerId id, World &world) = 0;
     };
 }

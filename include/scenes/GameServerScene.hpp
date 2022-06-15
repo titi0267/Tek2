@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2022
 ** B-YEP-400-STG-4-1-indiestudio-mathieu.brujan
 ** File description:
-** ServerScene
+** GameServerScene
 */
 
 #pragma once
@@ -16,11 +16,14 @@
 #include "ecs/components/GridPosition.hpp"
 #include "ecs/components/PlayerInputs.hpp"
 #include "ecs/components/Bomb.hpp"
+#include "ecs/components/Timer.hpp"
 #include "raylib/Vectors.hpp"
 #include "Map.hpp"
 
 namespace bomberman {
-    class ServerScene : public ecs::IScene {
+    class GameServerScene : public ecs::IScene, public ecs::SceneActionsHandleModule, public ecs::ServerNetworkSceneModule {
+        using ConnId = network::ConnId;
+
         std::unordered_map<ecs::PlayerId, ecs::Actions> _actions;
         map::Map _map;
 
@@ -33,15 +36,12 @@ namespace bomberman {
         void generateMapProps(ecs::World &world);
 
         public:
-        ServerScene() : _map(9, 9, 4, 4) {};
-        ServerScene(const void *data) : _map(9, 9, 4, 4) {};
+        GameServerScene() : _map(9, 9, 4, 4) {};
+        GameServerScene(const void *data) : _map(9, 9, 4, 4) {};
 
         void loadScene(ecs::World &world);
         void unloadScene(ecs::World &world);
         void entityKilled(ecs::Entity entity,ecs::World &world);
-
-        void setPlayerAction(ecs::PlayerId id, ecs::Actions action);
-        ecs::Actions getPlayerAction(ecs::PlayerId id) const;
 
         void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
@@ -49,6 +49,25 @@ namespace bomberman {
         void spawnWater(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void deleteBomb(ecs::BombId bomb);
 
+        void setPlayerAction(ecs::PlayerId id, ecs::Actions action);
+        ecs::Actions getPlayerAction(ecs::PlayerId id) const;
+
+        void onConnect(ConnId conn, ecs::World &world) {};
+        void onDisconnect(ConnId conn, ecs::World &world) {};
+        void onPlayerIdAttributed(ecs::PlayerId id, ecs::World &world) {};
+
         map::Map &getMap();
+    };
+
+    class GameExecuteActionUpdateSystem : public ecs::ASystem {
+        void placeBomb(ecs::Entity entity, ecs::World &world, bomberman::GameServerScene &scene);
+        void movePlayer(ecs::Entity entity, ecs::World &world, ecs::Actions action, map::Map &map);
+        void placeWater(ecs::Entity entity, ecs::World &world, bomberman::GameServerScene &scene);
+
+        public:
+        GameExecuteActionUpdateSystem() { _stage = ecs::Stages::UPDATE; };
+
+        void setSignature(ecs::ComponentManager &component);
+        void update(ecs::World &world);
     };
 }
