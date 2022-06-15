@@ -280,6 +280,8 @@ void ecs::ServerManager::deleteClientEntity(Entity entity, World &world)
 {
     MirroredEntity &mirrored = world.getComponent<MirroredEntity>(entity);
 
+    if (!_server->doesConnExists(mirrored.conn))
+        return;
     std::cout << "Delete " << (int) mirrored.foreignEntity << " from " << mirrored.conn << std::endl;
     _clientToServer[mirrored.conn].erase(mirrored.foreignEntity);
 }
