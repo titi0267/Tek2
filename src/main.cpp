@@ -24,6 +24,7 @@
 #include "raylib/ShaderManager.hpp"
 
 #include "Setup.hpp"
+#include "Assets.hpp"
 #include "Map.hpp"
 
 int main(int ac, char **av)
@@ -62,44 +63,13 @@ int main(int ac, char **av)
 
 // ----- [INIT RESSOURCES] -----
 
-    raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
-    raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
-    raylib::AnimationManager &animMan = world.getRessource<raylib::AnimationManager>();
-    raylib::FontManager &fontMan = world.getRessource<raylib::FontManager>();
-    raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
+    bomberman::loadTextures(world);
+    bomberman::loadModels(world);
+    bomberman::loadAnimations(world);
+    bomberman::loadFonts(world);
+    bomberman::loadShaders(world);
 
-    raylib::Model &bottleModel = modelMan.loadModel("bottle", "./assets/models/bottle.iqm");
-    raylib::Texture &bottleText = textureMan.loadTexture("bottle", "./assets/textures/bottle.png");
-    bottleModel.getMaterialView(0).setTexture(bottleText);
-
-    raylib::Model &tableModel = modelMan.loadModel("table", "./assets/models/table.iqm");
-    raylib::Texture &tableText = textureMan.loadTexture("table", "./assets/textures/table.png");
-    tableModel.getMaterialView(0).setTexture(tableText);
-
-    raylib::Model &chairModel = modelMan.loadModel("chair", "./assets/models/chair.iqm");
-    raylib::Texture &chairText = textureMan.loadTexture("chair", "./assets/textures/chair.png");
-    chairModel.getMaterialView(0).setTexture(chairText);
-
-    raylib::Model &bagModel = modelMan.loadModel("bag", "./assets/models/bag.iqm");
-    raylib::Texture &bagText = textureMan.loadTexture("bag", "./assets/textures/bag.png");
-    bagModel.getMaterialView(0).setTexture(bagText);
-
-    raylib::Texture &buttonText = textureMan.loadTexture("button", "./assets/textures/button.png");
-    raylib::Shader &buttonShader = shaderMan.loadShader("button", "./assets/shaders/button.vs", "./assets/shaders/button.fs");
-    raylib::Model &buttonModel = modelMan.loadModel("button", "./assets/models/button.iqm");
-    buttonModel.getMaterialView(0)
-    .setTexture(buttonText);
-    // .setColor(Color {125, 255, 125, 255})
-    // .setShader(buttonShader)
-
-    raylib::Texture &timotheText = textureMan.loadTexture("timothe", "./assets/textures/timothe.png");
-
-    raylib::Model &playerModel = modelMan.loadModel("player", "./assets/models/player.iqm");
-    playerModel.getMaterialView(0).setTexture(timotheText);
-
-    textureMan.loadTexture("ground", "./assets/textures/ground.png");
-    fontMan.loadFont("emulogic", "./assets/fonts/emulogic.ttf");
-    animMan.loadAnimations("playerAnims", "./assets/models/player.iqm");
+    bomberman::applyAssetsToModels(world);
 
 // ------ [START + RUN GAME] ------
 

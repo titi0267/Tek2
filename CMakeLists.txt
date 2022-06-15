@@ -11,6 +11,8 @@ find_package(raylib REQUIRED)
 add_executable(bomberman
     "src/main.cpp"
     "src/Setup.cpp"
+    "src/Assets.cpp"
+
     "src/Map.cpp"
 
     "src/ecs/engine/World.cpp"

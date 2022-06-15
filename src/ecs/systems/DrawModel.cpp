@@ -46,8 +46,6 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
                 continue;
             }
 
-            std::cout << "Animation is played ! " << std::endl;
-
             raylib::Animation &anim = animMan.getAnimation(playAnim.animation, playAnim.animIndex);
             modelMan.getModel(modelRef.modelId).drawAnimation(anim, playAnim.actualFrame, tint);
         } else

@@ -23,6 +23,7 @@
 #include "raylib/AnimationManager.hpp"
 
 #include "Setup.hpp"
+#include "Assets.hpp"
 
 void ecs::InternalServer::serverMain()
 {
@@ -44,12 +45,9 @@ void ecs::InternalServer::serverMain()
     _serverWorld->getRessource<ServerManager>().startServer(_port);
     _serverWorld->getRessource<SceneManager>().loadServerScene(*_serverWorld);
 
-    _serverWorld->getRessource<raylib::AnimationManager>().loadAnimations("playerAnims", "./assets/models/player.iqm");
+    bomberman::loadAnimations(*_serverWorld);
 
     ecs::Clock &clock = _serverWorld->getRessource<Clock>();
-
-    ecs::SceneManager &man = _serverWorld->getRessource<ecs::SceneManager>();
-    bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
 
     const std::chrono::system_clock::duration updateDuration = std::chrono::milliseconds(50);
     std::chrono::system_clock::time_point prevUpdate = std::chrono::system_clock::now();

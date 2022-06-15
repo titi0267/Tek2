@@ -31,8 +31,6 @@ void ecs::AnimationUpdateSystem::update(ecs::World &world)
         float timeBetweenFrames = playAnim.duration / anim.getFramesCount();
         int frame = std::floor(playAnim.timeElapsed / timeBetweenFrames);
 
-        std::cout << "Anim frame: " << frame << std::endl;
-
         if (frame > anim.getFramesCount()) {
             if (!playAnim.loop) {
                 playAnim.stop();
