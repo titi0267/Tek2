@@ -85,7 +85,7 @@ void bomberman::GameServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs:
     ecs::Entity entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
     ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"mathieu"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
 
-    _players.insert({id, entity});
+    _players.insert(entity);
 }
 
 void bomberman::GameServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
@@ -94,11 +94,12 @@ void bomberman::GameServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, 
     ecs::Entity entity = world.spawn().insert(ecs::BombId{}, transform, gPos,
     ecs::ModelRef {"bottle"}, ecs::Timer{}, ecs::MirrorEntity {}).getEntity();
 
-    _bombs.insert({world.getComponent<ecs::BombId>(entity), entity});
+    _bombs.insert(entity);
 }
-ecs::Entity bomberman::GameServerScene::getBomb(ecs::BombId bombId) const
+
+void bomberman::GameServerScene::deleteBomb(ecs::Entity bomb)
 {
-    return _bombs.at(bombId);
+    _bombs.erase(bomb);
 }
 
 void bomberman::GameServerScene::spawnWater(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
@@ -106,11 +107,13 @@ void bomberman::GameServerScene::spawnWater(Vector3 pos, ecs::GridPosition gPos,
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
     ecs::Entity entity = world.spawn().insert(transform, gPos,
     ecs::ModelRef {"water"}, ecs::Timer {}, ecs::Water {},ecs::MirrorEntity {}).getEntity();
+
+    _water.insert(entity);
 }
 
-void bomberman::GameServerScene::deleteBomb(ecs::BombId bomb)
+void bomberman::GameServerScene::deleteWarer(ecs::Entity water)
 {
-    _bombs.erase(bomb);
+    _water.erase(water);
 }
 
 void bomberman::GameServerScene::loadScene(ecs::World &world)

@@ -27,8 +27,9 @@ namespace bomberman {
         std::unordered_map<ecs::PlayerId, ecs::Actions> _actions;
         map::Map _map;
 
-        std::unordered_map<ecs::PlayerId, ecs::Entity> _players;
-        std::unordered_map<ecs::BombId, ecs::Entity> _bombs;
+        std::set<ecs::Entity> _players;
+        std::set<ecs::Entity> _bombs;
+        std::set<ecs::Entity> _water;
 
         void spawnDestructible(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void spawnWall(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
@@ -45,9 +46,9 @@ namespace bomberman {
 
         void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
-        ecs::Entity getBomb(ecs::BombId bombId) const;
+        void deleteBomb(ecs::Entity bomb);
         void spawnWater(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
-        void deleteBomb(ecs::BombId bomb);
+        void deleteWarer(ecs::Entity water);
 
         void setPlayerAction(ecs::PlayerId id, ecs::Actions action);
         ecs::Actions getPlayerAction(ecs::PlayerId id) const;
