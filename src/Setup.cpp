@@ -21,6 +21,7 @@
 #include "ecs/components/SceneMoveElement.hpp"
 #include "ecs/components/PlayerInputs.hpp"
 #include "ecs/components/Movement.hpp"
+#include "ecs/components/PlayAnimation.hpp"
 
 #include "network/sockets/SocketInclude.hpp"
 
@@ -30,7 +31,7 @@ void bomberman::registerCriticalComponents(ecs::World &world)
 {
     world.registerComponents<Transform, ecs::Movement, ecs::Hitbox, ecs::PlayerAction,
     ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint,
-    ecs::DrawableCube, ecs::Text3D>();
+    ecs::DrawableCube, ecs::Text3D, ecs::PlayAnimation>();
 }
 
 void bomberman::registerPhysics(ecs::World &world)
@@ -40,6 +41,8 @@ void bomberman::registerPhysics(ecs::World &world)
 
 void bomberman::registerRender(ecs::World &world)
 {
+    world.registerSystem<ecs::AnimationUpdateSystem>();
+
     world.registerSystems<ecs::DrawTextureCubeSystem,
     ecs::DrawableModelSystem, ecs::Draw3DTextSystem>();
 }

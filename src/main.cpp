@@ -64,6 +64,7 @@ int main(int ac, char **av)
 
     raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
+    raylib::AnimationManager &animMan = world.getRessource<raylib::AnimationManager>();
     raylib::FontManager &fontMan = world.getRessource<raylib::FontManager>();
     raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
 
@@ -91,8 +92,14 @@ int main(int ac, char **av)
     // .setColor(Color {125, 255, 125, 255})
     // .setShader(buttonShader)
 
+    raylib::Texture &timotheText = textureMan.loadTexture("timothe", "./assets/textures/timothe.png");
+
+    raylib::Model &playerModel = modelMan.loadModel("player", "./assets/models/player.iqm");
+    playerModel.getMaterialView(0).setTexture(timotheText);
+
     textureMan.loadTexture("ground", "./assets/textures/ground.png");
     fontMan.loadFont("emulogic", "./assets/fonts/emulogic.ttf");
+    animMan.loadAnimations("playerAnims", "./assets/models/player.iqm");
 
 // ------ [START + RUN GAME] ------
 

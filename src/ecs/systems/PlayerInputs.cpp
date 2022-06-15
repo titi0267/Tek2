@@ -11,6 +11,7 @@
 #include "scenes/ServerScene.hpp"
 #include "ecs/components/Bomb.hpp"
 #include "ecs/components/Player.hpp"
+#include "ecs/components/PlayAnimation.hpp"
 #include <iostream>
 
 void ecs::PlayerInputsUpdateSystem::setSignature(ecs::ComponentManager &component)
@@ -56,7 +57,7 @@ void ecs::PlayerActionUpdateSystem::update(ecs::World &world)
 
 void ecs::PlayerExecuteActionUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Transform, GridPosition, Player, Movement>();
+    _signature = component.generateSignature<Transform, GridPosition, Player, Movement, PlayAnimation>();
 }
 
 void ecs::PlayerExecuteActionUpdateSystem::placeBomb(Entity entity, World &world, bomberman::ServerScene &scene)
@@ -78,6 +79,12 @@ void ecs::PlayerExecuteActionUpdateSystem::movePlayer(Entity entity, World &worl
         {MOVE_LEFT, {-1, 0, 0}},
         {MOVE_RIGHT, {1, 0, 0}}
     };
+    const std::unordered_map<Actions, float> ROTATIONS = {
+        {MOVE_UP, PI},
+        {MOVE_DOWN, 0},
+        {MOVE_LEFT, 3*  PI / 2.0},
+        {MOVE_RIGHT, PI / 2.0},
+    };
 
     Transform &transform = world.getComponent<Transform>(entity);
     GridPosition &gPos = world.getComponent<GridPosition>(entity);
@@ -93,6 +100,8 @@ void ecs::PlayerExecuteActionUpdateSystem::movePlayer(Entity entity, World &worl
         std::cout << "[MOVE] TO " << gDest.x << ", " << gDest.y << std::endl;
         gPos = gDest;
         move.move(transform.translation + moveVec, 2);
+        transform.rotation = QuaternionFromEuler(0, ROTATIONS.at(action), 0);
+        world.getComponent<PlayAnimation>(entity).play("playerAnims", 0, 0.5, false);
     } else
         std::cout << "Can't go this way :" << map.getCellAt(gDest.x, gDest.y) << std::endl;
 }

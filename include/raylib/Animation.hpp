@@ -8,7 +8,6 @@
 #pragma once
 
 #include <string>
-#include "Model.hpp"
 #include "headers/raylib.h"
 
 namespace raylib {
@@ -23,11 +22,8 @@ namespace raylib {
         Animation(Animation &anim) = delete;
         Animation(Animation &&anim) : _anim(anim._anim) { anim._anim = { 0 }; };
 
-        void update(Model &model, int frame) { UpdateModelAnimation(model.getModel(), _anim, frame); };
-
         unsigned int getFramesCount() { return _anim.frameCount; };
         unsigned int getBonesCount() { return _anim.boneCount; };
-        bool isValid(Model &model) { return IsModelAnimationValid(model.getModel(), _anim); }
 
         RaylibAnimation &getAnimation() { return _anim; };
     };

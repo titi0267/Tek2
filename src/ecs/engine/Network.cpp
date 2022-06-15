@@ -13,6 +13,7 @@
 #include "ecs/components/Hitbox.hpp"
 #include "ecs/components/PlayerInputs.hpp"
 #include "ecs/components/Movement.hpp"
+#include "ecs/components/PlayAnimation.hpp"
 
 // MirrorEntity should NEVER be registered !
 const ecs::ComponentHash ecs::MIRROR_COMPONENTS[ecs::NB_MIRROR_COMPONENTS] = {
@@ -26,6 +27,7 @@ const ecs::ComponentHash ecs::MIRROR_COMPONENTS[ecs::NB_MIRROR_COMPONENTS] = {
     typeid(Tint).hash_code(),
     typeid(DrawableCube).hash_code(),
     typeid(Text3D).hash_code(),
+    typeid(PlayAnimation).hash_code(),
 };
 
 void ecs::createUpdateLocalEntityBuffer(Entity entity, World &world, std::stringbuf &buffer)

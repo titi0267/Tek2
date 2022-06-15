@@ -10,6 +10,7 @@
 #include <string>
 #include "headers/raylib.h"
 #include "MaterialView.hpp"
+#include "Animation.hpp"
 
 namespace raylib {
     using RaylibModel = ::Model;
@@ -23,14 +24,21 @@ namespace raylib {
         Model(Model &model) = delete;
         Model(Model &&model) : _model(model._model) { model._model = { 0 }; };
 
-        void draw(Vector3 position, float scale = 1.0f, Color tint = {255, 255, 255, 255})
+        void draw(Color tint = {255, 255, 255, 255})
         {
-            DrawModel(_model, position, scale, tint);
+            DrawModel(_model, {0}, {1}, tint);
         }
 
-        void drawWires(Vector3 position, float scale = 1.0f, Color tint = {255, 255, 255, 255})
+        void drawWires(Color tint = {255, 255, 255, 255})
         {
-            DrawModelWires(_model, position, scale, tint);
+            DrawModelWires(_model, {0}, {1}, tint);
+        }
+
+        void drawAnimation(Animation &anim, int frame, Color tint = {255, 255, 255, 255})
+        {
+            UpdateModelAnimation(_model, anim.getAnimation(), frame);
+            draw(tint);
+            UpdateModelAnimation(_model, anim.getAnimation(), 0);
         }
 
         unsigned int getBonesCount() { return _model.boneCount; };

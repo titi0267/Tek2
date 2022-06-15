@@ -18,6 +18,9 @@
 #include "ecs/components/Bomb.hpp"
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/Player.hpp"
+#include "ecs/components/PlayAnimation.hpp"
+
+#include "raylib/AnimationManager.hpp"
 
 #include "Setup.hpp"
 
@@ -29,17 +32,19 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<ServerManager>();
     _serverWorld->insertRessource<PlayersManager>(4);
     _serverWorld->insertRessource<SceneManager>();
+    _serverWorld->insertRessource<raylib::AnimationManager>();
     _serverWorld->insertRessource<ecs::Clock>();
 
     _serverWorld->registerComponents<ecs::BombId, ecs::Timer, ecs::Player, ecs::GridPosition>();
     _serverWorld->registerSystems<ecs::TimerUpdateSystem, ecs::PlayerActionUpdateSystem,
-    ecs::PlayerExecuteActionUpdateSystem, ecs::MovementUpdateSystem>();
-
+    ecs::PlayerExecuteActionUpdateSystem, ecs::MovementUpdateSystem, ecs::AnimationUpdateSystem>();
 
 // ------
 
     _serverWorld->getRessource<ServerManager>().startServer(_port);
     _serverWorld->getRessource<SceneManager>().loadServerScene(*_serverWorld);
+
+    _serverWorld->getRessource<raylib::AnimationManager>().loadAnimations("playerAnims", "./assets/models/player.iqm");
 
     ecs::Clock &clock = _serverWorld->getRessource<Clock>();
 

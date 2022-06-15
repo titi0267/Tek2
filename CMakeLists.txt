@@ -31,6 +31,7 @@ add_executable(bomberman
     "src/ecs/systems/Movement.cpp"
     "src/ecs/systems/Bomb.cpp"
     "src/ecs/systems/Timer.cpp"
+    "src/ecs/systems/Animation.cpp"
 
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"

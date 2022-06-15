@@ -16,6 +16,7 @@
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/Bomb.hpp"
 #include "ecs/components/Timer.hpp"
+#include "ecs/components/PlayAnimation.hpp"
 #include "raylib/Matrix.hpp"
 #include <utility>
 
@@ -74,7 +75,7 @@ void bomberman::ServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::Gri
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
     ecs::Entity entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
-    ecs::Movement{}, ecs::ModelRef("bottle"), ecs::MirrorEntity {}).getEntity();
+    ecs::Movement{}, ecs::ModelRef("player"), ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
 
     _players.insert({id, entity});
 
@@ -109,7 +110,7 @@ void bomberman::ServerScene::loadScene(ecs::World &world)
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             if (_map.getCellAt(x, y) == SPAWN) {
-                pos = {(float) x - width / 2.0f + 0.5f, 0, (float) y - height / 2.0f + 0.5f};
+                pos = {(float) x - width / 2.0f, 0, (float) y - height / 2.0f};
                 spawnPlayer(playerId++, pos, {x, y}, world);
             }
         }

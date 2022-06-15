@@ -33,6 +33,7 @@ void ecs::World::updateServer()
     _systems.updateStage(*this, TIME_UPDATE);
     _systems.updateStage(*this, INPUT_UPDATE);
     _systems.updateStage(*this, UPDATE);
+    _systems.updateStage(*this, RENDER_UPDATE);
 }
 
 void ecs::World::killAllEntities()
