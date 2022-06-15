@@ -56,10 +56,21 @@ void ecs::PlayerActionUpdateSystem::update(ecs::World &world)
 
 void ecs::PlayerExecuteActionUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Transform, GridPosition, Player, Movement, BombId>();
+    _signature = component.generateSignature<Transform, GridPosition, Player, Movement>();
 }
 
-void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
+void ecs::PlayerExecuteActionUpdateSystem::placeBomb(Entity entity, World &world, bomberman::ServerScene &scene)
+{
+    Transform &transform = world.getComponent<Transform>(entity);
+    GridPosition &gPos = world.getComponent<GridPosition>(entity);
+    map::Map &map = scene.getMap();
+
+    if (map.getCellAt(gPos.x, gPos.y) != VOID && map.getCellAt(gPos.x, gPos.y) != SPAWN)
+        return;
+    scene.spawnBomb(transform.translation, gPos, world);
+}
+
+void ecs::PlayerExecuteActionUpdateSystem::movePlayer(Entity entity, World &world, Actions action, map::Map &map)
 {
     const std::unordered_map<Actions, Vector3> MOVEMENTS = {
         {MOVE_UP, {0, 0, -1}},
@@ -67,37 +78,42 @@ void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
         {MOVE_LEFT, {-1, 0, 0}},
         {MOVE_RIGHT, {1, 0, 0}}
     };
+
+    Transform &transform = world.getComponent<Transform>(entity);
+    GridPosition &gPos = world.getComponent<GridPosition>(entity);
+    Movement &move = world.getComponent<Movement>(entity);
+
+    Vector3 moveVec =  MOVEMENTS.at(action);
+    GridPosition gDest = gPos + GridPosition {(int) moveVec.x, (int) moveVec.z};
+
+    if (gDest.x < 0 || gDest.y < 0 || gDest.x > map.getWidth() - 1 || gDest.y > map.getHeight() - 1)
+        return;
+
+    if (map.getCellAt(gDest.x, gDest.y) == VOID || map.getCellAt(gDest.x, gDest.y) == SPAWN) {
+        std::cout << "[MOVE] TO " << gDest.x << ", " << gDest.y << std::endl;
+        gPos = gDest;
+        move.move(transform.translation + moveVec, 2);
+    } else
+        std::cout << "Can't go this way :" << map.getCellAt(gDest.x, gDest.y) << std::endl;
+}
+
+void ecs::PlayerExecuteActionUpdateSystem::update(ecs::World &world)
+{
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     bomberman::ServerScene &scene = dynamic_cast<bomberman::ServerScene&>(man.getScene());
     map::Map &map = scene.getMap();
 
     for (ecs::Entity entity : _entities) {
         Player &player = world.getComponent<Player>(entity);
-        Transform &transform = world.getComponent<Transform>(entity);
-        GridPosition &gPos = world.getComponent<GridPosition>(entity);
-        Vector3 pos = transform.translation;
-        Movement &move = world.getComponent<Movement>(entity);
         Actions action = scene.getPlayerAction(player.id);
-        BombId &bomb = world.getComponent<BombId>(entity);
+        Movement &move = world.getComponent<Movement>(entity);
 
         if (action == DO_NOTHING || move.isMoving)
             continue;
         if (action == PLACE_BOMB) {
-            world.spawn().insert(BombId {pos});
-            //scene.spawnBomb(pos, gPos, world);
+            placeBomb(entity, world, scene);
         } else {
-            Vector3 moveVec =  MOVEMENTS.at(action);
-            GridPosition gDest = gPos + GridPosition {(int) moveVec.x, (int) moveVec.z};
-
-            if (gDest.x < 0 || gDest.y < 0 || gDest.x > map.getWidth() - 1 || gDest.y > map.getHeight() - 1)
-                return;
-
-            if (map.getCellAt(gDest.x, gDest.y) == VOID || map.getCellAt(gDest.x, gDest.y) == SPAWN) {
-                std::cout << "[MOVE] TO " << gDest.x << ", " << gDest.y << std::endl;
-                gPos = gDest;
-                move.move(pos + moveVec, 2);
-            } else
-                std::cout << "Can't go this way :" << map.getCellAt(gDest.x, gDest.y) << std::endl;
+            movePlayer(entity, world, action, map);
         }
     }
 }

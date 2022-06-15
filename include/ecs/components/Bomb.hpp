@@ -14,25 +14,34 @@
 namespace ecs {
     struct BombId {
         std::uint64_t uniqueBombId = 0;
-        double droppedTime = 0;
-        std::unordered_map<std::uint64_t, Vector3> bombPos;
 
-        BombId(Vector3 pos = {-1, -1, -1})
+        BombId()
         {
             static std::uint64_t uniqueId = 0;
 
-            std::cout << "New bomb: " << uniqueId << std::endl;
-            bombPos.insert({uniqueBombId, pos});
-            std::cout << "Bomb numbers :" << bombPos.size() << std::endl;
             uniqueBombId = uniqueId++;
         };
+
+        bool operator==(const BombId &bomb) const
+        {
+            return uniqueBombId == bomb.uniqueBombId;
+        }
     };
-    class BombIdUpdateSystem : public ASystem {
 
+    class BombUpdateSystem : public ASystem {
         public:
-        BombIdUpdateSystem() { _stage = ecs::Stages::UPDATE; };
-
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
+    };
+}
+
+namespace std {
+    template<>
+    struct hash<ecs::BombId>
+    {
+        std::size_t operator()(const ecs::BombId &bomb) const
+        {
+            return (hash<std::uint64_t>()(bomb.uniqueBombId));
+        }
     };
 }

@@ -14,6 +14,8 @@
 #include "ecs/engine/PlayerId.hpp"
 #include "ecs/engine/EntityCommands.hpp"
 #include "ecs/components/GridPosition.hpp"
+#include "ecs/components/PlayerInputs.hpp"
+#include "ecs/components/Bomb.hpp"
 #include "raylib/Vectors.hpp"
 #include "Map.hpp"
 
@@ -21,6 +23,9 @@ namespace bomberman {
     class ServerScene : public ecs::IScene {
         std::unordered_map<ecs::PlayerId, ecs::Actions> _actions;
         map::Map _map;
+
+        std::unordered_map<ecs::PlayerId, ecs::Entity> _players;
+        std::unordered_map<ecs::BombId, ecs::Entity> _bombs;
 
         void spawnDestructible(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void spawnWall(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
@@ -38,7 +43,9 @@ namespace bomberman {
         void setPlayerAction(ecs::PlayerId id, ecs::Actions action);
         ecs::Actions getPlayerAction(ecs::PlayerId id) const;
 
+        void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
+        void deleteBomb(ecs::BombId bomb);
 
         map::Map &getMap();
     };

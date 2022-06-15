@@ -5,16 +5,19 @@
 ** InternalServer
 */
 
+#include "scenes/ServerScene.hpp"
+
+#include "ecs/engine/Network.hpp"
+#include "ecs/engine/Clock.hpp"
+
 #include "ecs/engine/InternalServer.hpp"
 #include "ecs/engine/SceneManager.hpp"
 #include "ecs/engine/PlayersManager.hpp"
 #include "ecs/components/PlayerInputs.hpp"
 #include "ecs/components/Movement.hpp"
-#include "ecs/engine/Network.hpp"
-#include "ecs/engine/Clock.hpp"
-#include "ecs/components/Player.hpp"
-#include "scenes/ServerScene.hpp"
 #include "ecs/components/Bomb.hpp"
+#include "ecs/components/Timer.hpp"
+#include "ecs/components/Player.hpp"
 
 #include "Setup.hpp"
 
@@ -28,8 +31,8 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<SceneManager>();
     _serverWorld->insertRessource<ecs::Clock>();
 
-    _serverWorld->registerComponents<ecs::BombId, ecs::Player, ecs::GridPosition>();
-    _serverWorld->registerSystems<ecs::BombIdUpdateSystem, ecs::PlayerActionUpdateSystem,
+    _serverWorld->registerComponents<ecs::BombId, ecs::Timer, ecs::Player, ecs::GridPosition>();
+    _serverWorld->registerSystems<ecs::TimerUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::PlayerExecuteActionUpdateSystem, ecs::MovementUpdateSystem>();
 
 

@@ -14,16 +14,10 @@
 #include "ecs/components/Movement.hpp"
 #include "ecs/components/Player.hpp"
 #include "ecs/components/DrawableModel.hpp"
-#include "raylib/Matrix.hpp"
 #include "ecs/components/Bomb.hpp"
+#include "ecs/components/Timer.hpp"
+#include "raylib/Matrix.hpp"
 #include <utility>
-
-void bomberman::ServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
-{
-    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
-
-    world.spawn().insert(transform, gPos, ecs::ModelRef {"bottle"}, ecs::MirrorEntity {});
-}
 
 void bomberman::ServerScene::spawnDestructible(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
@@ -70,16 +64,50 @@ void bomberman::ServerScene::generateMapProps(ecs::World &world)
     }
 }
 
+void bomberman::ServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
+{
+    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
+    ecs::Entity entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
+    ecs::Movement{}, ecs::ModelRef("bottle"), ecs::MirrorEntity {}).getEntity();
+
+    _players.insert({id, entity});
+
+}
+
+void bomberman::ServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
+{
+    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
+    ecs::Entity entity = world.spawn().insert(ecs::BombId{}, transform, gPos,
+    ecs::ModelRef {"bottle"}, ecs::Timer{}, ecs::MirrorEntity {}).getEntity();
+
+    _bombs.insert({world.getComponent<ecs::BombId>(entity), entity});
+}
+
+void bomberman::ServerScene::deleteBomb(ecs::BombId bomb)
+{
+    _bombs.erase(bomb);
+}
+
 void bomberman::ServerScene::loadScene(ecs::World &world)
 {
+    int playerId = 0;
+    int width = _map.getWidth();
+    int height = _map.getHeight();
+    Vector3 pos;
+
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});
 
-    world.spawn().insert(Transform {{0, 0, 1}, QuaternionIdentity(), {1, 1, 1}},
-    ecs::GridPosition{_map.getWidth() / 2, _map.getHeight() / 2 + 1},
-    ecs::Movement{}, ecs::Player{0}, ecs::ModelRef("bottle"), ecs::MirrorEntity {}, ecs::BombId {{-1, -1, -1}});
-
     generateMapProps(world);
+
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            if (_map.getCellAt(x, y) == SPAWN) {
+                pos = {(float) x - width / 2.0f + 0.5f, 0, (float) y - height / 2.0f + 0.5f};
+                spawnPlayer(playerId++, pos, {x, y}, world);
+            }
+        }
+    }
 }
 
 void bomberman::ServerScene::unloadScene(ecs::World &world)

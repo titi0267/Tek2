@@ -15,6 +15,7 @@ void ecs::World::updateClient()
     raylib::Window &window = getRessource<raylib::Window>();
 
     _systems.updateStage(*this, NETWORK_UPDATE);
+    _systems.updateStage(*this, TIME_UPDATE);
     _systems.updateStage(*this, INPUT_UPDATE);
     _systems.updateStage(*this, UPDATE);
     _systems.updateStage(*this, RENDER_UPDATE);
@@ -29,6 +30,7 @@ void ecs::World::updateClient()
 void ecs::World::updateServer()
 {
     _systems.updateStage(*this, NETWORK_UPDATE);
+    _systems.updateStage(*this, TIME_UPDATE);
     _systems.updateStage(*this, INPUT_UPDATE);
     _systems.updateStage(*this, UPDATE);
 }

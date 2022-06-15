@@ -12,6 +12,13 @@
 #include "ecs/engine/World.hpp"
 #include "ecs/engine/PlayerId.hpp"
 
+namespace bomberman {
+    class ServerScene;
+}
+namespace map {
+    class Map;
+}
+
 namespace ecs {
     using Key = ::KeyboardKey;
 
@@ -60,6 +67,9 @@ namespace ecs {
     };
 
     class PlayerExecuteActionUpdateSystem : public ecs::ASystem {
+        void placeBomb(Entity entity, World &world, bomberman::ServerScene &scene);
+        void movePlayer(Entity entity, World &world, Actions action, map::Map &map);
+
         public:
         PlayerExecuteActionUpdateSystem() { _stage = ecs::Stages::UPDATE; };
 
