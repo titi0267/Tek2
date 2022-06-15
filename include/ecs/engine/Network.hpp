@@ -40,9 +40,10 @@ namespace ecs {
     };
 
     struct MirroredEntity {
+        ConnId conn;
         Entity foreignEntity;
 
-        MirroredEntity(Entity foreign = (Entity) 0) : foreignEntity(foreign) {};
+        MirroredEntity(ConnId conn = 0,  Entity foreign = (Entity) 0) : conn(conn), foreignEntity(foreign) {};
     };
 
     void createUpdateLocalEntityBuffer(Entity entity, World &world, std::stringbuf &buffer);

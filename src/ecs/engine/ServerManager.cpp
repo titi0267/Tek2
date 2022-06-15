@@ -139,7 +139,7 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity clientEntity, std
     std::uint32_t componentSize;
     std::string data = buffer.str();
 
-    // std::cout << "[SERVER] Creating entity from server" << std::endl;
+    std::cout << "[SERVER] Creating entity from server, " << conn << ", " << (int) clientEntity << " -> " << (int) localEntity << std::endl;
     _clientToServer[conn].insert({clientEntity, localEntity});
     // for (ConnId client : _activeConns) {
     //     if (client == conn)
@@ -155,7 +155,7 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity clientEntity, std
         entityCmds.insertByType(componentType);
         buffer.sgetn((char*) world.getComponentManager().getComponentByType(componentType, localEntity), componentSize);
     }
-    entityCmds.insert(MirroredEntity{clientEntity});
+    entityCmds.insert(MirroredEntity{conn, clientEntity});
 }
 
 void ecs::ServerManager::updateClientEntity(ConnId conn, Entity clientEntity, std::stringbuf &buffer, World &world)
@@ -280,15 +280,8 @@ void ecs::ServerManager::deleteClientEntity(Entity entity, World &world)
 {
     MirroredEntity &mirrored = world.getComponent<MirroredEntity>(entity);
 
-    for (auto &[conn, map] : _clientToServer) {
-        if (map.find(mirrored.foreignEntity) != map.end()) {
-            if (!_server->doesConnExists(conn))
-                return;
-            std::cout << "Delete Foreign entity : " << (int) mirrored.foreignEntity << std::endl;
-            map.erase(mirrored.foreignEntity);
-            return;
-        }
-    }
+    std::cout << "Delete " << (int) mirrored.foreignEntity << " from " << mirrored.conn << std::endl;
+    _clientToServer[mirrored.conn].erase(mirrored.foreignEntity);
 }
 
 void ecs::ServerUpdateSystem::setSignature(ComponentManager &component)

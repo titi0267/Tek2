@@ -38,10 +38,13 @@ void bomberman::LobbyServerScene::unloadScene(ecs::World &world)
 
 void bomberman::LobbyServerScene::entityKilled(ecs::Entity entity,ecs::World &world)
 {
-    if (world.hasComponent<ecs::MirrorEntity>(entity))
-        world.getRessource<ecs::ServerManager>().killLocalEntity(entity, world);
-    else
+    std::cout << "Killed " << (int) entity << std::endl;
+    std::cout << world.hasComponent<ecs::MirroredEntity>(entity) << ", " << world.hasComponent<ecs::MirrorEntity>(entity) << std::endl;
+
+    if (world.hasComponent<ecs::MirroredEntity>(entity))
         world.getRessource<ecs::ServerManager>().deleteClientEntity(entity, world);
+    else if (world.hasComponent<ecs::MirrorEntity>(entity))
+        world.getRessource<ecs::ServerManager>().killLocalEntity(entity, world);
 }
 
 void bomberman::LobbyServerScene::onConnect(ConnId conn, ecs::World &world)

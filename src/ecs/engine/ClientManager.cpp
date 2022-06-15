@@ -172,7 +172,7 @@ void ecs::ClientManager::spawnServerEntity(Entity serverEntity, std::stringbuf &
         entityCmds.insertByType(componentType);
         buffer.sgetn((char*) world.getComponentManager().getComponentByType(componentType, localEntity), componentSize);
     }
-    entityCmds.insert(MirroredEntity{serverEntity});
+    entityCmds.insert(MirroredEntity{0, serverEntity});
 }
 
 void ecs::ClientManager::updateServerEntity(Entity serverEntity, std::stringbuf &buffer, World &world)
