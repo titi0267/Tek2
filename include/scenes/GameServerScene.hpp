@@ -58,6 +58,10 @@ namespace bomberman {
         void onPlayerIdAttributed(ecs::PlayerId id, ecs::World &world) {};
 
         map::Map &getMap();
+
+        const std::set<ecs::Entity> &getPlayers() { return _players; };
+        const std::set<ecs::Entity> &getBombs() { return _bombs; };
+        const std::set<ecs::Entity> &getWater() { return _water; };
     };
 
     class GameExecuteActionUpdateSystem : public ecs::ASystem {
