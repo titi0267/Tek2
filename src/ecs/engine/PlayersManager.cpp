@@ -52,3 +52,10 @@ void ecs::PlayersManager::clientDisconnect(ConnId conn)
     }
     _connToPlayers.erase(conn);
 }
+
+std::vector<ecs::PlayerId> ecs::PlayersManager::getPlayersOfConn(ConnId conn)
+{
+    if (_connToPlayers.find(conn) == _connToPlayers.end())
+        return {};
+    return _connToPlayers[conn];
+}

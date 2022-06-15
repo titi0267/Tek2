@@ -16,7 +16,8 @@ namespace ecs {
     enum Scenes {
         MAIN_MENU_SCENE,
         GAME_SCENE,
-        SERVER_SCENE,
+        SERVER_GAME_SCENE,
+        SERVER_LOBBY_SCENE,
     };
 
     class IScene {

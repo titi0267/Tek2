@@ -12,13 +12,6 @@
 #include "ecs/engine/World.hpp"
 #include "ecs/engine/PlayerId.hpp"
 
-namespace bomberman {
-    class ServerScene;
-}
-namespace map {
-    class Map;
-}
-
 namespace ecs {
     using Key = ::KeyboardKey;
 
@@ -66,15 +59,9 @@ namespace ecs {
         void update(ecs::World &world);
     };
 
-    class PlayerExecuteActionUpdateSystem : public ecs::ASystem {
-        void placeBomb(Entity entity, World &world, bomberman::ServerScene &scene);
-        void movePlayer(Entity entity, World &world, Actions action, map::Map &map);
-
+    class SceneActionsHandleModule {
         public:
-        PlayerExecuteActionUpdateSystem() { _stage = ecs::Stages::UPDATE; };
-
-        void setSignature(ecs::ComponentManager &component);
-        void update(ecs::World &world);
+        virtual void setPlayerAction(ecs::PlayerId id, ecs::Actions action) = 0;
+        virtual ecs::Actions getPlayerAction(ecs::PlayerId id) const = 0;
     };
-
 }

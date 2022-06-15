@@ -34,11 +34,14 @@ add_executable(bomberman
     "src/ecs/systems/Bomb.cpp"
     "src/ecs/systems/Timer.cpp"
     "src/ecs/systems/Animation.cpp"
+    "src/ecs/systems/LobbyActions.cpp"
+    "src/ecs/systems/GameActions.cpp"
 
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"
     "src/scenes/GameScene.cpp"
-    "src/scenes/ServerScene.cpp"
+    "src/scenes/GameServerScene.cpp"
+    "src/scenes/LobbyServerScene.cpp"
 
     "src/network/client/LinuxClient.cpp"
     "src/network/client/WinClient.cpp"

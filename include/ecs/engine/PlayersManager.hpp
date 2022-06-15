@@ -30,5 +30,6 @@ namespace ecs {
         void stopAcceptingPlayers();
         PlayerId reservePlayerId(ConnId conn);
         void clientDisconnect(ConnId conn);
+        std::vector<PlayerId> getPlayersOfConn(ConnId conn);
     };
 }

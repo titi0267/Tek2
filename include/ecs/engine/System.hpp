@@ -74,6 +74,21 @@ namespace ecs {
         }
 
         template<class T>
+        void unregisterSystem()
+        {
+            SystemHash hash = typeid(T).hash_code();
+
+            if (_systems.find(hash) == _systems.end())
+                throw SystemDoNotExists();
+            _systems.erase(hash);
+            for (auto &[stage, systems] : _stages) {
+                auto index = std::find(systems.begin(), systems.end(), hash);
+                if (index != systems.end())
+                    systems.erase(index);
+            }
+        }
+
+        template<class T>
         T &getSystem()
         {
             SystemHash hash = typeid(T).hash_code();

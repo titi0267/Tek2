@@ -62,7 +62,7 @@ void bomberman::registerInputs(ecs::World &world)
 
 void bomberman::registerNetwork(ecs::World &world, bool client)
 {
-    world.registerComponent<ecs::MirrorEntity>();
+    world.registerComponents<ecs::MirrorEntity, ecs::MirroredEntity>();
     if (client) {
         world.registerSystem<ecs::ClientUpdateSystem>();
     } else {

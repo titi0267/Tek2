@@ -7,7 +7,7 @@
 
 #include "ecs/engine/SceneManager.hpp"
 #include "scenes/MainMenuScene.hpp"
-#include "scenes/ServerScene.hpp"
+#include "scenes/LobbyServerScene.hpp"
 
 void ecs::SceneManager::loadDefaultScene(ecs::World &world)
 {
@@ -18,8 +18,8 @@ void ecs::SceneManager::loadDefaultScene(ecs::World &world)
 
 void ecs::SceneManager::loadServerScene(ecs::World &world)
 {
-    _actualScene = std::make_unique<bomberman::ServerScene>();
-    _actualSceneType = SERVER_SCENE;
+    _actualScene = std::make_unique<bomberman::LobbyServerScene>();
+    _actualSceneType = SERVER_LOBBY_SCENE;
     _actualScene->loadScene(world);
 }
 

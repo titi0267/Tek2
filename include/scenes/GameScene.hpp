@@ -19,7 +19,7 @@ namespace bomberman {
         int nbPlayers;
     };
 
-    class GameScene : public ecs::IScene, public ecs::NetworkSceneModule {
+    class GameScene : public ecs::IScene, public ecs::ClientNetworkSceneModule {
         std::string _ip;
         std::string _port;
         bool _startLocalServer;
