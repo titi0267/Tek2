@@ -12,6 +12,7 @@
 namespace ecs {
     struct Player {
         PlayerId id;
+        bool alive = true;
 
         Player(PlayerId id = -1) : id(id) {};
     };

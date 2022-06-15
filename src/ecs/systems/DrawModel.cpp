@@ -8,11 +8,13 @@
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/PlayAnimation.hpp"
+#include "ecs/components/Skin.hpp"
 
 #include "raylib/Camera.hpp"
 #include "raylib/Matrix.hpp"
 #include "raylib/GL.hpp"
 #include "raylib/ModelManager.hpp"
+#include "raylib/TextureManager.hpp"
 #include "raylib/AnimationManager.hpp"
 
 void ecs::DrawableModelSystem::setSignature(ComponentManager &component)
@@ -24,17 +26,25 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
 {
     raylib::Camera &camera = world.getRessource<raylib::Camera>();
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
+    raylib::TextureManager &textMan = world.getRessource<raylib::TextureManager>();
     raylib::AnimationManager &animMan = world.getRessource<raylib::AnimationManager>();
 
     camera.begin3DMode();
     for (auto entity : _entities) {
         Transform &transform = world.getComponent<Transform>(entity);
         ModelRef &modelRef = world.getComponent<ModelRef>(entity);
+        raylib::Model &model = modelMan.getModel(modelRef.modelId);
+
         raylib::Matrix mat = raylib::Matrix::fromTransform(transform);
         Tint tint = WHITE;
 
         if (world.hasComponent<Tint>(entity))
             tint = world.getComponent<Tint>(entity);
+
+        if (world.hasComponent<Skin>(entity)) {
+            Skin &skin = world.getComponent<Skin>(entity);
+            model.getMaterialView(skin.matId).setTexture(textMan.getTexture(skin.texture));
+        }
 
         raylib::RlMatrixPush push;
         raylib::rlMultMatrix(mat);
@@ -42,14 +52,14 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
         if (world.hasComponent<PlayAnimation>(entity)) {
             PlayAnimation &playAnim = world.getComponent<PlayAnimation>(entity);
             if (!playAnim.isPlaying()) {
-                modelMan.getModel(modelRef.modelId).draw(tint);
+                model.draw(tint);
                 continue;
             }
 
             raylib::Animation &anim = animMan.getAnimation(playAnim.animation, playAnim.animIndex);
-            modelMan.getModel(modelRef.modelId).drawAnimation(anim, playAnim.actualFrame, tint);
+            model.drawAnimation(anim, playAnim.actualFrame, tint);
         } else
-            modelMan.getModel(modelRef.modelId).draw(tint);
+            model.draw(tint);
     }
     camera.end3DMode();
 }

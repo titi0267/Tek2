@@ -25,6 +25,8 @@ void bomberman::loadTextures(ecs::World &world)
     textureMan.loadTexture("ground", "./assets/textures/ground.png");
 
     textureMan.loadTexture("timothe", "./assets/textures/timothe.png");
+    textureMan.loadTexture("ludovic", "./assets/textures/ludo.png");
+    textureMan.loadTexture("mathieu", "./assets/textures/mathieu.png");
 }
 
 void bomberman::loadModels(ecs::World &world)

@@ -5,11 +5,15 @@
 ** ServerScene
 */
 
+#include <utility>
+
 #include "scenes/ServerScene.hpp"
+
+#include "ecs/engine/EntityCommands.hpp"
+
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/DrawableCube.hpp"
 #include "ecs/components/ColorTexture.hpp"
-#include "ecs/engine/EntityCommands.hpp"
 #include "ecs/components/PlayerInputs.hpp"
 #include "ecs/components/Movement.hpp"
 #include "ecs/components/Player.hpp"
@@ -17,8 +21,9 @@
 #include "ecs/components/Bomb.hpp"
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/PlayAnimation.hpp"
+#include "ecs/components/Skin.hpp"
+
 #include "raylib/Matrix.hpp"
-#include <utility>
 
 const float ROTATIONS[4] = {
     0, PI / 2.0, PI, 3 * PI / 2.0,
@@ -75,7 +80,7 @@ void bomberman::ServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::Gri
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
     ecs::Entity entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
-    ecs::Movement{}, ecs::ModelRef("player"), ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
+    ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"mathieu"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
 
     _players.insert({id, entity});
 
