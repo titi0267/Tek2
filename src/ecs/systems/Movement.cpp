@@ -36,6 +36,7 @@ void ecs::MovementUpdateSystem::update(ecs::World &world)
         if (actualDistance <= endRange) {
             pos = move.dest;
             move.isMoving = false;
+            return;
         }
         pos += movement;
     }
