@@ -38,6 +38,9 @@ namespace ecs {
 
     struct MirrorEntity {
         char prevData[1024 * 4];
+        std::uint32_t size = 0;
+
+        std::string_view getView() { return std::string_view(prevData, size); };
     };
 
     struct MirroredEntity {

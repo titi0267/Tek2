@@ -16,8 +16,7 @@ namespace ecs {
 
         Skin(const std::string &text = "", int matId = 0) : matId(matId)
         {
-            text.copy(texture, 255);
-            texture[text.size()] = 0;
+            texture[text.copy(texture, 255)] = 0;
         }
     };
 }

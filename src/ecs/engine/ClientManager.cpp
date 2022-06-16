@@ -211,12 +211,13 @@ void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
     std::string data = buffer.str();
     MirrorEntity &mirror = world.getComponent<MirrorEntity>(entity);
 
-    if (mirror.prevData == data)
+    if (mirror.getView() == data)
         return;
     // std::cout << "[CLIENT] Updating entity to server" << std::endl;
     // std::cout << "Buffer size: " << data.size() << std::endl;
     _client->write((void*) data.c_str(), data.size());
-    mirror.prevData[data.copy(mirror.prevData, sizeof(mirror.prevData))] = 0;
+    mirror.size = data.copy(mirror.prevData, sizeof(mirror.prevData));
+    mirror.prevData[mirror.size] = 0;
 }
 
 void ecs::ClientManager::killLocalEntity(Entity entity, World &world)
