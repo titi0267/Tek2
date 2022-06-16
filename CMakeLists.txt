@@ -21,6 +21,7 @@ add_executable(bomberman
     "src/ecs/systems/Hoverable.cpp"
     "src/ecs/systems/KeyRecorder.cpp"
     "src/ecs/systems/Text3D.cpp"
+    "src/ecs/systems/TextInput.cpp"
     "src/ecs/systems/SceneMoveElement.cpp"
     "src/ecs/systems/Button.cpp"
 

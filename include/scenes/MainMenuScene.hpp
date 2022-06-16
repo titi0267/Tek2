@@ -64,6 +64,7 @@ namespace bomberman {
         void spawnTitleButton(const Transform &transform, const std::string &text, ecs::World &world);
         void spawnSquareButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
         void spawnSquareButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, ecs::SingleKeyRecorder &recorder);
+        void spawnTextInputButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ecs::World &world);
 
         bool &getMovementRequest() { return moveRequest; };
         Vector3 &getMoveDest() { return moveDest; };

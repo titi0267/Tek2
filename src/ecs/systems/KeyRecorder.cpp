@@ -31,6 +31,10 @@ void ecs::KeyRecorderSystem::update(ecs::World &world)
         text.text = bind.getKeyText(key.gamepad, key.bind);
         if (!key.recording)
             continue;
+        if (!bind.getRecording(key.gamepad)) {
+            key.recording = false;
+            return;
+        }
         if (bind.getSetOff(key.gamepad)) {
             if (!key.first) {
                 tint = WHITE;

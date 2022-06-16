@@ -17,8 +17,12 @@ namespace ecs {
         InputFile _keyboard;
         bool _setOffGp;
         bool _setOffKb;
+        bool _recordingGp;
+        bool _textInputGp;
+        bool _recordingKb;
+        bool _textInputKb;
         public:
-            BindManager() : _gamepad(true), _keyboard(false), _setOffGp(false), _setOffKb(false) {};
+            BindManager() : _gamepad(true), _keyboard(false), _setOffGp(false), _setOffKb(false), _recordingGp(false), _recordingKb(false), _textInputGp(false), _textInputKb(false) {};
             ~BindManager() = default;
             void save(bool gamepad)
             {
@@ -78,6 +82,32 @@ namespace ecs {
                 if (gamepad)
                     return (_setOffGp);
                 return (_setOffKb);
+            }
+            void toggleRecording(bool gamepad)
+            {
+                if (gamepad)
+                    _recordingGp = !_recordingGp;
+                else
+                    _recordingKb = !_recordingKb;
+            }
+            bool getRecording(bool gamepad)
+            {
+                if (gamepad)
+                    return (_recordingGp);
+                return (_recordingKb);
+            }
+            void toggleTextInput(bool gamepad)
+            {
+                if (gamepad)
+                    _textInputGp = !_textInputGp;
+                else
+                    _textInputKb = !_textInputKb;
+            }
+            bool getTextInput(bool gamepad)
+            {
+                if (gamepad)
+                    return (_textInputGp);
+                return (_textInputKb);
             }
         protected:
         private:
