@@ -93,6 +93,12 @@ namespace ecs {
             _systems.unregisterSystem<T>();
         }
 
+        template<typename ...Ts>
+        void unregisterSystems()
+        {
+            (_systems.unregisterSystem<Ts>(), ...);
+        }
+
         template<typename T, typename ...Args>
         void insertRessource(Args... args)
         {

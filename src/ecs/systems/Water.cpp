@@ -5,6 +5,8 @@
 ** Water
 */
 
+#include "ecs/engine/SceneManager.hpp"
+#include "scenes/GameServerScene.hpp"
 #include "ecs/components/Water.hpp"
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/GridPosition.hpp"
@@ -18,14 +20,40 @@ void ecs::WaterUpdateSystem::setSignature(ecs::ComponentManager &component)
 
 void ecs::WaterUpdateSystem::update(ecs::World &world)
 {
+    ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
+    bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
+    map::Map &map = scene.getMap();
+    std::vector<Entity> toDelete;
+
     for (ecs::Entity entity : _entities) {
+        Transform &transform = world.getComponent<Transform>(entity);
+        ecs::GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
         Timer &timer = world.getComponent<Timer>(entity);
         Water &water = world.getComponent<Water>(entity);
-        Transform &transform = world.getComponent<Transform>(entity);
 
-        if (timer.timeElapsed >= 0.2) {
-            //boum;
-            std::cout << "Boum" << std::endl;
+        if (!water.expanded && timer.timeElapsed >= 0.2) {
+            Vector3 pos = transform.translation + water.dir;
+            ecs::GridPosition newGPos = gPos + ecs::GridPosition{(int) water.dir.x, (int) water.dir.z};
+            int cell = map.getCellAt(newGPos.x, newGPos.y);
+
+            water.expanded = true;
+
+            if (water.distance >= 4 || !newGPos.isValidPos(map))
+                continue;
+
+            if (cell == VOID || cell == SPAWN) {
+                scene.spawnWater(pos, newGPos, water.dir, water.distance + 1, world);
+            } else if (cell == DESTRUCTIBLE) {
+                map.setCellAt(newGPos.x, newGPos.y, VOID);
+                scene.deleteDestructible(newGPos, world);
+            }
         }
+
+        if (timer.timeElapsed >= 1)
+            toDelete.push_back(entity);
+    }
+    for (Entity entity : toDelete) {
+        world.getEntityCommands(entity).despawn();
+        scene.deleteWater(entity);
     }
 }

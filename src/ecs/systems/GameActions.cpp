@@ -24,6 +24,7 @@ void bomberman::GameExecuteActionUpdateSystem::placeBomb(ecs::Entity entity, ecs
     if (map.getCellAt(gPos.x, gPos.y) != VOID && map.getCellAt(gPos.x, gPos.y) != SPAWN)
         return;
     scene.spawnBomb(transform.translation, gPos, world);
+    map.setCellAt(gPos.x, gPos.y, BOMB);
 }
 
 void bomberman::GameExecuteActionUpdateSystem::movePlayer(ecs::Entity entity, ecs::World &world, ecs::Actions action, map::Map &map)

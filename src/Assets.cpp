@@ -23,6 +23,7 @@ void bomberman::loadTextures(ecs::World &world)
     textureMan.loadTexture("chair", "./assets/textures/chair.png");
     textureMan.loadTexture("bag", "./assets/textures/bag.png");
     textureMan.loadTexture("ground", "./assets/textures/ground.png");
+    textureMan.loadTexture("water", "./assets/textures/water.png");
 
     textureMan.loadTexture("timothe", "./assets/textures/timothe.png");
     textureMan.loadTexture("ludovic", "./assets/textures/ludo.png");
@@ -39,6 +40,7 @@ void bomberman::loadModels(ecs::World &world)
     modelMan.loadModel("table", "./assets/models/table.iqm");
     modelMan.loadModel("chair", "./assets/models/chair.iqm");
     modelMan.loadModel("bag", "./assets/models/bag.iqm");
+    modelMan.loadModel("water", "./asstes/models/water.iqm");
 
     modelMan.loadModel("player", "./assets/models/player.iqm");
 }
@@ -83,6 +85,9 @@ void bomberman::applyAssetsToModels(ecs::World &world)
 
     modelMan.getModel("bag").getMaterialView(0)
     .setTexture(textureMan.getTexture("bag"));
+
+    modelMan.getModel("water").getMaterialView(0)
+    .setTexture(textureMan.getTexture("water"));
 
     modelMan.getModel("player").getMaterialView(0)
     .setTexture(textureMan.getTexture("timothe"));

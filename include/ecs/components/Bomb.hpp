@@ -11,6 +11,10 @@
 #include "raylib/Vectors.hpp"
 #include <iostream>
 
+namespace bomberman {
+    class GameServerScene;
+}
+
 namespace ecs {
     struct BombId {
         std::uint64_t uniqueBombId = 0;
@@ -29,8 +33,10 @@ namespace ecs {
     };
 
     class BombUpdateSystem : public ASystem {
+        void placeWater(ecs::Entity entity, ecs::World &world, bomberman::GameServerScene &scene);
+
         public:
-        BombUpdateSystem() { _stage = ecs::Stages::DRAW_WORLD; };
+        BombUpdateSystem() { _stage = ecs::Stages::UPDATE; };
 
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);

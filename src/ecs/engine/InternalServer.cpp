@@ -15,7 +15,6 @@
 #include "ecs/components/PlayerInputs.hpp"
 #include "ecs/components/Movement.hpp"
 #include "ecs/components/Bomb.hpp"
-#include "ecs/components/BombExplosion.hpp"
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/Water.hpp"
 #include "ecs/components/Player.hpp"
@@ -38,11 +37,10 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<raylib::AnimationManager>();
     _serverWorld->insertRessource<ecs::Clock>();
 
-    _serverWorld->registerComponents<ecs::BombId, ecs::Water, ecs::BombExplosion,
+    _serverWorld->registerComponents<ecs::BombId, ecs::Water,
     ecs::Timer, ecs::Player, ecs::GridPosition>();
-    _serverWorld->registerSystems<ecs::WaterUpdateSystem, ecs::BombUpdateSystem, ecs::BombExplosionUpdateSystem,
-    ecs::TimerUpdateSystem, ecs::PlayerActionUpdateSystem, ecs::MovementUpdateSystem,
-    ecs::AnimationUpdateSystem>();
+    _serverWorld->registerSystems<ecs::TimerUpdateSystem,
+    ecs::PlayerActionUpdateSystem, ecs::AnimationUpdateSystem>();
 
 // ------
 

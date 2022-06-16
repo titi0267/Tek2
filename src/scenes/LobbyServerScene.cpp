@@ -26,14 +26,15 @@ void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs
 
 void bomberman::LobbyServerScene::loadScene(ecs::World &world)
 {
+    world.registerSystem<LobbyExecuteActionUpdateSystem>();
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});
-    world.registerSystem<LobbyExecuteActionUpdateSystem>();
 }
 
 void bomberman::LobbyServerScene::unloadScene(ecs::World &world)
 {
     world.killAllEntities();
+    world.unregisterSystem<LobbyExecuteActionUpdateSystem>();
 }
 
 void bomberman::LobbyServerScene::entityKilled(ecs::Entity entity,ecs::World &world)

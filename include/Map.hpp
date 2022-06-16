@@ -16,12 +16,13 @@
 
 #define MAP_X _width
 #define MAP_Y _height
-#define VOID -1
-#define WALL -2
-#define SPAWN -3
-#define DESTRUCTIBLE -4
-#define BOMB -5
-#define DANGEROUS -6
+
+#define VOID 1
+#define WALL 2
+#define SPAWN 3
+#define DESTRUCTIBLE 4
+#define BOMB 5
+#define DANGEROUS 6
 
 namespace map {
     class Map {
@@ -41,9 +42,9 @@ namespace map {
         public:
         Map(int _height, int _width, int nbrPlayer, int complexity);
 
-        int getHeight() { return _height; };
-        int getWidth() { return _width; };
-        int getCellAt(int x, int y) { return (_map[x + y * _width]); };
+        int getHeight() const { return _height; };
+        int getWidth() const { return _width; };
+        int getCellAt(int x, int y) const { return (_map[x + y * _width]); };
         void setCellAt(int x, int y, int val) { _map[x + y * _width] = val; };
 
         void dump();

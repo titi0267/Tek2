@@ -21,7 +21,6 @@
 #include "ecs/components/Player.hpp"
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/Bomb.hpp"
-#include "ecs/components/BombExplosion.hpp"
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/Water.hpp"
 #include "ecs/components/PlayAnimation.hpp"
@@ -38,8 +37,9 @@ void bomberman::GameServerScene::spawnDestructible(Vector3 pos, ecs::GridPositio
 {
     float rot = ROTATIONS[std::rand() % 4] + (PI / 16.0) * ((std::rand() % 100) / 100.0 - 0.5);
     Transform transform = {pos, QuaternionFromEuler(0, rot, 0), {1, 1, 1}};
+    ecs::Entity entity = world.spawn().insert(transform, ecs::ModelRef {"bag"}, ecs::MirrorEntity {}).getEntity();
 
-    world.spawn().insert(transform, ecs::ModelRef {"bag"}, ecs::MirrorEntity {});
+    _destructibles.insert({gPos, entity});
 }
 
 void bomberman::GameServerScene::spawnWall(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
@@ -93,10 +93,10 @@ void bomberman::GameServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs:
 void bomberman::GameServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
-    ecs::Entity entity = world.spawn().insert(ecs::BombId{}, ecs::BombExplosion {},transform, gPos,
+    ecs::Entity entity = world.spawn().insert(ecs::BombId {}, transform, gPos,
     ecs::ModelRef {"bottle"}, ecs::Timer{}, ecs::MirrorEntity {}).getEntity();
 
-    std::cout << "Spawn bomb" <<std::endl;
+    std::cout << "Spawn bomb " << (int) entity <<std::endl;
     _bombs.insert(entity);
 }
 
@@ -105,18 +105,26 @@ void bomberman::GameServerScene::deleteBomb(ecs::Entity bomb)
     _bombs.erase(bomb);
 }
 
-void bomberman::GameServerScene::spawnWater(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
+void bomberman::GameServerScene::spawnWater(Vector3 pos, ecs::GridPosition gPos, Vector3 dir, int distance, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
     ecs::Entity entity = world.spawn().insert(transform, gPos,
-    ecs::ModelRef {"water"}, ecs::Timer {}, ecs::Water {},ecs::MirrorEntity {}).getEntity();
+    ecs::ModelRef {"water"}, ecs::Timer {}, ecs::Water {dir, distance}, ecs::MirrorEntity {}).getEntity();
 
     _water.insert(entity);
 }
 
-void bomberman::GameServerScene::deleteWarer(ecs::Entity water)
+void bomberman::GameServerScene::deleteWater(ecs::Entity water)
 {
     _water.erase(water);
+}
+
+void bomberman::GameServerScene::deleteDestructible(ecs::GridPosition &pos, ecs::World &world)
+{
+    ecs::Entity entity = _destructibles[pos];
+
+    _destructibles.erase(pos);
+    world.getEntityCommands(entity).despawn();
 }
 
 void bomberman::GameServerScene::loadScene(ecs::World &world)
@@ -126,8 +134,8 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     int height = _map.getHeight();
     Vector3 pos;
 
-    world.unregisterSystem<LobbyExecuteActionUpdateSystem>();
-    world.registerSystem<GameExecuteActionUpdateSystem>();
+    world.registerSystems<GameExecuteActionUpdateSystem,
+    ecs::WaterUpdateSystem, ecs::BombUpdateSystem, ecs::MovementUpdateSystem>();
 
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});
@@ -150,6 +158,8 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
 void bomberman::GameServerScene::unloadScene(ecs::World &world)
 {
     world.killAllEntities();
+    world.unregisterSystems<GameExecuteActionUpdateSystem,
+    ecs::WaterUpdateSystem, ecs::BombUpdateSystem, ecs::MovementUpdateSystem>();
 }
 
 void bomberman::GameServerScene::entityKilled(ecs::Entity entity,ecs::World &world)

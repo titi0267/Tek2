@@ -32,13 +32,12 @@ add_executable(bomberman
     "src/ecs/systems/PlayerInputs.cpp"
     "src/ecs/systems/Movement.cpp"
     "src/ecs/systems/Bomb.cpp"
-    "src/ecs/systems/BombExplosion.cpp"
     "src/ecs/systems/Timer.cpp"
     "src/ecs/systems/Water.cpp"
     "src/ecs/systems/Animation.cpp"
     "src/ecs/systems/LobbyActions.cpp"
     "src/ecs/systems/GameActions.cpp"
-    
+
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"
     "src/scenes/GameScene.cpp"

@@ -10,8 +10,13 @@
 
 namespace ecs {
     struct Water {
-        Water() {};
+        Vector3 dir;
+        int distance;
+        bool expanded = false;
+
+        Water(Vector3 dir = {0}, int distance = 0) : dir(dir), distance(distance) {};
     };
+
     class WaterUpdateSystem : public ASystem {
         public:
         WaterUpdateSystem() { _stage = ecs::Stages::UPDATE; };
