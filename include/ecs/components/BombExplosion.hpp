@@ -15,7 +15,7 @@ namespace ecs {
     };
     class BombExplosionUpdateSystem : public ecs::ASystem {
         public:
-        BombExplosionUpdateSystem() { _stage = ecs::Stages::UPDATE; };
+        BombExplosionUpdateSystem() { _stage = ecs::Stages::DRAW_WORLD; };
 
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);

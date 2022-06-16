@@ -16,13 +16,13 @@ void ecs::BombExplosionUpdateSystem::setSignature(ecs::ComponentManager &compone
 
 void ecs::BombExplosionUpdateSystem::update(ecs::World &world)
 {
-    //ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
-    //bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
+    ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
+    bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
 
     for (ecs::Entity entity : _entities) {
         BombExplosion &bombExplosion = world.getComponent<BombExplosion>(entity);
         Water &water = world.getComponent<Water>(entity);
 
-        //scene.deleteBomb(entity);
+        scene.deleteBomb(entity);
     }
 }
