@@ -34,6 +34,7 @@
 #include "ecs/components/FullscreenButton.hpp"
 #include "ecs/components/FPSButton.hpp"
 #include "ecs/components/ToggleButton.hpp"
+#include "ecs/components/KeyRecorder.hpp"
 
 namespace bomberman {
     class MainMenuScene : public ecs::IScene, public ecs::MoveRequesterSceneModule {
@@ -62,6 +63,7 @@ namespace bomberman {
         void spawnStaticButton(const Transform &transform, const std::string &text, ecs::World &world);
         void spawnTitleButton(const Transform &transform, const std::string &text, ecs::World &world);
         void spawnSquareButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
+        void spawnSquareButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, ecs::SingleKeyRecorder &recorder);
 
         bool &getMovementRequest() { return moveRequest; };
         Vector3 &getMoveDest() { return moveDest; };

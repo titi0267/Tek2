@@ -5,9 +5,9 @@
 ** InputFile
 */
 
-#include "InputFile.hpp"
-#include "KeyboardBind.hpp"
-#include "GamepadBind.hpp"
+#include "input/InputFile.hpp"
+#include "input/KeyboardBind.hpp"
+#include "input/GamepadBind.hpp"
 #include <fstream>
 #include <iostream>
 #include <regex>
@@ -70,6 +70,8 @@ void InputFile::setName(const std::string &name)
 
 void InputFile::setKey(IBind::Binding bind, int keyInt)
 {
+    std::cout << bind << " " << keyInt << std::endl;
+    std::cout << _gamepad << std::endl;
     _binds->setKey(bind, keyInt);
 }
 

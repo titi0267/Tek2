@@ -5,7 +5,7 @@
 ** GamepadBind
 */
 
-#include "GamepadBind.hpp"
+#include "input/GamepadBind.hpp"
 #include <stdexcept>
 
 GamepadBind::GamepadBind(const std::vector<std::string> &file)
@@ -76,7 +76,16 @@ std::string GamepadBind::keyToGameTxt(int keyInt)
 void GamepadBind::setKey(Binding bind, int keyInt)
 {
     auto it = buttonToString.find((GamepadButton)keyInt);
-    if (it != buttonToString.end())
+    if (it != buttonToString.end()) {
+        int temp = (int)_keys[bind];
         _keys[bind] = (GamepadButton)keyInt;
+        for (int i = 0; i < 5; i++) {
+            if (i == (int)bind)
+                continue;
+            if (_keys[i] == keyInt)
+                _keys[i] = (GamepadButton)temp;
+        }
+        return;
+    }
     throw std::invalid_argument("Key does not exist");
 }

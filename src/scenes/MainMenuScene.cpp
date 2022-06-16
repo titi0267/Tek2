@@ -35,6 +35,16 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 
+void toggleKeyRecordFunction(ecs::World &world, ecs::Entity entity)
+{
+    ecs::SingleKeyRecorder &key = world.getComponent<ecs::SingleKeyRecorder>(entity);
+    ecs::BindManager &bind = world.getRessource<ecs::BindManager>();
+
+    key.recording = true;
+    key.first = true;
+    bind.toggleSetOff(key.gamepad);
+}
+
 void setResFunction(ecs::World &world, ecs::Entity entity)
 {
     ecs::ResolutionButton &res = world.getComponent<ecs::ResolutionButton>(entity);
@@ -174,17 +184,22 @@ void bomberman::MainMenuScene::generateAudioSettingsMenu(ecs::World &world)
 void bomberman::MainMenuScene::generateGamepadPart(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
+    ecs::SingleKeyRecorder a = {true, IBind::UP};
+    ecs::SingleKeyRecorder b = {true, IBind::LEFT};
+    ecs::SingleKeyRecorder c = {true, IBind::RIGHT};
+    ecs::SingleKeyRecorder d = {true, IBind::DOWN};
+    ecs::SingleKeyRecorder e = {true, IBind::PLACE};
 
     spawnStaticButton({{-19.5, -7.25, -2}, rot, {1, 1, 1}}, "Up", world);
     spawnStaticButton({{-19.5, -8.25, -2}, rot, {1, 1, 1}}, "Left", world);
     spawnStaticButton({{-19.5, -9.25, -2}, rot, {1, 1, 1}}, "Right", world);
     spawnStaticButton({{-19.5, -10.25, -2}, rot, {1, 1, 1}}, "Down", world);
     spawnStaticButton({{-19.5, -11.25, -2}, rot, {1, 1, 1}}, "Place a bomb", world);
-    spawnSquareButton({{-17, -7.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
-    spawnSquareButton({{-17, -8.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
-    spawnSquareButton({{-17, -9.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
-    spawnSquareButton({{-17, -10.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
-    spawnSquareButton({{-17, -11.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
+    spawnSquareButton({{-17, -7.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, a);
+    spawnSquareButton({{-17, -8.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, b);
+    spawnSquareButton({{-17, -9.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, c);
+    spawnSquareButton({{-17, -10.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
+    spawnSquareButton({{-17, -11.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
     spawnStaticButton({{-23.5, -7.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
     spawnStaticButton({{-24, -8.75, -2}, rot, {1, 1, 1}}, "", world);
     spawnSquareButton({{-22, -8.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, upFunction, world);
@@ -197,16 +212,23 @@ void bomberman::MainMenuScene::generateGamepadPart(ecs::World &world)
 void bomberman::MainMenuScene::generateKeyboardPart(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
+    int i = 0;
+    ecs::SingleKeyRecorder a = {false, IBind::UP};
+    ecs::SingleKeyRecorder b = {false, IBind::LEFT};
+    ecs::SingleKeyRecorder c = {false, IBind::RIGHT};
+    ecs::SingleKeyRecorder d = {false, IBind::DOWN};
+    ecs::SingleKeyRecorder e = {false, IBind::PLACE};
+
     spawnStaticButton({{-0.5, -7.25, -2}, rot, {1, 1, 1}}, "Up", world);
     spawnStaticButton({{-0.5, -8.25, -2}, rot, {1, 1, 1}}, "Left", world);
     spawnStaticButton({{-0.5, -9.25, -2}, rot, {1, 1, 1}}, "Right", world);
     spawnStaticButton({{-0.5, -10.25, -2}, rot, {1, 1, 1}}, "Down", world);
     spawnStaticButton({{-0.5, -11.25, -2}, rot, {1, 1, 1}}, "Place a bomb", world);
-    spawnSquareButton({{-3, -7.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
-    spawnSquareButton({{-3, -8.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
-    spawnSquareButton({{-3, -9.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
-    spawnSquareButton({{-3, -10.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
-    spawnSquareButton({{-3, -11.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, upFunction, world);
+    spawnSquareButton({{-3, -7.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, a);
+    spawnSquareButton({{-3, -8.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, b);
+    spawnSquareButton({{-3, -9.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, c);
+    spawnSquareButton({{-3, -10.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
+    spawnSquareButton({{-3, -11.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
     spawnStaticButton({{3.5, -7.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
     spawnStaticButton({{4, -8.75, -2}, rot, {1, 1, 1}}, "", world);
     spawnSquareButton({{2, -8.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, upFunction, world);
@@ -355,4 +377,17 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world)
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {0.7});
+}
+
+void bomberman::MainMenuScene::spawnSquareButton(const Transform &transform, const std::string &text,
+const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, ecs::SingleKeyRecorder &recorder)
+{
+    const float BUTTON_SIZE = 3;
+
+    world.spawn().insert(transform,
+    ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
+    ecs::ModelRef {"square_button"}, hoverTint.base,
+    ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::SceneMoveElement {0.7}, recorder);
 }

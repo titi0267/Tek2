@@ -11,6 +11,7 @@
 
 #include "ecs/engine/EntityCommands.hpp"
 #include "ecs/engine/SceneManager.hpp"
+#include "input/BindsManager.hpp"
 
 #include "raylib/Camera.hpp"
 #include "raylib/Window.hpp"
@@ -36,6 +37,7 @@
 #include "ecs/components/FullscreenButton.hpp"
 #include "ecs/components/FPSButton.hpp"
 #include "ecs/components/ToggleButton.hpp"
+#include "ecs/components/KeyRecorder.hpp"
 
 #include "Map.hpp"
 
@@ -58,8 +60,8 @@ void registerRender(ecs::World &world)
 
 void registerMouseInputs(ecs::World &world)
 {
-    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement, ecs::ResolutionButton, ecs::FullscreenButton, ecs::FPSButton, ecs::ToggleButton>();
-    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem, ecs::ResolutionButtonSystem, ecs::FullscreenButtonSystem, ecs::FPSButtonSystem, ecs::ShowFPSButtonSystem, ecs::ToggleMusicButtonSystem, ecs::ToggleSoundButtonSystem>();
+    world.registerComponents<ecs::Clickable, ecs::Hoverable, ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement, ecs::ResolutionButton, ecs::FullscreenButton, ecs::FPSButton, ecs::ToggleButton, ecs::SingleKeyRecorder>();
+    world.registerSystems<ecs::ClickUpdateSystem, ecs::HoverUpdateSystem, ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem, ecs::ResolutionButtonSystem, ecs::FullscreenButtonSystem, ecs::FPSButtonSystem, ecs::ShowFPSButtonSystem, ecs::ToggleMusicButtonSystem, ecs::ToggleSoundButtonSystem, ecs::KeyRecorderSystem>();
 }
 
 int main()
@@ -83,6 +85,7 @@ int main()
     world.insertRessource<raylib::ShaderManager>();
     world.insertRessource<raylib::SoundManager>();
     world.insertRessource<ecs::SceneManager>();
+    world.insertRessource<ecs::BindManager>();
 
 // ----- [INIT RESSOURCES] -----
 

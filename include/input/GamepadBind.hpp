@@ -8,7 +8,7 @@
 #pragma once
 
 #include "IBind.hpp"
-#include "../bomberman/include/raylib/headers/raylib.h"
+#include "raylib/headers/raylib.h"
 #include <vector>
 #include <string>
 #include <unordered_map>

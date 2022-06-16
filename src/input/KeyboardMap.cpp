@@ -5,7 +5,7 @@
 ** KeyboardMap
 */
 
-#include "KeyboardBind.hpp"
+#include "input/KeyboardBind.hpp"
 
 const std::unordered_map<KeyboardKey, std::string> keyToStringMap {
     std::make_pair(KEY_A, "LETTER_A"),

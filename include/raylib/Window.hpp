@@ -108,6 +108,10 @@ namespace raylib {
                 return;
             ToggleFullscreen();
         }
+        int getKeyPressed()
+        {
+            return (GetKeyPressed());
+        }
         private:
             bool _close;
             int _fps;

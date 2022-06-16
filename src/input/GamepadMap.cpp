@@ -5,7 +5,7 @@
 ** GamepadMap
 */
 
-#include "GamepadBind.hpp"
+#include "input/GamepadBind.hpp"
 
 const std::unordered_map<GamepadButton, std::string> buttonToString {
     std::make_pair(GAMEPAD_BUTTON_LEFT_FACE_UP, "DPAD_UP"),

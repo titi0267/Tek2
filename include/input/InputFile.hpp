@@ -16,6 +16,18 @@ class InputFile {
     public:
         InputFile(const std::string &path);
         InputFile(bool gamepad);
+        InputFile(InputFile &&other)
+        {
+            _name = other._name;
+            _gamepad = other._gamepad;
+            _binds = std::move(_binds);
+        }
+        void operator=(const InputFile &other)
+        {
+            _name = other._name;
+            _gamepad = other._gamepad;
+            _binds = std::move(_binds);
+        }
         ~InputFile();
         void save();
         void setName(const std::string &name);
