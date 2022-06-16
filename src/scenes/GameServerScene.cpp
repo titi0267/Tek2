@@ -86,9 +86,25 @@ void bomberman::GameServerScene::generateMapProps(ecs::World &world)
 void bomberman::GameServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
-    ecs::Entity entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
-    ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"mathieu"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
-
+    ecs::Entity entity;
+    switch (id) {
+        case 0:
+            entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
+            ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"mathieu"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
+        break;
+        case 1:
+            entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
+            ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"ludovic"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
+        break;
+        case 2:
+            entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
+            ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"timothe"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
+        break;
+        case 3:
+            entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
+            ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"jeffrey"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
+        break;
+    }
     _players.insert(entity);
 }
 
