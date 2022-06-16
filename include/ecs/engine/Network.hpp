@@ -11,6 +11,7 @@
 #include <sstream>
 #include <iostream>
 #include <chrono>
+#include <map>
 #include <unordered_map>
 #include "network/IClient.hpp"
 #include "network/IServer.hpp"
@@ -52,7 +53,7 @@ namespace ecs {
     class ServerManager {
         std::unique_ptr<network::IServer> _server;
         std::vector<ConnId> _activeConns;
-        std::unordered_map<network::ConnId, std::unordered_map<Entity, Entity>> _clientToServer;
+        std::unordered_map<network::ConnId, std::map<Entity, Entity>> _clientToServer;
 
         void sendCmd(ConnId conn, NetworkCommand cmd);
 

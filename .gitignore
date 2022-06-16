@@ -2,3 +2,6 @@
 .vscode
 build/
 ip
+vgcore*
+bombitek.map
+bombitek.dat

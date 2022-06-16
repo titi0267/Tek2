@@ -36,6 +36,7 @@ std::vector<network::ConnId> ecs::ServerManager::acceptNewConns(ecs::World &worl
 
     while (_server->canAcceptConn()) {
         conn = _server->acceptClient();
+        std::cout << "Accept new conn : " << conn << std::endl;
         _activeConns.push_back(conn);
         _clientToServer.insert({conn, {}});
         newConns.push_back(conn);
@@ -51,8 +52,8 @@ void ecs::ServerManager::handleClientDisconnection(ConnId conn, World &world)
     auto &entitites = _clientToServer[conn];
 
     scene.onDisconnect(conn, world);
-    for (auto &[client, local] : entitites)
-        world.getEntityCommands(local).despawn();
+    while (entitites.size() > 0)
+        world.getEntityCommands(entitites.rbegin()->second).despawn();
     world.getRessource<PlayersManager>().clientDisconnect(conn);
     _clientToServer.erase(conn);
     _activeConns.erase(std::find(_activeConns.begin(), _activeConns.end(), conn));
@@ -139,7 +140,7 @@ void ecs::ServerManager::spawnClientEntity(ConnId conn, Entity clientEntity, std
     std::uint32_t componentSize;
     std::string data = buffer.str();
 
-    std::cout << "[SERVER] Creating entity from server, " << conn << ", " << (int) clientEntity << " -> " << (int) localEntity << std::endl;
+    std::cout << "[SERVER] Creating entity from client " << conn << std::endl;
     _clientToServer[conn].insert({clientEntity, localEntity});
     // for (ConnId client : _activeConns) {
     //     if (client == conn)
@@ -280,9 +281,6 @@ void ecs::ServerManager::deleteClientEntity(Entity entity, World &world)
 {
     MirroredEntity &mirrored = world.getComponent<MirroredEntity>(entity);
 
-    if (!_server->doesConnExists(mirrored.conn))
-        return;
-    std::cout << "Delete " << (int) mirrored.foreignEntity << " from " << mirrored.conn << std::endl;
     _clientToServer[mirrored.conn].erase(mirrored.foreignEntity);
 }
 
