@@ -18,6 +18,7 @@ namespace ecs {
         GAME_SCENE,
         SERVER_GAME_SCENE,
         SERVER_LOBBY_SCENE,
+        WIN_SCENE,
     };
 
     class IScene {
