@@ -84,4 +84,12 @@ namespace bomberman {
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
     };
+
+    class GameCheckWinSystem : public ecs::ASystem {
+        public:
+        GameCheckWinSystem() { _stage = ecs::Stages::UPDATE; };
+
+        void setSignature(ecs::ComponentManager &component);
+        void update(ecs::World &world);
+    };
 }

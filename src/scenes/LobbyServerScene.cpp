@@ -42,7 +42,7 @@ void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs
 
 void bomberman::LobbyServerScene::loadScene(ecs::World &world)
 {
-    world.registerSystem<LobbyExecuteActionUpdateSystem>();
+    world.registerSystems<LobbyExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem>();
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});
 }
@@ -50,7 +50,7 @@ void bomberman::LobbyServerScene::loadScene(ecs::World &world)
 void bomberman::LobbyServerScene::unloadScene(ecs::World &world)
 {
     world.killAllEntities();
-    world.unregisterSystem<LobbyExecuteActionUpdateSystem>();
+    world.unregisterSystems<LobbyExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem>();
 }
 
 void bomberman::LobbyServerScene::entityKilled(ecs::Entity entity,ecs::World &world)

@@ -165,9 +165,10 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     std::ifstream file("bombitek.dat");
     Vector3 pos;
 
-    world.registerSystems<GameExecuteActionUpdateSystem,
+    world.registerSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
-     ecs::BombUpdateSystem, ecs::MovementUpdateSystem>();
+    ecs::BombUpdateSystem, ecs::MovementUpdateSystem,
+    GameCheckWinSystem>();
 
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});
@@ -215,9 +216,10 @@ void bomberman::GameServerScene::unloadScene(ecs::World &world)
     }
 
     world.killAllEntities();
-    world.unregisterSystems<GameExecuteActionUpdateSystem,
+    world.unregisterSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
-    ecs::BombUpdateSystem, ecs::MovementUpdateSystem>();
+    ecs::BombUpdateSystem, ecs::MovementUpdateSystem,
+    GameCheckWinSystem>();
 }
 
 void bomberman::GameServerScene::entityKilled(ecs::Entity entity,ecs::World &world)

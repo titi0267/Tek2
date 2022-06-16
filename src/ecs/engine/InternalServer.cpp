@@ -40,7 +40,7 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<ecs::Clock>();
 
     _serverWorld->registerComponents<ecs::Player, ecs::GridPosition, ecs::BombId, ecs::Water, ecs::DestructibleTile>();
-    _serverWorld->registerSystems<ecs::PlayerActionUpdateSystem, ecs::AnimationUpdateSystem>();
+    _serverWorld->registerSystems<ecs::AnimationUpdateSystem>();
 
 // ------
 

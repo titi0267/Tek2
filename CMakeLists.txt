@@ -38,13 +38,14 @@ add_executable(bomberman
     "src/ecs/systems/LobbyActions.cpp"
     "src/ecs/systems/GameActions.cpp"
     "src/ecs/systems/BackgroundRotation.cpp"
+    "src/ecs/systems/CheckWin.cpp"
 
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"
     "src/scenes/GameScene.cpp"
     "src/scenes/GameServerScene.cpp"
     "src/scenes/LobbyServerScene.cpp"
-    "src/scenes/WinScene.cpp"
+    "src/scenes/WinServerScene.cpp"
 
     "src/network/client/LinuxClient.cpp"
     "src/network/client/WinClient.cpp"

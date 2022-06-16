@@ -2,21 +2,21 @@
 ** EPITECH PROJECT, 2022
 ** indieStudio
 ** File description:
-** WinScene
+** WinServerScene
 */
 
-#include "scenes/WinScene.hpp"
+#include "scenes/WinServerScene.hpp"
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/Skin.hpp"
 #include "ecs/engine/Network.hpp"
 #include "raylib/Camera.hpp"
 
-void bomberman::WinScene::spawnBackground(ecs::World &world)
+void bomberman::WinServerScene::spawnBackground(ecs::World &world)
 {
     ;
 }
 
-void bomberman::WinScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::World &world)
+void bomberman::WinServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
     ecs::Entity entity;
@@ -40,18 +40,18 @@ void bomberman::WinScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::World 
     }
 }
 
-void bomberman::WinScene::loadScene(ecs::World &world)
+void bomberman::WinServerScene::loadScene(ecs::World &world)
 {
-    raylib::Camera &cam = world.getRessource<raylib::Camera>();
-
+    std::remove("bombitek.dat");
+    std::remove("bombitek.map");
 }
 
-void bomberman::WinScene::unloadScene(ecs::World &world)
+void bomberman::WinServerScene::unloadScene(ecs::World &world)
 {
     world.killAllEntities();
 }
 
-void bomberman::WinScene::entityKilled(ecs::Entity entity, ecs::World &world)
+void bomberman::WinServerScene::entityKilled(ecs::Entity entity, ecs::World &world)
 {
     if (world.hasComponent<ecs::MirroredEntity>(entity))
         world.getRessource<ecs::ServerManager>().deleteClientEntity(entity, world);

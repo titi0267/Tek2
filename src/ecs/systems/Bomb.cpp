@@ -57,7 +57,7 @@ void ecs::BombUpdateSystem::update(ecs::World &world)
     for (ecs::Entity entity : _entities) {
         Timer &timer = world.getComponent<Timer>(entity);
 
-        if (timer.timeElapsed >= 5) {
+        if (timer.timeElapsed >= 2) {
             placeWater(entity, world, scene);
             toDelete.push_back(entity);
         }
