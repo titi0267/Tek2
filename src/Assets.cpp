@@ -18,6 +18,7 @@ void bomberman::loadTextures(ecs::World &world)
 
     textureMan.loadTexture("epitech", "./assets/textures/epitech.png");
     textureMan.loadTexture("button", "./assets/textures/button.png");
+    textureMan.loadTexture("logo", "./assets/textures/logo.png");
 
     textureMan.loadTexture("bottle", "./assets/textures/bottle.png");
     textureMan.loadTexture("table", "./assets/textures/table.png");
@@ -37,6 +38,7 @@ void bomberman::loadModels(ecs::World &world)
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
 
     modelMan.loadModel("button", "./assets/models/button.iqm");
+    modelMan.loadModel("logo", "./assets/models/logo.iqm");
 
     modelMan.loadModel("bottle", "./assets/models/bottle.iqm");
     modelMan.loadModel("table", "./assets/models/table.iqm");
@@ -72,6 +74,9 @@ void bomberman::applyAssetsToModels(ecs::World &world)
 {
     raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
+
+    modelMan.getModel("logo").getMaterialView(0)
+    .setTexture(textureMan.getTexture("logo"));
 
     modelMan.getModel("button").getMaterialView(0)
     .setTexture(textureMan.getTexture("button"));

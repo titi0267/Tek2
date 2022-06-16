@@ -63,7 +63,7 @@ void downFunction(ecs::World &world, ecs::Entity entity)
         ecs::MoveRequesterSceneModule &scene = dynamic_cast<ecs::MoveRequesterSceneModule&>(man.getScene());
 
         scene.getMovementRequest() = true;
-        scene.getMoveDest() = {0, 10, 0};
+        scene.getMoveDest() = {0, 15, 0};
         world.getComponent<ecs::Tint>(entity) = RED;
     } catch (std::bad_cast) {};
 }
@@ -76,7 +76,7 @@ void upFunction(ecs::World &world, ecs::Entity entity)
         ecs::MoveRequesterSceneModule &scene = dynamic_cast<ecs::MoveRequesterSceneModule&>(man.getScene());
 
         scene.getMovementRequest() = true;
-        scene.getMoveDest() = {0, -10, 0};
+        scene.getMoveDest() = {0, -15, 0};
         world.getComponent<ecs::Tint>(entity) = RED;
     } catch (std::bad_cast) {};
 }
@@ -89,7 +89,7 @@ void rightFunction(ecs::World &world, ecs::Entity entity)
         ecs::MoveRequesterSceneModule &scene = dynamic_cast<ecs::MoveRequesterSceneModule&>(man.getScene());
 
         scene.getMovementRequest() = true;
-        scene.getMoveDest() = {10, 0, 0};
+        scene.getMoveDest() = {15, 0, 0};
         world.getComponent<ecs::Tint>(entity) = RED;
     } catch (std::bad_cast) {};
 }
@@ -102,7 +102,7 @@ void leftFunction(ecs::World &world, ecs::Entity entity)
         ecs::MoveRequesterSceneModule &scene = dynamic_cast<ecs::MoveRequesterSceneModule&>(man.getScene());
 
         scene.getMovementRequest() = true;
-        scene.getMoveDest() = {-10, 0, 0};
+        scene.getMoveDest() = {-15, 0, 0};
         world.getComponent<ecs::Tint>(entity) = RED;
     } catch (std::bad_cast) {};
 }
@@ -133,24 +133,26 @@ void bomberman::MainMenuScene::generateMainMenu(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
 
-    spawnButton({{0, 2.75, -2}, rot, {1, 1, 1}}, "Start", {WHITE, GREEN}, startFunction, world);
-    spawnButton({{0, 1.75, -2}, rot, {1, 1, 1}}, "Connect", {WHITE, GREEN}, connectFunction, world);
-    spawnButton({{0, 0.75, -2}, rot, {1, 1, 1}}, "Tutorial", {WHITE, GRAY}, quitFunction, world);
-    spawnButton({{0, -0.75, -2}, rot, {1, 1, 1}}, "Settings", {WHITE, GRAY}, rightFunction, world);
-    spawnButton({{0, -2.75, -2}, rot, {1, 1, 1}}, "Quit", {WHITE, RED}, quitFunction, world);
+    world.spawn().insert(Transform {{0, 2.25, -2}, QuaternionIdentity(), {1, 1, 1}},
+    ecs::ModelRef{"logo"}, ecs::SceneMoveElement{MOVE_SPEED});
+    spawnButton({{0,  1.25, -2}, rot, {1, 1, 1}}, "Start", {WHITE, GREEN}, startFunction, world);
+    spawnButton({{0,  0.50, -2}, rot, {1, 1, 1}}, "Connect", {WHITE, GREEN}, connectFunction, world);
+    spawnButton({{0, -0.50, -2}, rot, {1, 1, 1}}, "Tutorial", {WHITE, GRAY}, quitFunction, world);
+    spawnButton({{0, -1.25, -2}, rot, {1, 1, 1}}, "Settings", {WHITE, GRAY}, rightFunction, world);
+    spawnButton({{0, -2.50, -2}, rot, {1, 1, 1}}, "Quit", {WHITE, RED}, quitFunction, world);
 }
 
 void bomberman::MainMenuScene::generateSettingsMenu(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
 
-    spawnButton({{-10, 2.75, -2}, rot, {1, 1, 1}}, "Graphical", {WHITE, GRAY}, upFunction, world);
-    spawnButton({{-10, 1.75, -2}, rot, {1, 1, 1}}, "Audio", {WHITE, GRAY}, rightFunction, world);
-    spawnButton({{-10, 0.75, -2}, rot, {1, 1, 1}}, "Keybinds", {WHITE, GRAY}, downFunction, world);
-    spawnButton({{-10, -0.75, -2}, rot, {1, 1, 1}}, "Main Menu", {WHITE, GRAY}, leftFunction, world);
-    spawnButton({{-10, 12.75, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, downFunction, world);
-    spawnButton({{-20, 2.75, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
-    spawnButton({{-10, -7.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, upFunction, world);
+    spawnButton({{-15,  2.75, -2}, rot, {1, 1, 1}}, "Graphical", {WHITE, GRAY}, upFunction, world);
+    spawnButton({{-15,  1.75, -2}, rot, {1, 1, 1}}, "Audio", {WHITE, GRAY}, rightFunction, world);
+    spawnButton({{-15,  0.75, -2}, rot, {1, 1, 1}}, "Keybinds", {WHITE, GRAY}, downFunction, world);
+    spawnButton({{-15, -0.75, -2}, rot, {1, 1, 1}}, "Main Menu", {WHITE, GRAY}, leftFunction, world);
+    spawnButton({{-15,  17.75, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, downFunction, world);
+    spawnButton({{-30,  2.75, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
+    spawnButton({{-15, -12.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, upFunction, world);
 }
 
 void bomberman::MainMenuScene::spawnButton(const Transform &transform, const std::string &text,
@@ -163,5 +165,5 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world)
     ecs::ModelRef {"button"}, WHITE,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
-    ecs::SceneMoveElement {0.7});
+    ecs::SceneMoveElement {MOVE_SPEED});
 }

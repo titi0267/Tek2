@@ -35,6 +35,8 @@ namespace bomberman {
     class MainMenuScene : public ecs::IScene, public ecs::MoveRequesterSceneModule {
         using ClickCallbackFct = ecs::ClickCallbackFct;
 
+        const float MOVE_SPEED = 0.9;
+
         bool moveRequest = false;
         Vector3 moveDest = {0};
 

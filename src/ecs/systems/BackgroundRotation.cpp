@@ -23,8 +23,8 @@ void ecs::BackgroundRotationUpdateSystem::update(ecs::World &world)
         float pitch = std::sin(timer.timeElapsed / 15.0 * PI) * PI / 64.0;
         float yaw = std::cos(timer.timeElapsed / 10.0 * PI) * PI / 64.0;
 
-        if (timer.timeElapsed >= 30.0)
-            timer.timeElapsed = fmod(timer.timeElapsed, 30.0);
+        if (timer.timeElapsed >= 60.0)
+            timer.timeElapsed = fmod(timer.timeElapsed, 60.0);
         transform.rotation = QuaternionFromEuler(pitch, yaw, PI);
     }
 }
