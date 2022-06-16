@@ -10,6 +10,8 @@
 #include "ecs/components/Water.hpp"
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/GridPosition.hpp"
+#include "ecs/components/Player.hpp"
+#include "ecs/components/Movement.hpp"
 #include "raylib/Vectors.hpp"
 #include <iostream>
 
@@ -55,5 +57,40 @@ void ecs::WaterUpdateSystem::update(ecs::World &world)
     for (Entity entity : toDelete) {
         world.getEntityCommands(entity).despawn();
         scene.deleteWater(entity);
+    }
+}
+
+void ecs::WaterCollisionUpdateSystem::setSignature(ecs::ComponentManager &component)
+{
+    _signature = component.generateSignature<GridPosition, Water>();
+}
+
+void ecs::WaterCollisionUpdateSystem::update(ecs::World &world)
+{
+    ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
+    bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
+    const std::set<Entity> &players = scene.getPlayers();
+    std::vector<std::tuple<Entity, Player&, GridPosition&>> playersAlive;
+
+    for (Entity pEntity : players) {
+        Player &player = world.getComponent<Player>(pEntity);
+
+        if (player.alive) {
+            GridPosition &gPos = world.getComponent<GridPosition>(pEntity);
+            playersAlive.push_back({pEntity, player, gPos});
+        }
+    }
+    for (Entity entity : _entities) {
+        GridPosition &pos = world.getComponent<GridPosition>(entity);
+
+        for (auto [pEntity, player, gPos] : playersAlive) {
+            if (pos == gPos) {
+                Transform &transform = world.getComponent<Transform>(pEntity);
+                Vector3 deathPos = transform.translation + Vector3{0, 100, 0};
+
+                player.alive = false;
+                world.getComponent<Movement>(pEntity).move(deathPos, 25);
+            }
+        }
     }
 }

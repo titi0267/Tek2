@@ -73,7 +73,7 @@ void bomberman::GameExecuteActionUpdateSystem::update(ecs::World &world)
         ecs::Actions action = scene.getPlayerAction(player.id);
         ecs::Movement &move = world.getComponent<ecs::Movement>(entity);
 
-        if (action == ecs::DO_NOTHING || move.isMoving)
+        if (action == ecs::DO_NOTHING || move.isMoving || !player.alive)
             continue;
         if (action == ecs::PLACE_BOMB) {
             placeBomb(entity, world, scene);

@@ -55,7 +55,7 @@ void bomberman::GameServerScene::spawnFloor(Vector2 mapSize, ecs::World &world)
     Transform transform = {{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}};
 
     world.spawn().insert(transform,
-    ecs::DrawableCube {{0, 0, 0}, {mapSize.x, 0.1, mapSize.y}},
+    ecs::DrawableCube {{0, -0.1, 0}, {mapSize.x, 0.1, mapSize.y}},
     ecs::TextureRef("ground"), ecs::MirrorEntity {});
 }
 
@@ -135,7 +135,8 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     Vector3 pos;
 
     world.registerSystems<GameExecuteActionUpdateSystem,
-    ecs::WaterUpdateSystem, ecs::BombUpdateSystem, ecs::MovementUpdateSystem>();
+    ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
+     ecs::BombUpdateSystem, ecs::MovementUpdateSystem>();
 
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});
@@ -145,7 +146,7 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             if (_map.getCellAt(x, y) == SPAWN) {
-                pos = {(float) x - width / 2.0f, 0, (float) y - height / 2.0f};
+                pos = {(float) x - width / 2.0f + 0.5f, 0, (float) y - height / 2.0f + 0.5f};
                 spawnPlayer(playerId++, pos, {x, y}, world);
             }
         }
@@ -159,7 +160,8 @@ void bomberman::GameServerScene::unloadScene(ecs::World &world)
 {
     world.killAllEntities();
     world.unregisterSystems<GameExecuteActionUpdateSystem,
-    ecs::WaterUpdateSystem, ecs::BombUpdateSystem, ecs::MovementUpdateSystem>();
+    ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
+    ecs::BombUpdateSystem, ecs::MovementUpdateSystem>();
 }
 
 void bomberman::GameServerScene::entityKilled(ecs::Entity entity,ecs::World &world)

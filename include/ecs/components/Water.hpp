@@ -24,4 +24,12 @@ namespace ecs {
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
     };
+
+    class WaterCollisionUpdateSystem : public ASystem {
+        public:
+        WaterCollisionUpdateSystem() { _stage = ecs::Stages::UPDATE; };
+
+        void setSignature(ecs::ComponentManager &component);
+        void update(ecs::World &world);
+    };
 }
