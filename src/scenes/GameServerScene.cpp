@@ -181,6 +181,9 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
                 _water.insert(entity);
             else if (world.hasComponent<ecs::DestructibleTile>(entity))
                 _destructibles.insert({world.getComponent<ecs::GridPosition>(entity), entity});
+
+            if (world.hasComponent<ecs::MirrorEntity>(entity))
+                world.getComponent<ecs::MirrorEntity>(entity).size = 0;
         }
         _map.load("bombitek.map");
     }
