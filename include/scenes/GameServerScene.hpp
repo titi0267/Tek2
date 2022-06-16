@@ -21,6 +21,12 @@
 #include "Map.hpp"
 
 namespace bomberman {
+    struct GameServerSceneArgs {
+        bool reloadGame;
+
+        GameServerSceneArgs(bool reload = false) : reloadGame(true) {};
+    };
+
     class GameServerScene : public ecs::IScene, public ecs::SceneActionsHandleModule, public ecs::ServerNetworkSceneModule {
         using ConnId = network::ConnId;
 
@@ -39,7 +45,6 @@ namespace bomberman {
         void generateMapProps(ecs::World &world);
 
         public:
-        GameServerScene() : _map(9, 9, 4, 4) {};
         GameServerScene(const void *data) : _map(9, 9, 4, 4) {};
 
         void loadScene(ecs::World &world);

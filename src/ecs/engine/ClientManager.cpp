@@ -216,7 +216,7 @@ void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
     // std::cout << "[CLIENT] Updating entity to server" << std::endl;
     // std::cout << "Buffer size: " << data.size() << std::endl;
     _client->write((void*) data.c_str(), data.size());
-    mirror.prevData = data;
+    mirror.prevData[data.copy(mirror.prevData, sizeof(mirror.prevData))] = 0;
 }
 
 void ecs::ClientManager::killLocalEntity(Entity entity, World &world)

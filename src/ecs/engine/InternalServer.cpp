@@ -20,6 +20,7 @@
 #include "ecs/components/Player.hpp"
 #include "ecs/components/PlayAnimation.hpp"
 #include "ecs/components/GridPosition.hpp"
+#include "ecs/components/DestructibleTile.hpp"
 
 #include "raylib/AnimationManager.hpp"
 
@@ -38,7 +39,7 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<raylib::AnimationManager>();
     _serverWorld->insertRessource<ecs::Clock>();
 
-    _serverWorld->registerComponents<ecs::Player, ecs::GridPosition, ecs::BombId, ecs::Water>();
+    _serverWorld->registerComponents<ecs::Player, ecs::GridPosition, ecs::BombId, ecs::Water, ecs::DestructibleTile>();
     _serverWorld->registerSystems<ecs::PlayerActionUpdateSystem, ecs::AnimationUpdateSystem>();
 
 // ------
@@ -64,6 +65,7 @@ void ecs::InternalServer::serverMain()
         prevUpdate = now;
     }
 
+    _serverWorld->getRessource<ecs::SceneManager>().getScene().unloadScene(*_serverWorld);
     _serverWorld->getRessource<ecs::ServerManager>().closeServer();
 }
 

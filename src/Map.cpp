@@ -181,7 +181,7 @@ void map::Map::dump()
 
 void map::Map::save(std::string name)
 {
-    std::ofstream saving(name + ".mbt");
+    std::ofstream saving(name);
     saving << _height << "\n" << _width << "\n";
     std::ostream_iterator<int> saving_it(saving, "\n");
     std::copy(_map.begin(), _map.end(), saving_it);

@@ -22,7 +22,7 @@ void bomberman::LobbyExecuteActionUpdateSystem::update(ecs::World &world)
     for (ecs::Entity entity : _entities) {
         ecs::Player &player = world.getComponent<ecs::Player>(entity);
 
-        if (scene.getPlayerAction(player.id) == ecs::PLACE_BOMB) {
+        if (scene.getPlayerAction(player.id) == ecs::MOVE_UP) {
             scene.setPlayerReady(player.id);
             change = true;
         }

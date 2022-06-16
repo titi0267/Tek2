@@ -216,7 +216,7 @@ void ecs::ServerManager::updateLocalEntity(Entity entity, World &world)
     // std::cout << "Buffer size: " << data.size() << std::endl;
     for (ConnId conn : _activeConns)
         _server->write(conn, (void*) data.c_str(), data.size());
-    mirror.prevData = data;
+    mirror.prevData[data.copy(mirror.prevData, sizeof(mirror.prevData))] = 0;
 }
 
 void ecs::ServerManager::killLocalEntity(Entity entity, World &world)
@@ -235,7 +235,7 @@ void ecs::ServerManager::sendEntityToNewConns(std::vector<network::ConnId> &newC
     MirrorEntity &mirror = world.getComponent<MirrorEntity>(entity);
 
     for (network::ConnId conn : newConns)
-        _server->write(conn, (void*) mirror.prevData.c_str(), mirror.prevData.size());
+        _server->write(conn, (void*) mirror.prevData, std::string_view(mirror.prevData).size());
 }
 
 void ecs::ServerManager::initPlayers(ConnId conn, World &world)

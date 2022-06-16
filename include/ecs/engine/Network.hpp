@@ -36,7 +36,7 @@ namespace ecs {
     };
 
     struct MirrorEntity {
-        std::string prevData;
+        char prevData[1024 * 4];
     };
 
     struct MirroredEntity {

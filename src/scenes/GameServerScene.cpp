@@ -25,6 +25,7 @@
 #include "ecs/components/Water.hpp"
 #include "ecs/components/PlayAnimation.hpp"
 #include "ecs/components/Skin.hpp"
+#include "ecs/components/DestructibleTile.hpp"
 
 #include <iostream>
 #include "raylib/Matrix.hpp"
@@ -37,7 +38,8 @@ void bomberman::GameServerScene::spawnDestructible(Vector3 pos, ecs::GridPositio
 {
     float rot = ROTATIONS[std::rand() % 4] + (PI / 16.0) * ((std::rand() % 100) / 100.0 - 0.5);
     Transform transform = {pos, QuaternionFromEuler(0, rot, 0), {1, 1, 1}};
-    ecs::Entity entity = world.spawn().insert(transform, ecs::ModelRef {"bag"}, ecs::MirrorEntity {}).getEntity();
+    ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef {"bag"},
+    ecs::MirrorEntity {}, ecs::DestructibleTile {}).getEntity();
 
     _destructibles.insert({gPos, entity});
 }
@@ -132,6 +134,7 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     int playerId = 0;
     int width = _map.getWidth();
     int height = _map.getHeight();
+    std::ifstream file("bombitek.dat");
     Vector3 pos;
 
     world.registerSystems<GameExecuteActionUpdateSystem,
@@ -141,15 +144,29 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});
 
-    generateMapProps(world);
-
-    for (int y = 0; y < height; y++) {
-        for (int x = 0; x < width; x++) {
-            if (_map.getCellAt(x, y) == SPAWN) {
-                pos = {(float) x - width / 2.0f + 0.5f, 0, (float) y - height / 2.0f + 0.5f};
-                spawnPlayer(playerId++, pos, {x, y}, world);
+    if (!file.is_open()) {
+        generateMapProps(world);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (_map.getCellAt(x, y) == SPAWN) {
+                    pos = {(float) x - width / 2.0f + 0.5f, 0, (float) y - height / 2.0f + 0.5f};
+                    spawnPlayer(playerId++, pos, {x, y}, world);
+                }
             }
         }
+    } else {
+        world.decodeEntities(file);
+        for (ecs::Entity entity : world.getLivingEntities()) {
+            if (world.hasComponent<ecs::Player>(entity))
+                _players.insert(entity);
+            else if (world.hasComponent<ecs::BombId>(entity))
+                _bombs.insert(entity);
+            else if (world.hasComponent<ecs::Water>(entity))
+                _water.insert(entity);
+            else if (world.hasComponent<ecs::DestructibleTile>(entity))
+                _destructibles.insert({world.getComponent<ecs::GridPosition>(entity), entity});
+        }
+        _map.load("bombitek.map");
     }
 
     world.getRessource<ecs::PlayersManager>().stopAcceptingPlayers();
@@ -158,6 +175,14 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
 
 void bomberman::GameServerScene::unloadScene(ecs::World &world)
 {
+    std::ofstream file{"bombitek.dat"};
+
+    _map.save("bombitek.map");
+    for (ecs::Entity entity : world.getLivingEntities()) {
+        if (!world.hasComponent<ecs::MirroredEntity>(entity))
+            world.encodeEntity(entity, file);
+    }
+
     world.killAllEntities();
     world.unregisterSystems<GameExecuteActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
