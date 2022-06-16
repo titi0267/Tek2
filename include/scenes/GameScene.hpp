@@ -17,6 +17,9 @@ namespace bomberman {
         std::string port;
         bool startLocalServer;
         int nbPlayers;
+
+        GameSceneArgs(const std::string &ip, const std::string &port, bool localServer, int nbPlayers) :
+            ip(ip), port(port), startLocalServer(localServer), nbPlayers(nbPlayers) {};
     };
 
     class GameScene : public ecs::IScene, public ecs::ClientNetworkSceneModule {

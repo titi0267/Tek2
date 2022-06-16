@@ -30,7 +30,7 @@ void bomberman::GameScene::successConn(ecs::World &world)
 void bomberman::GameScene::failedConn(ecs::World &world)
 {
     std::cout << "failed" << std::endl;
-    world.getRessource<ecs::SceneManager>().changeScene(world, ecs::MAIN_MENU_SCENE, nullptr);
+    world.getRessource<ecs::SceneManager>().changeScene(ecs::MAIN_MENU_SCENE, nullptr);
 }
 
 void bomberman::GameScene::loadScene(ecs::World &world)
@@ -62,7 +62,7 @@ void bomberman::GameScene::entityKilled(ecs::Entity entity, ecs::World &world)
 void bomberman::GameScene::onDisconnect(ecs::World &world)
 {
     std::cout << "disconnect" << std::endl;
-    world.getRessource<ecs::SceneManager>().changeScene(world, ecs::MAIN_MENU_SCENE, nullptr);
+    world.getRessource<ecs::SceneManager>().changeScene(ecs::MAIN_MENU_SCENE, nullptr);
 }
 
 void bomberman::GameScene::playerIdAssigned(ecs::PlayerId id, ecs::World &world)

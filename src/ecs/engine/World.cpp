@@ -16,6 +16,7 @@ void ecs::World::updateClient()
 {
     raylib::Window &window = getRessource<raylib::Window>();
 
+    getRessource<ecs::SceneManager>().executeSceneChange(*this);
     _systems.updateStage(*this, NETWORK_UPDATE);
     _systems.updateStage(*this, TIME_UPDATE);
     _systems.updateStage(*this, INPUT_UPDATE);
@@ -31,6 +32,7 @@ void ecs::World::updateClient()
 
 void ecs::World::updateServer()
 {
+    getRessource<ecs::SceneManager>().executeSceneChange(*this);
     _systems.updateStage(*this, NETWORK_UPDATE);
     _systems.updateStage(*this, TIME_UPDATE);
     _systems.updateStage(*this, INPUT_UPDATE);

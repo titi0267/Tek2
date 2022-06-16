@@ -37,16 +37,14 @@
 
 void startFunction(ecs::World &world, ecs::Entity entity)
 {
-    bomberman::GameSceneArgs args = {"127.0.0.1", "4242", true, 1};
-
-    world.getRessource<ecs::SceneManager>().changeScene(world, ecs::GAME_SCENE, &args);
+    world.getRessource<ecs::SceneManager>().changeScene(ecs::GAME_SCENE,
+    std::make_shared<bomberman::GameSceneArgs>("127.0.0.1", "4242", true, 1));
 }
 
 void connectFunction(ecs::World &world, ecs::Entity entity)
 {
-    bomberman::GameSceneArgs args = {"127.0.0.1", "4242", false, 1};
-
-    world.getRessource<ecs::SceneManager>().changeScene(world, ecs::GAME_SCENE, &args);
+    world.getRessource<ecs::SceneManager>().changeScene(ecs::GAME_SCENE,
+    std::make_shared<bomberman::GameSceneArgs>("127.0.0.1", "4242", false, 1));
 }
 
 void quitFunction(ecs::World &world, ecs::Entity entity)

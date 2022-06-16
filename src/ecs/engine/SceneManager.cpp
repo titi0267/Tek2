@@ -23,10 +23,21 @@ void ecs::SceneManager::loadServerScene(ecs::World &world)
     _actualScene->loadScene(world);
 }
 
-void ecs::SceneManager::changeScene(ecs::World &world, Scenes scene, const void *data)
+void ecs::SceneManager::changeScene(Scenes scene, const std::shared_ptr<void> &data)
 {
-    _actualScene->unloadScene(world);
-    _actualScene = SCENES_LIST[scene](data);
-    _actualSceneType = scene;
-    _actualScene->loadScene(world);
+    _changeRequested = true;
+    _nextScene = scene;
+    _nextSceneData = data;
+}
+
+void ecs::SceneManager::executeSceneChange(ecs::World &world)
+{
+    if (_changeRequested) {
+        _actualScene->unloadScene(world);
+        _actualScene = SCENES_LIST[_nextScene](_nextSceneData.get());
+        _actualSceneType = _nextScene;
+        _nextSceneData.reset();
+        _changeRequested = false;
+        _actualScene->loadScene(world);
+    }
 }

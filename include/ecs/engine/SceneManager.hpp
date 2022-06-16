@@ -34,10 +34,15 @@ namespace ecs {
         std::unique_ptr<IScene> _actualScene;
         Scenes _actualSceneType;
 
+        bool _changeRequested = false;
+        Scenes _nextScene;
+        std::shared_ptr<void> _nextSceneData = nullptr;
+
         public:
         void loadDefaultScene(ecs::World &world);
         void loadServerScene(ecs::World &world);
-        void changeScene(ecs::World &world, Scenes scene, const void *data);
+        void changeScene(Scenes scene, const std::shared_ptr<void> &data);
+        void executeSceneChange(ecs::World &world);
 
         IScene &getScene() { return *_actualScene; };
         Scenes getSceneType() { return _actualSceneType; };

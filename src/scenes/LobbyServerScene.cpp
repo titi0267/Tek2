@@ -100,7 +100,7 @@ void bomberman::LobbyServerScene::checkReady(ecs::World &world)
         }
     }
     if (allReady)
-        world.getRessource<ecs::SceneManager>().changeScene(world, ecs::SERVER_GAME_SCENE, nullptr);
+        world.getRessource<ecs::SceneManager>().changeScene(ecs::SERVER_GAME_SCENE, nullptr);
 }
 
 void bomberman::LobbyServerScene::setPlayerAction(ecs::PlayerId id, ecs::Actions action)
