@@ -46,6 +46,7 @@ namespace bomberman {
         void unloadScene(ecs::World &world);
         void entityKilled(ecs::Entity entity,ecs::World &world) {};
 
+        void spawnBackground(ecs::World &world);
         void generateMainMenu(ecs::World &world);
         void generateSettingsMenu(ecs::World &world);
 

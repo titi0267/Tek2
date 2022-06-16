@@ -39,6 +39,7 @@ int main(int ac, char **av)
 // ---- [COMPONENTS + SYSTEMS] ----
 
     bomberman::registerCriticalComponents(world);
+    bomberman::registerBothSide(world);
 
     bomberman::registerInputs(world);
     bomberman::registerRender(world);

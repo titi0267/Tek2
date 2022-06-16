@@ -29,8 +29,6 @@ void ecs::DrawTextureCubeSystem::setSignature(ecs::ComponentManager &component)
     _signature = component.generateSignature<Transform, DrawableCube, TextureRef>();
 }
 
-#include <iostream>
-
 void ecs::DrawTextureCubeSystem::update(ecs::World &world)
 {
     raylib::Camera &camera = world.getRessource<raylib::Camera>();

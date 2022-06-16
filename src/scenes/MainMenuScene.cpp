@@ -32,6 +32,8 @@
 #include "ecs/components/SceneMoveElement.hpp"
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
+#include "ecs/components/BackgroundRotation.hpp"
+#include "ecs/components/Timer.hpp"
 
 void startFunction(ecs::World &world, ecs::Entity entity)
 {
@@ -111,6 +113,7 @@ void bomberman::MainMenuScene::loadScene(ecs::World &world)
 
     cam.setPosition({0, 0, 2});
     cam.setTarget({0, 0, 0});
+    spawnBackground(world);
     generateMainMenu(world);
     generateSettingsMenu(world);
 }
@@ -118,6 +121,12 @@ void bomberman::MainMenuScene::loadScene(ecs::World &world)
 void bomberman::MainMenuScene::unloadScene(ecs::World &world)
 {
     world.killAllEntities();
+}
+
+void bomberman::MainMenuScene::spawnBackground(ecs::World &world)
+{
+    world.spawn().insert(Transform {{0, 0, -8}, QuaternionFromEuler(0, 0, PI), {1, 1, 1}}, ecs::TextureRef{"epitech"},
+    ecs::DrawableCube{{0, 0, 0}, {36, 20, 0.1}}, ecs::BackgroundRotation {}, ecs::Timer {});
 }
 
 void bomberman::MainMenuScene::generateMainMenu(ecs::World &world)

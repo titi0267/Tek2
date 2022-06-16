@@ -23,6 +23,8 @@
 #include "ecs/components/Movement.hpp"
 #include "ecs/components/PlayAnimation.hpp"
 #include "ecs/components/Skin.hpp"
+#include "ecs/components/BackgroundRotation.hpp"
+#include "ecs/components/Timer.hpp"
 
 #include "network/sockets/SocketInclude.hpp"
 
@@ -33,6 +35,12 @@ void bomberman::registerCriticalComponents(ecs::World &world)
     world.registerComponents<Transform, ecs::Movement, ecs::Hitbox, ecs::PlayerAction,
     ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint,
     ecs::DrawableCube, ecs::Text3D, ecs::PlayAnimation, ecs::Skin>();
+}
+
+void bomberman::registerBothSide(ecs::World &world)
+{
+    world.registerComponent<ecs::Timer>();
+    world.registerSystem<ecs::TimerUpdateSystem>();
 }
 
 void bomberman::registerPhysics(ecs::World &world)
@@ -46,6 +54,9 @@ void bomberman::registerRender(ecs::World &world)
 
     world.registerSystems<ecs::DrawTextureCubeSystem,
     ecs::DrawableModelSystem, ecs::Draw3DTextSystem>();
+
+    world.registerComponent<ecs::BackgroundRotation>();
+    world.registerSystem<ecs::BackgroundRotationUpdateSystem>();
 }
 
 void bomberman::registerInputs(ecs::World &world)

@@ -29,6 +29,7 @@
 void ecs::InternalServer::serverMain()
 {
     bomberman::registerCriticalComponents(*_serverWorld);
+    bomberman::registerBothSide(*_serverWorld);
     bomberman::registerNetwork(*_serverWorld, false);
 
     _serverWorld->insertRessource<ServerManager>();
@@ -37,10 +38,8 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<raylib::AnimationManager>();
     _serverWorld->insertRessource<ecs::Clock>();
 
-    _serverWorld->registerComponents<ecs::BombId, ecs::Water,
-    ecs::Timer, ecs::Player, ecs::GridPosition>();
-    _serverWorld->registerSystems<ecs::TimerUpdateSystem,
-    ecs::PlayerActionUpdateSystem, ecs::AnimationUpdateSystem>();
+    _serverWorld->registerComponents<ecs::Player, ecs::GridPosition, ecs::BombId, ecs::Water>();
+    _serverWorld->registerSystems<ecs::PlayerActionUpdateSystem, ecs::AnimationUpdateSystem>();
 
 // ------
 

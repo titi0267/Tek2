@@ -16,6 +16,7 @@ void bomberman::loadTextures(ecs::World &world)
 {
     raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
 
+    textureMan.loadTexture("epitech", "./assets/textures/epitech.png");
     textureMan.loadTexture("button", "./assets/textures/button.png");
 
     textureMan.loadTexture("bottle", "./assets/textures/bottle.png");
@@ -28,6 +29,7 @@ void bomberman::loadTextures(ecs::World &world)
     textureMan.loadTexture("timothe", "./assets/textures/timothe.png");
     textureMan.loadTexture("ludovic", "./assets/textures/ludo.png");
     textureMan.loadTexture("mathieu", "./assets/textures/mathieu.png");
+    textureMan.loadTexture("jeffrey", "./assets/textures/jeffrey.png");
 }
 
 void bomberman::loadModels(ecs::World &world)
