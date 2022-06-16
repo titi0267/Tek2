@@ -46,12 +46,27 @@ void ecs::KeyRecorderSystem::update(ecs::World &world)
         }
         if (!key.gamepad) {
             int ch = win.getKeyPressed();
-            bool toggle = false;
             while (win.getKeyPressed() != 0);
             if (!ch)
                 continue;
             try {
                 bind.setKey(false, key.bind, ch);
+                text.text = bind.getKeyText(key.gamepad, key.bind);
+            }
+            catch (std::invalid_argument) {
+                continue;
+            }
+            tint = WHITE;
+            hTint.base = WHITE;
+            hTint.onHover = GRAY;
+            key.recording = false;
+        }
+        else {
+            int ch = win.getButtonPressed(0);
+            if (!ch)
+                continue;
+            try {
+                bind.setKey(true, key.bind, ch);
                 text.text = bind.getKeyText(key.gamepad, key.bind);
             }
             catch (std::invalid_argument) {

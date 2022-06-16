@@ -9,6 +9,7 @@
 
 #include <string>
 #include "headers/raylib.h"
+#include "input/GamepadBind.hpp"
 
 namespace raylib {
     class Window {
@@ -111,6 +112,40 @@ namespace raylib {
         int getKeyPressed()
         {
             return (GetKeyPressed());
+        }
+        int getButtonPressed(int gamepad)
+        {
+            if (!IsGamepadAvailable(gamepad))
+                return (0);
+            float a = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X);
+            float b = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y);
+            float c = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X);
+            float d = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y);
+            if (a || b) {
+                float abs_a = a < 0 ? a * -1 : a;
+                float abs_b = b < 0 ? b * -1 : b;
+                if (abs_a >= abs_b) {
+                    if (a < 0)
+                        return (GAMEPAD_JOYSTICK_LEFT_FACE_LEFT);
+                    return (GAMEPAD_JOYSTICK_LEFT_FACE_RIGHT);
+                }
+                if (b < 0)
+                    return (GAMEPAD_JOYSTICK_LEFT_FACE_UP);
+                return (GAMEPAD_JOYSTICK_LEFT_FACE_DOWN);
+            }
+            if (c || d) {
+                float abs_c = c < 0 ? c * -1 : c;
+                float abs_d = d < 0 ? d * -1 : d;
+                if (abs_c >= abs_d) {
+                    if (c < 0)
+                        return (GAMEPAD_JOYSTICK_RIGHT_FACE_LEFT);
+                    return (GAMEPAD_JOYSTICK_RIGHT_FACE_RIGHT);
+                }
+                if (d < 0)
+                    return (GAMEPAD_JOYSTICK_RIGHT_FACE_UP);
+                return (GAMEPAD_JOYSTICK_RIGHT_FACE_DOWN);
+            }
+            return (GetGamepadButtonPressed());
         }
         private:
             bool _close;
