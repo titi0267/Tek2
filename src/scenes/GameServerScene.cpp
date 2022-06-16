@@ -21,11 +21,13 @@
 #include "ecs/components/Player.hpp"
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/Bomb.hpp"
+#include "ecs/components/BombExplosion.hpp"
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/Water.hpp"
 #include "ecs/components/PlayAnimation.hpp"
 #include "ecs/components/Skin.hpp"
 
+#include <iostream>
 #include "raylib/Matrix.hpp"
 
 const float ROTATIONS[4] = {
@@ -91,9 +93,10 @@ void bomberman::GameServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs:
 void bomberman::GameServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
-    ecs::Entity entity = world.spawn().insert(ecs::BombId{}, transform, gPos,
+    ecs::Entity entity = world.spawn().insert(ecs::BombId{}, ecs::BombExplosion {},transform, gPos,
     ecs::ModelRef {"bottle"}, ecs::Timer{}, ecs::MirrorEntity {}).getEntity();
 
+    std::cout << "Spawn bomb" <<std::endl;
     _bombs.insert(entity);
 }
 

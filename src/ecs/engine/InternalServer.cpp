@@ -40,7 +40,7 @@ void ecs::InternalServer::serverMain()
 
     _serverWorld->registerComponents<ecs::BombId, ecs::Water, ecs::BombExplosion,
     ecs::Timer, ecs::Player, ecs::GridPosition>();
-    _serverWorld->registerSystems<ecs::WaterUpdateSystem, ecs::BombExplosionUpdateSystem,
+    _serverWorld->registerSystems<ecs::WaterUpdateSystem, ecs::BombUpdateSystem, ecs::BombExplosionUpdateSystem,
     ecs::TimerUpdateSystem, ecs::PlayerActionUpdateSystem, ecs::MovementUpdateSystem,
     ecs::AnimationUpdateSystem>();
 

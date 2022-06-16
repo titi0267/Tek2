@@ -67,7 +67,6 @@ namespace bomberman {
     class GameExecuteActionUpdateSystem : public ecs::ASystem {
         void placeBomb(ecs::Entity entity, ecs::World &world, bomberman::GameServerScene &scene);
         void movePlayer(ecs::Entity entity, ecs::World &world, ecs::Actions action, map::Map &map);
-        void placeWater(ecs::Entity entity, ecs::World &world, bomberman::GameServerScene &scene);
 
         public:
         GameExecuteActionUpdateSystem() { _stage = ecs::Stages::UPDATE; };

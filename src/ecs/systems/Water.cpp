@@ -9,6 +9,7 @@
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/GridPosition.hpp"
 #include "raylib/Vectors.hpp"
+#include <iostream>
 
 void ecs::WaterUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
@@ -24,6 +25,7 @@ void ecs::WaterUpdateSystem::update(ecs::World &world)
 
         if (timer.timeElapsed >= 0.2) {
             //boum;
+            std::cout << "Boum" << std::endl;
         }
     }
 }

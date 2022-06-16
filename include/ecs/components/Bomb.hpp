@@ -30,6 +30,8 @@ namespace ecs {
 
     class BombUpdateSystem : public ASystem {
         public:
+        BombUpdateSystem() { _stage = ecs::Stages::DRAW_WORLD; };
+
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
     };
