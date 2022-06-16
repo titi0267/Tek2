@@ -34,6 +34,16 @@ const float ROTATIONS[4] = {
     0, PI / 2.0, PI, 3 * PI / 2.0,
 };
 
+Vector3 bomberman::GameServerScene::mapCoordsToWorldCoords(int x, int y)
+{
+    int width = _map.getWidth();
+    int height = _map.getHeight();
+    float centeredX = x - width / 2.0f;
+    float centeredY = y - height / 2.0f;
+
+    return Vector3 {centeredX * 1.2f + 0.5f, 0, centeredY * 1.2f + 0.5f};
+}
+
 void bomberman::GameServerScene::spawnDestructible(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
     float rot = ROTATIONS[std::rand() % 4] + (PI / 16.0) * ((std::rand() % 100) / 100.0 - 0.5);
@@ -55,9 +65,11 @@ void bomberman::GameServerScene::spawnWall(Vector3 pos, ecs::GridPosition gPos, 
 void bomberman::GameServerScene::spawnFloor(Vector2 mapSize, ecs::World &world)
 {
     Transform transform = {{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}};
+    float sizeX = (mapSize.x + 1) * 1.25f;
+    float sizeY = (mapSize.y + 1) * 1.25f;
 
     world.spawn().insert(transform,
-    ecs::DrawableCube {{0, -0.1, 0}, {mapSize.x, 0.1, mapSize.y}},
+    ecs::DrawableCube {{0, -0.1, 0}, {sizeX, 0.1, sizeY}},
     ecs::TextureRef("ground"), ecs::MirrorEntity {});
 }
 
@@ -70,7 +82,7 @@ void bomberman::GameServerScene::generateMapProps(ecs::World &world)
     spawnFloor({(float) width, (float) height}, world);
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
-            pos = {(float) x - width / 2.0f + 0.5f, 0, (float) y - height / 2.0f + 0.5f};
+            pos = mapCoordsToWorldCoords(x, y);
             switch (_map.getCellAt(x, y)) {
                 case DESTRUCTIBLE:
                 spawnDestructible(pos, {x, y}, world);
@@ -165,7 +177,7 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (_map.getCellAt(x, y) == SPAWN) {
-                    pos = {(float) x - width / 2.0f + 0.5f, 0, (float) y - height / 2.0f + 0.5f};
+                    pos = mapCoordsToWorldCoords(x, y);
                     spawnPlayer(playerId++, pos, {x, y}, world);
                 }
             }

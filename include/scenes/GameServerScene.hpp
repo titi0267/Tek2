@@ -39,6 +39,8 @@ namespace bomberman {
         std::set<ecs::Entity> _bombs;
         std::set<ecs::Entity> _water;
 
+        Vector3 mapCoordsToWorldCoords(int x, int y);
+
         void spawnDestructible(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void spawnWall(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void spawnFloor(Vector2 mapSize, ecs::World &world);

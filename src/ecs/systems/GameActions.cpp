@@ -30,15 +30,15 @@ void bomberman::GameExecuteActionUpdateSystem::placeBomb(ecs::Entity entity, ecs
 void bomberman::GameExecuteActionUpdateSystem::movePlayer(ecs::Entity entity, ecs::World &world, ecs::Actions action, map::Map &map)
 {
     const std::unordered_map<ecs::Actions, Vector3> MOVEMENTS = {
-        {ecs::MOVE_UP, {0, 0, -1}},
-        {ecs::MOVE_DOWN, {0, 0, 1}},
-        {ecs::MOVE_LEFT, {-1, 0, 0}},
-        {ecs::MOVE_RIGHT, {1, 0, 0}}
+        {ecs::MOVE_UP, {0, 0, -1.2}},
+        {ecs::MOVE_DOWN, {0, 0, 1.2}},
+        {ecs::MOVE_LEFT, {-1.2, 0, 0}},
+        {ecs::MOVE_RIGHT, {1.2, 0, 0}}
     };
     const std::unordered_map<ecs::Actions, float> ROTATIONS = {
         {ecs::MOVE_UP, PI},
         {ecs::MOVE_DOWN, 0},
-        {ecs::MOVE_LEFT, 3*  PI / 2.0},
+        {ecs::MOVE_LEFT, 3.0 * PI / 2.0},
         {ecs::MOVE_RIGHT, PI / 2.0},
     };
 
