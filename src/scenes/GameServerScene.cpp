@@ -184,7 +184,7 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     world.registerSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
     ecs::BombUpdateSystem, ecs::MovementUpdateSystem,
-    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem>();
+    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem, ecs::PlayerUpdateSystem>();
 
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});
@@ -243,7 +243,7 @@ void bomberman::GameServerScene::unloadScene(ecs::World &world)
     world.unregisterSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
     ecs::BombUpdateSystem, ecs::MovementUpdateSystem,
-    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem>();
+    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem, ecs::PlayerUpdateSystem>();
 }
 
 void bomberman::GameServerScene::entityKilled(ecs::Entity entity,ecs::World &world)

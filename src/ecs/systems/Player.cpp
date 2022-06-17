@@ -16,7 +16,7 @@
 
 void ecs::PlayerUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Timer, Player, SpawnBonus, Movement, Transform>();
+    _signature = component.generateSignature<Player, Transform, GridPosition>();
 }
 
 void ecs::PlayerUpdateSystem::update(ecs::World &world)
@@ -27,9 +27,7 @@ void ecs::PlayerUpdateSystem::update(ecs::World &world)
     static float timeElapsed = 0;
 
     for (ecs::Entity entity : _entities) {
-        Timer &timer = world.getComponent<Timer>(entity);
         Player &player = world.getComponent<Player>(entity);
-        SpawnBonus &spawnBonus = world.getComponent<SpawnBonus>(entity);
         Transform &transform = world.getComponent<Transform>(entity);
 
         if (player.bootsBonus == true) {

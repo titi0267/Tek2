@@ -14,6 +14,7 @@
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/Skin.hpp"
 #include "ecs/components/Player.hpp"
+#include "ecs/components/SpawnBonus.hpp"
 
 void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::World &world)
 {

@@ -29,4 +29,7 @@ namespace ecs {
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
     };
+    class BonusCollisionUpdateSystem {
+
+    };
 }

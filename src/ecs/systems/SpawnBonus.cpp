@@ -11,7 +11,7 @@
 
 void ecs::SpawnBonusUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<SpawnBonus, GridPosition, Transform>();
+    _signature = component.generateSignature<GridPosition, SpawnBonus>();
 }
 
 void ecs::SpawnBonusUpdateSystem::update(ecs::World &world)
@@ -19,8 +19,10 @@ void ecs::SpawnBonusUpdateSystem::update(ecs::World &world)
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
     map::Map &map = scene.getMap();
+
     const std::set<Entity> &players = scene.getPlayers();
     std::vector<std::tuple<Entity, Player&, GridPosition&>> playersAlive;
+    std::vector<ecs::Entity> toDelete;
 
     for (Entity pEntity : players) {
         Player &player = world.getComponent<Player>(pEntity);
@@ -38,7 +40,7 @@ void ecs::SpawnBonusUpdateSystem::update(ecs::World &world)
         for (auto [pEntity, player, gPos] : playersAlive) {
             if (pos == gPos) {
                 std::cout << "GET ENTITY" << std::endl;
-                /*switch (scene.getBonus(entity)) {
+                switch (scene.getBonus(entity)) {
                     case ecs::Bonus::BOMBBONUS:
                         player.bombBonus = true;
                     break;
@@ -53,11 +55,14 @@ void ecs::SpawnBonusUpdateSystem::update(ecs::World &world)
                     break;
                     default:
                     break;
-                }*/
+                }
                 std::cout << "GOT ENTITY" << std::endl;
-                world.getEntityCommands(entity).despawn();
-                scene.deleteBonus(entity);
+                toDelete.push_back(entity);
             }
         }
+    }
+    for (ecs::Entity entity : toDelete) {
+        world.getEntityCommands(entity).despawn();
+        scene.deleteBonus(entity);
     }
 }
