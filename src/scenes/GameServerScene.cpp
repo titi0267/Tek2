@@ -178,7 +178,7 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     int playerId = 0;
     int width = _map.getWidth();
     int height = _map.getHeight();
-    std::ifstream file("bombitek.dat");
+    std::ifstream file("bombitek.dat", std::ios_base::in | std::ios_base::binary);
     Vector3 pos;
 
     world.registerSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
@@ -223,7 +223,7 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
 
 void bomberman::GameServerScene::unloadScene(ecs::World &world)
 {
-    std::ofstream file{"bombitek.dat"};
+    std::ofstream file{"bombitek.dat", std::ios_base::out | std::ios_base::binary};
     std::uint32_t nbEntities = 0;
     std::stringbuf buffer;
     std::string data;
