@@ -132,7 +132,7 @@ int network::WinServer::read(ConnId id, void *buf, std::size_t size)
         throw (SocketError("WinServer", "server has not been created"));
     SocketFd fd = _clients[id];
 
-    return ::read(fd, buf, size);
+    return ::recv(fd, (char *)buf, size,0);
 }
 
 //Needs testing
@@ -142,7 +142,7 @@ void network::WinServer::write(ConnId id, void *data, std::size_t size)
         throw (SocketError("WinServer", "server has not been created"));
     SocketFd fd = _clients[id];
 
-    ::write(fd, data, size);
+    ::send(fd, (char*)data, size,0);
 }
 
 //#warning WinServer::disconnectConn() may not be correct !

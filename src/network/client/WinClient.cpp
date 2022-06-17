@@ -76,7 +76,7 @@ int network::WinClient::read(void *buf, std::size_t size)
 {
     if (!_connected)
         throw (SocketError("WinClient", "client is not connected"));
-    return ::read(_socket->getSocket(), buf, size);
+    return ::recv(_socket->getSocket(), (char *)buf, size, 0);
 }
 
 //Needs testing
@@ -84,7 +84,7 @@ void network::WinClient::write(void *data, std::size_t size)
 {
     if (!_connected)
         throw (SocketError("WinClient", "client is not connected"));
-    ::write(_socket->getSocket(), data, size);
+    ::send(_socket->getSocket(), (char *)data, size, 0);
 }
 
 #endif

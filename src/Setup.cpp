@@ -26,8 +26,6 @@
 #include "ecs/components/BackgroundRotation.hpp"
 #include "ecs/components/Timer.hpp"
 
-#include "network/sockets/SocketInclude.hpp"
-
 // Those components are mirrored between clients and server
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
 void bomberman::registerCriticalComponents(ecs::World &world)
@@ -68,7 +66,7 @@ void bomberman::registerInputs(ecs::World &world)
     world.registerSystems<ecs::PlayerInputsUpdateSystem>();
 
     world.registerComponents<ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement>();
-    world.registerSystems<ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem>();
+    world.registerSystems<ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem>();
 }
 
 void bomberman::registerNetwork(ecs::World &world, bool client)
@@ -79,15 +77,4 @@ void bomberman::registerNetwork(ecs::World &world, bool client)
     } else {
         world.registerSystem<ecs::ServerUpdateSystem>();
     }
-}
-
-int bomberman::WSA(void)
-{
-    #ifdef _WIN32
-    WSACleanup();
-    WSADATA wsaData;
-    if (WSAStartup(MAKEWORD(2,2), &wsaData))
-        return (1);
-    #endif
-    return (0);
 }

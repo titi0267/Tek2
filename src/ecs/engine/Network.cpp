@@ -19,17 +19,17 @@
 // MirrorEntity should NEVER be registered !
 const ecs::ComponentHash ecs::MIRROR_COMPONENTS[ecs::NB_MIRROR_COMPONENTS] = {
     typeid(Transform).hash_code(),
-    typeid(Movement).hash_code(),
-    typeid(Hitbox).hash_code(),
-    typeid(PlayerAction).hash_code(),
-    typeid(TextureRef).hash_code(),
-    typeid(ModelRef).hash_code(),
-    typeid(FontRef).hash_code(),
-    typeid(Tint).hash_code(),
-    typeid(DrawableCube).hash_code(),
-    typeid(Text3D).hash_code(),
-    typeid(PlayAnimation).hash_code(),
-    typeid(Skin).hash_code(),
+    typeid(ecs::Movement).hash_code(),
+    typeid(ecs::Hitbox).hash_code(),
+    typeid(ecs::PlayerAction).hash_code(),
+    typeid(ecs::TextureRef).hash_code(),
+    typeid(ecs::ModelRef).hash_code(),
+    typeid(ecs::FontRef).hash_code(),
+    typeid(ecs::Tint).hash_code(),
+    typeid(ecs::DrawableCube).hash_code(),
+    typeid(ecs::Text3D).hash_code(),
+    typeid(ecs::PlayAnimation).hash_code(),
+    typeid(ecs::Skin).hash_code(),
 };
 
 void ecs::createUpdateLocalEntityBuffer(Entity entity, World &world, std::stringbuf &buffer)

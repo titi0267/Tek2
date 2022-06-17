@@ -109,7 +109,6 @@ void bomberman::MainMenuScene::loadScene(ecs::World &world)
 {
     raylib::Camera &cam = world.getRessource<raylib::Camera>();
 
-    world.registerSystem<ecs::SceneMoveElementSystem>();
     cam.setPosition({0, 0, 2});
     cam.setTarget({0, 0, 0});
     spawnBackground(world);
@@ -119,7 +118,6 @@ void bomberman::MainMenuScene::loadScene(ecs::World &world)
 
 void bomberman::MainMenuScene::unloadScene(ecs::World &world)
 {
-    world.unregisterSystem<ecs::SceneMoveElementSystem>();
     world.killAllEntities();
 }
 
