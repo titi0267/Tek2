@@ -35,6 +35,7 @@
 #include "ecs/components/FPSButton.hpp"
 #include "ecs/components/ToggleButton.hpp"
 #include "ecs/components/KeyRecorder.hpp"
+#include "ecs/components/TextInput.hpp"
 
 namespace bomberman {
     class MainMenuScene : public ecs::IScene, public ecs::MoveRequesterSceneModule {
@@ -64,7 +65,7 @@ namespace bomberman {
         void spawnTitleButton(const Transform &transform, const std::string &text, ecs::World &world);
         void spawnSquareButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
         void spawnSquareButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, ecs::SingleKeyRecorder &recorder);
-        void spawnTextInputButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ecs::World &world);
+        void spawnTextInputButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ecs::World &world, ecs::TextInputSettings &set);
 
         bool &getMovementRequest() { return moveRequest; };
         Vector3 &getMoveDest() { return moveDest; };

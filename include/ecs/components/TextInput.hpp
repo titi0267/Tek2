@@ -23,4 +23,19 @@ namespace ecs {
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
     };
+    struct TextInputSettings {
+        std::string input;
+        bool toggle;
+        bool gamepad;
+        bool save;
+        TextInputSettings() : input(""), toggle(false) {};
+        TextInputSettings(bool gamepad, bool save) : input(""), toggle(false), gamepad(gamepad), save(save) {};
+    };
+    class TextInputSettingsSystem : public ecs::ASystem {
+        public:
+        TextInputSettingsSystem() { _stage = ecs::Stages::INPUT_UPDATE; };
+
+        void setSignature(ecs::ComponentManager &component);
+        void update(ecs::World &world);
+    };
 }

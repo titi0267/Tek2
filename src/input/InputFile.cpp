@@ -17,12 +17,14 @@ InputFile::InputFile(const std::string &path)
 {
     std::ifstream ifs;
     std::vector<std::string> fileContent;
-    std::string filename = std::filesystem::path(path).filename().c_str();
+    std::string filename = std::filesystem::path(path).filename().u8string();
     std::smatch match;
     if (!std::regex_search(filename, match, std::regex("([A-Za-z0-9]+).input")))
         throw std::invalid_argument("Invalid file name");
     _name = match[1].str();
     ifs.open(path, std::ifstream::in);
+    if (!ifs.good())
+        throw std::invalid_argument("Invalid file");
     for (std::string line; std::getline(ifs, line); )
         fileContent.push_back(line);
     if (fileContent.size() != 6)
@@ -57,6 +59,8 @@ void InputFile::save()
 
     std::filesystem::create_directory("./inputs");
     file.open(filename, std::ios::out);
+    if (!file.good())
+        throw std::invalid_argument("Invalid file");
     file << (_gamepad ? "Gamepad" : "Keyboard") << std::endl;
     for (int i = 0; i < 5; i++)
         file << _binds->getKeyString((IBind::Binding) i) << std::endl;

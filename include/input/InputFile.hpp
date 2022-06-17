@@ -20,13 +20,13 @@ class InputFile {
         {
             _name = other._name;
             _gamepad = other._gamepad;
-            _binds = std::move(_binds);
+            _binds = std::move(other._binds);
         }
-        void operator=(const InputFile &other)
+        void operator=(InputFile &&other)
         {
             _name = other._name;
             _gamepad = other._gamepad;
-            _binds = std::move(_binds);
+            _binds = std::move(other._binds);
         }
         ~InputFile();
         void save();

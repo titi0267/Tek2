@@ -12,7 +12,7 @@
 KeyboardBind::KeyboardBind(const std::vector<std::string> &file)
 {
     for (int i = 0; i < 5; i++)
-        _keys[i] = (KeyboardKey)stringToKey(file[i]);
+        _keys.push_back ((KeyboardKey)stringToKey(file[i]));
     for (int i = 0; i < 5; i++)
         for (int ii = i + 1; ii < 5; ii++)
             if (_keys[i] == _keys[ii])

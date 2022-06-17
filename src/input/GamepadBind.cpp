@@ -11,7 +11,7 @@
 GamepadBind::GamepadBind(const std::vector<std::string> &file)
 {
     for (int i = 0; i < 5; i++)
-        _keys[i] = (GamepadButton)stringToKey(file[i]);
+        _keys.push_back ((GamepadButton)stringToKey(file[i]));
     for (int i = 0; i < 5; i++)
         for (int ii = i + 1; ii < 5; ii++)
             if (_keys[i] == _keys[ii])

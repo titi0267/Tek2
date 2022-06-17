@@ -36,6 +36,35 @@
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/TextInput.hpp"
 
+void toggleLoadKeyboard(ecs::World &world, ecs::Entity entity)
+{
+    ecs::BindManager &bind = world.getRessource<ecs::BindManager>();
+
+    bind.load(false, bind.getLoadStr(false));
+}
+
+void toggleLoadGamepad(ecs::World &world, ecs::Entity entity)
+{
+    ecs::BindManager &bind = world.getRessource<ecs::BindManager>();
+
+    bind.load(true, bind.getLoadStr(true));
+}
+
+void toggleSaveKeyboard(ecs::World &world, ecs::Entity entity)
+{
+    ecs::BindManager &bind = world.getRessource<ecs::BindManager>();
+
+    bind.save(0);
+}
+
+
+void toggleSaveGamepad(ecs::World &world, ecs::Entity entity)
+{
+    ecs::BindManager &bind = world.getRessource<ecs::BindManager>();
+
+    bind.save(1);
+}
+
 void toggleKeyRecordFunction(ecs::World &world, ecs::Entity entity)
 {
     ecs::SingleKeyRecorder &key = world.getComponent<ecs::SingleKeyRecorder>(entity);
@@ -194,6 +223,8 @@ void bomberman::MainMenuScene::generateGamepadPart(ecs::World &world)
     ecs::SingleKeyRecorder c = {true, IBind::RIGHT};
     ecs::SingleKeyRecorder d = {true, IBind::DOWN};
     ecs::SingleKeyRecorder e = {true, IBind::PLACE};
+    ecs::TextInputSettings first = {true, false};
+    ecs::TextInputSettings second = {true, true};
 
     spawnStaticButton({{-19.5, -7.25, -2}, rot, {1, 1, 1}}, "Up", world);
     spawnStaticButton({{-19.5, -8.25, -2}, rot, {1, 1, 1}}, "Left", world);
@@ -206,11 +237,11 @@ void bomberman::MainMenuScene::generateGamepadPart(ecs::World &world)
     spawnSquareButton({{-17, -10.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
     spawnSquareButton({{-17, -11.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
     spawnStaticButton({{-23.5, -7.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
-    spawnTextInputButton({{-24, -8.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world);
-    spawnSquareButton({{-22, -8.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, upFunction, world);
+    spawnTextInputButton({{-24, -8.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, first);
+    spawnSquareButton({{-22, -8.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleLoadGamepad, world);
     spawnStaticButton({{-23.5, -9.75, -2}, rot, {1, 1, 1}}, "Save to:", world);
-    spawnTextInputButton({{-24, -10.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world);
-    spawnSquareButton({{-22, -10.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, upFunction, world);
+    spawnTextInputButton({{-24, -10.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, second);
+    spawnSquareButton({{-22, -10.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleSaveGamepad, world);
     spawnButton({{-20, -12.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
 }
 
@@ -223,6 +254,8 @@ void bomberman::MainMenuScene::generateKeyboardPart(ecs::World &world)
     ecs::SingleKeyRecorder c = {false, IBind::RIGHT};
     ecs::SingleKeyRecorder d = {false, IBind::DOWN};
     ecs::SingleKeyRecorder e = {false, IBind::PLACE};
+    ecs::TextInputSettings first = {false, false};
+    ecs::TextInputSettings second = {false, true};
 
     spawnStaticButton({{-0.5, -7.25, -2}, rot, {1, 1, 1}}, "Up", world);
     spawnStaticButton({{-0.5, -8.25, -2}, rot, {1, 1, 1}}, "Left", world);
@@ -235,11 +268,11 @@ void bomberman::MainMenuScene::generateKeyboardPart(ecs::World &world)
     spawnSquareButton({{-3, -10.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
     spawnSquareButton({{-3, -11.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
     spawnStaticButton({{3.5, -7.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
-    spawnStaticButton({{4, -8.75, -2}, rot, {1, 1, 1}}, "", world);
-    spawnSquareButton({{2, -8.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, upFunction, world);
+    spawnTextInputButton({{4, -8.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, first);
+    spawnSquareButton({{2, -8.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleLoadKeyboard, world);
     spawnStaticButton({{3.5, -9.75, -2}, rot, {1, 1, 1}}, "Save to:", world);
-    spawnStaticButton({{4, -10.75, -2}, rot, {1, 1, 1}}, "", world);
-    spawnSquareButton({{2, -10.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, upFunction, world);
+    spawnTextInputButton({{4, -10.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, second);
+    spawnSquareButton({{2, -10.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleSaveKeyboard, world);
     spawnButton({{0, -12.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, rightFunction, world);
 }
 
@@ -354,7 +387,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
 }
 
 void bomberman::MainMenuScene::spawnTextInputButton(const Transform &transform, const std::string &text,
-const ecs::HoverTint &hoverTint, ecs::World &world)
+const ecs::HoverTint &hoverTint, ecs::World &world, ecs::TextInputSettings &set)
 {
     const float BUTTON_SIZE = 3;
 
@@ -363,7 +396,7 @@ const ecs::HoverTint &hoverTint, ecs::World &world)
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint,
-    ecs::SceneMoveElement {0.7}, ecs::TextInput {});
+    ecs::SceneMoveElement {0.7}, set);
 }
 
 void bomberman::MainMenuScene::spawnStaticButton(const Transform &transform, const std::string &text, ecs::World &world)

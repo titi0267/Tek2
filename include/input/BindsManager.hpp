@@ -10,11 +10,14 @@
 #include "InputFile.hpp"
 #include <utility>
 #include <stdexcept>
+#include <iostream>
 
 namespace ecs {
     class BindManager {
         InputFile _gamepad;
         InputFile _keyboard;
+        std::string _loadGp;
+        std::string _loadKb;
         bool _setOffGp;
         bool _setOffKb;
         bool _recordingGp;
@@ -62,12 +65,13 @@ namespace ecs {
                 try {
                     InputFile file(path);
                     if (gamepad)
-                        _gamepad = file;
+                        _gamepad = std::move(file);
                     else
-                        _keyboard = file;
+                        _keyboard = std::move(file);
                 }
                 catch (std::invalid_argument) {
-                    throw std::invalid_argument("File does not exist or isn't correct!");
+                    std::cerr << "Bad input file" << std::endl;
+                    //throw std::invalid_argument("File does not exist or isn't correct!");
                 }
             }
             void toggleSetOff(bool gamepad)
@@ -108,6 +112,19 @@ namespace ecs {
                 if (gamepad)
                     return (_textInputGp);
                 return (_textInputKb);
+            }
+            void setLoadStr(bool gamepad, const std::string &str)
+            {
+                if (gamepad)
+                    _loadGp = std::string("./inputs/").append(str).append(".input");
+                else
+                    _loadKb = std::string("./inputs/").append(str).append(".input");
+            }
+            std::string &getLoadStr(bool gamepad)
+            {
+                if (gamepad)
+                    return (_loadGp);
+                return (_loadKb);
             }
         protected:
         private:
