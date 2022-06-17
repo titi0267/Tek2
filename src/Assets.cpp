@@ -22,12 +22,13 @@ void bomberman::loadTextures(ecs::World &world)
     textureMan.loadTexture("button", "./assets/textures/button.png");
     textureMan.loadTexture("large_button", "./assets/textures/large_button.png");
     textureMan.loadTexture("square_button", "./assets/textures/square_button.png");
+    textureMan.loadTexture("amphi", "./assets/textures/amphi.png");
 
     textureMan.loadTexture("bottle", "./assets/textures/bottle.png");
     textureMan.loadTexture("table", "./assets/textures/table.png");
     textureMan.loadTexture("chair", "./assets/textures/chair.png");
     textureMan.loadTexture("bag", "./assets/textures/bag.png");
-    textureMan.loadTexture("ground", "./assets/textures/ground.png");
+    // textureMan.loadTexture("ground", "./assets/textures/ground.png");
     textureMan.loadTexture("water", "./assets/textures/water.png");
 
     textureMan.loadTexture("timothe", "./assets/textures/timothe.png");
@@ -44,6 +45,7 @@ void bomberman::loadModels(ecs::World &world)
     modelMan.loadModel("large_button", "./assets/models/large_button.iqm");
     modelMan.loadModel("square_button", "./assets/models/square_button.iqm");
     modelMan.loadModel("logo", "./assets/models/logo.iqm");
+    modelMan.loadModel("amphi", "./assets/models/amphi.iqm");
 
     modelMan.loadModel("bottle", "./assets/models/bottle.iqm");
     modelMan.loadModel("table", "./assets/models/table.iqm");
@@ -98,6 +100,9 @@ void bomberman::applyAssetsToModels(ecs::World &world)
 
     modelMan.getModel("button").getMaterialView(0)
     .setTexture(textureMan.getTexture("button"));
+
+    modelMan.getModel("amphi").getMaterialView(0)
+    .setTexture(textureMan.getTexture("amphi"));
 
     modelMan.getModel("bottle").getMaterialView(0)
     .setTexture(textureMan.getTexture("bottle"));

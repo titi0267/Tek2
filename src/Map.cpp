@@ -83,9 +83,11 @@ void map::Map::squareGen()
     setCellAt(MAP_X - 2, MAP_Y - 3, WALL);
 
     // CENTRE
-    for (int i = 3; i < MAP_Y - 3; i++) {
-        for (int j = 3; j < MAP_X - 3; j++) {
-            setCellAt(j, i, WALL);
+    for (int y = 3; y < MAP_Y - 3; y++) {
+        for (int x = 3; x < MAP_X - 3; x++) {
+            if ((x % 3 == 1) || (y % 3 == 1))
+                continue;
+            setCellAt(y, x, WALL);
         }
     }
 }

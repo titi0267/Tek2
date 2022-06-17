@@ -47,9 +47,16 @@ Vector3 bomberman::GameServerScene::mapCoordsToWorldCoords(int x, int y)
 
 void bomberman::GameServerScene::spawnDestructible(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
+    const ecs::Tint TINTS[5]= {
+        {240, 90, 90, 255},
+        {247, 235, 230, 255},
+        {20, 111, 50, 255},
+        {71, 20, 35, 255},
+        {34, 35, 29, 255},
+    };
     float rot = ROTATIONS[std::rand() % 4] + (PI / 16.0) * ((std::rand() % 100) / 100.0 - 0.5);
     Transform transform = {pos, QuaternionFromEuler(0, rot, 0), {1, 1, 1}};
-    ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef {"bag"},
+    ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef {"bag"}, TINTS[std::rand() % 5],
     ecs::MirrorEntity {}, ecs::DestructibleTile {}).getEntity();
 
     _destructibles.insert({gPos, entity});
@@ -80,7 +87,8 @@ void bomberman::GameServerScene::generateMapProps(ecs::World &world)
     int height = _map.getHeight();
     Vector3 pos;
 
-    spawnFloor({(float) width, (float) height}, world);
+    // spawnFloor({(float) width, (float) height}, world);
+    world.spawn().insert(Transform {{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::ModelRef{"amphi"}, ecs::MirrorEntity{});
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             pos = mapCoordsToWorldCoords(x, y);
@@ -218,7 +226,7 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     }
 
     world.getRessource<ecs::PlayersManager>().stopAcceptingPlayers();
-    world.getRessource<ecs::ServerManager>().moveCameras({0, 12, 5}, {0, 0, 0});
+    world.getRessource<ecs::ServerManager>().moveCameras({0, 16, 3}, {0, 0, 0});
 }
 
 void bomberman::GameServerScene::unloadScene(ecs::World &world)

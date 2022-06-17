@@ -50,7 +50,7 @@ namespace bomberman {
         void generateMapProps(ecs::World &world);
 
         public:
-        GameServerScene(const void *data) : _map(9, 9, 4, 4) {};
+        GameServerScene(const void *data) : _map(15, 15, 4, 4) {};
 
         void loadScene(ecs::World &world);
         void unloadScene(ecs::World &world);

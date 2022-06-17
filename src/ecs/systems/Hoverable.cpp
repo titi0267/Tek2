@@ -12,6 +12,7 @@
 
 #include "raylib/Window.hpp"
 #include "raylib/Camera.hpp"
+#include <limits>
 
 #include <iostream>
 #include <limits>
