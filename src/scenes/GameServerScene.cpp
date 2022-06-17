@@ -235,7 +235,7 @@ void bomberman::GameServerScene::unloadScene(ecs::World &world)
     world.unregisterSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
     ecs::BombUpdateSystem, ecs::MovementUpdateSystem,
-    GameCheckWinSystem>();
+    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem>();
 }
 
 void bomberman::GameServerScene::entityKilled(ecs::Entity entity,ecs::World &world)
