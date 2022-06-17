@@ -29,12 +29,20 @@ namespace ecs {
 
         double getDeltaSec()
         {
-            return _delta.count() / 1000000000.0;
+            #ifdef __linux__
+                return _delta.count() / 1000000000.0;
+            #elif _WIN32
+                return _delta.count() / 10000000.0;
+            #endif
         }
 
         std::uint64_t getNanoSec()
         {
-            return _delta.count();
+            #ifdef __linux__
+                return _delta.count();
+            #elif _WIN32
+                return _delta.count() * 100;
+            #endif
         }
     };
 }

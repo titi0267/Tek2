@@ -36,12 +36,13 @@ void ecs::WaterUpdateSystem::update(ecs::World &world)
         if (!water.expanded && timer.timeElapsed >= 0.2) {
             Vector3 pos = transform.translation + water.dir;
             ecs::GridPosition newGPos = gPos + ecs::GridPosition{(int) water.dir.x, (int) water.dir.z};
-            int cell = map.getCellAt(newGPos.x, newGPos.y);
 
             water.expanded = true;
 
             if (water.distance >= 4 || !newGPos.isValidPos(map))
                 continue;
+
+            int cell = map.getCellAt(newGPos.x, newGPos.y);
 
             if (cell == VOID || cell == SPAWN) {
                 scene.spawnWater(pos, newGPos, water.dir, water.distance + 1, world);
