@@ -32,8 +32,12 @@ namespace ecs {
         SystemManager &getSystemManager() { return _systems; };
         RessourcesManager &getRessourceManager() { return _ressources; };
 
-        void update();
+        void updateClient();
+        void updateServer();
         void killAllEntities();
+
+        void decodeEntities(std::ifstream &file);
+        void encodeEntity(Entity entity, std::stringbuf &buffer);
 
         EntityCommands spawn();
         EntityCommands getEntityCommands(Entity entity);
@@ -69,6 +73,12 @@ namespace ecs {
         }
 
         template<typename T>
+        std::vector<Entity> query()
+        {
+            return _components.query<T>();
+        }
+
+        template<typename T>
         void registerSystem()
         {
             _systems.registerSystem<T>(_components);
@@ -78,6 +88,18 @@ namespace ecs {
         void registerSystems()
         {
             (_systems.registerSystem<Ts>(_components), ...);
+        }
+
+        template<typename T>
+        void unregisterSystem()
+        {
+            _systems.unregisterSystem<T>();
+        }
+
+        template<typename ...Ts>
+        void unregisterSystems()
+        {
+            (_systems.unregisterSystem<Ts>(), ...);
         }
 
         template<typename T, typename ...Args>

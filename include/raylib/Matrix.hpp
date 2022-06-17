@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "headers/raylib.h"
 #include "headers/raymath.h"
 
 namespace raylib {

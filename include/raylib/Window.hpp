@@ -13,10 +13,12 @@
 
 namespace raylib {
     class Window {
+        bool _close = false;
+        int _fps;
+
         public:
         Window(int width = 640, int height = 480, const std::string &name = "Indie Studio")
         {
-            _close = false;
             InitWindow(width, height, name.c_str());
         };
 
@@ -29,6 +31,16 @@ namespace raylib {
         {
             _fps = fps;
             SetTargetFPS(fps);
+        }
+
+        int getFPS()
+        {
+            return (_fps);
+        }
+
+        void drawFPS(int x, int y)
+        {
+            DrawFPS(x, y);
         }
 
         void resize(Vector2 size)
@@ -51,9 +63,7 @@ namespace raylib {
 
         bool shouldClose()
         {
-            if (_close)
-                return (true);
-            return WindowShouldClose();
+            return _close || WindowShouldClose();
         }
 
         Vector2 getMousePos()
@@ -61,14 +71,14 @@ namespace raylib {
             return GetMousePosition();
         }
 
-        int getFPS()
+        bool isKeyDown(KeyboardKey key)
         {
-            return (_fps);
+            return IsKeyDown(key);
         }
 
-        void drawFPS(int x, int y)
+        bool isKeyPressed(KeyboardKey key)
         {
-            DrawFPS(x, y);
+            return IsKeyPressed(key);
         }
 
         bool isMouseButtonPressed(MouseButton button)
@@ -95,7 +105,7 @@ namespace raylib {
         {
             if (IsWindowFullscreen())
                 return;
-            resize({(float)1920,(float)1080});
+            resize({(float) 1920,(float) 1080});
             ToggleFullscreen();
         }
 
@@ -103,16 +113,19 @@ namespace raylib {
         {
             return (IsWindowFullscreen());
         }
+
         void setWindowed()
         {
             if (!IsWindowFullscreen())
                 return;
             ToggleFullscreen();
         }
+
         int getKeyPressed()
         {
             return (GetKeyPressed());
         }
+
         int getButtonPressed(int gamepad)
         {
             if (!IsGamepadAvailable(gamepad))
@@ -147,8 +160,5 @@ namespace raylib {
             }
             return (GetGamepadButtonPressed());
         }
-        private:
-            bool _close;
-            int _fps;
     };
 }

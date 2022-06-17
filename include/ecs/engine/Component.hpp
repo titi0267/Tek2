@@ -12,12 +12,16 @@
 #include <unordered_map>
 #include <array>
 #include <memory>
+#include <vector>
+#include <algorithm>
 
 #include "Entity.hpp"
 
 namespace ecs {
     using ComponentType = std::uint8_t;
     const ComponentType MAX_COMPONENTS = 64;
+
+    using ComponentHash = std::size_t;
 
     using Signature = std::bitset<MAX_COMPONENTS>;
 
@@ -27,7 +31,11 @@ namespace ecs {
 
     class IComponentArray {
         public:
+        virtual void addEntity(Entity entity) = 0;
         virtual void removeEntity(Entity entity) = 0;
+        virtual void *getComponentPtr(Entity entity) = 0;
+        virtual bool isEntityRegistered(Entity entity) = 0;
+        virtual std::size_t getComponentSize() = 0;
     };
 
     template<typename T>
@@ -38,6 +46,13 @@ namespace ecs {
         std::size_t _nextIndex = 0;
 
         public:
+        void addEntity(Entity entity)
+        {
+            _entityToIndex[entity] = _nextIndex;
+            _indexToEntity[_nextIndex] = entity;
+            _nextIndex++;
+        }
+
         void addEntity(Entity entity, const T &component)
         {
             _components[_nextIndex] = component;
@@ -74,16 +89,34 @@ namespace ecs {
             return _components[_entityToIndex[entity]];
         }
 
+        void *getComponentPtr(Entity entity)
+        {
+            if (_entityToIndex.find(entity) == _entityToIndex.end())
+                throw EnityDoNotHaveComponent();
+            return &_components[_entityToIndex[entity]];
+        }
+
         bool isEntityRegistered(Entity entity)
         {
             return _entityToIndex.find(entity) != _entityToIndex.end();
         }
+
+        std::vector<Entity> getEntities()
+        {
+            std::vector<Entity> entities(_entityToIndex.size());
+
+            std::transform(_entityToIndex.begin(), _entityToIndex.end(), entities.begin(), [](auto pair){return pair.first;});
+            return entities;
+        }
+
+        std::size_t getComponentSize()
+        {
+            return sizeof(T);
+        }
     };
 
     class ComponentManager {
-        using ComponentHash = std::size_t;
-
-        ComponentType _nextComponentType = 1;
+        ComponentType _nextComponentType = 0;
         std::unordered_map<ComponentHash, ComponentType> _componentTypes;
         std::unordered_map<ComponentType, std::unique_ptr<IComponentArray>> _componentsArrays;
 
@@ -116,6 +149,11 @@ namespace ecs {
         {
             ComponentHash hash = typeid(T).hash_code();
 
+            return getComponentTypeByHash(hash);
+        }
+
+        ComponentType getComponentTypeByHash(ComponentHash hash)
+        {
             if (_componentTypes.find(hash) == _componentTypes.end())
                 throw UnknownComponent();
             return _componentTypes[hash];
@@ -168,6 +206,36 @@ namespace ecs {
             if (_componentTypes.find(hash) == _componentTypes.end())
                 throw UnknownComponent();
             return getComponentArray<T>(_componentTypes[hash])->isEntityRegistered(entity);
+        }
+
+        template<typename T>
+        std::vector<Entity> query()
+        {
+            ComponentHash hash = typeid(T).hash_code();
+
+            if (_componentTypes.find(hash) == _componentTypes.end())
+                throw UnknownComponent();
+            return getComponentArray<T>(_componentTypes[hash])->getEntities();
+        }
+
+        void addComponentToEntityByType(ComponentType type, Entity entity)
+        {
+            _componentsArrays[type]->addEntity(entity);
+        }
+
+        void *getComponentByType(ComponentType type, Entity entity)
+        {
+            return _componentsArrays[type]->getComponentPtr(entity);
+        }
+
+        bool hasComponentById(ComponentType type, Entity entity)
+        {
+            return _componentsArrays[type]->isEntityRegistered(entity);
+        }
+
+        std::size_t getComponentSize(ComponentType type)
+        {
+            return _componentsArrays[type]->getComponentSize();
         }
 
         IComponentArray *getIComponentArray(ComponentType type)

@@ -10,6 +10,7 @@
 #include <sstream>
 
 #include "scenes/MainMenuScene.hpp"
+#include "scenes/GameScene.hpp"
 
 #include "ecs/engine/EntityCommands.hpp"
 
@@ -35,6 +36,8 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/TextInput.hpp"
+#include "ecs/components/BackgroundRotation.hpp"
+#include "ecs/components/Timer.hpp"
 
 void toggleLoadKeyboard(ecs::World &world, ecs::Entity entity)
 {
@@ -56,7 +59,6 @@ void toggleSaveKeyboard(ecs::World &world, ecs::Entity entity)
 
     bind.save(0);
 }
-
 
 void toggleSaveGamepad(ecs::World &world, ecs::Entity entity)
 {
@@ -118,6 +120,18 @@ void fullscreenFunction(ecs::World &world, ecs::Entity entity)
     world.getComponent<ecs::FullscreenButton>(entity).timeout = true;
 }
 
+void startFunction(ecs::World &world, ecs::Entity entity)
+{
+    world.getRessource<ecs::SceneManager>().changeScene(ecs::GAME_SCENE,
+    std::make_shared<bomberman::GameSceneArgs>("127.0.0.1", "4242", true, 1));
+}
+
+void connectFunction(ecs::World &world, ecs::Entity entity)
+{
+    world.getRessource<ecs::SceneManager>().changeScene(ecs::GAME_SCENE,
+    std::make_shared<bomberman::GameSceneArgs>("127.0.0.1", "4242", false, 1));
+}
+
 void quitFunction(ecs::World &world, ecs::Entity entity)
 {
     world.getComponent<ecs::Tint>(entity) = RED;
@@ -132,7 +146,7 @@ void downFunction(ecs::World &world, ecs::Entity entity)
         ecs::MoveRequesterSceneModule &scene = dynamic_cast<ecs::MoveRequesterSceneModule&>(man.getScene());
 
         scene.getMovementRequest() = true;
-        scene.getMoveDest() = {0, 10, 0};
+        scene.getMoveDest() = {0, 15, 0};
         world.getComponent<ecs::Tint>(entity) = RED;
     } catch (std::bad_cast) {};
 }
@@ -145,7 +159,7 @@ void upFunction(ecs::World &world, ecs::Entity entity)
         ecs::MoveRequesterSceneModule &scene = dynamic_cast<ecs::MoveRequesterSceneModule&>(man.getScene());
 
         scene.getMovementRequest() = true;
-        scene.getMoveDest() = {0, -10, 0};
+        scene.getMoveDest() = {0, -15, 0};
         world.getComponent<ecs::Tint>(entity) = RED;
     } catch (std::bad_cast) {};
 }
@@ -158,7 +172,7 @@ void rightFunction(ecs::World &world, ecs::Entity entity)
         ecs::MoveRequesterSceneModule &scene = dynamic_cast<ecs::MoveRequesterSceneModule&>(man.getScene());
 
         scene.getMovementRequest() = true;
-        scene.getMoveDest() = {10, 0, 0};
+        scene.getMoveDest() = {15, 0, 0};
         world.getComponent<ecs::Tint>(entity) = RED;
     } catch (std::bad_cast) {};
 }
@@ -171,13 +185,18 @@ void leftFunction(ecs::World &world, ecs::Entity entity)
         ecs::MoveRequesterSceneModule &scene = dynamic_cast<ecs::MoveRequesterSceneModule&>(man.getScene());
 
         scene.getMovementRequest() = true;
-        scene.getMoveDest() = {-10, 0, 0};
+        scene.getMoveDest() = {-15, 0, 0};
         world.getComponent<ecs::Tint>(entity) = RED;
     } catch (std::bad_cast) {};
 }
 
 void bomberman::MainMenuScene::loadScene(ecs::World &world)
 {
+    raylib::Camera &cam = world.getRessource<raylib::Camera>();
+
+    cam.setPosition({0, 0, 2});
+    cam.setTarget({0, 0, 0});
+    spawnBackground(world);
     generateMainMenu(world);
     generateSettingsMenu(world);
 }
@@ -187,6 +206,12 @@ void bomberman::MainMenuScene::unloadScene(ecs::World &world)
     world.killAllEntities();
 }
 
+void bomberman::MainMenuScene::spawnBackground(ecs::World &world)
+{
+    world.spawn().insert(Transform {{0, 0, -8}, QuaternionFromEuler(0, 0, PI), {1, 1, 1}}, ecs::TextureRef{"epitech"},
+    ecs::DrawableCube{{0, 0, 0}, {36, 20, 0.1}}, ecs::BackgroundRotation {}, ecs::Timer {});
+}
+
 void bomberman::MainMenuScene::generateMainMenu(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
@@ -194,10 +219,15 @@ void bomberman::MainMenuScene::generateMainMenu(ecs::World &world)
     auto &music = man.getSound("main_menu_music");
 
     music.playSound();
-    spawnButton({{0, 2.75, -2}, rot, {1, 1, 1}}, "Start", {WHITE, GREEN}, quitFunction, world);
-    spawnButton({{0, 1.75, -2}, rot, {1, 1, 1}}, "Tutorial", {WHITE, GRAY}, quitFunction, world);
-    spawnButton({{0, 0.75, -2}, rot, {1, 1, 1}}, "Settings", {WHITE, GRAY}, rightFunction, world);
-    spawnButton({{0, -0.75, -2}, rot, {1, 1, 1}}, "Quit", {WHITE, RED}, quitFunction, world);
+
+    world.spawn().insert(Transform {{0, 2.25, -2}, QuaternionIdentity(), {1, 1, 1}},
+    ecs::ModelRef{"logo"}, ecs::SceneMoveElement{MOVE_SPEED - 0.3f});
+
+    spawnButton({{0,  1.25, -2}, rot, {1, 1, 1}}, "Start", {WHITE, GREEN}, startFunction, world);
+    spawnButton({{0,  0.50, -2}, rot, {1, 1, 1}}, "Connect", {WHITE, GREEN}, connectFunction, world);
+    spawnButton({{0, -0.50, -2}, rot, {1, 1, 1}}, "Tutorial", {WHITE, GRAY}, quitFunction, world);
+    spawnButton({{0, -1.25, -2}, rot, {1, 1, 1}}, "Settings", {WHITE, GRAY}, rightFunction, world);
+    spawnButton({{0, -2.50, -2}, rot, {1, 1, 1}}, "Quit", {WHITE, RED}, quitFunction, world);
 }
 
 void bomberman::MainMenuScene::generateAudioSettingsMenu(ecs::World &world)
@@ -205,14 +235,14 @@ void bomberman::MainMenuScene::generateAudioSettingsMenu(ecs::World &world)
     Quaternion rot = QuaternionIdentity();
     float y = 2.75;
 
-    spawnTitleButton({{-20, y, -2}, rot, {1, 1, 1}}, "Settings Menu", world);
-    spawnToggleButton({{-20, y - 1, -2}, rot, {1, 1, 1}}, "Music is on!", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::MUSIC);
-    spawnToggleButton({{-20, y - 2, -2}, rot, {1, 1, 1}}, "Sound is on!", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
+    spawnTitleButton({{-30, y, -2}, rot, {1, 1, 1}}, "Settings Menu", world);
+    spawnToggleButton({{-30, y - 1, -2}, rot, {1, 1, 1}}, "Music is on!", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::MUSIC);
+    spawnToggleButton({{-30, y - 2, -2}, rot, {1, 1, 1}}, "Sound is on!", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
     // CHANGE WITH NUANCER
-    spawnToggleButton({{-20, y - 3, -2}, rot, {1, 1, 1}}, ("Music: 100" ), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
-    spawnToggleButton({{-20, y - 4, -2}, rot, {1, 1, 1}}, ("Sound: 100"), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
+    spawnToggleButton({{-30, y - 3, -2}, rot, {1, 1, 1}}, ("Music: 100" ), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
+    spawnToggleButton({{-30, y - 4, -2}, rot, {1, 1, 1}}, ("Sound: 100"), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
     // CHANGE WITH NUANCER
-    spawnButton({{-20, y - 5, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
+    spawnButton({{-30, y - 5, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
 }
 
 void bomberman::MainMenuScene::generateGamepadPart(ecs::World &world)
@@ -226,23 +256,23 @@ void bomberman::MainMenuScene::generateGamepadPart(ecs::World &world)
     ecs::TextInputSettings first = {true, false};
     ecs::TextInputSettings second = {true, true};
 
-    spawnStaticButton({{-19.5, -7.25, -2}, rot, {1, 1, 1}}, "Up", world);
-    spawnStaticButton({{-19.5, -8.25, -2}, rot, {1, 1, 1}}, "Left", world);
-    spawnStaticButton({{-19.5, -9.25, -2}, rot, {1, 1, 1}}, "Right", world);
-    spawnStaticButton({{-19.5, -10.25, -2}, rot, {1, 1, 1}}, "Down", world);
-    spawnStaticButton({{-19.5, -11.25, -2}, rot, {1, 1, 1}}, "Place bomb", world);
-    spawnSquareButton({{-17, -7.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, a);
-    spawnSquareButton({{-17, -8.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, b);
-    spawnSquareButton({{-17, -9.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, c);
-    spawnSquareButton({{-17, -10.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
-    spawnSquareButton({{-17, -11.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
-    spawnStaticButton({{-23.5, -7.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
-    spawnTextInputButton({{-24, -8.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, first);
-    spawnSquareButton({{-22, -8.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleLoadGamepad, world);
-    spawnStaticButton({{-23.5, -9.75, -2}, rot, {1, 1, 1}}, "Save to:", world);
-    spawnTextInputButton({{-24, -10.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, second);
-    spawnSquareButton({{-22, -10.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleSaveGamepad, world);
-    spawnButton({{-20, -12.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
+    spawnStaticButton({{-29.5, -12.25, -2}, rot, {1, 1, 1}}, "Up", world);
+    spawnStaticButton({{-29.5, -13.25, -2}, rot, {1, 1, 1}}, "Left", world);
+    spawnStaticButton({{-29.5, -14.25, -2}, rot, {1, 1, 1}}, "Right", world);
+    spawnStaticButton({{-29.5, -15.25, -2}, rot, {1, 1, 1}}, "Down", world);
+    spawnStaticButton({{-29.5, -16.25, -2}, rot, {1, 1, 1}}, "Place bomb", world);
+    spawnSquareButton({{-27, -12.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, a);
+    spawnSquareButton({{-27, -13.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, b);
+    spawnSquareButton({{-27, -14.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, c);
+    spawnSquareButton({{-27, -15.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
+    spawnSquareButton({{-27, -16.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
+    spawnStaticButton({{-33.5, -12.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
+    spawnTextInputButton({{-34, -13.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, first);
+    spawnSquareButton({{-32, -13.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleLoadGamepad, world);
+    spawnStaticButton({{-33.5, -14.75, -2}, rot, {1, 1, 1}}, "Save to:", world);
+    spawnTextInputButton({{-34, -15.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, second);
+    spawnSquareButton({{-32, -15.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleSaveGamepad, world);
+    spawnButton({{-30, -17.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
 }
 
 void bomberman::MainMenuScene::generateKeyboardPart(ecs::World &world)
@@ -257,33 +287,33 @@ void bomberman::MainMenuScene::generateKeyboardPart(ecs::World &world)
     ecs::TextInputSettings first = {false, false};
     ecs::TextInputSettings second = {false, true};
 
-    spawnStaticButton({{-0.5, -7.25, -2}, rot, {1, 1, 1}}, "Up", world);
-    spawnStaticButton({{-0.5, -8.25, -2}, rot, {1, 1, 1}}, "Left", world);
-    spawnStaticButton({{-0.5, -9.25, -2}, rot, {1, 1, 1}}, "Right", world);
-    spawnStaticButton({{-0.5, -10.25, -2}, rot, {1, 1, 1}}, "Down", world);
-    spawnStaticButton({{-0.5, -11.25, -2}, rot, {1, 1, 1}}, "Place bomb", world);
-    spawnSquareButton({{-3, -7.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, a);
-    spawnSquareButton({{-3, -8.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, b);
-    spawnSquareButton({{-3, -9.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, c);
-    spawnSquareButton({{-3, -10.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
-    spawnSquareButton({{-3, -11.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
-    spawnStaticButton({{3.5, -7.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
-    spawnTextInputButton({{4, -8.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, first);
-    spawnSquareButton({{2, -8.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleLoadKeyboard, world);
-    spawnStaticButton({{3.5, -9.75, -2}, rot, {1, 1, 1}}, "Save to:", world);
-    spawnTextInputButton({{4, -10.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, second);
-    spawnSquareButton({{2, -10.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleSaveKeyboard, world);
-    spawnButton({{0, -12.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, rightFunction, world);
+    spawnStaticButton({{-0.5, -12.25, -2}, rot, {1, 1, 1}}, "Up", world);
+    spawnStaticButton({{-0.5, -13.25, -2}, rot, {1, 1, 1}}, "Left", world);
+    spawnStaticButton({{-0.5, -14.25, -2}, rot, {1, 1, 1}}, "Right", world);
+    spawnStaticButton({{-0.5, -15.25, -2}, rot, {1, 1, 1}}, "Down", world);
+    spawnStaticButton({{-0.5, -16.25, -2}, rot, {1, 1, 1}}, "Place bomb", world);
+    spawnSquareButton({{-3, -12.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, a);
+    spawnSquareButton({{-3, -13.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, b);
+    spawnSquareButton({{-3, -14.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, c);
+    spawnSquareButton({{-3, -15.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
+    spawnSquareButton({{-3, -16.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
+    spawnStaticButton({{3.5, -12.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
+    spawnTextInputButton({{4, -13.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, first);
+    spawnSquareButton({{2, -13.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleLoadKeyboard, world);
+    spawnStaticButton({{3.5, -14.75, -2}, rot, {1, 1, 1}}, "Save to:", world);
+    spawnTextInputButton({{4, -15.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, second);
+    spawnSquareButton({{2, -15.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleSaveKeyboard, world);
+    spawnButton({{0, -17.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, rightFunction, world);
 }
 
 void bomberman::MainMenuScene::generateKeybindsSettingsMenu(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
 
-    spawnTitleButton({{-10, -7.25, -2}, rot, {1, 1, 1}}, "Keybinds Menu", world);
-    spawnButton({{-12, -9.25, -2}, rot, {1, 1, 1}}, "Gamepad", {WHITE, GRAY}, rightFunction, world);
-    spawnButton({{-8, -9.25, -2}, rot, {1, 1, 1}}, "Keyboard", {WHITE, GRAY}, leftFunction, world);
-    spawnButton({{-10, -12.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, upFunction, world);
+    spawnTitleButton({{-15, -12.25, -2}, rot, {1, 1, 1}}, "Keybinds Menu", world);
+    spawnButton({{-17, -14.25, -2}, rot, {1, 1, 1}}, "Gamepad", {WHITE, GRAY}, rightFunction, world);
+    spawnButton({{-13, -14.25, -2}, rot, {1, 1, 1}}, "Keyboard", {WHITE, GRAY}, leftFunction, world);
+    spawnButton({{-15, -17.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, upFunction, world);
     generateGamepadPart(world);
     generateKeyboardPart(world);
 }
@@ -291,19 +321,19 @@ void bomberman::MainMenuScene::generateKeybindsSettingsMenu(ecs::World &world)
 void bomberman::MainMenuScene::generateGraphicalSettingsMenu(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
-    float y = 12.75;
+    float y = 17.75;
 
-    spawnTitleButton({{-10, y, -2}, rot, {1, 1, 1}}, "Graphical settings", world);
-    spawnFullscreenButton({{-12.50, y - 1, -2}, rot, {1, 1, 1}}, "Fullscreen", {WHITE, GRAY}, fullscreenFunction, world, {true, false, false});
-    spawnFullscreenButton({{-7.50, y - 1, -2}, rot, {1, 1, 1}}, "Windowed", {GREEN, GRAY}, windowedFunction, world, {false, false, false});
-    spawnResolutionButton({{-14, y - 2, -2}, rot, {1, 1, 1}}, "1600x900", {WHITE, GRAY}, setResFunction, world, {1600, 900});
-    spawnResolutionButton({{-10, y - 2, -2}, rot, {1, 1, 1}}, "1280x720", {WHITE, GRAY}, setResFunction, world, {1280, 720});
-    spawnResolutionButton({{-6, y - 2, -2}, rot, {1, 1, 1}}, "854x480", {WHITE, GRAY}, setResFunction, world, {854, 480});
-    spawnFPSButton({{-14, y - 3, -2}, rot, {1, 1, 1}}, "30FPS", {WHITE, GRAY}, setFPSFunction, world, {30});
-    spawnFPSButton({{-10, y - 3, -2}, rot, {1, 1, 1}}, "60FPS", {WHITE, GRAY}, setFPSFunction, world, {60});
-    spawnFPSButton({{-6, y - 3, -2}, rot, {1, 1, 1}}, "Screen rate", {WHITE, GRAY}, setFPSFunction, world, {GetMonitorRefreshRate(GetCurrentMonitor())});
-    spawnToggleButton({{-10, y - 4, -2}, rot, {1, 1, 1}}, "Show FPS", {RED, RED}, toggleFunction, world, ecs::ToggleButton::SHOW_FPS);
-    spawnButton({{-10, y - 5, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, downFunction, world);
+    spawnTitleButton({{-15, y, -2}, rot, {1, 1, 1}}, "Graphical settings", world);
+    spawnFullscreenButton({{-17.50, y - 1, -2}, rot, {1, 1, 1}}, "Fullscreen", {WHITE, GRAY}, fullscreenFunction, world, {true, false, false});
+    spawnFullscreenButton({{-12.50, y - 1, -2}, rot, {1, 1, 1}}, "Windowed", {GREEN, GRAY}, windowedFunction, world, {false, false, false});
+    spawnResolutionButton({{-19, y - 2, -2}, rot, {1, 1, 1}}, "1600x900", {WHITE, GRAY}, setResFunction, world, {1600, 900});
+    spawnResolutionButton({{-15, y - 2, -2}, rot, {1, 1, 1}}, "1280x720", {WHITE, GRAY}, setResFunction, world, {1280, 720});
+    spawnResolutionButton({{-11, y - 2, -2}, rot, {1, 1, 1}}, "854x480", {WHITE, GRAY}, setResFunction, world, {854, 480});
+    spawnFPSButton({{-19, y - 3, -2}, rot, {1, 1, 1}}, "30FPS", {WHITE, GRAY}, setFPSFunction, world, {30});
+    spawnFPSButton({{-15, y - 3, -2}, rot, {1, 1, 1}}, "60FPS", {WHITE, GRAY}, setFPSFunction, world, {60});
+    spawnFPSButton({{-11, y - 3, -2}, rot, {1, 1, 1}}, "Screen rate", {WHITE, GRAY}, setFPSFunction, world, {GetMonitorRefreshRate(GetCurrentMonitor())});
+    spawnToggleButton({{-15, y - 4, -2}, rot, {1, 1, 1}}, "Show FPS", {RED, RED}, toggleFunction, world, ecs::ToggleButton::SHOW_FPS);
+    spawnButton({{-15, y - 5, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, downFunction, world);
 }
 
 void bomberman::MainMenuScene::generateSettingsMenu(ecs::World &world)
@@ -314,11 +344,11 @@ void bomberman::MainMenuScene::generateSettingsMenu(ecs::World &world)
     generateGraphicalSettingsMenu(world);
     generateAudioSettingsMenu(world);
     generateKeybindsSettingsMenu(world);
-    spawnTitleButton({{-10, y, -2}, rot, {1, 1, 1}}, "Settings Menu", world);
-    spawnButton({{-10, y - 1, -2}, rot, {1, 1, 1}}, "Graphical", {WHITE, GRAY}, upFunction, world);
-    spawnButton({{-10, y - 2, -2}, rot, {1, 1, 1}}, "Audio", {WHITE, GRAY}, rightFunction, world);
-    spawnButton({{-10, y - 3, -2}, rot, {1, 1, 1}}, "Keybinds", {WHITE, GRAY}, downFunction, world);
-    spawnButton({{-10, y - 4, -2}, rot, {1, 1, 1}}, "Main Menu", {WHITE, GRAY}, leftFunction, world);
+    spawnTitleButton({{-15, y, -2}, rot, {1, 1, 1}}, "Settings Menu", world);
+    spawnButton({{-15, y - 1, -2}, rot, {1, 1, 1}}, "Graphical", {WHITE, GRAY}, upFunction, world);
+    spawnButton({{-15, y - 2, -2}, rot, {1, 1, 1}}, "Audio", {WHITE, GRAY}, rightFunction, world);
+    spawnButton({{-15, y - 3, -2}, rot, {1, 1, 1}}, "Keybinds", {WHITE, GRAY}, downFunction, world);
+    spawnButton({{-15, y - 4, -2}, rot, {1, 1, 1}}, "Main Menu", {WHITE, GRAY}, leftFunction, world);
 }
 
 void bomberman::MainMenuScene::spawnButton(const Transform &transform, const std::string &text,
@@ -331,7 +361,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world)
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
-    ecs::SceneMoveElement {0.7});
+    ecs::SceneMoveElement {MOVE_SPEED});
 }
 
 void bomberman::MainMenuScene::spawnFullscreenButton(const Transform &transform, const std::string &text,
@@ -344,7 +374,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
-    ecs::SceneMoveElement {0.7}, but);
+    ecs::SceneMoveElement {MOVE_SPEED}, but);
 }
 
 void bomberman::MainMenuScene::spawnResolutionButton(const Transform &transform, const std::string &text,
@@ -357,7 +387,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
-    ecs::SceneMoveElement {0.7}, res);
+    ecs::SceneMoveElement {MOVE_SPEED}, res);
 }
 
 void bomberman::MainMenuScene::spawnFPSButton(const Transform &transform, const std::string &text,
@@ -370,7 +400,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
-    ecs::SceneMoveElement {0.7}, but);
+    ecs::SceneMoveElement {MOVE_SPEED}, but);
 }
 
 void bomberman::MainMenuScene::spawnToggleButton(const Transform &transform, const std::string &text,
@@ -383,7 +413,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
-    ecs::SceneMoveElement {0.7}, ecs::ToggleButton {usage});
+    ecs::SceneMoveElement {MOVE_SPEED}, ecs::ToggleButton {usage});
 }
 
 void bomberman::MainMenuScene::spawnTextInputButton(const Transform &transform, const std::string &text,
@@ -396,7 +426,7 @@ const ecs::HoverTint &hoverTint, ecs::World &world, ecs::TextInputSettings &set)
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint,
-    ecs::SceneMoveElement {0.7}, set);
+    ecs::SceneMoveElement {MOVE_SPEED}, set);
 }
 
 void bomberman::MainMenuScene::spawnStaticButton(const Transform &transform, const std::string &text, ecs::World &world)
@@ -414,7 +444,7 @@ void bomberman::MainMenuScene::spawnTitleButton(const Transform &transform, cons
 
     world.spawn().insert(transform,
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
-    ecs::ModelRef {"large_button"}, ecs::SceneMoveElement {0.7});
+    ecs::ModelRef {"large_button"}, ecs::SceneMoveElement {MOVE_SPEED - 0.3f});
 }
 
 void bomberman::MainMenuScene::spawnSquareButton(const Transform &transform, const std::string &text,
@@ -427,7 +457,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world)
     ecs::ModelRef {"square_button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
-    ecs::SceneMoveElement {0.7});
+    ecs::SceneMoveElement {MOVE_SPEED});
 }
 
 void bomberman::MainMenuScene::spawnSquareButton(const Transform &transform, const std::string &text,
@@ -440,5 +470,5 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::ModelRef {"square_button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
-    ecs::SceneMoveElement {0.7}, recorder);
+    ecs::SceneMoveElement {MOVE_SPEED}, recorder);
 }

@@ -10,7 +10,10 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <stdexcept>
 #include "Animation.hpp"
+
+#include <iostream>
 
 namespace raylib {
     class AnimationInvalidIndex {};

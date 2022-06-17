@@ -11,6 +11,7 @@
 #include "Entity.hpp"
 #include "Component.hpp"
 #include "World.hpp"
+#include "SceneManager.hpp"
 
 namespace ecs {
     class EntityCommands {
@@ -19,6 +20,7 @@ namespace ecs {
 
         public:
         EntityCommands(Entity entity, World &world) : _entity(entity), _world(world) {};
+        EntityCommands(const EntityCommands &other) : _entity(other._entity), _world(other._world) {};
         ~EntityCommands() = default;
 
         template<typename T>
@@ -40,6 +42,16 @@ namespace ecs {
             return *this;
         }
 
+        EntityCommands &insertByType(ComponentType type)
+        {
+            Signature &signature = _world.getEntityManager().getSignature(_entity);
+
+            _world.getComponentManager().addComponentToEntityByType(type, _entity);
+            signature[type] = true;
+            _world.getSystemManager().updateEntitySignature(_entity, signature);
+            return *this;
+        }
+
         template<typename T>
         EntityCommands &remove()
         {
@@ -56,13 +68,19 @@ namespace ecs {
             Signature &sign = _world.getEntityManager().getSignature(_entity);
             std::deque<Entity> &living = _world.getLivingEntities();
 
+            if (std::find(living.begin(), living.end(), _entity) == living.end())
+                return;
+            _world.getRessource<ecs::SceneManager>().getScene().entityKilled(_entity, _world);
             for (ComponentType i = 0; i < MAX_COMPONENTS; i++) {
-                if (sign[i])
+                if (sign.test(i))
                     _world.getComponentManager().getIComponentArray(i)->removeEntity(_entity);
             }
+            sign.reset();
             _world.getSystemManager().updateEntitySignature(_entity, sign);
             _world.getEntityManager().destroyEntity(_entity);
             living.erase(std::find(living.begin(), living.end(), _entity));
         }
+
+        Entity getEntity() { return _entity; };
     };
 }

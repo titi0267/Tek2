@@ -15,8 +15,10 @@
 namespace ecs {
     class World;
 
-    const std::size_t STAGES_NB = 5;
+    const std::size_t STAGES_NB = 7;
     enum Stages {
+        NETWORK_UPDATE,
+        TIME_UPDATE,
         INPUT_UPDATE,
         UPDATE,
         RENDER_UPDATE,
@@ -69,6 +71,21 @@ namespace ecs {
             system->setSignature(component);
             _systems[hash] = std::move(system);
             _stages[stage].push_back(hash);
+        }
+
+        template<class T>
+        void unregisterSystem()
+        {
+            SystemHash hash = typeid(T).hash_code();
+
+            if (_systems.find(hash) == _systems.end())
+                throw SystemDoNotExists();
+            _systems.erase(hash);
+            for (auto &[stage, systems] : _stages) {
+                auto index = std::find(systems.begin(), systems.end(), hash);
+                if (index != systems.end())
+                    systems.erase(index);
+            }
         }
 
         template<class T>

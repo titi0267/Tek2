@@ -41,13 +41,20 @@ namespace bomberman {
     class MainMenuScene : public ecs::IScene, public ecs::MoveRequesterSceneModule {
         using ClickCallbackFct = ecs::ClickCallbackFct;
 
+        const float MOVE_SPEED = 0.9;
+
         bool moveRequest = false;
         Vector3 moveDest = {0};
 
         public:
+        MainMenuScene() {};
+        MainMenuScene(const void *data) {};
+
         void loadScene(ecs::World &world);
         void unloadScene(ecs::World &world);
+        void entityKilled(ecs::Entity entity,ecs::World &world) {};
 
+        void spawnBackground(ecs::World &world);
         void generateMainMenu(ecs::World &world);
         void generateSettingsMenu(ecs::World &world);
         void generateGraphicalSettingsMenu(ecs::World &world);
