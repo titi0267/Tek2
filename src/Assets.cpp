@@ -33,6 +33,9 @@ void bomberman::loadTextures(ecs::World &world)
     textureMan.loadTexture("jeffrey", "./assets/textures/jeffrey.png");
 
     textureMan.loadTexture("bombBonus", "./assets/textures/bombBonus.png");
+    textureMan.loadTexture("boots", "./assets/textures/boots.png");
+    textureMan.loadTexture("explode", "./assets/textures/explode.png");
+    textureMan.loadTexture("tig", "./assets/textures/tig.png");
 }
 
 void bomberman::loadModels(ecs::World &world)
@@ -51,6 +54,9 @@ void bomberman::loadModels(ecs::World &world)
     modelMan.loadModel("player", "./assets/models/player.iqm");
 
     modelMan.loadModel("bombBonus", "./assets/models/bombBonus.iqm");
+    modelMan.loadModel("boots", "./assets/models/boots.iqm");
+    modelMan.loadModel("explode", "./assets/models/explode.iqm");
+    modelMan.loadModel("tig", "./assets/models/tig.iqm");
 }
 
 void bomberman::loadAnimations(ecs::World &world)
@@ -105,4 +111,14 @@ void bomberman::applyAssetsToModels(ecs::World &world)
 
     modelMan.getModel("bombBonus").getMaterialView(0).
     setTexture(textureMan.getTexture("bombBonus"));
+
+    modelMan.getModel("boots").getMaterialView(0).
+    setTexture(textureMan.getTexture("boots"));
+
+    modelMan.getModel("explode").getMaterialView(0).
+    setTexture(textureMan.getTexture("explode"));
+
+    modelMan.getModel("tig").getMaterialView(0).
+    setTexture(textureMan.getTexture("tig"));
+
 }

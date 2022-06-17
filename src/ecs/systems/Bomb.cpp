@@ -49,22 +49,22 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
             scene.deleteDestructible(waterGPos, world);
             if (std::rand() % scene.getBonusChances() == 0) {
                 scene.setBonusChances(3);
-                randomBonus = std::rand() % 3;
+                randomBonus = std::rand() % 4;
                 switch (randomBonus) {
                     case 0:
                         bonusType = "bombBonus";
                     break;
                     case 1:
-                        bonusType = "bombBonus";
+                        bonusType = "boots";
                     break;
                     case 2:
-                        bonusType = "bombBonus";
+                        bonusType = "explode";
                     break;
                     default:
-                        bonusType = "bombBonus";
+                        bonusType = "tig";
                     break;
                 }
-                scene.spawnBonus(transform.translation, waterGPos, bonusType, world);
+                scene.spawnBonus(waterPos, waterGPos, bonusType, world);
             } else {
                 scene.setBonusChances(scene.getBonusChances() - 1);
             }
