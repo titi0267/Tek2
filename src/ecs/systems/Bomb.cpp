@@ -26,8 +26,11 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
 
     Transform &transform = world.getComponent<Transform>(entity);
     ecs::GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
+    int randomBonus = 0;
+    std::string bonusType;
 
     map::Map &map = scene.getMap();
+    std::srand(std::time(nullptr));
 
     map.setCellAt(gPos.x, gPos.y, VOID);
     for (int i = 0; i < 5; i++) {
@@ -44,6 +47,27 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
         } else if (cell == DESTRUCTIBLE) {
             map.setCellAt(waterGPos.x, waterGPos.y, VOID);
             scene.deleteDestructible(waterGPos, world);
+            if (std::rand() % scene.getBonusChances() == 0) {
+                scene.setBonusChances(3);
+                randomBonus = std::rand() % 3;
+                switch (randomBonus) {
+                    case 0:
+                        bonusType = "bag";
+                    break;
+                    case 1:
+                        bonusType = "bag";
+                    break;
+                    case 2:
+                        bonusType = "bag";
+                    break;
+                    default:
+                        bonusType = "bag";
+                    break;
+                }
+                scene.spawnBonus(transform.translation, waterGPos, bonusType, world);
+            } else {
+                scene.setBonusChances(scene.getBonusChances() - 1);
+            }
         }
     }
 }

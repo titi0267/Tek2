@@ -34,6 +34,7 @@ add_executable(bomberman
     "src/ecs/systems/Bomb.cpp"
     "src/ecs/systems/Timer.cpp"
     "src/ecs/systems/Water.cpp"
+    "src/ecs/systems/SpawnBonus.cpp"
     "src/ecs/systems/Animation.cpp"
     "src/ecs/systems/LobbyActions.cpp"
     "src/ecs/systems/GameActions.cpp"

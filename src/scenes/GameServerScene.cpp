@@ -26,6 +26,7 @@
 #include "ecs/components/PlayAnimation.hpp"
 #include "ecs/components/Skin.hpp"
 #include "ecs/components/DestructibleTile.hpp"
+#include "ecs/components/SpawnBonus.hpp"
 
 #include <iostream>
 #include "raylib/Matrix.hpp"
@@ -144,10 +145,25 @@ void bomberman::GameServerScene::spawnWater(Vector3 pos, ecs::GridPosition gPos,
     _water.insert(entity);
 }
 
+
 void bomberman::GameServerScene::deleteWater(ecs::Entity water)
 {
     _water.erase(water);
 }
+
+void bomberman::GameServerScene::spawnBonus(Vector3 pos, ecs::GridPosition gPos, std::string &bonus, ecs::World &world)
+{
+    Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
+    ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef{bonus}, ecs::SpawnBonus {}, ecs::MirrorEntity {}).getEntity();
+
+    _bonus.insert(entity);
+}
+
+void bomberman::GameServerScene::deleteBonus(ecs::Entity bonus)
+{
+    _bonus.erase(bonus);
+}
+
 
 void bomberman::GameServerScene::deleteDestructible(ecs::GridPosition &pos, ecs::World &world)
 {
@@ -168,7 +184,7 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     world.registerSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
     ecs::BombUpdateSystem, ecs::MovementUpdateSystem,
-    GameCheckWinSystem>();
+    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem>();
 
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});

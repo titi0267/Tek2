@@ -23,6 +23,7 @@
 #define DESTRUCTIBLE 4
 #define BOMB 5
 #define DANGEROUS 6
+#define BONUS 7
 
 namespace map {
     class Map {

@@ -38,6 +38,9 @@ namespace bomberman {
         std::set<ecs::Entity> _players;
         std::set<ecs::Entity> _bombs;
         std::set<ecs::Entity> _water;
+        std::set<ecs::Entity> _bonus;
+
+        int _bonusChances = 3;
 
         Vector3 mapCoordsToWorldCoords(int x, int y);
 
@@ -54,6 +57,8 @@ namespace bomberman {
         void entityKilled(ecs::Entity entity,ecs::World &world);
 
         void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
+        void spawnBonus(Vector3 pos, ecs::GridPosition gPos, std::string &bonus, ecs::World &world);
+        void deleteBonus(ecs::Entity bonus);
         void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void deleteBomb(ecs::Entity bomb);
         void spawnWater(Vector3 pos, ecs::GridPosition gPos, Vector3 dir, int distance, ecs::World &world);
@@ -72,6 +77,9 @@ namespace bomberman {
         const std::set<ecs::Entity> &getPlayers() { return _players; };
         const std::set<ecs::Entity> &getBombs() { return _bombs; };
         const std::set<ecs::Entity> &getWater() { return _water; };
+        const std::set<ecs::Entity> &getBonus() { return _bonus; };
+        int getBonusChances() { return _bonusChances; };
+        void setBonusChances(int bonusChances) { _bonusChances = bonusChances; };
     };
 
     class GameExecuteActionUpdateSystem : public ecs::ASystem {
