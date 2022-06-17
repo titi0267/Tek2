@@ -26,8 +26,7 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
 
     Transform &transform = world.getComponent<Transform>(entity);
     ecs::GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
-    int randomBonus = 0;
-    std::string bonusType;
+    ecs::Bonus randomBonus = NOTHING;
 
     map::Map &map = scene.getMap();
     std::srand(std::time(nullptr));
@@ -49,22 +48,21 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
             scene.deleteDestructible(waterGPos, world);
             if (std::rand() % scene.getBonusChances() == 0) {
                 scene.setBonusChances(3);
-                randomBonus = std::rand() % 4;
+                randomBonus = static_cast<ecs::Bonus>(std::rand() % 4);
                 switch (randomBonus) {
-                    case 0:
-                        bonusType = "bombBonus";
+                    case ecs::Bonus::BOMBBONUS:
+                        scene.spawnBonus(waterPos, waterGPos, "bombBonus", ecs::Bonus::BOOTS, world);
                     break;
-                    case 1:
-                        bonusType = "boots";
+                    case ecs::Bonus::BOOTS:
+                        scene.spawnBonus(waterPos, waterGPos, "boots", ecs::Bonus::BOOTS, world);
                     break;
-                    case 2:
-                        bonusType = "explode";
+                    case ecs::Bonus::EXPLODE:
+                        scene.spawnBonus(waterPos, waterGPos, "explode", ecs::Bonus::BOOTS, world);
                     break;
                     default:
-                        bonusType = "tig";
+                        scene.spawnBonus(waterPos, waterGPos, "tig", ecs::Bonus::BOOTS, world);
                     break;
                 }
-                scene.spawnBonus(waterPos, waterGPos, bonusType, world);
             } else {
                 scene.setBonusChances(scene.getBonusChances() - 1);
             }

@@ -151,12 +151,13 @@ void bomberman::GameServerScene::deleteWater(ecs::Entity water)
     _water.erase(water);
 }
 
-void bomberman::GameServerScene::spawnBonus(Vector3 pos, ecs::GridPosition gPos, std::string &bonus, ecs::World &world)
+void bomberman::GameServerScene::spawnBonus(Vector3 pos, ecs::GridPosition gPos, const std::string &bonus, ecs::Bonus bonusType, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
     ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef{bonus}, ecs::SpawnBonus {}, ecs::MirrorEntity {}).getEntity();
 
-    _bonus.insert(entity);
+    std::cout << "ADD " << bonus << std::endl;
+    _bonus.insert({entity, bonusType});
 }
 
 void bomberman::GameServerScene::deleteBonus(ecs::Entity bonus)

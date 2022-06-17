@@ -16,6 +16,7 @@
 #include "ecs/components/GridPosition.hpp"
 #include "ecs/components/PlayerInputs.hpp"
 #include "ecs/components/Bomb.hpp"
+#include "ecs/components/SpawnBonus.hpp"
 #include "ecs/components/Timer.hpp"
 #include "raylib/Vectors.hpp"
 #include "Map.hpp"
@@ -38,7 +39,7 @@ namespace bomberman {
         std::set<ecs::Entity> _players;
         std::set<ecs::Entity> _bombs;
         std::set<ecs::Entity> _water;
-        std::set<ecs::Entity> _bonus;
+        std::unordered_map<ecs::Entity, ecs::Bonus> _bonus;
 
         int _bonusChances = 3;
 
@@ -57,7 +58,7 @@ namespace bomberman {
         void entityKilled(ecs::Entity entity,ecs::World &world);
 
         void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
-        void spawnBonus(Vector3 pos, ecs::GridPosition gPos, std::string &bonus, ecs::World &world);
+        void spawnBonus(Vector3 pos, ecs::GridPosition gPos, const std::string &bonus, ecs::Bonus bonusType, ecs::World &world);
         void deleteBonus(ecs::Entity bonus);
         void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void deleteBomb(ecs::Entity bomb);
@@ -77,7 +78,7 @@ namespace bomberman {
         const std::set<ecs::Entity> &getPlayers() { return _players; };
         const std::set<ecs::Entity> &getBombs() { return _bombs; };
         const std::set<ecs::Entity> &getWater() { return _water; };
-        const std::set<ecs::Entity> &getBonus() { return _bonus; };
+        const ecs::Bonus &getBonus(ecs::Entity &entity) { return _bonus.at(entity); };
         int getBonusChances() { return _bonusChances; };
         void setBonusChances(int bonusChances) { _bonusChances = bonusChances; };
     };

@@ -10,8 +10,18 @@
 #include "ecs/engine/Component.hpp"
 
 namespace ecs {
+    enum Bonus {
+        BOMBBONUS,
+        BOOTS,
+        EXPLODE,
+        TIG,
+        NOTHING
+    };
     struct SpawnBonus {
+        Bonus _bonusType = NOTHING;
+
         SpawnBonus() {};
+        Bonus getBonus() const { return _bonusType; };
     };
     class SpawnBonusUpdateSystem : public ecs::ASystem {
         public:
