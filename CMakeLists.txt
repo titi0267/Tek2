@@ -13,9 +13,9 @@ add_executable(bomberman
     "src/main.cpp"
     "src/Setup.cpp"
     "src/Assets.cpp"
-    "src/WSA.cpp"
-
     "src/Map.cpp"
+    "src/AiFunc.cpp"
+    "src/WSA.cpp"
 
     "src/ecs/engine/World.cpp"
     "src/ecs/engine/Network.cpp"
@@ -51,6 +51,7 @@ add_executable(bomberman
     "src/ecs/systems/GameActions.cpp"
     "src/ecs/systems/BackgroundRotation.cpp"
     "src/ecs/systems/CheckWin.cpp"
+    "src/ecs/systems/Ai.cpp"
 
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"

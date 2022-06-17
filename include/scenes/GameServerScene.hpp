@@ -35,7 +35,7 @@ namespace bomberman {
 
         std::unordered_map<ecs::GridPosition, ecs::Entity> _destructibles;
 
-        std::set<ecs::Entity> _players;
+        std::unordered_map<ecs::PlayerId, ecs::Entity> _players;
         std::set<ecs::Entity> _bombs;
         std::set<ecs::Entity> _water;
         std::set<ecs::Entity> _bonus;
@@ -48,6 +48,7 @@ namespace bomberman {
         void spawnWall(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void spawnFloor(Vector2 mapSize, ecs::World &world);
         void generateMapProps(ecs::World &world);
+        void createAi(ecs::PlayerId id, ecs::World &world);
 
         public:
         GameServerScene(const void *data) : _map(9, 9, 4, 4) {};
@@ -74,7 +75,7 @@ namespace bomberman {
 
         map::Map &getMap();
 
-        const std::set<ecs::Entity> &getPlayers() { return _players; };
+        const std::unordered_map<ecs::PlayerId, ecs::Entity> &getPlayers() { return _players; };
         const std::set<ecs::Entity> &getBombs() { return _bombs; };
         const std::set<ecs::Entity> &getWater() { return _water; };
         const std::set<ecs::Entity> &getBonus() { return _bonus; };

@@ -12,20 +12,18 @@
 
 void ecs::AiSystem::setSignature(ComponentManager &component)
 {
-    _signature = component.generateSignature<Transform, AiSystem, PlayerAction>();
+    _signature = component.generateSignature<Ai, PlayerAction>();
 }
 
 void ecs::AiSystem::update(ecs::World &world)
 {
-    map::Map &map = world.getRessource<map::Map>();
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
 
-
     for (Entity entity : _entities) {
-        AiSystem &ai = world.getComponent<AiSystem>(entity);
+        // Ai &ai = world.getComponent<Ai>(entity);
         PlayerAction &action = world.getComponent<PlayerAction>(entity);
-        ecs::Actions newAction = AiFunc::update(map, scene, world, world.getComponent<GridPosition>(entity));
+        ecs::Actions newAction = ai::AiFunc::update(action.id, scene, world);
         action.action = newAction;
     }
 }

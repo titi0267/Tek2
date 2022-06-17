@@ -27,6 +27,7 @@
 #include "ecs/components/Skin.hpp"
 #include "ecs/components/DestructibleTile.hpp"
 #include "ecs/components/SpawnBonus.hpp"
+#include "ecs/components/Ai.hpp"
 
 #include <iostream>
 #include "raylib/Matrix.hpp"
@@ -118,7 +119,13 @@ void bomberman::GameServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs:
             ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"jeffrey"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
         break;
     }
-    _players.insert(entity);
+    _players.insert({id, entity});
+}
+
+void bomberman::GameServerScene::createAi(ecs::PlayerId id, ecs::World &world)
+{
+    std::cout << "Create AI #" << id << std::endl;
+    world.spawn().insert(ecs::PlayerAction{id}, ecs::Ai{});
 }
 
 void bomberman::GameServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
@@ -142,9 +149,9 @@ void bomberman::GameServerScene::spawnWater(Vector3 pos, ecs::GridPosition gPos,
     ecs::Entity entity = world.spawn().insert(transform, gPos,
     ecs::ModelRef {"water"}, ecs::Timer {}, ecs::Water {dir, distance}, ecs::MirrorEntity {}).getEntity();
 
+    std::cout << "Spawn water !" << std::endl;
     _water.insert(entity);
 }
-
 
 void bomberman::GameServerScene::deleteWater(ecs::Entity water)
 {
@@ -184,7 +191,8 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     world.registerSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
     ecs::BombUpdateSystem, ecs::MovementUpdateSystem,
-    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem>();
+    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem,
+    ecs::AiSystem>();
 
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});
@@ -203,7 +211,7 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
         world.decodeEntities(file);
         for (ecs::Entity entity : world.getLivingEntities()) {
             if (world.hasComponent<ecs::Player>(entity))
-                _players.insert(entity);
+                _players.insert({world.getComponent<ecs::Player>(entity).id, entity});
             else if (world.hasComponent<ecs::BombId>(entity))
                 _bombs.insert(entity);
             else if (world.hasComponent<ecs::Water>(entity))
@@ -217,7 +225,11 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
         _map.load("bombitek.map");
     }
 
-    world.getRessource<ecs::PlayersManager>().stopAcceptingPlayers();
+    ecs::PlayersManager &playerMan = world.getRessource<ecs::PlayersManager>();
+    playerMan.stopAcceptingPlayers();
+    while (playerMan.isIdAvailaible())
+        createAi(playerMan.getNextPlayerId(), world);
+
     world.getRessource<ecs::ServerManager>().moveCameras({0, 12, 5}, {0, 0, 0});
 }
 
@@ -243,7 +255,8 @@ void bomberman::GameServerScene::unloadScene(ecs::World &world)
     world.unregisterSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
     ecs::BombUpdateSystem, ecs::MovementUpdateSystem,
-    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem>();
+    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem,
+    ecs::AiSystem>();
 }
 
 void bomberman::GameServerScene::entityKilled(ecs::Entity entity,ecs::World &world)

@@ -23,7 +23,6 @@
 #define DESTRUCTIBLE 4
 #define BOMB 5
 #define DANGEROUS 6
-#define BONUS 7
 
 namespace map {
     class Map {
@@ -47,6 +46,12 @@ namespace map {
         int getWidth() const { return _width; };
         int getCellAt(int x, int y) const { return (_map[x + y * _width]); };
         void setCellAt(int x, int y, int val) { _map[x + y * _width] = val; };
+        bool isValidCell(int x, int y) { return x >= 0 && y >= 0 && x < _width && y < _height; };
+        bool isWalkableCell(int x, int y) {
+            int cell = getCellAt(x, y);
+
+            return cell == VOID || cell == SPAWN || cell == DANGEROUS;
+        };
 
         void dump();
         void print(ecs::World &world);

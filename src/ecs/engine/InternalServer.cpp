@@ -12,17 +12,6 @@
 #include "ecs/engine/SceneManager.hpp"
 #include "ecs/engine/PlayersManager.hpp"
 
-#include "ecs/components/PlayerInputs.hpp"
-#include "ecs/components/Movement.hpp"
-#include "ecs/components/Bomb.hpp"
-#include "ecs/components/Timer.hpp"
-#include "ecs/components/Water.hpp"
-#include "ecs/components/SpawnBonus.hpp"
-#include "ecs/components/Player.hpp"
-#include "ecs/components/PlayAnimation.hpp"
-#include "ecs/components/GridPosition.hpp"
-#include "ecs/components/DestructibleTile.hpp"
-
 #include "raylib/AnimationManager.hpp"
 
 #include "Setup.hpp"
@@ -32,6 +21,7 @@ void ecs::InternalServer::serverMain()
 {
     bomberman::registerCriticalComponents(*_serverWorld);
     bomberman::registerBothSide(*_serverWorld);
+    bomberman::registerServerSide(*_serverWorld);
     bomberman::registerNetwork(*_serverWorld, false);
 
     _serverWorld->insertRessource<ServerManager>();
@@ -39,11 +29,6 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<SceneManager>();
     _serverWorld->insertRessource<raylib::AnimationManager>();
     _serverWorld->insertRessource<ecs::Clock>();
-
-    _serverWorld->registerComponents<ecs::Player, ecs::GridPosition, ecs::BombId, ecs::Water, ecs::DestructibleTile, ecs::SpawnBonus>();
-    _serverWorld->registerSystems<ecs::AnimationUpdateSystem>();
-
-// ------
 
     _serverWorld->getRessource<ServerManager>().startServer(_port);
     _serverWorld->getRessource<SceneManager>().loadServerScene(*_serverWorld);

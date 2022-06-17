@@ -15,19 +15,19 @@
 
 namespace ecs {
     enum State {
-            IN_DANGER,
-            ITEM_ON_MAP,
-            ENEMY_KILLABLE,
-            ENEMY_REACHABLE
+        IN_DANGER,
+        ITEM_ON_MAP,
+        ENEMY_KILLABLE,
+        ENEMY_REACHABLE
     };
     struct Ai {
         ecs::State _state;
     };
     class AiSystem : public ecs::ASystem {
         public:
-            AiSystem() : ecs::ASystem() {_stage = ecs::INPUT_UPDATE;};
+        AiSystem() : ecs::ASystem() {_stage = ecs::INPUT_UPDATE;};
 
-            void setSignature(ecs::ComponentManager &component);
-            void update(ecs::World &world);
+        void setSignature(ecs::ComponentManager &component);
+        void update(ecs::World &world);
     };
 };

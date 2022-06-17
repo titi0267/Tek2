@@ -21,7 +21,7 @@ void bomberman::GameExecuteActionUpdateSystem::placeBomb(ecs::Entity entity, ecs
     ecs::GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
     map::Map &map = scene.getMap();
 
-    if (map.getCellAt(gPos.x, gPos.y) != VOID && map.getCellAt(gPos.x, gPos.y) != SPAWN)
+    if (!map.isWalkableCell(gPos.x, gPos.y))
         return;
     scene.spawnBomb(transform.translation, gPos, world);
     map.setCellAt(gPos.x, gPos.y, BOMB);
@@ -46,20 +46,19 @@ void bomberman::GameExecuteActionUpdateSystem::movePlayer(ecs::Entity entity, ec
     ecs::GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
     ecs::Movement &move = world.getComponent<ecs::Movement>(entity);
 
-    Vector3 moveVec =  MOVEMENTS.at(action);
+    Vector3 moveVec = MOVEMENTS.at(action);
     ecs::GridPosition gDest = gPos + ecs::GridPosition {(int) moveVec.x, (int) moveVec.z};
 
-    if (gDest.x < 0 || gDest.y < 0 || gDest.x > map.getWidth() - 1 || gDest.y > map.getHeight() - 1)
+    if (!map.isValidCell(gDest.x, gDest.y))
         return;
 
-    if (map.getCellAt(gDest.x, gDest.y) == VOID || map.getCellAt(gDest.x, gDest.y) == SPAWN) {
+    if (map.isWalkableCell(gDest.x, gDest.y)) {
         std::cout << "[MOVE] TO " << gDest.x << ", " << gDest.y << std::endl;
         gPos = gDest;
         move.move(transform.translation + moveVec, 2);
         transform.rotation = QuaternionFromEuler(0, ROTATIONS.at(action), 0);
         world.getComponent<ecs::PlayAnimation>(entity).play("playerAnims", 0, 0.5, false);
-    } else
-        std::cout << "Can't go this way :" << map.getCellAt(gDest.x, gDest.y) << std::endl;
+    }
 }
 
 void bomberman::GameExecuteActionUpdateSystem::update(ecs::World &world)

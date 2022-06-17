@@ -44,7 +44,7 @@ void ecs::WaterUpdateSystem::update(ecs::World &world)
 
             int cell = map.getCellAt(newGPos.x, newGPos.y);
 
-            if (cell == VOID || cell == SPAWN) {
+            if (map.isWalkableCell(newGPos.x, newGPos.y)) {
                 scene.spawnWater(pos, newGPos, water.dir, water.distance + 1, world);
             } else if (cell == DESTRUCTIBLE) {
                 map.setCellAt(newGPos.x, newGPos.y, VOID);
@@ -70,10 +70,10 @@ void ecs::WaterCollisionUpdateSystem::update(ecs::World &world)
 {
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
-    const std::set<Entity> &players = scene.getPlayers();
+    const std::unordered_map<PlayerId, Entity> &players = scene.getPlayers();
     std::vector<std::tuple<Entity, Player&, GridPosition&>> playersAlive;
 
-    for (Entity pEntity : players) {
+    for (auto &[id, pEntity] : players) {
         Player &player = world.getComponent<Player>(pEntity);
 
         if (player.alive) {

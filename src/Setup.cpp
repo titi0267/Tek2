@@ -31,6 +31,14 @@
 #include "ecs/components/ResolutionButton.hpp"
 #include "ecs/components/TextInput.hpp"
 #include "ecs/components/ToggleButton.hpp"
+#include "ecs/components/Player.hpp"
+#include "ecs/components/GridPosition.hpp"
+#include "ecs/components/Bomb.hpp"
+#include "ecs/components/Player.hpp"
+#include "ecs/components/Water.hpp"
+#include "ecs/components/DestructibleTile.hpp"
+#include "ecs/components/SpawnBonus.hpp"
+#include "ecs/components/Ai.hpp"
 
 // Those components are mirrored between clients and server
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
@@ -45,6 +53,13 @@ void bomberman::registerBothSide(ecs::World &world)
 {
     world.registerComponent<ecs::Timer>();
     world.registerSystem<ecs::TimerUpdateSystem>();
+}
+
+void bomberman::registerServerSide(ecs::World &world)
+{
+    world.registerComponents<ecs::Player, ecs::GridPosition, ecs::BombId,
+    ecs::Water, ecs::DestructibleTile, ecs::SpawnBonus, ecs::Ai>();
+    world.registerSystems<ecs::AnimationUpdateSystem>();
 }
 
 void bomberman::registerPhysics(ecs::World &world)

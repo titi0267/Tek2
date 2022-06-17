@@ -59,3 +59,16 @@ std::vector<ecs::PlayerId> ecs::PlayersManager::getPlayersOfConn(ConnId conn)
         return {};
     return _connToPlayers[conn];
 }
+
+bool ecs::PlayersManager::isIdAvailaible()
+{
+    return _availaibleIds.size();
+}
+
+ ecs::PlayerId ecs::PlayersManager::getNextPlayerId()
+{
+    PlayerId id = _availaibleIds.front();
+
+    _availaibleIds.pop_front();
+    return id;
+}
