@@ -35,4 +35,6 @@ namespace raylib {
 
     inline void rlTexCoord2f(const Vector2 &uv) { ::rlTexCoord2f(uv.x, uv.y); };
     inline void rlVertex3f(const Vector3 &pos) { ::rlVertex3f(pos.x, pos.y, pos.z); };
+
+    inline void rlColor3f(float r, float g, float b) { ::rlColor3f(r, g, b); };
 };

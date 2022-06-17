@@ -31,6 +31,7 @@
 #include "ecs/components/ResolutionButton.hpp"
 #include "ecs/components/TextInput.hpp"
 #include "ecs/components/ToggleButton.hpp"
+#include "ecs/components/Grid.hpp"
 
 // Those components are mirrored between clients and server
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
@@ -38,7 +39,7 @@ void bomberman::registerCriticalComponents(ecs::World &world)
 {
     world.registerComponents<Transform, ecs::Movement, ecs::Hitbox, ecs::PlayerAction,
     ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint,
-    ecs::DrawableCube, ecs::Text3D, ecs::PlayAnimation, ecs::Skin>();
+    ecs::DrawableCube, ecs::Text3D, ecs::PlayAnimation, ecs::Skin, ecs::Grid>();
 }
 
 void bomberman::registerBothSide(ecs::World &world)
@@ -57,7 +58,7 @@ void bomberman::registerRender(ecs::World &world)
     world.registerSystem<ecs::AnimationUpdateSystem>();
 
     world.registerSystems<ecs::DrawTextureCubeSystem,
-    ecs::DrawableModelSystem, ecs::Draw3DTextSystem>();
+    ecs::DrawableModelSystem, ecs::Draw3DTextSystem, ecs::DrawGridSystem>();
 
     world.registerComponent<ecs::BackgroundRotation>();
     world.registerSystem<ecs::BackgroundRotationUpdateSystem>();

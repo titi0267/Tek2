@@ -27,6 +27,7 @@
 #include "ecs/components/Skin.hpp"
 #include "ecs/components/DestructibleTile.hpp"
 #include "ecs/components/SpawnBonus.hpp"
+#include "ecs/components/Grid.hpp"
 
 #include <iostream>
 #include "raylib/Matrix.hpp"
@@ -89,6 +90,7 @@ void bomberman::GameServerScene::generateMapProps(ecs::World &world)
 
     // spawnFloor({(float) width, (float) height}, world);
     world.spawn().insert(Transform {{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::ModelRef{"amphi"}, ecs::MirrorEntity{});
+    world.spawn().insert(Transform {{0, 0.01, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::Grid{width, 1.2}, ecs::MirrorEntity{});
     for (int y = 0; y < height; y++) {
         for (int x = 0; x < width; x++) {
             pos = mapCoordsToWorldCoords(x, y);
