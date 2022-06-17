@@ -49,7 +49,7 @@ void bomberman::loadModels(ecs::World &world)
     modelMan.loadModel("table", "./assets/models/table.iqm");
     modelMan.loadModel("chair", "./assets/models/chair.iqm");
     modelMan.loadModel("bag", "./assets/models/bag.iqm");
-    modelMan.loadModel("water", "./asstes/models/water.iqm");
+    modelMan.loadModel("water", "./assets/models/water.iqm");
 
     modelMan.loadModel("player", "./assets/models/player.iqm");
 
