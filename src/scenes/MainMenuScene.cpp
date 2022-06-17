@@ -456,7 +456,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world)
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
     ecs::ModelRef {"square_button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::Hoverable {}, hoverTint, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {MOVE_SPEED});
 }
 
@@ -469,6 +469,6 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
     ecs::ModelRef {"square_button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::Hoverable {}, hoverTint, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {MOVE_SPEED}, recorder);
 }
