@@ -64,10 +64,16 @@ namespace ecs {
             {
                 try {
                     InputFile file(path);
-                    if (gamepad)
+                    if (gamepad) {
+                        if (!file.getGamepad())
+                            throw std::invalid_argument("File is not a gamepad file");
                         _gamepad = std::move(file);
-                    else
+                    }
+                    else {
+                        if (file.getGamepad())
+                            throw std::invalid_argument("File is not a gamepad file");
                         _keyboard = std::move(file);
+                    }
                 }
                 catch (std::invalid_argument) {
                     std::cerr << "Bad input file" << std::endl;

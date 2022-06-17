@@ -88,3 +88,8 @@ std::string InputFile::getKeyText(IBind::Binding bind)
 {
     return (_binds->getKeyText(bind));
 }
+
+bool InputFile::getGamepad()
+{
+    return (_gamepad);
+}
