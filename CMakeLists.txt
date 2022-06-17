@@ -12,6 +12,7 @@ add_executable(bomberman
     "src/main.cpp"
     "src/Setup.cpp"
     "src/Assets.cpp"
+    "src/WSA.cpp"
 
     "src/Map.cpp"
 
