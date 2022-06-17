@@ -134,7 +134,7 @@ namespace raylib {
             float b = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y);
             float c = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X);
             float d = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y);
-            if (a || b) {
+            if (a > 0.25 || a < -0.25 || b > 0.25 || b < -0.25) {
                 float abs_a = a < 0 ? a * -1 : a;
                 float abs_b = b < 0 ? b * -1 : b;
                 if (abs_a >= abs_b) {
@@ -146,7 +146,7 @@ namespace raylib {
                     return (GAMEPAD_JOYSTICK_LEFT_FACE_UP);
                 return (GAMEPAD_JOYSTICK_LEFT_FACE_DOWN);
             }
-            if (c || d) {
+            if (c > 0.25 || c < -0.25 || d > 0.25 || d < -0.25) {
                 float abs_c = c < 0 ? c * -1 : c;
                 float abs_d = d < 0 ? d * -1 : d;
                 if (abs_c >= abs_d) {
