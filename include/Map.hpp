@@ -41,14 +41,16 @@ namespace map {
 
         public:
         Map(int _height, int _width, int nbrPlayer, int complexity);
+        Map(const Map &other) : _height(other._height), _width(other._width),
+        _nbrPlayer(other._nbrPlayer), _complexity(other._complexity), _map(other._map) {}
 
         int getHeight() const { return _height; };
         int getWidth() const { return _width; };
-        int getCellAt(int x, int y) const { return (_map[x + y * _width]); };
-        void setCellAt(int x, int y, int val) { _map[x + y * _width] = val; };
+        int getCellAt(int x, int y) const { return (_map.at(x + y * _width)); };
+        void setCellAt(int x, int y, int val) { _map.at(x + y * _width) = val; };
         bool isValidCell(int x, int y) { return x >= 0 && y >= 0 && x < _width && y < _height; };
         bool isWalkableCell(int x, int y) {
-            int cell = getCellAt(x, y);
+            int cell = _map.at(x + y * _width);
 
             return cell == VOID || cell == SPAWN || cell == DANGEROUS;
         };

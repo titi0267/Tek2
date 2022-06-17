@@ -24,7 +24,12 @@ namespace ecs {
 
         bool isValidPos(const map::Map &map) const
         {
-            return x >= 0 && y >= 00 && x < map.getWidth() && y < map.getHeight();
+            return x >= 0 && y >= 0 && x < map.getWidth() && y < map.getHeight();
+        }
+
+        int toArrayIndex(int width)
+        {
+            return x + y * width;
         }
     };
 

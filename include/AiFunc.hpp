@@ -8,6 +8,7 @@
 #pragma once
 
 #include "ecs/components/Ai.hpp"
+#include "ecs/components/GridPosition.hpp"
 #include "Map.hpp"
 
 namespace ai {
@@ -36,13 +37,14 @@ namespace ai {
 
         static void defineDangerous(map::Map &map, std::deque<BombStruct> &bomb);
         static void defineBomb(int x, int y, map::Map &map, int bomb_length);
-        static void defineNext(std::deque<ecs::GridPosition> &actual, std::deque<ecs::GridPosition> &next, std::vector<int> &map, int width);
 
         static ecs::Actions goSafe(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
         static ecs::Actions goItem(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
         static ecs::Actions goKill(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
         static ecs::Actions goReach(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
 
-        static std::deque<ecs::Actions> PathFinding(map::Map &map, ecs::GridPosition in, ecs::GridPosition out);
+        static ecs::Actions PathFinding(map::Map &map, ecs::GridPosition in, ecs::GridPosition out);
+        static void propagateDistField(std::deque<ecs::GridPosition> &actual, std::deque<ecs::GridPosition> &next, map::Map &map, std::vector<int> &distField, int distance);
+        static ecs::GridPosition getPreviousCell(ecs::GridPosition pos, std::vector<int> &distField, map::Map &map);
     };
 }

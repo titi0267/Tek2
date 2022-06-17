@@ -40,6 +40,7 @@ namespace ecs {
         char prevData[1024 * 4];
         std::uint32_t size = 0;
 
+        MirrorEntity() { prevData[0] == 0; };
         std::string_view getView() { return std::string_view(prevData, size); };
     };
 

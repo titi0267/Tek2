@@ -7,6 +7,9 @@
 
 #include "ecs/components/Ai.hpp"
 #include "ecs/components/ColorTexture.hpp"
+#include "ecs/components/Player.hpp"
+#include "ecs/components/Movement.hpp"
+#include "scenes/GameServerScene.hpp"
 #include "Map.hpp"
 #include "AiFunc.hpp"
 
@@ -21,8 +24,11 @@ void ecs::AiSystem::update(ecs::World &world)
     bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
 
     for (Entity entity : _entities) {
-        // Ai &ai = world.getComponent<Ai>(entity);
         PlayerAction &action = world.getComponent<PlayerAction>(entity);
+        Entity pEntity = scene.getPlayers().at(action.id);
+
+        if (world.getComponent<ecs::Movement>(pEntity).isMoving)
+            return;
         ecs::Actions newAction = ai::AiFunc::update(action.id, scene, world);
         action.action = newAction;
     }

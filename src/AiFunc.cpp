@@ -16,8 +16,8 @@ ecs::Actions ai::AiFunc::update(ecs::PlayerId aiId, bomberman::GameServerScene &
     std::deque<PlayerStruct> player = setPlayer(scene.getPlayers(), world);
     std::deque<ItemStruct> item = setItem(scene.getBonus(), world);
     ecs::GridPosition pos = world.getComponent<ecs::GridPosition>(scene.getPlayers().at(aiId));
-    ecs::Actions act;
     map::Map mapCpy = scene.getMap();
+    ecs::Actions act;
 
     defineDangerous(mapCpy, bomb);
     for (auto fct : _functions) {
@@ -71,34 +71,34 @@ ecs::Actions ai::AiFunc::goSafe(map::Map &map, std::deque<BombStruct> &bomb, std
 
     if (map.isValidCell(pos.x, pos.y) && map.getCellAt(pos.x, pos.y) != DANGEROUS)
         return (ecs::Actions::DO_NOTHING);
-    if (map.isValidCell(pos.x - 1, pos.y) && map.getCellAt(pos.x - 1, pos.y) == VOID)
+    if (map.isValidCell(pos.x - 1, pos.y) && map.isWalkableCell(pos.x - 1, pos.y) && map.getCellAt(pos.x - 1, pos.y) != DANGEROUS)
         return (ecs::Actions::MOVE_LEFT);
-    if (map.isValidCell(pos.x + 1, pos.y) && map.getCellAt(pos.x + 1, pos.y) == VOID)
+    if (map.isValidCell(pos.x + 1, pos.y) && map.isWalkableCell(pos.x + 1, pos.y) && map.getCellAt(pos.x + 1, pos.y) != DANGEROUS)
         return (ecs::Actions::MOVE_RIGHT);
-    if (map.isValidCell(pos.x, pos.y - 1) && map.getCellAt(pos.x, pos.y - 1) == VOID)
+    if (map.isValidCell(pos.x, pos.y - 1) && map.isWalkableCell(pos.x, pos.y - 1) && map.getCellAt(pos.x, pos.y - 1) != DANGEROUS)
         return (ecs::Actions::MOVE_UP);
-    if (map.isValidCell(pos.x, pos.y + 1) && map.getCellAt(pos.x, pos.y + 1) == VOID)
+    if (map.isValidCell(pos.x, pos.y + 1) && map.isWalkableCell(pos.x, pos.y + 1) && map.getCellAt(pos.x, pos.y + 1) != DANGEROUS)
         return (ecs::Actions::MOVE_DOWN);
     return (randoum[std::rand() % 4]);
 }
 
 ecs::Actions ai::AiFunc::goItem(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
 {
-    std::deque<ecs::Actions> tmp;
-    if (item.empty())
-        return (ecs::Actions::DO_NOTHING);
+    ecs::Actions action;
+
     for (auto actual : item) {
-        if ((tmp = PathFinding(map, pos, actual.pos))[0] != ecs::Actions::DO_NOTHING)
-            return (tmp[0]);
+        if ((action = PathFinding(map, pos, actual.pos)) != ecs::DO_NOTHING)
+            return(ecs::PLACE_BOMB);
     }
     return (ecs::Actions::DO_NOTHING);
 }
 
 ecs::Actions ai::AiFunc::goKill(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
 {
-    std::deque<ecs::Actions> tmp;
+    ecs::Actions action;
+
     for (auto actual : item) {
-        if ((tmp = PathFinding(map, pos, actual.pos)).size() <= 4)
+        if ((action = PathFinding(map, pos, actual.pos)) != ecs::DO_NOTHING)
             return(ecs::PLACE_BOMB);
     }
     return (ecs::Actions::DO_NOTHING);
@@ -106,13 +106,18 @@ ecs::Actions ai::AiFunc::goKill(map::Map &map, std::deque<BombStruct> &bomb, std
 
 ecs::Actions ai::AiFunc::goReach(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
 {
-    ecs::Actions randoum[5] = {ecs::Actions::MOVE_UP, ecs::Actions::MOVE_RIGHT, ecs::Actions::MOVE_DOWN, ecs::Actions::MOVE_LEFT
-    , ecs::Actions::DO_NOTHING};
+    ecs::Actions randoum[5] = {
+        ecs::Actions::MOVE_UP,
+        ecs::Actions::MOVE_RIGHT,
+        ecs::Actions::MOVE_DOWN,
+        ecs::Actions::MOVE_LEFT,
+        ecs::Actions::DO_NOTHING
+    };
+    ecs::Actions action;
 
-    std::deque<ecs::Actions> tmp;
     for (auto actual : player) {
-        if ((tmp = PathFinding(map, pos, actual.pos))[0] != ecs::Actions::DO_NOTHING)
-            return (tmp[0]);
+        if ((action = PathFinding(map, pos, actual.pos)) != ecs::Actions::DO_NOTHING)
+            return (action);
     }
     if ((map.isValidCell(pos.x - 1, pos.y) && map.getCellAt(pos.x - 1, pos.y) == DESTRUCTIBLE) ||
         (map.isValidCell(pos.x + 1, pos.y) && map.getCellAt(pos.x + 1, pos.y) == DESTRUCTIBLE) ||
@@ -122,73 +127,85 @@ ecs::Actions ai::AiFunc::goReach(map::Map &map, std::deque<BombStruct> &bomb, st
     return (randoum[std::rand() % 5]);
 }
 
-std::deque<ecs::Actions> ai::AiFunc::PathFinding(map::Map &map, ecs::GridPosition in, ecs::GridPosition out)
+ecs::Actions ai::AiFunc::PathFinding(map::Map &map, ecs::GridPosition in, ecs::GridPosition out)
 {
     std::deque<ecs::GridPosition> actual;
     std::deque<ecs::GridPosition> next;
-    std::deque<ecs::GridPosition>::iterator itr;
-    std::deque<ecs::Actions> result;
-    std::vector<int> pathfind = map.getMap();
+    std::vector<int> distField;
+    ecs::GridPosition pos;
+    ecs::GridPosition prevPos;
+    int distance = 1;
+    bool found = false;
+    int index;
 
-    actual.push_back(in);
-    defineNext(actual, next, pathfind, map.getWidth());
-    itr = std::find(next.begin(), next.end(), out);
-    for (int i = 0; itr != next.end(); i++) {
-        if (next.empty()) {
-            result.push_back(ecs::Actions::DO_NOTHING);
-            return (result);
+    distField.resize(map.getWidth() * map.getHeight(), -1);
+    next.push_back(in);
+    std::cout << "Path Finding: " << map.getWidth() * map.getHeight() << ", " << in.toArrayIndex(map.getWidth()) << ", " << distField.size() << std::endl;
+    distField.at(in.toArrayIndex(map.getWidth())) = 0;
+    do {
+        actual = next;
+        next.clear();
+        propagateDistField(actual, next, map, distField, distance);
+        distance++;
+    } while (next.size() > 0 && !(found = (std::find(next.begin(), next.end(), out) != next.end())));
+
+    if (!found)
+        return ecs::Actions::DO_NOTHING;
+
+    prevPos = out;
+    do {
+        index = distField.at(out.toArrayIndex(map.getWidth()));
+        prevPos = pos;
+        pos = getPreviousCell(prevPos, distField, map);
+        distance--;
+        if (pos == in) {
+            if (in.x < pos.x)
+                return ecs::MOVE_RIGHT;
+            if (in.x > pos.x)
+                return ecs::MOVE_LEFT;
+            if (in.y < pos.y)
+                return ecs::MOVE_DOWN;
+            if (in.y > pos.y)
+                return ecs::MOVE_UP;
         }
-        for (int j = 0; j < next.size(); j++)
-            pathfind[next[j].x + next[j].y *  map.getWidth()] = i;
-        defineNext(actual, next, pathfind, map.getWidth());
-        itr = std::find(next.begin(), next.end(), out);
-    }
-    for (int i = pathfind[out.x + out.y * map.getWidth()] - 1; i != 0; i--) {
-        if (pathfind[out.x - 1 + out.y * map.getWidth()] == i) {
-            out.x = out.x - 1;
-            result.push_back(ecs::Actions::MOVE_LEFT);
-        } else if (pathfind[out.x + 1 + out.y * map.getWidth()] == i) {
-            out.x = out.x + 1;
-            result.push_back(ecs::Actions::MOVE_RIGHT);
-        } else if (pathfind[out.x + (out.y + 1) * map.getWidth()] == i) {
-            out.y = out.y + 1;
-            result.push_back(ecs::Actions::MOVE_DOWN);
-        } else if (pathfind[out.x + (out.y - 1) * map.getWidth()] == i) {
-            out.y = out.y - 1;
-            result.push_back(ecs::Actions::MOVE_UP);
-        }
-    }
-    if (result.empty())
-        result.push_back(ecs::Actions::DO_NOTHING);
-    return (result);
+    } while(distance >= 0);
+    return ecs::DO_NOTHING;
 }
 
-void ai::AiFunc::defineNext(std::deque<ecs::GridPosition> &actual, std::deque<ecs::GridPosition> &next, std::vector<int> &map, int width)
+void ai::AiFunc::propagateDistField(std::deque<ecs::GridPosition> &actual, std::deque<ecs::GridPosition> &next, map::Map &map, std::vector<int> &distField, int distance)
 {
+    const ecs::GridPosition DIRECTIONS[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     ecs::GridPosition posNext;
+    int width = map.getWidth();
+    int index;
 
-    next.clear();
-    for (int i = 0; i < actual.size(); i++) {
-        int tmp_x = actual[i].x;
-        int tmp_y = actual[i].y;
-        if (tmp_x - 1 >= 0 && map[tmp_x - 1 +  tmp_y * width] == VOID) {
-            posNext.x = tmp_x - 1;
-            posNext.y = tmp_y;
-            next.push_back(posNext);
-        } if (tmp_x + 1 < width && map[tmp_x + 1 + tmp_y * width] == VOID) {
-            posNext.x = tmp_x + 1;
-            posNext.y = tmp_y;
-            next.push_back(posNext);
-        } if (tmp_y - 1 >= 0 && map[tmp_x +  (tmp_y - 1) * width] == VOID) {
-            posNext.x = tmp_x;
-            posNext.y = tmp_y - 1;
-            next.push_back(posNext);
-        } if (tmp_y + 1 < width && map[tmp_x + (tmp_y + 1) * width] == VOID) {
-            posNext.x = tmp_x;
-            posNext.y = tmp_y + 1;
-            next.push_back(posNext);
+    for (ecs::GridPosition &pos : actual) {
+        for (int i = 0; i < 4; i++) {
+            posNext = pos + DIRECTIONS[i];
+            index = posNext.toArrayIndex(map.getWidth());
+            if (!map.isValidCell(posNext.x, posNext.y) || distField.at(index) != -1)
+                continue;
+            if (map.isWalkableCell(posNext.x, posNext.y)) {
+                distField.at(index) = distance;
+                next.push_back(posNext);
+            }
         }
     }
+}
+
+ecs::GridPosition ai::AiFunc::getPreviousCell(ecs::GridPosition pos, std::vector<int> &distField, map::Map &map)
+{
+    const ecs::GridPosition DIRECTIONS[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+    int width = map.getWidth();
+    int distance = distField.at(pos.toArrayIndex(width));
+    ecs::GridPosition posNext;
+
+    for (int i = 0; i < 4; i++) {
+        posNext = pos + DIRECTIONS[i];
+        if (posNext.isValidPos(map) && distField.at(posNext.toArrayIndex(width)) < distance)
+            return posNext;
+    }
+    throw std::runtime_error("Could not find previous cell, this should never happen");
 }
 
 void ai::AiFunc::defineDangerous(map::Map &map, std::deque<BombStruct> &bomb)
@@ -203,23 +220,23 @@ void ai::AiFunc::defineBomb(int x, int y, map::Map &map, int bomb_length)
 
     map.setCellAt(x, y, DANGEROUS);
     for (int i = 1; i < bomb_length; i++) {
-        if (line[0] && x > 0 && map.getCellAt(x - i, y) == VOID) {
+        if (line[0] && (x - i) >= 0 && map.isWalkableCell(x - i, y)) {
             map.setCellAt(x - i, y, DANGEROUS);
         } else
             line[0] = 0;
 
-        if (line[1] && x < map.getWidth() && map.getCellAt(x + i, y) == VOID) {
+        if (line[1] && (x + i) < map.getWidth() && map.isWalkableCell(x + i, y)) {
             map.setCellAt(x + i, y, DANGEROUS);
         } else
             line[1] = 0;
 
 
-        if (line[2] && y > 0 && map.getCellAt(x, y - i) == VOID) {
+        if (line[2] && (y - i) >= 0 && map.isWalkableCell(x, y - i)) {
             map.setCellAt(x, y - i, DANGEROUS);
         } else
             line[2] = 0;
 
-        if (line[3] && y < map.getHeight() && map.getCellAt(x, y + i) == VOID) {
+        if (line[3] && (y + i) < map.getHeight() && map.isWalkableCell(x, y + i)) {
             map.setCellAt(x, y + i, DANGEROUS);
         } else
             line[3] = 0;
