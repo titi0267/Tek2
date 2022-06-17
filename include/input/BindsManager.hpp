@@ -77,7 +77,7 @@ namespace ecs {
                 }
                 catch (std::invalid_argument) {
                     std::cerr << "Bad input file" << std::endl;
-                    //throw std::invalid_argument("File does not exist or isn't correct!");
+                    throw std::invalid_argument("File does not exist or isn't correct!");
                 }
             }
             void toggleSetOff(bool gamepad)

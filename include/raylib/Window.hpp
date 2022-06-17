@@ -88,12 +88,12 @@ namespace raylib {
                     float abs_b = b < 0 ? b * -1 : b;
                     if (abs_a >= abs_b) {
                     if (a < 0)
-                        return (button == GAMEPAD_JOYSTICK_LEFT_FACE_LEFT ? true : false);
-                    return (button == GAMEPAD_JOYSTICK_LEFT_FACE_RIGHT ? true : false);
+                        return (button == (GamepadButton)GAMEPAD_JOYSTICK_LEFT_FACE_LEFT ? true : false);
+                    return (button == (GamepadButton)GAMEPAD_JOYSTICK_LEFT_FACE_RIGHT ? true : false);
                     }
                     if (b < 0)
-                        return (button == GAMEPAD_JOYSTICK_LEFT_FACE_UP ? true : false);
-                    return (button == GAMEPAD_JOYSTICK_LEFT_FACE_DOWN ? true : false);
+                        return (button == (GamepadButton)GAMEPAD_JOYSTICK_LEFT_FACE_UP ? true : false);
+                    return (button == (GamepadButton)GAMEPAD_JOYSTICK_LEFT_FACE_DOWN ? true : false);
                 }
                 return (false);
             }
@@ -104,12 +104,12 @@ namespace raylib {
                 float abs_b = b < 0 ? b * -1 : b;
                 if (abs_a >= abs_b) {
                 if (a < 0)
-                    return (button == GAMEPAD_JOYSTICK_RIGHT_FACE_LEFT ? true : false);
-                return (button == GAMEPAD_JOYSTICK_RIGHT_FACE_RIGHT ? true : false);
+                    return (button == (GamepadButton)GAMEPAD_JOYSTICK_RIGHT_FACE_LEFT ? true : false);
+                return (button == (GamepadButton)GAMEPAD_JOYSTICK_RIGHT_FACE_RIGHT ? true : false);
                 }
                 if (b < 0)
-                    return (button == GAMEPAD_JOYSTICK_RIGHT_FACE_UP ? true : false);
-                return (button == GAMEPAD_JOYSTICK_RIGHT_FACE_DOWN ? true : false);
+                    return (button == (GamepadButton)GAMEPAD_JOYSTICK_RIGHT_FACE_UP ? true : false);
+                return (button == (GamepadButton)GAMEPAD_JOYSTICK_RIGHT_FACE_DOWN ? true : false);
             }
             return (false);
         }
