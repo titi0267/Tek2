@@ -31,6 +31,8 @@ void bomberman::loadTextures(ecs::World &world)
     textureMan.loadTexture("ludovic", "./assets/textures/ludo.png");
     textureMan.loadTexture("mathieu", "./assets/textures/mathieu.png");
     textureMan.loadTexture("jeffrey", "./assets/textures/jeffrey.png");
+
+    textureMan.loadTexture("bombBonus", "./assets/textures/bombBonus.png");
 }
 
 void bomberman::loadModels(ecs::World &world)
@@ -47,6 +49,8 @@ void bomberman::loadModels(ecs::World &world)
     modelMan.loadModel("water", "./asstes/models/water.iqm");
 
     modelMan.loadModel("player", "./assets/models/player.iqm");
+
+    modelMan.loadModel("bombBonus", "./assets/models/bombBonus.iqm");
 }
 
 void bomberman::loadAnimations(ecs::World &world)
@@ -98,4 +102,7 @@ void bomberman::applyAssetsToModels(ecs::World &world)
 
     modelMan.getModel("player").getMaterialView(0)
     .setTexture(textureMan.getTexture("timothe"));
+
+    modelMan.getModel("bombBonus").getMaterialView(0).
+    setTexture(textureMan.getTexture("bombBonus"));
 }

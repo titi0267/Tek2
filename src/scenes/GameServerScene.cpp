@@ -164,7 +164,6 @@ void bomberman::GameServerScene::deleteBonus(ecs::Entity bonus)
     _bonus.erase(bonus);
 }
 
-
 void bomberman::GameServerScene::deleteDestructible(ecs::GridPosition &pos, ecs::World &world)
 {
     ecs::Entity entity = _destructibles[pos];

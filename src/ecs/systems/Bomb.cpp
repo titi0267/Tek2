@@ -52,16 +52,16 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
                 randomBonus = std::rand() % 3;
                 switch (randomBonus) {
                     case 0:
-                        bonusType = "bag";
+                        bonusType = "bombBonus";
                     break;
                     case 1:
-                        bonusType = "bag";
+                        bonusType = "bombBonus";
                     break;
                     case 2:
-                        bonusType = "bag";
+                        bonusType = "bombBonus";
                     break;
                     default:
-                        bonusType = "bag";
+                        bonusType = "bombBonus";
                     break;
                 }
                 scene.spawnBonus(transform.translation, waterGPos, bonusType, world);
