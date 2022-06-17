@@ -50,11 +50,13 @@ void ecs::World::killAllEntities()
 
 void ecs::World::decodeEntities(std::ifstream &file)
 {
+    std::uint32_t nbEntities;
     std::uint32_t nbComponents = 0;
     ComponentType type = 0;
     std::uint32_t componentSize = 0;
 
-    while (!file.eof()) {
+    file.read((char*) &nbEntities, sizeof(std::uint32_t));
+    for (int i = 0; i < nbEntities; i++) {
         EntityCommands entityCmds = spawn();
         Entity entity = entityCmds.getEntity();
 
@@ -69,27 +71,27 @@ void ecs::World::decodeEntities(std::ifstream &file)
     }
 }
 
-void ecs::World::encodeEntity(Entity entity, std::ofstream &file)
+void ecs::World::encodeEntity(Entity entity, std::stringbuf &buffer)
 {
     std::uint32_t nbComponents = 0;
     std::uint32_t componentSize = 0;
     ecs::Signature sign = _entities.getSignature(entity);
-    std::stringbuf buffer;
+    std::stringbuf localBuf;
     std::string data;
 
     for (ComponentType i = 0; i < MAX_COMPONENTS; i++) {
         if (sign.test(i)) {
             nbComponents++;
             componentSize = _components.getComponentSize(i);
-            buffer.sputn((char*) &i, sizeof(ComponentType));
-            buffer.sputn((char*) &componentSize, sizeof(std::uint32_t));
-            buffer.sputn((char*) _components.getComponentByType(i, entity), componentSize);
+            localBuf.sputn((char*) &i, sizeof(ComponentType));
+            localBuf.sputn((char*) &componentSize, sizeof(std::uint32_t));
+            localBuf.sputn((char*) _components.getComponentByType(i, entity), componentSize);
         }
     }
-    data = buffer.str();
-    file.write((char*) &nbComponents, sizeof(std::uint32_t));
+    data = localBuf.str();
+    buffer.sputn((char*) &nbComponents, sizeof(std::uint32_t));
     std::cout << "Encode " << (int) entity << " with " << nbComponents << " components" << std::endl;
-    file.write(data.c_str(), data.size());
+    buffer.sputn(data.c_str(), data.size());
 }
 
 ecs::EntityCommands ecs::World::spawn()

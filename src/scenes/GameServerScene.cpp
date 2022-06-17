@@ -224,12 +224,20 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
 void bomberman::GameServerScene::unloadScene(ecs::World &world)
 {
     std::ofstream file{"bombitek.dat"};
+    std::uint32_t nbEntities = 0;
+    std::stringbuf buffer;
+    std::string data;
 
     _map.save("bombitek.map");
     for (ecs::Entity entity : world.getLivingEntities()) {
-        if (!world.hasComponent<ecs::MirroredEntity>(entity))
-            world.encodeEntity(entity, file);
+        if (!world.hasComponent<ecs::MirroredEntity>(entity)) {
+            nbEntities++;
+            world.encodeEntity(entity, buffer);
+        }
     }
+    data = buffer.str();
+    file.write((char*) &nbEntities, sizeof(std::uint32_t));
+    file.write(data.c_str(), data.size());
 
     world.killAllEntities();
     world.unregisterSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,

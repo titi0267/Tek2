@@ -37,7 +37,7 @@ namespace ecs {
         void killAllEntities();
 
         void decodeEntities(std::ifstream &file);
-        void encodeEntity(Entity entity, std::ofstream &file);
+        void encodeEntity(Entity entity, std::stringbuf &buffer);
 
         EntityCommands spawn();
         EntityCommands getEntityCommands(Entity entity);
