@@ -9,6 +9,7 @@
 #include "ecs/components/HoverTint.hpp"
 #include "ecs/components/HoverRotate.hpp"
 #include "ecs/components/ColorTexture.hpp"
+#include "ecs/components/Timer.hpp"
 
 #include "raylib/Window.hpp"
 #include "raylib/Camera.hpp"
@@ -81,7 +82,7 @@ void ecs::HoverTintUpdateSystem::update(ecs::World &world)
 
 void ecs::HoverRotateUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Hoverable, Transform, HoverRotate>();
+    _signature = component.generateSignature<Hoverable, Transform, HoverRotate, Timer>();
 }
 
 void ecs::HoverRotateUpdateSystem::update(ecs::World &world)
@@ -90,17 +91,20 @@ void ecs::HoverRotateUpdateSystem::update(ecs::World &world)
         Hoverable &hover = world.getComponent<Hoverable>(entity);
         Transform &transform = world.getComponent<Transform>(entity);
         HoverRotate &rotate = world.getComponent<HoverRotate>(entity);
+        Timer &timer = world.getComponent<Timer>(entity);
         Vector3 rot = QuaternionToEuler(transform.rotation);
 
         if (rotate.inRotation) {
-            rot.x += PI / 4.0 / 15;
-            if (!hover.isHover && rot.x <= 1e-04 && rot.x >= -1e-04) {
+            rot.x = timer.timeElapsed * 2 * PI;
+            if (!hover.isHover && fmod(rot.x, PI * 2) < 0.1) {
                 rot.x = 0;
                 rotate.inRotation = false;
             }
             transform.rotation = QuaternionFromEuler(rot.x, rot.y, rot.z);
         }
-        else if (hover.isHover)
+        else if (hover.isHover) {
+            timer.timeElapsed = 0;
             rotate.inRotation = true;
+        }
     }
 }
