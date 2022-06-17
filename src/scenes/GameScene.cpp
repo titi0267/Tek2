@@ -21,22 +21,24 @@
 
 #include "Setup.hpp"
 
-void bomberman::GameScene::successConn(ecs::World &world)
+void bomberman::successConn(ecs::World &world, void *data)
 {
-    std::cout << "success" << std::endl;
-    world.getRessource<ecs::ClientManager>().initPlayers(_nbPlayers);
+    bomberman::GameScene *scene = (bomberman::GameScene*) data;
+
+    std::cout << "Connection succeed" << std::endl;
+    world.getRessource<ecs::ClientManager>().initPlayers(scene->getNbPlayersOnClient());
 }
 
-void bomberman::GameScene::failedConn(ecs::World &world)
+void bomberman::failedConn(ecs::World &world, void *data)
 {
-    std::cout << "failed" << std::endl;
+    std::cout << "Connection falied" << std::endl;
     world.getRessource<ecs::SceneManager>().changeScene(ecs::MAIN_MENU_SCENE, nullptr);
 }
 
 void bomberman::GameScene::loadScene(ecs::World &world)
 {
-    ecs::ConnectionSuccessFct success = (ecs::ConnectionSuccessFct) &bomberman::GameScene::successConn;
-    ecs::ConnectionFailedFct failed = (ecs::ConnectionFailedFct) &bomberman::GameScene::failedConn;
+    ecs::ConnectionSuccessFct success = &bomberman::successConn;
+    ecs::ConnectionFailedFct failed = &bomberman::failedConn;
 
     if (_startLocalServer)
         world.getRessource<ecs::InternalServer>().startServer(_port);

@@ -34,11 +34,11 @@ void ecs::ClientManager::handleDisconnect(World &world)
 }
 
 void ecs::ClientManager::attemptConnection(const std::string &ip, const std::string &port,
-void *obj, ConnectionSuccessFct success, ConnectionFailedFct failed)
+void *data, ConnectionSuccessFct success, ConnectionFailedFct failed)
 {
     _ip = ip;
     _port = port;
-    _obj = obj;
+    _data = data;
     _success = success;
     _failed = failed;
     _connAttempted = true;
@@ -58,12 +58,12 @@ void ecs::ClientManager::tryConnection(ecs::World &world)
         connectTo(_ip, _port);
         std::cout << "[CLIENT] Successfully connected to " << _ip << ":" << _port << std::endl;
         _connAttempted = false;
-        _success(_obj, world);
+        _success(world, _data);
     } catch(network::SocketError) {
         if (_tryConnCount == 5) {
             std::cout << "[CLIENT] Failed all connection attempts" << std::endl;
             _connAttempted = false;
-            _failed(_obj, world);
+            _failed(world, _data);
             return;
         }
         _lastTryDelta = 0;

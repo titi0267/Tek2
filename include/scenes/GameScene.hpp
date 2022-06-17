@@ -12,6 +12,9 @@
 #include "ecs/engine/PlayersManager.hpp"
 
 namespace bomberman {
+    void successConn(ecs::World &world, void *obj);
+    void failedConn(ecs::World &world, void *obj);
+
     struct GameSceneArgs {
         std::string ip;
         std::string port;
@@ -27,9 +30,6 @@ namespace bomberman {
         std::string _port;
         bool _startLocalServer;
         int _nbPlayers;
-
-        void successConn(ecs::World &world);
-        void failedConn(ecs::World &world);
 
         public:
         GameScene(const void *data) : _ip(((GameSceneArgs*) data)->ip), _port(((GameSceneArgs*) data)->port),

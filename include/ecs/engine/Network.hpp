@@ -92,8 +92,8 @@ namespace ecs {
         void deleteClientEntity(Entity entity, World &world);
     };
 
-    using ConnectionSuccessFct = void (*)(void *obj, ecs::World &world);
-    using ConnectionFailedFct = void (*)(void *obj, ecs::World &world);
+    using ConnectionSuccessFct = void (*)(ecs::World &world, void *obj);
+    using ConnectionFailedFct = void (*)(ecs::World &world, void *obj);
 
     class ClientManager {
         std::unique_ptr<network::IClient> _client;
@@ -103,7 +103,7 @@ namespace ecs {
         std::string _port;
         bool _connAttempted = false;
         int _tryConnCount = 0;
-        void *_obj = nullptr;
+        void *_data = nullptr;
         ConnectionSuccessFct _success;
         ConnectionFailedFct _failed;
         float _lastTryDelta = 0;
