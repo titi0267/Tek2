@@ -20,6 +20,7 @@ namespace raylib {
         Window(int width = 640, int height = 480, const std::string &name = "Indie Studio")
         {
             InitWindow(width, height, name.c_str());
+            SetExitKey(KEY_NULL);
         };
 
         ~Window()

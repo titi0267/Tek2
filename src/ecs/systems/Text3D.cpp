@@ -6,6 +6,7 @@
 */
 
 #include "ecs/components/Text3D.hpp"
+#include "ecs/components/CameraFollow.hpp"
 
 #include "raylib/Camera.hpp"
 #include "raylib/Matrix.hpp"
@@ -135,6 +136,7 @@ void ecs::Draw3DTextSystem::setSignature(ecs::ComponentManager &component)
 void ecs::Draw3DTextSystem::update(ecs::World &world)
 {
     raylib::Camera &cam = world.getRessource<raylib::Camera>();
+    raylib::Matrix invViewMat = cam.getViewMatrix().inverse();
     raylib::FontManager &fontMan = world.getRessource<raylib::FontManager>();
 
     cam.begin3DMode();
@@ -149,6 +151,9 @@ void ecs::Draw3DTextSystem::update(ecs::World &world)
 
         Vector3 trueOffset = text.offset * transformMat + Vector3 {-size.x / 2, -size.y / 2, 0} * transformMat;
         raylib::Matrix mat = raylib::Matrix::fromTransform(transform) * raylib::Matrix::fromTranslate(trueOffset);
+
+        if (world.hasComponent<CameraFollow>(entity))
+            mat = mat * invViewMat;
 
         raylib::RlMatrixPush push;
         raylib::rlMultMatrix(mat);

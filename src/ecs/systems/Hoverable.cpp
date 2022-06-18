@@ -10,6 +10,7 @@
 #include "ecs/components/HoverRotate.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/Timer.hpp"
+#include "ecs/components/CameraFollow.hpp"
 
 #include "raylib/Window.hpp"
 #include "raylib/Camera.hpp"
@@ -28,6 +29,7 @@ void ecs::HoverUpdateSystem::update(ecs::World &world)
     raylib::Window &window = world.getRessource<raylib::Window>();
     raylib::Camera &cam = world.getRessource<raylib::Camera>();
     raylib::Ray ray = cam.getMouseRay(window.getMousePos());
+    raylib::Matrix invViewMat = cam.getViewMatrix().inverse();
 
     Hoverable *hitHover = nullptr;
     float hitDist = std::numeric_limits<float>::max();
@@ -36,8 +38,12 @@ void ecs::HoverUpdateSystem::update(ecs::World &world)
     for (ecs::Entity entity : _entities) {
         Transform &transform = world.getComponent<Transform>(entity);
         Hitbox &hitbox = world.getComponent<Hitbox>(entity);
+        raylib::Matrix mat = raylib::Matrix::fromTransform(transform);
 
-        BoundingBox box = hitbox.getBoundingBox(transform);
+        if (world.hasComponent<CameraFollow>(entity))
+            mat = mat * invViewMat;
+
+        BoundingBox box = hitbox.getBoundingBox(mat);
         RayCollision collision = ray.getCollisionBox(box);
 
         if (world.hasComponent<Hoverable>(entity)) {

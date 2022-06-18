@@ -9,6 +9,7 @@
 
 #include "Ray.hpp"
 #include "Vectors.hpp"
+#include "Matrix.hpp"
 
 namespace raylib {
     using RaylibCamera = ::Camera3D;
@@ -43,6 +44,7 @@ namespace raylib {
         void end3DMode() { EndMode3D(); }
 
         Ray getMouseRay(Vector2 mousePos) { return Ray(GetMouseRay(mousePos, _cam)); };
+        Matrix getViewMatrix() { return Matrix(GetCameraMatrix(_cam)); };
 
         RaylibCamera &getCamera() { return _cam; };
     };

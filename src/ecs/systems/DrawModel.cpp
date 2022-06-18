@@ -9,6 +9,7 @@
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/PlayAnimation.hpp"
 #include "ecs/components/Skin.hpp"
+#include "ecs/components/CameraFollow.hpp"
 
 #include "raylib/Camera.hpp"
 #include "raylib/Matrix.hpp"
@@ -28,6 +29,7 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
     raylib::TextureManager &textMan = world.getRessource<raylib::TextureManager>();
     raylib::AnimationManager &animMan = world.getRessource<raylib::AnimationManager>();
+    raylib::Matrix invViewMat = camera.getViewMatrix().inverse();
 
     camera.begin3DMode();
     for (auto entity : _entities) {
@@ -37,6 +39,9 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
 
         raylib::Matrix mat = raylib::Matrix::fromTransform(transform);
         Tint tint = WHITE;
+
+        if (world.hasComponent<CameraFollow>(entity))
+            mat = mat * invViewMat;
 
         if (world.hasComponent<Tint>(entity))
             tint = world.getComponent<Tint>(entity);

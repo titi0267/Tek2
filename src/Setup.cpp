@@ -32,6 +32,7 @@
 #include "ecs/components/TextInput.hpp"
 #include "ecs/components/ToggleButton.hpp"
 #include "ecs/components/Grid.hpp"
+#include "ecs/components/CameraFollow.hpp"
 
 // Those components are mirrored between clients and server
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
@@ -62,6 +63,8 @@ void bomberman::registerRender(ecs::World &world)
 
     world.registerComponent<ecs::BackgroundRotation>();
     world.registerSystem<ecs::BackgroundRotationUpdateSystem>();
+
+    world.registerComponent<ecs::CameraFollow>();
 }
 
 void bomberman::registerInputs(ecs::World &world)
