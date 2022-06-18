@@ -140,7 +140,6 @@ ecs::Actions ai::AiFunc::PathFinding(map::Map &map, ecs::GridPosition in, ecs::G
 
     distField.resize(map.getWidth() * map.getHeight(), -1);
     next.push_back(in);
-    std::cout << "Path Finding: " << map.getWidth() * map.getHeight() << ", " << in.toArrayIndex(map.getWidth()) << ", " << distField.size() << std::endl;
     distField.at(in.toArrayIndex(map.getWidth())) = 0;
     do {
         actual = next;
@@ -152,21 +151,21 @@ ecs::Actions ai::AiFunc::PathFinding(map::Map &map, ecs::GridPosition in, ecs::G
     if (!found)
         return ecs::Actions::DO_NOTHING;
 
-    prevPos = out;
+    pos = out;
     do {
-        index = distField.at(out.toArrayIndex(map.getWidth()));
         prevPos = pos;
         pos = getPreviousCell(prevPos, distField, map);
         distance--;
         if (pos == in) {
-            if (in.x < pos.x)
+            if (in.x < prevPos.x)
                 return ecs::MOVE_RIGHT;
-            if (in.x > pos.x)
+            if (in.x > prevPos.x)
                 return ecs::MOVE_LEFT;
-            if (in.y < pos.y)
+            if (in.y < prevPos.y)
                 return ecs::MOVE_DOWN;
-            if (in.y > pos.y)
+            if (in.y > prevPos.y)
                 return ecs::MOVE_UP;
+            return ecs::DO_NOTHING;
         }
     } while(distance >= 0);
     return ecs::DO_NOTHING;
@@ -199,10 +198,14 @@ ecs::GridPosition ai::AiFunc::getPreviousCell(ecs::GridPosition pos, std::vector
     int width = map.getWidth();
     int distance = distField.at(pos.toArrayIndex(width));
     ecs::GridPosition posNext;
+    int val;
 
     for (int i = 0; i < 4; i++) {
         posNext = pos + DIRECTIONS[i];
-        if (posNext.isValidPos(map) && distField.at(posNext.toArrayIndex(width)) < distance)
+        if (!posNext.isValidPos(map))
+            continue;
+        val = distField.at(posNext.toArrayIndex(width));
+        if (val > -1 && val < distance)
             return posNext;
     }
     throw std::runtime_error("Could not find previous cell, this should never happen");
