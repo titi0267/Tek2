@@ -43,7 +43,7 @@ std::deque<ai::BombStruct> ai::AiFunc::setBomb(const std::set<ecs::Entity> &list
 
     for (auto actual : list) {
         tmp.pos = world.getComponent<ecs::GridPosition>(actual);
-        tmp.size = 4;
+        tmp.size = world.getComponent<ecs::Bomb>(actual).bombDistance;
         tmp.time = world.getComponent<ecs::Timer>(actual).timeElapsed;
         bomb.push_back(tmp);
     }
@@ -93,23 +93,8 @@ ecs::Actions ai::AiFunc::goSafe(ecs::PlayerId aiId, map::Map &map, std::deque<Bo
 
     if (map.getCellAt(pos.x, pos.y) != DANGEROUS)
         return (ecs::Actions::DO_NOTHING);
-    if (map.isValidCell(pos.x - 1, pos.y) && map.isWalkableCell(pos.x - 1, pos.y) && map.getCellAt(pos.x - 1, pos.y) != DANGEROUS)
-        return (ecs::Actions::MOVE_LEFT);
-    if (map.isValidCell(pos.x + 1, pos.y) && map.isWalkableCell(pos.x + 1, pos.y) && map.getCellAt(pos.x + 1, pos.y) != DANGEROUS)
-        return (ecs::Actions::MOVE_RIGHT);
-    if (map.isValidCell(pos.x, pos.y - 1) && map.isWalkableCell(pos.x, pos.y - 1) && map.getCellAt(pos.x, pos.y - 1) != DANGEROUS)
-        return (ecs::Actions::MOVE_UP);
-    if (map.isValidCell(pos.x, pos.y + 1) && map.isWalkableCell(pos.x, pos.y + 1) && map.getCellAt(pos.x, pos.y + 1) != DANGEROUS)
-        return (ecs::Actions::MOVE_DOWN);
-    if (map.isValidCell(pos.x - 1, pos.y) && map.isWalkableCell(pos.x - 1, pos.y))
-        return (ecs::Actions::MOVE_LEFT);
-    if (map.isValidCell(pos.x + 1, pos.y) && map.isWalkableCell(pos.x + 1, pos.y))
-        return (ecs::Actions::MOVE_RIGHT);
-    if (map.isValidCell(pos.x, pos.y - 1) && map.isWalkableCell(pos.x, pos.y - 1))
-        return (ecs::Actions::MOVE_UP);
-    if (map.isValidCell(pos.x, pos.y + 1) && map.isWalkableCell(pos.x, pos.y + 1))
-        return (ecs::Actions::MOVE_DOWN);
-    return (randoum[std::rand() % 4]);
+    else
+        return getClosestSafe(map, pos);
 }
 
 ecs::Actions ai::AiFunc::goItem(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
@@ -208,6 +193,56 @@ ecs::Actions ai::AiFunc::PathFinding(map::Map &map, ecs::GridPosition in, ecs::G
     return ecs::DO_NOTHING;
 }
 
+ecs::Actions ai::AiFunc::getClosestSafe(map::Map &map, ecs::GridPosition in)
+{
+    std::deque<ecs::GridPosition> actual;
+    std::deque<ecs::GridPosition> next;
+    std::vector<int> distField;
+    ecs::GridPosition pos;
+    ecs::GridPosition prevPos;
+    int distance = 1;
+    bool found = false;
+    int index;
+
+    distField.resize(map.getWidth() * map.getHeight(), -1);
+    next.push_back(in);
+    distField.at(in.toArrayIndex(map.getWidth())) = 0;
+    do {
+        actual = next;
+        next.clear();
+        propagateDistField(actual, next, map, distField, distance);
+        distance++;
+        for (ecs::GridPosition testPos : next) {
+            if (map.isWalkableCell(testPos.x, testPos.y) && map.getCellAt(testPos.x, testPos.y) != DANGEROUS) {
+                pos = testPos;
+                found = true;
+                break;
+            }
+        }
+    } while (next.size() > 0 && !found);
+
+    if (!found)
+        return ecs::Actions::DO_NOTHING;
+
+    do {
+        prevPos = pos;
+        pos = getPreviousCell(prevPos, distField, map);
+        distance--;
+        if (pos == in) {
+            if (in.x < prevPos.x)
+                return ecs::MOVE_RIGHT;
+            if (in.x > prevPos.x)
+                return ecs::MOVE_LEFT;
+            if (in.y < prevPos.y)
+                return ecs::MOVE_DOWN;
+            if (in.y > prevPos.y)
+                return ecs::MOVE_UP;
+            return ecs::DO_NOTHING;
+        }
+    } while(distance >= 0);
+    return ecs::DO_NOTHING;
+}
+
 void ai::AiFunc::propagateDistField(std::deque<ecs::GridPosition> &actual, std::deque<ecs::GridPosition> &next, map::Map &map, std::vector<int> &distField, int distance)
 {
     const ecs::GridPosition DIRECTIONS[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
@@ -251,7 +286,7 @@ ecs::GridPosition ai::AiFunc::getPreviousCell(ecs::GridPosition pos, std::vector
 void ai::AiFunc::defineDangerous(map::Map &map, std::deque<BombStruct> &bomb)
 {
     for (auto actual : bomb)
-        defineBomb(actual.pos.x, actual.pos.y, map, 4);
+        defineBomb(actual.pos.x, actual.pos.y, map, actual.size);
 }
 
 void ai::AiFunc::defineBomb(int x, int y, map::Map &map, int bomb_length)

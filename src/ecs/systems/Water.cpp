@@ -33,25 +33,25 @@ void ecs::WaterUpdateSystem::update(ecs::World &world)
         Timer &timer = world.getComponent<Timer>(entity);
         Water &water = world.getComponent<Water>(entity);
 
-        if (!water.expanded && timer.timeElapsed >= 0.2) {
-            Vector3 pos = transform.translation + water.dir;
-            ecs::GridPosition newGPos = gPos + ecs::GridPosition{(int) water.dir.x, (int) water.dir.z};
+        // if (!water.expanded && timer.timeElapsed >= 0.2) {
+        //     Vector3 pos = transform.translation + water.dir;
+        //     ecs::GridPosition newGPos = gPos + ecs::GridPosition{(int) water.dir.x, (int) water.dir.z};
 
-            water.expanded = true;
+        //     water.expanded = true;
 
-            if (water.distance == water.maxDistance || !newGPos.isValidPos(map) || (water.dir.x == 0 && water.dir.z == 0))
-                continue;
+        //     if (water.distance == water.maxDistance || !newGPos.isValidPos(map) || (water.dir.x == 0 && water.dir.z == 0))
+        //         continue;
 
-            int cell = map.getCellAt(newGPos.x, newGPos.y);
+        //     int cell = map.getCellAt(newGPos.x, newGPos.y);
 
-            if (map.isWalkableCell(newGPos.x, newGPos.y)) {
-                scene.spawnWater(pos, newGPos, water.dir, water.distance + 1, world);
-            } else if (cell == DESTRUCTIBLE) {
-                map.setCellAt(newGPos.x, newGPos.y, VOID);
-                scene.deleteDestructible(newGPos, world);
-                scene.trySpawnBonus(pos, newGPos, world);
-            }
-        }
+        //     if (map.isWalkableCell(newGPos.x, newGPos.y)) {
+        //         scene.spawnWater(pos, newGPos, water.dir, water.distance + 1, world);
+        //     } else if (cell == DESTRUCTIBLE) {
+        //         map.setCellAt(newGPos.x, newGPos.y, VOID);
+        //         scene.deleteDestructible(newGPos, world);
+        //         scene.trySpawnBonus(pos, newGPos, world);
+        //     }
+        // }
 
         if (timer.timeElapsed >= 1)
             toDelete.push_back(entity);

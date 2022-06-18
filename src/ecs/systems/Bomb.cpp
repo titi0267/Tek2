@@ -17,12 +17,11 @@ void ecs::BombUpdateSystem::setSignature(ecs::ComponentManager &component)
 
 void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bomberman::GameServerScene &scene)
 {
-    const Vector3 DIRECTIONS[5] = {
+    const Vector3 DIRECTIONS[4] = {
         { 0, 0, -1},
         { 0, 0,  1},
         {-1, 0,  0},
         { 1, 0,  0},
-        { 0, 0,  0},
     };
 
     Transform &transform = world.getComponent<Transform>(entity);
@@ -32,21 +31,26 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
     map::Map &map = scene.getMap();
 
     map.setCellAt(gPos.x, gPos.y, VOID);
-    for (int i = 0; i < 5; i++) {
-        Vector3 waterPos = transform.translation + DIRECTIONS[i];
-        ecs::GridPosition waterGPos = gPos + ecs::GridPosition {(int) DIRECTIONS[i].x, (int) DIRECTIONS[i].z};
+    scene.spawnWater(transform.translation, gPos, {0, 0, 0}, 0, world);
+    for (int i = 0; i < 4; i++) {
+        for (int dist = 1; dist < bomb.bombDistance; dist ++) {
+            Vector3 waterPos = transform.translation + DIRECTIONS[i] * dist;
+            ecs::GridPosition waterGPos = gPos + ecs::GridPosition {(int) DIRECTIONS[i].x * dist, (int) DIRECTIONS[i].z * dist};
 
-        if (!waterGPos.isValidPos(map))
-            continue;
+            if (!waterGPos.isValidPos(map))
+                break;
 
-        int cell = map.getCellAt(waterGPos.x, waterGPos.y);
+            int cell = map.getCellAt(waterGPos.x, waterGPos.y);
 
-        if (cell == VOID || cell == SPAWN) {
-            scene.spawnWater(waterPos, waterGPos, {DIRECTIONS[i].x, 0, DIRECTIONS[i].z}, 1, world);
-        } else if (cell == DESTRUCTIBLE) {
-            map.setCellAt(waterGPos.x, waterGPos.y, VOID);
-            scene.deleteDestructible(waterGPos, world);
-            scene.trySpawnBonus(waterPos, waterGPos, world);
+            if (map.isWalkableCell(waterGPos.x, waterGPos.y)) {
+                scene.spawnWater(waterPos, waterGPos, {DIRECTIONS[i].x, 0, DIRECTIONS[i].z}, 1, world);
+            } else if (cell == DESTRUCTIBLE) {
+                map.setCellAt(waterGPos.x, waterGPos.y, VOID);
+                scene.deleteDestructible(waterGPos, world);
+                scene.trySpawnBonus(waterPos, waterGPos, world);
+                break;
+            } else
+                break;
         }
     }
 }

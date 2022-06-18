@@ -27,8 +27,8 @@ void ecs::AiSystem::update(ecs::World &world)
         PlayerAction &action = world.getComponent<PlayerAction>(entity);
         Entity pEntity = scene.getPlayers().at(action.id);
 
-        if (world.getComponent<ecs::Movement>(pEntity).isMoving)
-            return;
+        // if (world.getComponent<ecs::Movement>(pEntity).isMoving)
+        //     return;
         ecs::Actions newAction = ai::AiFunc::update(action.id, scene, world);
         action.action = newAction;
     }
