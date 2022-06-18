@@ -12,7 +12,7 @@
 const std::unordered_map<ecs::Bonus, ecs::BonusApplyEffectFct> ecs::BONUS_FCT =
 {
     {ecs::BONUS_BOMB, [](ecs::Player &player){player.maxBombs++; }},
-    {ecs::BONUS_BOOTS, [](ecs::Player &player){player.speed = SPEED_BOOST; player.speedDuration = SPEED_DURATION; }},
+    {ecs::BONUS_BOOTS, [](ecs::Player &player){player.speed = ecs::SPEED_BOOST; player.speedDuration = ecs::SPEED_DURATION; }},
     {ecs::BONUS_RANGE, [](ecs::Player &player){player.bombRange++; }},
     {ecs::BONUS_TIG, [](ecs::Player &player){player.tigs++; }},
 };
