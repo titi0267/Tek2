@@ -76,7 +76,7 @@ namespace ecs {
         ServerManager() : _server(network::CPSocket::createServer()) {};
         ~ServerManager() = default;
 
-        void startServer(const std::string &port) { _server->createServer("127.0.0.1", port); };
+        void startServer(const std::string &port) { _server->createServer("0.0.0.0", port); };
         void closeServer() { _server->closeServer(); };
 
         std::vector<network::ConnId> acceptNewConns(World &world);
