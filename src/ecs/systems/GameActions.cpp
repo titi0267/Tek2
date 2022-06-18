@@ -10,6 +10,7 @@
 #include "ecs/components/Movement.hpp"
 #include "ecs/components/PlayAnimation.hpp"
 #include "ecs/engine/Clock.hpp"
+#include <vector>
 
 void bomberman::GameExecuteActionUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
@@ -21,10 +22,15 @@ void bomberman::GameExecuteActionUpdateSystem::placeBomb(ecs::Entity entity, ecs
     Transform &transform = world.getComponent<Transform>(entity);
     ecs::GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
     map::Map &map = scene.getMap();
+    ecs::Player &player = world.getComponent<ecs::Player>(entity);
 
     if (map.getCellAt(gPos.x, gPos.y) != VOID && map.getCellAt(gPos.x, gPos.y) != SPAWN)
         return;
-    scene.spawnBomb(transform.translation, gPos, world);
+    if (scene.getBombNbrs(player.id) >= (1 + player.maxBomb))
+        return;
+    scene.addBombToPlayer(player.id);
+    std::cout << "ADD BOMB TO " << player.id << std::endl;
+    scene.spawnBomb(transform.translation, gPos, player.id, world);
     map.setCellAt(gPos.x, gPos.y, BOMB);
 }
 
@@ -58,9 +64,9 @@ void bomberman::GameExecuteActionUpdateSystem::movePlayer(ecs::Entity entity, ec
         return;
 
     if ((map.getCellAt(gDest.x, gDest.y) == VOID || map.getCellAt(gDest.x, gDest.y) == SPAWN) && player.isStun == false) {
-        std::cout << "[MOVE] TO " << gDest.x << ", " << gDest.y << " [SPEED] " << 2 + scene.getSpeedBonus() << std::endl;
+        std::cout << "[MOVE] TO " << gDest.x << ", " << gDest.y << " [SPEED] " << 3 + scene.getSpeedBonus() << std::endl;
         gPos = gDest;
-        move.move(transform.translation + moveVec, 2 + scene.getSpeedBonus());
+        move.move(transform.translation + moveVec, 3 + scene.getSpeedBonus());
         transform.rotation = QuaternionFromEuler(0, ROTATIONS.at(action), 0);
         world.getComponent<ecs::PlayAnimation>(entity).play("playerAnims", 0, 0.5, false);
     } else
@@ -82,13 +88,10 @@ void bomberman::GameExecuteActionUpdateSystem::update(ecs::World &world)
         if (action == ecs::DO_NOTHING || move.isMoving || !player.alive)
             continue;
         if (action == ecs::PLACE_BOMB) {
-            if (player.placeBomb == true)
-                continue;
             if (player.explodeBonus == true) {
                 player.explodePlaced = true;
                 std::cout << "BONUS PLACED" << std::endl;
             }
-            player.placeBomb = true;
             placeBomb(entity, world, scene);
         } else {
             movePlayer(entity, world, action, map);

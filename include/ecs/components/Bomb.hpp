@@ -9,6 +9,7 @@
 #include "ecs/engine/World.hpp"
 #include "ecs/engine/Component.hpp"
 #include "raylib/Vectors.hpp"
+#include "ecs/engine/PlayerId.hpp"
 #include <iostream>
 
 namespace bomberman {
@@ -18,8 +19,9 @@ namespace bomberman {
 namespace ecs {
     struct BombId {
         std::uint64_t uniqueBombId = 0;
+        ecs::PlayerId id = -1;
 
-        BombId()
+        BombId(ecs::PlayerId id = -1) : id(id)
         {
             static std::uint64_t uniqueId = 0;
 
