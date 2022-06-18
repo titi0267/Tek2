@@ -237,7 +237,7 @@ void bomberman::MainMenuScene::generateMainMenu(ecs::World &world)
     music.playSound();
 
     world.spawn().insert(Transform {{0, 2.25, -2}, QuaternionIdentity(), {1, 1, 1}},
-    ecs::ModelRef{"logo"}, ecs::SceneMoveElement{MOVE_SPEED - 0.3f});
+    ecs::ModelRef{"logo"}, ecs::SceneMoveElement{MOVE_SPEED});
 
     spawnButton({{0,  1.25, -2}, rot, {1, 1, 1}}, "Start", {WHITE, GREEN}, startFunction, world);
     spawnButton({{0,  0.50, -2}, rot, {1, 1, 1}}, "Connect", {WHITE, GREEN}, connectFunction, world);
@@ -460,7 +460,7 @@ void bomberman::MainMenuScene::spawnTitleButton(const Transform &transform, cons
 
     world.spawn().insert(transform,
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
-    ecs::ModelRef {"large_button"}, ecs::SceneMoveElement {MOVE_SPEED - 0.3f});
+    ecs::ModelRef {"large_button"}, ecs::SceneMoveElement {MOVE_SPEED});
 }
 
 void bomberman::MainMenuScene::spawnSquareButton(const Transform &transform, const std::string &text,

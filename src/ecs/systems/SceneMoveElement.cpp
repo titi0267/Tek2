@@ -42,7 +42,7 @@ void ecs::SceneMoveElementSystem::update(ecs::World &world)
             Transform &transform = world.getComponent<Transform>(entity);
             SceneMoveElement &move = world.getComponent<SceneMoveElement>(entity);
 
-            if (scene.getMovementRequest()) {
+            if (scene.getMovementRequest() && !move.inMovement) {
                 move.start = transform.translation;
                 move.destination = transform.translation + scene.getMoveDest();
                 move.inMovement = true;
