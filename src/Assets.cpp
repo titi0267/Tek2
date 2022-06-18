@@ -36,6 +36,7 @@ void bomberman::loadTextures(ecs::World &world)
     textureMan.loadTexture("mathieu", "./assets/textures/mathieu.png");
     textureMan.loadTexture("jeffrey", "./assets/textures/jeffrey.png");
     textureMan.loadTexture("tom", "./assets/textures/tom.png");
+    textureMan.loadTexture("omar", "./assets/textures/omar.png");
 
     textureMan.loadTexture("bonus_bomb", "./assets/textures/bombBonus.png");
     textureMan.loadTexture("bonus_boots", "./assets/textures/boots.png");
@@ -60,6 +61,7 @@ void bomberman::loadModels(ecs::World &world)
     modelMan.loadModel("water", "./assets/models/water.iqm");
 
     modelMan.loadModel("player", "./assets/models/player.iqm");
+    modelMan.loadModel("omar", "./assets/models/omar.iqm");
 
     modelMan.loadModel("bonus_bomb", "./assets/models/bombBonus.iqm");
     modelMan.loadModel("bonus_boots", "./assets/models/boots.iqm");
@@ -93,6 +95,7 @@ void bomberman::loadSounds(ecs::World &world)
     raylib::SoundManager &soundMan = world.getRessource<raylib::SoundManager>();
 
     soundMan.loadSound("main_menu_music", "./assets/sounds/main_menu.mp3", true);
+    soundMan.loadSound("omar_voice", "./assets/sounds/omar.wav", true);
 }
 
 void bomberman::applyAssetsToModels(ecs::World &world)
@@ -144,5 +147,8 @@ void bomberman::applyAssetsToModels(ecs::World &world)
 
     modelMan.getModel("bonus_tig").getMaterialView(0).
     setTexture(textureMan.getTexture("bonus_tig"));
+
+    modelMan.getModel("omar").getMaterialView(0).
+    setTexture(textureMan.getTexture("omar"));
 
 }
