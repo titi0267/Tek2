@@ -136,7 +136,13 @@ namespace ecs {
         void killLocalEntity(Entity entity, World &world);
 
         void connectTo(const std::string &ip = "127.0.0.1", const std::string &port = "4242") { _client->connectTo(ip, port); };
-        void disconnect() { _client->disconnect(); };
+        void disconnect()
+        {
+            if (_connAttempted)
+                _connAttempted = false;
+            else
+                _client->disconnect();
+        };
         bool isConnected() { return _client->isConnected(); };
     };
 

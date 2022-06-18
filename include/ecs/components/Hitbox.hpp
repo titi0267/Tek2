@@ -28,5 +28,10 @@ namespace ecs {
 
             return BoundingBox { min * mat, max * mat };
         };
+
+        BoundingBox getBoundingBox(raylib::Matrix &mat)
+        {
+            return BoundingBox { min * mat, max * mat };
+        };
     };
 }

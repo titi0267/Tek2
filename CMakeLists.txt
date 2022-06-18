@@ -53,6 +53,7 @@ add_executable(bomberman
     "src/ecs/systems/CheckWin.cpp"
     "src/ecs/systems/Player.cpp"
     "src/ecs/systems/DrawGrid.cpp"
+    "src/ecs/systems/GameToggleQuit.cpp"
 
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"
