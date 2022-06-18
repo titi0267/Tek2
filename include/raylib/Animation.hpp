@@ -17,7 +17,13 @@ namespace raylib {
         RaylibAnimation _anim;
 
         public:
-        Animation(RaylibAnimation &&animation) : _anim(animation) {};
+        Animation(RaylibAnimation &&animation) : _anim(animation)
+        {
+            for (int frame = 0; frame < _anim.frameCount; frame++) {
+                for (int bone = 0; bone < _anim.boneCount; bone++)
+                    _anim.framePoses[frame][bone].scale = {1, 1, 1};
+            }
+        };
         ~Animation() { UnloadModelAnimation(_anim); };
         Animation(Animation &anim) = delete;
         Animation(Animation &&anim) : _anim(anim._anim) { anim._anim = { 0 }; };

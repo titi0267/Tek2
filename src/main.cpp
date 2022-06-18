@@ -15,6 +15,8 @@
 #include "ecs/engine/InternalServer.hpp"
 #include "ecs/engine/Clock.hpp"
 
+#include "input/BindsManager.hpp"
+
 #include "raylib/Camera.hpp"
 #include "raylib/Window.hpp"
 #include "raylib/TextureManager.hpp"
@@ -22,6 +24,7 @@
 #include "raylib/AnimationManager.hpp"
 #include "raylib/FontManager.hpp"
 #include "raylib/ShaderManager.hpp"
+#include "raylib/SoundManager.hpp"
 
 #include "Setup.hpp"
 #include "Assets.hpp"
@@ -57,7 +60,9 @@ int main(int ac, char **av)
     world.insertRessource<raylib::AnimationManager>();
     world.insertRessource<raylib::FontManager>();
     world.insertRessource<raylib::ShaderManager>();
+    world.insertRessource<raylib::SoundManager>();
     world.insertRessource<ecs::SceneManager>();
+    world.insertRessource<ecs::BindManager>();
 
     world.insertRessource<ecs::ClientManager>();
     world.insertRessource<ecs::InternalServer>();
@@ -69,6 +74,7 @@ int main(int ac, char **av)
     bomberman::loadAnimations(world);
     bomberman::loadFonts(world);
     bomberman::loadShaders(world);
+    bomberman::loadSounds(world);
 
     bomberman::applyAssetsToModels(world);
 

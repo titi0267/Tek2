@@ -11,20 +11,24 @@
 #include "raylib/AnimationManager.hpp"
 #include "raylib/FontManager.hpp"
 #include "raylib/ShaderManager.hpp"
+#include "raylib/SoundManager.hpp"
 
 void bomberman::loadTextures(ecs::World &world)
 {
     raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
 
+    textureMan.loadTexture("logo", "./assets/textures/logo.png");
     textureMan.loadTexture("epitech", "./assets/textures/epitech.png");
     textureMan.loadTexture("button", "./assets/textures/button.png");
-    textureMan.loadTexture("logo", "./assets/textures/logo.png");
+    textureMan.loadTexture("large_button", "./assets/textures/large_button.png");
+    textureMan.loadTexture("square_button", "./assets/textures/square_button.png");
+    textureMan.loadTexture("amphi", "./assets/textures/amphi.png");
 
     textureMan.loadTexture("bottle", "./assets/textures/bottle.png");
     textureMan.loadTexture("table", "./assets/textures/table.png");
     textureMan.loadTexture("chair", "./assets/textures/chair.png");
     textureMan.loadTexture("bag", "./assets/textures/bag.png");
-    textureMan.loadTexture("ground", "./assets/textures/ground.png");
+    // textureMan.loadTexture("ground", "./assets/textures/ground.png");
     textureMan.loadTexture("water", "./assets/textures/water.png");
 
     textureMan.loadTexture("timothe", "./assets/textures/timothe.png");
@@ -43,7 +47,10 @@ void bomberman::loadModels(ecs::World &world)
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
 
     modelMan.loadModel("button", "./assets/models/button.iqm");
+    modelMan.loadModel("large_button", "./assets/models/large_button.iqm");
+    modelMan.loadModel("square_button", "./assets/models/square_button.iqm");
     modelMan.loadModel("logo", "./assets/models/logo.iqm");
+    modelMan.loadModel("amphi", "./assets/models/amphi.iqm");
 
     modelMan.loadModel("bottle", "./assets/models/bottle.iqm");
     modelMan.loadModel("table", "./assets/models/table.iqm");
@@ -80,6 +87,13 @@ void bomberman::loadShaders(ecs::World &world)
     // shaderMan.loadShader("button", "./assets/shaders/button.vs", "./assets/shaders/button.fs");
 }
 
+void bomberman::loadSounds(ecs::World &world)
+{
+    raylib::SoundManager &soundMan = world.getRessource<raylib::SoundManager>();
+
+    soundMan.loadSound("main_menu_music", "./assets/sounds/main_menu.mp3", true);
+}
+
 void bomberman::applyAssetsToModels(ecs::World &world)
 {
     raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
@@ -88,8 +102,17 @@ void bomberman::applyAssetsToModels(ecs::World &world)
     modelMan.getModel("logo").getMaterialView(0)
     .setTexture(textureMan.getTexture("logo"));
 
+    modelMan.getModel("large_button").getMaterialView(0)
+    .setTexture(textureMan.getTexture("large_button"));
+
+    modelMan.getModel("square_button").getMaterialView(0)
+    .setTexture(textureMan.getTexture("square_button"));
+
     modelMan.getModel("button").getMaterialView(0)
     .setTexture(textureMan.getTexture("button"));
+
+    modelMan.getModel("amphi").getMaterialView(0)
+    .setTexture(textureMan.getTexture("amphi"));
 
     modelMan.getModel("bottle").getMaterialView(0)
     .setTexture(textureMan.getTexture("bottle"));

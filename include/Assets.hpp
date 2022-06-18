@@ -15,5 +15,6 @@ namespace bomberman {
     void loadAnimations(ecs::World &world);
     void loadFonts(ecs::World &world);
     void loadShaders(ecs::World &world);
+    void loadSounds(ecs::World &world);
     void applyAssetsToModels(ecs::World &world);
 }

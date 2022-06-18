@@ -5,6 +5,7 @@ project(bomberman CXX)
 set(CMAKE_BUILD_TYPE Debug)
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+set(CMAKE_CXX_FLAGS "-g")
 include("${CMAKE_SOURCE_DIR}/cmake/Findraylib.cmake")
 find_package(raylib REQUIRED)
 
@@ -24,12 +25,21 @@ add_executable(bomberman
     "src/ecs/engine/PlayersManager.cpp"
     "src/ecs/engine/InternalServer.cpp"
 
+    "src/input/GamepadBind.cpp"
+    "src/input/GamepadMap.cpp"
+    "src/input/InputFile.cpp"
+    "src/input/KeyboardBind.cpp"
+    "src/input/KeyboardMap.cpp"
+
     "src/ecs/systems/ClickUpdate.cpp"
     "src/ecs/systems/DrawCube.cpp"
     "src/ecs/systems/DrawModel.cpp"
     "src/ecs/systems/Hoverable.cpp"
+    "src/ecs/systems/KeyRecorder.cpp"
     "src/ecs/systems/Text3D.cpp"
+    "src/ecs/systems/TextInput.cpp"
     "src/ecs/systems/SceneMoveElement.cpp"
+    "src/ecs/systems/Button.cpp"
     "src/ecs/systems/PlayerInputs.cpp"
     "src/ecs/systems/Movement.cpp"
     "src/ecs/systems/Bomb.cpp"
@@ -42,6 +52,7 @@ add_executable(bomberman
     "src/ecs/systems/BackgroundRotation.cpp"
     "src/ecs/systems/CheckWin.cpp"
     "src/ecs/systems/Player.cpp"
+    "src/ecs/systems/DrawGrid.cpp"
 
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"

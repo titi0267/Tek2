@@ -1,6 +1,7 @@
 /bomberman
 .vscode
 build/
+inputs/
 ip
 vgcore*
 bombitek.map

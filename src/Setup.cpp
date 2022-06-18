@@ -25,6 +25,13 @@
 #include "ecs/components/Skin.hpp"
 #include "ecs/components/BackgroundRotation.hpp"
 #include "ecs/components/Timer.hpp"
+#include "ecs/components/FPSButton.hpp"
+#include "ecs/components/FullscreenButton.hpp"
+#include "ecs/components/KeyRecorder.hpp"
+#include "ecs/components/ResolutionButton.hpp"
+#include "ecs/components/TextInput.hpp"
+#include "ecs/components/ToggleButton.hpp"
+#include "ecs/components/Grid.hpp"
 
 // Those components are mirrored between clients and server
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
@@ -32,7 +39,7 @@ void bomberman::registerCriticalComponents(ecs::World &world)
 {
     world.registerComponents<Transform, ecs::Movement, ecs::Hitbox, ecs::PlayerAction,
     ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint,
-    ecs::DrawableCube, ecs::Text3D, ecs::PlayAnimation, ecs::Skin>();
+    ecs::DrawableCube, ecs::Text3D, ecs::PlayAnimation, ecs::Skin, ecs::Grid>();
 }
 
 void bomberman::registerBothSide(ecs::World &world)
@@ -51,7 +58,7 @@ void bomberman::registerRender(ecs::World &world)
     world.registerSystem<ecs::AnimationUpdateSystem>();
 
     world.registerSystems<ecs::DrawTextureCubeSystem,
-    ecs::DrawableModelSystem, ecs::Draw3DTextSystem>();
+    ecs::DrawableModelSystem, ecs::Draw3DTextSystem, ecs::DrawGridSystem>();
 
     world.registerComponent<ecs::BackgroundRotation>();
     world.registerSystem<ecs::BackgroundRotationUpdateSystem>();
@@ -67,6 +74,12 @@ void bomberman::registerInputs(ecs::World &world)
 
     world.registerComponents<ecs::HoverTint, ecs::HoverRotate, ecs::SceneMoveElement>();
     world.registerSystems<ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem>();
+
+    world.registerComponents<ecs::ResolutionButton, ecs::FullscreenButton, ecs::FPSButton,
+    ecs::ToggleButton, ecs::SingleKeyRecorder, ecs::TextInput, ecs::TextInputSettings>();
+    world.registerSystems<ecs::ResolutionButtonSystem, ecs::FullscreenButtonSystem, ecs::FPSButtonSystem,
+    ecs::ShowFPSButtonSystem, ecs::ToggleMusicButtonSystem, ecs::ToggleSoundButtonSystem,
+    ecs::KeyRecorderSystem, ecs::TextInputSystem, ecs::TextInputSettingsSystem>();
 }
 
 void bomberman::registerNetwork(ecs::World &world, bool client)

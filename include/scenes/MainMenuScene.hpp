@@ -30,6 +30,12 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/SceneMoveElement.hpp"
+#include "ecs/components/ResolutionButton.hpp"
+#include "ecs/components/FullscreenButton.hpp"
+#include "ecs/components/FPSButton.hpp"
+#include "ecs/components/ToggleButton.hpp"
+#include "ecs/components/KeyRecorder.hpp"
+#include "ecs/components/TextInput.hpp"
 
 namespace bomberman {
     class MainMenuScene : public ecs::IScene, public ecs::MoveRequesterSceneModule {
@@ -51,8 +57,22 @@ namespace bomberman {
         void spawnBackground(ecs::World &world);
         void generateMainMenu(ecs::World &world);
         void generateSettingsMenu(ecs::World &world);
+        void generateGraphicalSettingsMenu(ecs::World &world);
+        void generateAudioSettingsMenu(ecs::World &world);
+        void generateKeybindsSettingsMenu(ecs::World &world);
+        void generateGamepadPart(ecs::World &world);
+        void generateKeyboardPart(ecs::World &world);
 
         void spawnButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
+        void spawnResolutionButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::ResolutionButton &res);
+        void spawnFullscreenButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::FullscreenButton &but);
+        void spawnFPSButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, const ecs::FPSButton &but);
+        void spawnToggleButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, ecs::ToggleButton::Usage usage);
+        void spawnStaticButton(const Transform &transform, const std::string &text, ecs::World &world);
+        void spawnTitleButton(const Transform &transform, const std::string &text, ecs::World &world);
+        void spawnSquareButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world);
+        void spawnSquareButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, ecs::SingleKeyRecorder &recorder);
+        void spawnTextInputButton(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ecs::World &world, ecs::TextInputSettings &set);
 
         bool &getMovementRequest() { return moveRequest; };
         Vector3 &getMoveDest() { return moveDest; };
