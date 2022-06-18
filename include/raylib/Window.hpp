@@ -20,6 +20,7 @@ namespace raylib {
         Window(int width = 640, int height = 480, const std::string &name = "Indie Studio")
         {
             InitWindow(width, height, name.c_str());
+            SetExitKey(KEY_NULL);
         };
 
         ~Window()
@@ -74,6 +75,44 @@ namespace raylib {
         bool isKeyDown(KeyboardKey key)
         {
             return IsKeyDown(key);
+        }
+
+        bool isButtonDown(int gamepad, GamepadButton button)
+        {
+            if (button < 18)
+                return IsGamepadButtonDown(gamepad, button);
+            if (button >= 18 && button <= 21) {
+                float a = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_X);
+                float b = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y);
+                if (a > 0.25 || a < -0.25 || b > 0.25 || b < -0.25) {
+                    float abs_a = a < 0 ? a * -1 : a;
+                    float abs_b = b < 0 ? b * -1 : b;
+                    if (abs_a >= abs_b) {
+                    if (a < 0)
+                        return (button == (GamepadButton)GAMEPAD_JOYSTICK_LEFT_FACE_LEFT ? true : false);
+                    return (button == (GamepadButton)GAMEPAD_JOYSTICK_LEFT_FACE_RIGHT ? true : false);
+                    }
+                    if (b < 0)
+                        return (button == (GamepadButton)GAMEPAD_JOYSTICK_LEFT_FACE_UP ? true : false);
+                    return (button == (GamepadButton)GAMEPAD_JOYSTICK_LEFT_FACE_DOWN ? true : false);
+                }
+                return (false);
+            }
+            float a = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X);
+            float b = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y);
+            if (a > 0.25 || a < -0.25 || b > 0.25 || b < -0.25) {
+                float abs_a = a < 0 ? a * -1 : a;
+                float abs_b = b < 0 ? b * -1 : b;
+                if (abs_a >= abs_b) {
+                if (a < 0)
+                    return (button == (GamepadButton)GAMEPAD_JOYSTICK_RIGHT_FACE_LEFT ? true : false);
+                return (button == (GamepadButton)GAMEPAD_JOYSTICK_RIGHT_FACE_RIGHT ? true : false);
+                }
+                if (b < 0)
+                    return (button == (GamepadButton)GAMEPAD_JOYSTICK_RIGHT_FACE_UP ? true : false);
+                return (button == (GamepadButton)GAMEPAD_JOYSTICK_RIGHT_FACE_DOWN ? true : false);
+            }
+            return (false);
         }
 
         bool isKeyPressed(KeyboardKey key)
@@ -134,7 +173,7 @@ namespace raylib {
             float b = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_LEFT_Y);
             float c = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_X);
             float d = GetGamepadAxisMovement(gamepad, GAMEPAD_AXIS_RIGHT_Y);
-            if (a || b) {
+            if (a > 0.25 || a < -0.25 || b > 0.25 || b < -0.25) {
                 float abs_a = a < 0 ? a * -1 : a;
                 float abs_b = b < 0 ? b * -1 : b;
                 if (abs_a >= abs_b) {
@@ -146,7 +185,7 @@ namespace raylib {
                     return (GAMEPAD_JOYSTICK_LEFT_FACE_UP);
                 return (GAMEPAD_JOYSTICK_LEFT_FACE_DOWN);
             }
-            if (c || d) {
+            if (c > 0.25 || c < -0.25 || d > 0.25 || d < -0.25) {
                 float abs_c = c < 0 ? c * -1 : c;
                 float abs_d = d < 0 ? d * -1 : d;
                 if (abs_c >= abs_d) {

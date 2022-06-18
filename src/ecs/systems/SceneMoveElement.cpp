@@ -34,6 +34,7 @@ bool ecs::SceneMoveElementSystem::move(Vector3 &translation, SceneMoveElement &m
 void ecs::SceneMoveElementSystem::update(ecs::World &world)
 {
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
+    bool moveExecuted = false;
 
     try {
         ecs::MoveRequesterSceneModule &scene = dynamic_cast<ecs::MoveRequesterSceneModule&>(man.getScene());
@@ -42,14 +43,17 @@ void ecs::SceneMoveElementSystem::update(ecs::World &world)
             Transform &transform = world.getComponent<Transform>(entity);
             SceneMoveElement &move = world.getComponent<SceneMoveElement>(entity);
 
-            if (scene.getMovementRequest()) {
+            if (scene.getMovementRequest() && !move.inMovement) {
                 move.start = transform.translation;
                 move.destination = transform.translation + scene.getMoveDest();
                 move.inMovement = true;
+                moveExecuted = true;
             }
             if (move.inMovement)
                 move.inMovement = this->move(transform.translation, move);
         }
-        scene.getMovementRequest() = false;
+
+        if (moveExecuted)
+            scene.getMovementRequest() = false;
     } catch(std::bad_cast) {};
 }

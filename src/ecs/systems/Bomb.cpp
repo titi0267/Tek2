@@ -8,10 +8,11 @@
 #include "ecs/components/Bomb.hpp"
 #include "ecs/components/Water.hpp"
 #include "scenes/GameServerScene.hpp"
+#include "ecs/components/Player.hpp"
 
 void ecs::BombUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Transform, GridPosition, BombId, Timer>();
+    _signature = component.generateSignature<Transform, GridPosition, Bomb, Timer>();
 }
 
 void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bomberman::GameServerScene &scene)
@@ -25,12 +26,10 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
     };
 
     Transform &transform = world.getComponent<Transform>(entity);
-    ecs::GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
-    int randomBonus = 0;
-    std::string bonusType;
+    GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
+    Bomb &bomb = world.getComponent<ecs::Bomb>(entity);
 
     map::Map &map = scene.getMap();
-    std::srand(std::time(nullptr));
 
     map.setCellAt(gPos.x, gPos.y, VOID);
     for (int i = 0; i < 5; i++) {
@@ -47,27 +46,7 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
         } else if (cell == DESTRUCTIBLE) {
             map.setCellAt(waterGPos.x, waterGPos.y, VOID);
             scene.deleteDestructible(waterGPos, world);
-            if (std::rand() % scene.getBonusChances() == 0) {
-                scene.setBonusChances(3);
-                randomBonus = std::rand() % 3;
-                switch (randomBonus) {
-                    case 0:
-                        bonusType = "bag";
-                    break;
-                    case 1:
-                        bonusType = "bag";
-                    break;
-                    case 2:
-                        bonusType = "bag";
-                    break;
-                    default:
-                        bonusType = "bag";
-                    break;
-                }
-                scene.spawnBonus(transform.translation, waterGPos, bonusType, world);
-            } else {
-                scene.setBonusChances(scene.getBonusChances() - 1);
-            }
+            scene.trySpawnBonus(waterPos, waterGPos, world);
         }
     }
 }
@@ -80,9 +59,11 @@ void ecs::BombUpdateSystem::update(ecs::World &world)
 
     for (ecs::Entity entity : _entities) {
         Timer &timer = world.getComponent<Timer>(entity);
+        Bomb &bomb = world.getComponent<Bomb>(entity);
 
         if (timer.timeElapsed >= 2) {
             placeWater(entity, world, scene);
+            world.getComponent<Player>(scene.getPlayers().at(bomb.playerId)).placedBombs--;
             toDelete.push_back(entity);
         }
     }

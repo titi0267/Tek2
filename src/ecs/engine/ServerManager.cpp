@@ -120,7 +120,7 @@ void ecs::ServerManager::spawnOrUpdateClientEntity(ConnId conn, World &world)
 {
     auto &clientToServer = _clientToServer[conn];
     Entity serverEntity;
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
 
     if (tryRead(conn, &serverEntity, sizeof(Entity)))
         return;
@@ -187,7 +187,7 @@ void ecs::ServerManager::killClientEntity(ConnId conn, World &world)
 {
     Entity clientEntity;
     Entity localEntity;
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
     std::string data;
 
     // std::cout << "[SERVER] Killing entity from client" << std::endl;
@@ -206,7 +206,7 @@ void ecs::ServerManager::killClientEntity(ConnId conn, World &world)
 
 void ecs::ServerManager::updateLocalEntity(Entity entity, World &world)
 {
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
     createUpdateLocalEntityBuffer(entity, world, buffer);
     std::string data = buffer.str();
     MirrorEntity &mirror = world.getComponent<MirrorEntity>(entity);
@@ -223,7 +223,7 @@ void ecs::ServerManager::updateLocalEntity(Entity entity, World &world)
 
 void ecs::ServerManager::killLocalEntity(Entity entity, World &world)
 {
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
     createKillLocalEntityBuffer(entity, buffer);
     std::string data = buffer.str();
 

@@ -22,18 +22,25 @@ void bomberman::loadTextures(ecs::World &world)
     textureMan.loadTexture("button", "./assets/textures/button.png");
     textureMan.loadTexture("large_button", "./assets/textures/large_button.png");
     textureMan.loadTexture("square_button", "./assets/textures/square_button.png");
+    textureMan.loadTexture("amphi", "./assets/textures/amphi.png");
 
     textureMan.loadTexture("bottle", "./assets/textures/bottle.png");
     textureMan.loadTexture("table", "./assets/textures/table.png");
     textureMan.loadTexture("chair", "./assets/textures/chair.png");
     textureMan.loadTexture("bag", "./assets/textures/bag.png");
-    textureMan.loadTexture("ground", "./assets/textures/ground.png");
+    // textureMan.loadTexture("ground", "./assets/textures/ground.png");
     textureMan.loadTexture("water", "./assets/textures/water.png");
 
     textureMan.loadTexture("timothe", "./assets/textures/timothe.png");
-    textureMan.loadTexture("ludovic", "./assets/textures/ludo.png");
+    textureMan.loadTexture("ludovic", "./assets/textures/ludovic.png");
     textureMan.loadTexture("mathieu", "./assets/textures/mathieu.png");
     textureMan.loadTexture("jeffrey", "./assets/textures/jeffrey.png");
+    textureMan.loadTexture("tom", "./assets/textures/tom.png");
+
+    textureMan.loadTexture("bonus_bomb", "./assets/textures/bombBonus.png");
+    textureMan.loadTexture("bonus_boots", "./assets/textures/boots.png");
+    textureMan.loadTexture("bonus_range", "./assets/textures/explode.png");
+    textureMan.loadTexture("bonus_tig", "./assets/textures/tig.png");
 }
 
 void bomberman::loadModels(ecs::World &world)
@@ -44,14 +51,20 @@ void bomberman::loadModels(ecs::World &world)
     modelMan.loadModel("large_button", "./assets/models/large_button.iqm");
     modelMan.loadModel("square_button", "./assets/models/square_button.iqm");
     modelMan.loadModel("logo", "./assets/models/logo.iqm");
+    modelMan.loadModel("amphi", "./assets/models/amphi.iqm");
 
     modelMan.loadModel("bottle", "./assets/models/bottle.iqm");
     modelMan.loadModel("table", "./assets/models/table.iqm");
     modelMan.loadModel("chair", "./assets/models/chair.iqm");
     modelMan.loadModel("bag", "./assets/models/bag.iqm");
-    modelMan.loadModel("water", "./asstes/models/water.iqm");
+    modelMan.loadModel("water", "./assets/models/water.iqm");
 
     modelMan.loadModel("player", "./assets/models/player.iqm");
+
+    modelMan.loadModel("bonus_bomb", "./assets/models/bombBonus.iqm");
+    modelMan.loadModel("bonus_boots", "./assets/models/boots.iqm");
+    modelMan.loadModel("bonus_range", "./assets/models/explode.iqm");
+    modelMan.loadModel("bonus_tig", "./assets/models/tig.iqm");
 }
 
 void bomberman::loadAnimations(ecs::World &world)
@@ -99,6 +112,9 @@ void bomberman::applyAssetsToModels(ecs::World &world)
     modelMan.getModel("button").getMaterialView(0)
     .setTexture(textureMan.getTexture("button"));
 
+    modelMan.getModel("amphi").getMaterialView(0)
+    .setTexture(textureMan.getTexture("amphi"));
+
     modelMan.getModel("bottle").getMaterialView(0)
     .setTexture(textureMan.getTexture("bottle"));
 
@@ -116,4 +132,17 @@ void bomberman::applyAssetsToModels(ecs::World &world)
 
     modelMan.getModel("player").getMaterialView(0)
     .setTexture(textureMan.getTexture("timothe"));
+
+    modelMan.getModel("bonus_bomb").getMaterialView(0).
+    setTexture(textureMan.getTexture("bonus_bomb"));
+
+    modelMan.getModel("bonus_boots").getMaterialView(0).
+    setTexture(textureMan.getTexture("bonus_boots"));
+
+    modelMan.getModel("bonus_range").getMaterialView(0).
+    setTexture(textureMan.getTexture("bonus_range"));
+
+    modelMan.getModel("bonus_tig").getMaterialView(0).
+    setTexture(textureMan.getTexture("bonus_tig"));
+
 }

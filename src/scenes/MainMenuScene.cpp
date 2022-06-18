@@ -43,14 +43,28 @@ void toggleLoadKeyboard(ecs::World &world, ecs::Entity entity)
 {
     ecs::BindManager &bind = world.getRessource<ecs::BindManager>();
 
-    bind.load(false, bind.getLoadStr(false));
+    try {
+        bind.load(false, bind.getLoadStr(false));
+    }
+    catch (std::invalid_argument) {
+        world.getComponent<ecs::Tint>(entity) = RED;
+        return;
+    }
+    world.getComponent<ecs::Tint>(entity) = GREEN;
 }
 
 void toggleLoadGamepad(ecs::World &world, ecs::Entity entity)
 {
     ecs::BindManager &bind = world.getRessource<ecs::BindManager>();
 
-    bind.load(true, bind.getLoadStr(true));
+    try {
+        bind.load(true, bind.getLoadStr(true));
+    }
+    catch (std::invalid_argument) {
+        world.getComponent<ecs::Tint>(entity) = RED;
+        return;
+    }
+    world.getComponent<ecs::Tint>(entity) = GREEN;
 }
 
 void toggleSaveKeyboard(ecs::World &world, ecs::Entity entity)
@@ -58,6 +72,7 @@ void toggleSaveKeyboard(ecs::World &world, ecs::Entity entity)
     ecs::BindManager &bind = world.getRessource<ecs::BindManager>();
 
     bind.save(0);
+    world.getComponent<ecs::Tint>(entity) = GREEN;
 }
 
 void toggleSaveGamepad(ecs::World &world, ecs::Entity entity)
@@ -65,6 +80,7 @@ void toggleSaveGamepad(ecs::World &world, ecs::Entity entity)
     ecs::BindManager &bind = world.getRessource<ecs::BindManager>();
 
     bind.save(1);
+    world.getComponent<ecs::Tint>(entity) = GREEN;
 }
 
 void toggleKeyRecordFunction(ecs::World &world, ecs::Entity entity)
@@ -256,22 +272,22 @@ void bomberman::MainMenuScene::generateGamepadPart(ecs::World &world)
     ecs::TextInputSettings first = {true, false};
     ecs::TextInputSettings second = {true, true};
 
-    spawnStaticButton({{-29.5, -12.25, -2}, rot, {1, 1, 1}}, "Up", world);
-    spawnStaticButton({{-29.5, -13.25, -2}, rot, {1, 1, 1}}, "Left", world);
-    spawnStaticButton({{-29.5, -14.25, -2}, rot, {1, 1, 1}}, "Right", world);
-    spawnStaticButton({{-29.5, -15.25, -2}, rot, {1, 1, 1}}, "Down", world);
-    spawnStaticButton({{-29.5, -16.25, -2}, rot, {1, 1, 1}}, "Place bomb", world);
-    spawnSquareButton({{-27, -12.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, a);
-    spawnSquareButton({{-27, -13.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, b);
-    spawnSquareButton({{-27, -14.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, c);
-    spawnSquareButton({{-27, -15.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
-    spawnSquareButton({{-27, -16.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
-    spawnStaticButton({{-33.5, -12.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
-    spawnTextInputButton({{-34, -13.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, first);
-    spawnSquareButton({{-32, -13.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleLoadGamepad, world);
-    spawnStaticButton({{-33.5, -14.75, -2}, rot, {1, 1, 1}}, "Save to:", world);
-    spawnTextInputButton({{-34, -15.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, second);
-    spawnSquareButton({{-32, -15.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleSaveGamepad, world);
+    spawnStaticButton({{-28, -12.25, -2}, rot, {1, 1, 1}}, "Up", world);
+    spawnStaticButton({{-28, -13.25, -2}, rot, {1, 1, 1}}, "Left", world);
+    spawnStaticButton({{-28, -14.25, -2}, rot, {1, 1, 1}}, "Right", world);
+    spawnStaticButton({{-28, -15.25, -2}, rot, {1, 1, 1}}, "Down", world);
+    spawnStaticButton({{-28, -16.25, -2}, rot, {1, 1, 1}}, "Place bomb", world);
+    spawnSquareButton({{-25.5, -12.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, a);
+    spawnSquareButton({{-25.5, -13.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, b);
+    spawnSquareButton({{-25.5, -14.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, c);
+    spawnSquareButton({{-25.5, -15.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
+    spawnSquareButton({{-25.5, -16.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
+    spawnStaticButton({{-33, -12.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
+    spawnTextInputButton({{-33.5, -13.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, first);
+    spawnSquareButton({{-31, -13.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleLoadGamepad, world);
+    spawnStaticButton({{-33, -14.75, -2}, rot, {1, 1, 1}}, "Save to:", world);
+    spawnTextInputButton({{-33.5, -15.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, second);
+    spawnSquareButton({{-31, -15.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleSaveGamepad, world);
     spawnButton({{-30, -17.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
 }
 
@@ -287,22 +303,22 @@ void bomberman::MainMenuScene::generateKeyboardPart(ecs::World &world)
     ecs::TextInputSettings first = {false, false};
     ecs::TextInputSettings second = {false, true};
 
-    spawnStaticButton({{-0.5, -12.25, -2}, rot, {1, 1, 1}}, "Up", world);
-    spawnStaticButton({{-0.5, -13.25, -2}, rot, {1, 1, 1}}, "Left", world);
-    spawnStaticButton({{-0.5, -14.25, -2}, rot, {1, 1, 1}}, "Right", world);
-    spawnStaticButton({{-0.5, -15.25, -2}, rot, {1, 1, 1}}, "Down", world);
-    spawnStaticButton({{-0.5, -16.25, -2}, rot, {1, 1, 1}}, "Place bomb", world);
-    spawnSquareButton({{-3, -12.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, a);
-    spawnSquareButton({{-3, -13.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, b);
-    spawnSquareButton({{-3, -14.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, c);
-    spawnSquareButton({{-3, -15.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
-    spawnSquareButton({{-3, -16.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
-    spawnStaticButton({{3.5, -12.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
-    spawnTextInputButton({{4, -13.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, first);
-    spawnSquareButton({{2, -13.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleLoadKeyboard, world);
-    spawnStaticButton({{3.5, -14.75, -2}, rot, {1, 1, 1}}, "Save to:", world);
-    spawnTextInputButton({{4, -15.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, second);
-    spawnSquareButton({{2, -15.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleSaveKeyboard, world);
+    spawnStaticButton({{-2, -12.25, -2}, rot, {1, 1, 1}}, "Up", world);
+    spawnStaticButton({{-2, -13.25, -2}, rot, {1, 1, 1}}, "Left", world);
+    spawnStaticButton({{-2, -14.25, -2}, rot, {1, 1, 1}}, "Right", world);
+    spawnStaticButton({{-2, -15.25, -2}, rot, {1, 1, 1}}, "Down", world);
+    spawnStaticButton({{-2, -16.25, -2}, rot, {1, 1, 1}}, "Place bomb", world);
+    spawnSquareButton({{-4.5, -12.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, a);
+    spawnSquareButton({{-4.5, -13.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, b);
+    spawnSquareButton({{-4.5, -14.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, c);
+    spawnSquareButton({{-4.5, -15.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, d);
+    spawnSquareButton({{-4.5, -16.25, -2}, rot, {1, 1, 1}}, " ", {WHITE, GRAY}, toggleKeyRecordFunction, world, e);
+    spawnStaticButton({{3, -12.75, -2}, rot, {1, 1, 1}}, "Load from:", world);
+    spawnTextInputButton({{3.5, -13.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, first);
+    spawnSquareButton({{1, -13.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleLoadKeyboard, world);
+    spawnStaticButton({{3, -14.75, -2}, rot, {1, 1, 1}}, "Save to:", world);
+    spawnTextInputButton({{3.5, -15.75, -2}, rot, {1, 1, 1}}, "", {WHITE, BLUE}, world, second);
+    spawnSquareButton({{1, -15.75, -2}, rot, {1, 1, 1}}, "OK", {WHITE, GRAY}, toggleSaveKeyboard, world);
     spawnButton({{0, -17.25, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, rightFunction, world);
 }
 
@@ -360,7 +376,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world)
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Timer {}, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {MOVE_SPEED});
 }
 
@@ -373,7 +389,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Timer {}, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {MOVE_SPEED}, but);
 }
 
@@ -386,7 +402,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Timer {}, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {MOVE_SPEED}, res);
 }
 
@@ -399,7 +415,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Timer {}, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {MOVE_SPEED}, but);
 }
 
@@ -412,7 +428,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
     ecs::ModelRef {"button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Timer {}, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {MOVE_SPEED}, ecs::ToggleButton {usage});
 }
 
@@ -456,7 +472,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world)
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
     ecs::ModelRef {"square_button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::Hoverable {}, hoverTint, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {MOVE_SPEED});
 }
 
@@ -469,6 +485,6 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
     ecs::ModelRef {"square_button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Clickable {doOnClick},
+    ecs::Hoverable {}, hoverTint, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {MOVE_SPEED}, recorder);
 }

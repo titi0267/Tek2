@@ -132,7 +132,7 @@ bool ecs::ClientManager::readServerEntityUpdate(std::stringbuf &buffer)
         std::string tmp;
         tmp.reserve(componentSize);
 
-        if (tryRead(tmp.data(), componentSize))
+        if (tryRead((char*) tmp.data(), componentSize))
             return true;
         buffer.sputn((char*) &componentType, sizeof(ComponentType));
         buffer.sputn((char*) &componentSize, sizeof(std::uint32_t));
@@ -144,7 +144,7 @@ bool ecs::ClientManager::readServerEntityUpdate(std::stringbuf &buffer)
 void ecs::ClientManager::spawnOrUpdateServerEntity(World &world)
 {
     Entity serverEntity;
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
 
     if (tryRead(&serverEntity, sizeof(Entity))
     || readServerEntityUpdate(buffer))
@@ -206,7 +206,7 @@ void ecs::ClientManager::killServerEntity(World &world)
 
 void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
 {
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
     createUpdateLocalEntityBuffer(entity, world, buffer);
     std::string data = buffer.str();
     MirrorEntity &mirror = world.getComponent<MirrorEntity>(entity);
@@ -222,7 +222,7 @@ void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
 
 void ecs::ClientManager::killLocalEntity(Entity entity, World &world)
 {
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
     createKillLocalEntityBuffer(entity, buffer);
     std::string data = buffer.str();
 
@@ -255,6 +255,13 @@ void ecs::ClientManager::handleMoveCamera(ecs::World &world)
     _client->read(&target, sizeof(Vector3));
     cam.setPosition(pos);
     cam.setTarget(target);
+}
+
+void ecs::ClientManager::deleteServerEntity(Entity entity, World &world)
+{
+    MirroredEntity &mirrored = world.getComponent<MirroredEntity>(entity);
+
+    _serverToClient.erase(mirrored.foreignEntity);
 }
 
 void ecs::ClientUpdateSystem::setSignature(ComponentManager &component)

@@ -16,11 +16,14 @@
 #include "ecs/components/GridPosition.hpp"
 #include "ecs/components/PlayerInputs.hpp"
 #include "ecs/components/Bomb.hpp"
+#include "ecs/components/SpawnBonus.hpp"
 #include "ecs/components/Timer.hpp"
 #include "raylib/Vectors.hpp"
 #include "Map.hpp"
 
 namespace bomberman {
+    const int BONUS_SPAWN_INV_CHANCE = 1;
+
     struct GameServerSceneArgs {
         bool reloadGame;
 
@@ -31,16 +34,15 @@ namespace bomberman {
         using ConnId = network::ConnId;
 
         std::unordered_map<ecs::PlayerId, ecs::Actions> _actions;
-        map::Map _map;
+        std::unordered_map<ecs::PlayerId, bool> _updatedThisFrame;
 
+        map::Map _map;
         std::unordered_map<ecs::GridPosition, ecs::Entity> _destructibles;
 
         std::unordered_map<ecs::PlayerId, ecs::Entity> _players;
         std::set<ecs::Entity> _bombs;
         std::set<ecs::Entity> _water;
         std::set<ecs::Entity> _bonus;
-
-        int _bonusChances = 3;
 
         Vector3 mapCoordsToWorldCoords(int x, int y);
 
@@ -50,24 +52,31 @@ namespace bomberman {
         void generateMapProps(ecs::World &world);
         void createAi(ecs::PlayerId id, ecs::World &world);
 
+        void startNewGame(ecs::World &world);
+        void loadSavedGame(ecs::World &world);
+
         public:
-        GameServerScene(const void *data) : _map(9, 9, 4, 4) {};
+        GameServerScene(const void *data) : _map(15, 15, 4, 4) {};
 
         void loadScene(ecs::World &world);
         void unloadScene(ecs::World &world);
         void entityKilled(ecs::Entity entity,ecs::World &world);
 
         void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
-        void spawnBonus(Vector3 pos, ecs::GridPosition gPos, std::string &bonus, ecs::World &world);
+        void spawnBonus(Vector3 pos, ecs::GridPosition gPos, ecs::Bonus bonus, ecs::World &world);
         void deleteBonus(ecs::Entity bonus);
-        void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
+        void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::Player &player, ecs::World &world);
         void deleteBomb(ecs::Entity bomb);
         void spawnWater(Vector3 pos, ecs::GridPosition gPos, Vector3 dir, int distance, ecs::World &world);
         void deleteWater(ecs::Entity water);
         void deleteDestructible(ecs::GridPosition &pos, ecs::World &world);
 
+        void trySpawnBonus(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
+
         void setPlayerAction(ecs::PlayerId id, ecs::Actions action);
         ecs::Actions getPlayerAction(ecs::PlayerId id) const;
+        bool isActionUpdatedThisFrame(ecs::PlayerId id) const { return _updatedThisFrame.at(id); };
+        void setActionUpdatedThisFrame(ecs::PlayerId id, bool updated) { _updatedThisFrame.at(id) = updated; };
 
         void onConnect(ConnId conn, ecs::World &world) {};
         void onDisconnect(ConnId conn, ecs::World &world) {};
@@ -79,8 +88,6 @@ namespace bomberman {
         const std::set<ecs::Entity> &getBombs() { return _bombs; };
         const std::set<ecs::Entity> &getWater() { return _water; };
         const std::set<ecs::Entity> &getBonus() { return _bonus; };
-        int getBonusChances() { return _bonusChances; };
-        void setBonusChances(int bonusChances) { _bonusChances = bonusChances; };
     };
 
     class GameExecuteActionUpdateSystem : public ecs::ASystem {

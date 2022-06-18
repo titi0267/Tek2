@@ -31,6 +31,9 @@
 #include "ecs/components/ResolutionButton.hpp"
 #include "ecs/components/TextInput.hpp"
 #include "ecs/components/ToggleButton.hpp"
+#include "ecs/components/Grid.hpp"
+#include "ecs/components/CameraFollow.hpp"
+#include "ecs/components/ItemRotation.hpp"
 #include "ecs/components/Player.hpp"
 #include "ecs/components/GridPosition.hpp"
 #include "ecs/components/Bomb.hpp"
@@ -45,19 +48,19 @@
 void bomberman::registerCriticalComponents(ecs::World &world)
 {
     world.registerComponents<Transform, ecs::Movement, ecs::Hitbox, ecs::PlayerAction,
-    ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint,
-    ecs::DrawableCube, ecs::Text3D, ecs::PlayAnimation, ecs::Skin>();
+    ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint, ecs::DrawableCube, ecs::Text3D,
+    ecs::PlayAnimation, ecs::Skin, ecs::Grid, ecs::ItemRotation>();
 }
 
 void bomberman::registerBothSide(ecs::World &world)
 {
     world.registerComponent<ecs::Timer>();
-    world.registerSystem<ecs::TimerUpdateSystem>();
+    world.registerSystems<ecs::TimerUpdateSystem, ecs::ItemRotationUpdateSystem>();
 }
 
 void bomberman::registerServerSide(ecs::World &world)
 {
-    world.registerComponents<ecs::Player, ecs::GridPosition, ecs::BombId,
+    world.registerComponents<ecs::Player, ecs::GridPosition, ecs::Bomb,
     ecs::Water, ecs::DestructibleTile, ecs::SpawnBonus, ecs::Ai>();
     world.registerSystems<ecs::AnimationUpdateSystem>();
 }
@@ -72,10 +75,12 @@ void bomberman::registerRender(ecs::World &world)
     world.registerSystem<ecs::AnimationUpdateSystem>();
 
     world.registerSystems<ecs::DrawTextureCubeSystem,
-    ecs::DrawableModelSystem, ecs::Draw3DTextSystem>();
+    ecs::DrawableModelSystem, ecs::Draw3DTextSystem, ecs::DrawGridSystem>();
 
     world.registerComponent<ecs::BackgroundRotation>();
     world.registerSystem<ecs::BackgroundRotationUpdateSystem>();
+
+    world.registerComponent<ecs::CameraFollow>();
 }
 
 void bomberman::registerInputs(ecs::World &world)

@@ -60,6 +60,11 @@ namespace raylib {
             return *this;
         }
 
+        Matrix inverse()
+        {
+            return MatrixInvert(_mat);
+        }
+
         const RaylibMatrix &getMatrix() const
         {
             return _mat;

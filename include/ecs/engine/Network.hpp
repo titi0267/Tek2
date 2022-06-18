@@ -13,6 +13,7 @@
 #include <chrono>
 #include <map>
 #include <unordered_map>
+#include <string_view>
 #include "network/IClient.hpp"
 #include "network/IServer.hpp"
 #include "network/CPSocket.hpp"
@@ -23,7 +24,7 @@
 namespace ecs {
     using ConnId = network::ConnId;
 
-    const std::size_t NB_MIRROR_COMPONENTS = 12;
+    const std::size_t NB_MIRROR_COMPONENTS = 14;
     extern const ComponentHash MIRROR_COMPONENTS[NB_MIRROR_COMPONENTS];
 
     enum class NetworkCommand : uint8_t {
@@ -37,10 +38,9 @@ namespace ecs {
     };
 
     struct MirrorEntity {
-        char prevData[1024 * 4];
+        char prevData[1024 * 4] = {0};
         std::uint32_t size = 0;
 
-        MirrorEntity() { prevData[0] == 0; };
         std::string_view getView() { return std::string_view(prevData, size); };
     };
 
@@ -136,8 +136,16 @@ namespace ecs {
         void updateLocalEntity(Entity entity, World &world);
         void killLocalEntity(Entity entity, World &world);
 
-        void connectTo(const std::string &ip = "127.0.0.1", const std::string &port = "4243") { _client->connectTo(ip, port); };
-        void disconnect() { _client->disconnect(); };
+        void deleteServerEntity(Entity entity, World &world);
+
+        void connectTo(const std::string &ip = "127.0.0.1", const std::string &port = "4242") { _client->connectTo(ip, port); };
+        void disconnect()
+        {
+            if (_connAttempted)
+                _connAttempted = false;
+            else
+                _client->disconnect();
+        };
         bool isConnected() { return _client->isConnected(); };
     };
 

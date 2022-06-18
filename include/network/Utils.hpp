@@ -17,7 +17,7 @@ namespace network {
 
             static unsigned short portStringToPort(const std::string &portStr)
             {
-                unsigned short port = 4243;
+                unsigned short port = 4242;
 
                 if (portStr.empty())
                     return (port);

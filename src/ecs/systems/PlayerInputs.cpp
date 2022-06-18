@@ -30,12 +30,22 @@ void ecs::PlayerInputsUpdateSystem::update(ecs::World &world)
         PlayerAction &action = world.getComponent<PlayerAction>(entity);
 
         action.action = DO_NOTHING;
-        if (window.isKeyDown(input.bombKey))
-            action.action = PLACE_BOMB;
-        else if ((tmp = window.isKeyDown(input.upKey)) ^ window.isKeyDown(input.downKey))
-            action.action = tmp ? MOVE_UP : MOVE_DOWN;
-        else if ((tmp = window.isKeyDown(input.leftKey)) ^ window.isKeyDown(input.rightKey))
-            action.action = tmp ? MOVE_LEFT : MOVE_RIGHT;
+        if (input.gamepad) {
+            if (window.isButtonDown(0, (GamepadButton)input.bombKey))
+                action.action = PLACE_BOMB;
+            else if ((tmp = window.isButtonDown(0, (GamepadButton)input.upKey)) ^ window.isButtonDown(0, (GamepadButton)input.downKey))
+                action.action = tmp ? MOVE_UP : MOVE_DOWN;
+            else if ((tmp = window.isButtonDown(0, (GamepadButton)input.leftKey)) ^ window.isButtonDown(0, (GamepadButton)input.rightKey))
+                action.action = tmp ? MOVE_LEFT : MOVE_RIGHT;
+        }
+        else {
+            if (window.isKeyDown((KeyboardKey)input.bombKey))
+                action.action = PLACE_BOMB;
+            else if ((tmp = window.isKeyDown((KeyboardKey)input.upKey)) ^ window.isKeyDown((KeyboardKey)input.downKey))
+                action.action = tmp ? MOVE_UP : MOVE_DOWN;
+            else if ((tmp = window.isKeyDown((KeyboardKey)input.leftKey)) ^ window.isKeyDown((KeyboardKey)input.rightKey))
+                action.action = tmp ? MOVE_LEFT : MOVE_RIGHT;
+        }
    }
 }
 
@@ -52,6 +62,7 @@ void ecs::PlayerActionUpdateSystem::update(ecs::World &world)
     for (ecs::Entity entity : _entities) {
         PlayerAction &action = world.getComponent<PlayerAction>(entity);
 
+        scene.setActionUpdatedThisFrame(action.id, scene.getPlayerAction(action.id) != action.action);
         scene.setPlayerAction(action.id, action.action);
     }
 }

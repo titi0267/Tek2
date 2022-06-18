@@ -10,8 +10,12 @@
 #include "ecs/engine/SceneManager.hpp"
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/PlayersManager.hpp"
+#include "ecs/engine/System.hpp"
+#include "ecs/engine/World.hpp"
+#include "ecs/components/SceneMoveElement.hpp"
 
 namespace bomberman {
+    void disconnectFunction(ecs::World &world, ecs::Entity entity);
     void successConn(ecs::World &world, void *obj);
     void failedConn(ecs::World &world, void *obj);
 
@@ -25,11 +29,15 @@ namespace bomberman {
             ip(ip), port(port), startLocalServer(localServer), nbPlayers(nbPlayers) {};
     };
 
-    class GameScene : public ecs::IScene, public ecs::ClientNetworkSceneModule {
+    class GameScene : public ecs::IScene, public ecs::ClientNetworkSceneModule, public ecs::MoveRequesterSceneModule {
         std::string _ip;
         std::string _port;
         bool _startLocalServer;
         int _nbPlayers;
+
+        bool _moveRequest = false;
+        Vector3 _move = {0, 0, 0};
+        bool _buttonToggle = false;
 
         public:
         GameScene(const void *data) : _ip(((GameSceneArgs*) data)->ip), _port(((GameSceneArgs*) data)->port),
@@ -42,5 +50,17 @@ namespace bomberman {
         int getNbPlayersOnClient() { return _nbPlayers; };
         void onDisconnect(ecs::World &world);
         void playerIdAssigned(ecs::PlayerId id, ecs::World &world);
+
+        bool &getMovementRequest() { return _moveRequest; };
+        Vector3 &getMoveDest() { return _move; };
+        bool &getQuitButtonToggle() { return _buttonToggle; };
+    };
+
+    class GameToggleQuitButtonSystem : public ecs::ASystem {
+        public:
+        GameToggleQuitButtonSystem() { _stage = ecs::INPUT_UPDATE; };
+
+        void setSignature(ecs::ComponentManager &component);
+        void update(ecs::World &world);
     };
 }

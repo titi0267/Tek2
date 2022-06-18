@@ -11,6 +11,8 @@
 #include "ecs/engine/InternalServer.hpp"
 #include "ecs/engine/SceneManager.hpp"
 #include "ecs/engine/PlayersManager.hpp"
+#include "ecs/engine/SkinManager.hpp"
+#include "network/SocketError.hpp"
 
 #include "raylib/AnimationManager.hpp"
 
@@ -26,6 +28,7 @@ void ecs::InternalServer::serverMain()
 
     _serverWorld->insertRessource<ServerManager>();
     _serverWorld->insertRessource<PlayersManager>(4);
+    _serverWorld->insertRessource<SkinManager>();
     _serverWorld->insertRessource<SceneManager>();
     _serverWorld->insertRessource<raylib::AnimationManager>();
     _serverWorld->insertRessource<ecs::Clock>();

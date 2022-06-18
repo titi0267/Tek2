@@ -9,9 +9,12 @@
 #include "ecs/components/HoverTint.hpp"
 #include "ecs/components/HoverRotate.hpp"
 #include "ecs/components/ColorTexture.hpp"
+#include "ecs/components/Timer.hpp"
+#include "ecs/components/CameraFollow.hpp"
 
 #include "raylib/Window.hpp"
 #include "raylib/Camera.hpp"
+#include <limits>
 
 #include <iostream>
 #include <limits>
@@ -26,6 +29,7 @@ void ecs::HoverUpdateSystem::update(ecs::World &world)
     raylib::Window &window = world.getRessource<raylib::Window>();
     raylib::Camera &cam = world.getRessource<raylib::Camera>();
     raylib::Ray ray = cam.getMouseRay(window.getMousePos());
+    raylib::Matrix invViewMat = cam.getViewMatrix().inverse();
 
     Hoverable *hitHover = nullptr;
     float hitDist = std::numeric_limits<float>::max();
@@ -34,8 +38,12 @@ void ecs::HoverUpdateSystem::update(ecs::World &world)
     for (ecs::Entity entity : _entities) {
         Transform &transform = world.getComponent<Transform>(entity);
         Hitbox &hitbox = world.getComponent<Hitbox>(entity);
+        raylib::Matrix mat = raylib::Matrix::fromTransform(transform);
 
-        BoundingBox box = hitbox.getBoundingBox(transform);
+        if (world.hasComponent<CameraFollow>(entity))
+            mat = mat * invViewMat;
+
+        BoundingBox box = hitbox.getBoundingBox(mat);
         RayCollision collision = ray.getCollisionBox(box);
 
         if (world.hasComponent<Hoverable>(entity)) {
@@ -81,7 +89,7 @@ void ecs::HoverTintUpdateSystem::update(ecs::World &world)
 
 void ecs::HoverRotateUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Hoverable, Transform, HoverRotate>();
+    _signature = component.generateSignature<Hoverable, Transform, HoverRotate, Timer>();
 }
 
 void ecs::HoverRotateUpdateSystem::update(ecs::World &world)
@@ -90,17 +98,20 @@ void ecs::HoverRotateUpdateSystem::update(ecs::World &world)
         Hoverable &hover = world.getComponent<Hoverable>(entity);
         Transform &transform = world.getComponent<Transform>(entity);
         HoverRotate &rotate = world.getComponent<HoverRotate>(entity);
+        Timer &timer = world.getComponent<Timer>(entity);
         Vector3 rot = QuaternionToEuler(transform.rotation);
 
         if (rotate.inRotation) {
-            rot.x += PI / 4.0 / 15;
-            if (!hover.isHover && rot.x <= 1e-04 && rot.x >= -1e-04) {
+            rot.x = timer.timeElapsed * 2 * PI;
+            if (!hover.isHover && fmod(rot.x, PI * 2) < 0.1) {
                 rot.x = 0;
                 rotate.inRotation = false;
             }
             transform.rotation = QuaternionFromEuler(rot.x, rot.y, rot.z);
         }
-        else if (hover.isHover)
+        else if (hover.isHover) {
+            timer.timeElapsed = 0;
             rotate.inRotation = true;
+        }
     }
 }

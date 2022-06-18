@@ -39,7 +39,7 @@ void ecs::WaterUpdateSystem::update(ecs::World &world)
 
             water.expanded = true;
 
-            if (water.distance >= 4 || !newGPos.isValidPos(map))
+            if (water.distance == water.maxDistance || !newGPos.isValidPos(map) || (water.dir.x == 0 && water.dir.z == 0))
                 continue;
 
             int cell = map.getCellAt(newGPos.x, newGPos.y);
@@ -49,6 +49,7 @@ void ecs::WaterUpdateSystem::update(ecs::World &world)
             } else if (cell == DESTRUCTIBLE) {
                 map.setCellAt(newGPos.x, newGPos.y, VOID);
                 scene.deleteDestructible(newGPos, world);
+                scene.trySpawnBonus(pos, newGPos, world);
             }
         }
 
@@ -81,10 +82,11 @@ void ecs::WaterCollisionUpdateSystem::update(ecs::World &world)
             playersAlive.push_back({pEntity, player, gPos});
         }
     }
+
     for (Entity entity : _entities) {
         GridPosition &pos = world.getComponent<GridPosition>(entity);
 
-        for (auto [pEntity, player, gPos] : playersAlive) {
+        for (auto &[pEntity, player, gPos] : playersAlive) {
             if (pos == gPos) {
                 Transform &transform = world.getComponent<Transform>(pEntity);
                 Vector3 deathPos = transform.translation + Vector3{0, 100, 0};

@@ -23,6 +23,7 @@ add_executable(bomberman
     "src/ecs/engine/ServerManager.cpp"
     "src/ecs/engine/SceneManager.cpp"
     "src/ecs/engine/PlayersManager.cpp"
+    "src/ecs/engine/SkinManager.cpp"
     "src/ecs/engine/InternalServer.cpp"
 
     "src/input/GamepadBind.cpp"
@@ -52,6 +53,10 @@ add_executable(bomberman
     "src/ecs/systems/BackgroundRotation.cpp"
     "src/ecs/systems/CheckWin.cpp"
     "src/ecs/systems/Ai.cpp"
+    "src/ecs/systems/Player.cpp"
+    "src/ecs/systems/DrawGrid.cpp"
+    "src/ecs/systems/GameToggleQuit.cpp"
+    "src/ecs/systems/ItemRotation.cpp"
 
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"
