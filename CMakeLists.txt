@@ -64,6 +64,7 @@ add_executable(bomberman
     "src/scenes/GameServerScene.cpp"
     "src/scenes/LobbyServerScene.cpp"
     "src/scenes/WinServerScene.cpp"
+    "src/scenes/IntroScene.cpp"
 
     "src/network/client/LinuxClient.cpp"
     "src/network/client/WinClient.cpp"

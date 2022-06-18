@@ -18,4 +18,5 @@ std::unordered_map<ecs::Scenes, std::function<std::unique_ptr<ecs::IScene>(const
     {ecs::Scenes::SERVER_GAME_SCENE, [](const void *data){ return std::make_unique<bomberman::GameServerScene>(data); }},
     {ecs::Scenes::SERVER_LOBBY_SCENE, [](const void *data){ return std::make_unique<bomberman::LobbyServerScene>(data); }},
     {ecs::Scenes::SERVER_WIN_SCENE, [](const void *data){ return std::make_unique<bomberman::WinServerScene>(data); }},
+    {ecs::Scenes::INTRO_SCENE, [](const void *data){ return std::make_unique<bomberman::WinServerScene>(data); }},
 };

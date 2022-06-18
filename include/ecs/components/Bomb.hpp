@@ -17,6 +17,8 @@ namespace bomberman {
 }
 
 namespace ecs {
+    const float BOMB_EXPLODING_TIME = 3.0f;
+
     struct Bomb {
         ecs::PlayerId playerId = -1;
         int bombDistance = 0;

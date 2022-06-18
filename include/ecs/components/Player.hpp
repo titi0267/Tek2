@@ -11,16 +11,17 @@
 #include "ecs/engine/System.hpp"
 
 namespace ecs {
-    const float SPEED_BOOST = 2.0f;
+    const float BASE_SPEED = 3.0f;
+    const float SPEED_BOOST = 5.0f;
 
     const float SPEED_DURATION = 2.0f;
-    const float TIG_DURATION = 2.0f;
+    const float TIG_DURATION = 1.0f;
 
     struct Player {
         PlayerId id;
         bool alive = true;
 
-        float speed = 2;
+        float speed = BASE_SPEED;
         int bombRange = 4;
         int maxBombs = 1;
 

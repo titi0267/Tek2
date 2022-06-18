@@ -33,6 +33,7 @@
 #include "ecs/components/ToggleButton.hpp"
 #include "ecs/components/Grid.hpp"
 #include "ecs/components/CameraFollow.hpp"
+#include "ecs/components/Intro.hpp"
 #include "ecs/components/ItemRotation.hpp"
 #include "ecs/components/Player.hpp"
 #include "ecs/components/GridPosition.hpp"
@@ -81,6 +82,8 @@ void bomberman::registerRender(ecs::World &world)
     world.registerSystem<ecs::BackgroundRotationUpdateSystem>();
 
     world.registerComponent<ecs::CameraFollow>();
+
+    world.registerComponent<ecs::Intro>();
 }
 
 void bomberman::registerInputs(ecs::World &world)
