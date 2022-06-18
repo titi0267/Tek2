@@ -10,7 +10,7 @@
 
 ecs::Actions ai::AiFunc::update(ecs::PlayerId aiId, bomberman::GameServerScene &scene, ecs::World &world)
 {
-    std::vector<ecs::Actions (*)(map::Map&, std::deque<BombStruct>&, std::deque<PlayerStruct>&, std::deque<ItemStruct>&, ecs::GridPosition)>
+    std::vector<ecs::Actions (*)(ecs::PlayerId, map::Map&, std::deque<BombStruct>&, std::deque<PlayerStruct>&, std::deque<ItemStruct>&, ecs::GridPosition)>
                             _functions = {goSafe, goItem, goKill, goReach};
     std::deque<BombStruct> bomb =  setBomb(scene.getBombs(), world);
     std::deque<WaterStruct> water = setWater(scene.getWater(), world);
@@ -23,7 +23,7 @@ ecs::Actions ai::AiFunc::update(ecs::PlayerId aiId, bomberman::GameServerScene &
     defineWater(mapCpy, water);
     defineDangerous(mapCpy, bomb);
     for (auto fct : _functions) {
-        if ((act = fct(mapCpy, bomb, player, item, pos)) != ecs::Actions::DO_NOTHING)
+        if ((act = fct(aiId, mapCpy, bomb, player, item, pos)) != ecs::Actions::DO_NOTHING)
             return (act);
     }
     return (ecs::Actions::DO_NOTHING);
@@ -68,6 +68,7 @@ std::deque<ai::PlayerStruct> ai::AiFunc::setPlayer(const std::unordered_map<ecs:
     std::deque<PlayerStruct> player;
 
     for (auto &[id, entity] : list) {
+        tmp.id = id;
         tmp.pos = world.getComponent<ecs::GridPosition>(entity);
         player.push_back(tmp);
     }
@@ -86,11 +87,11 @@ std::deque<ai::ItemStruct> ai::AiFunc::setItem(const std::set<ecs::Entity> &list
     return (item);
 }
 
-ecs::Actions ai::AiFunc::goSafe(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
+ecs::Actions ai::AiFunc::goSafe(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
 {
     ecs::Actions randoum[4] = {ecs::Actions::MOVE_UP, ecs::Actions::MOVE_RIGHT, ecs::Actions::MOVE_DOWN, ecs::Actions::MOVE_LEFT};
 
-    if (map.isValidCell(pos.x, pos.y) && map.getCellAt(pos.x, pos.y) != DANGEROUS)
+    if (map.getCellAt(pos.x, pos.y) != DANGEROUS)
         return (ecs::Actions::DO_NOTHING);
     if (map.isValidCell(pos.x - 1, pos.y) && map.isWalkableCell(pos.x - 1, pos.y) && map.getCellAt(pos.x - 1, pos.y) != DANGEROUS)
         return (ecs::Actions::MOVE_LEFT);
@@ -111,43 +112,39 @@ ecs::Actions ai::AiFunc::goSafe(map::Map &map, std::deque<BombStruct> &bomb, std
     return (randoum[std::rand() % 4]);
 }
 
-ecs::Actions ai::AiFunc::goItem(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
+ecs::Actions ai::AiFunc::goItem(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
 {
     ecs::Actions action;
 
-    for (auto actual : item) {
+    for (auto &actual : item) {
         if ((action = PathFinding(map, pos, actual.pos)) != ecs::DO_NOTHING)
-            return(ecs::PLACE_BOMB);
+            return action;
     }
     return (ecs::Actions::DO_NOTHING);
 }
 
-ecs::Actions ai::AiFunc::goKill(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
+ecs::Actions ai::AiFunc::goKill(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
 {
     ecs::Actions action;
 
-    for (auto actual : item) {
-        if ((action = PathFinding(map, pos, actual.pos)) != ecs::DO_NOTHING)
-            return(ecs::PLACE_BOMB);
+    for (auto &actual : player) {
+        if (actual.id != aiId && (action = PathFinding(map, pos, actual.pos)) != ecs::DO_NOTHING)
+            return action;
     }
     return (ecs::Actions::DO_NOTHING);
 }
 
-ecs::Actions ai::AiFunc::goReach(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
+ecs::Actions ai::AiFunc::goReach(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
 {
     std::deque<ecs::Actions> randoum;
     ecs::Actions action;
 
-    for (auto actual : player) {
-        if ((action = PathFinding(map, pos, actual.pos)) != ecs::Actions::DO_NOTHING)
-            return (action);
-    }
     randoum = isAroundSafe(map, pos);
-    if (((map.isValidCell(pos.x - 1, pos.y) && map.getCellAt(pos.x - 1, pos.y) == DESTRUCTIBLE) ||
-        (map.isValidCell(pos.x + 1, pos.y) && map.getCellAt(pos.x + 1, pos.y) == DESTRUCTIBLE) ||
-        (map.isValidCell(pos.x, pos.y - 1) && map.getCellAt(pos.x, pos.y - 1) == DESTRUCTIBLE) ||
-        (map.isValidCell(pos.x, pos.y + 1) && map.getCellAt(pos.x, pos.y + 1) == DESTRUCTIBLE)) &&
-        (randoum.empty() != true))
+    if (((map.isValidCell(pos.x - 1, pos.y) && map.getCellAt(pos.x - 1, pos.y) == DESTRUCTIBLE)
+    || (map.isValidCell(pos.x + 1, pos.y) && map.getCellAt(pos.x + 1, pos.y) == DESTRUCTIBLE)
+    || (map.isValidCell(pos.x, pos.y - 1) && map.getCellAt(pos.x, pos.y - 1) == DESTRUCTIBLE)
+    || (map.isValidCell(pos.x, pos.y + 1) && map.getCellAt(pos.x, pos.y + 1) == DESTRUCTIBLE))
+    && (!randoum.empty()))
         return (ecs::Actions::PLACE_BOMB);
     randoum.push_back(ecs::Actions::DO_NOTHING);
     return (randoum[std::rand() % randoum.size()]);
@@ -156,15 +153,14 @@ ecs::Actions ai::AiFunc::goReach(map::Map &map, std::deque<BombStruct> &bomb, st
 std::deque<ecs::Actions> ai::AiFunc::isAroundSafe(map::Map &map, ecs::GridPosition pos)
 {
     std::deque<ecs::Actions> tmp;
-    if (map.isValidCell(pos.x - 1, pos.y) && map.getCellAt(pos.x - 1, pos.y) == VOID)
+    if (map.isValidCell(pos.x - 1, pos.y) && map.isWalkableCell(pos.x - 1, pos.y) && map.getCellAt(pos.x - 1, pos.y) != DANGEROUS)
         tmp.push_back(ecs::Actions::MOVE_LEFT);
-    if (map.isValidCell(pos.x + 1, pos.y) && map.getCellAt(pos.x + 1, pos.y) == VOID)
+    if (map.isValidCell(pos.x + 1, pos.y) && map.isWalkableCell(pos.x + 1, pos.y) && map.getCellAt(pos.x + 1, pos.y) != DANGEROUS)
         tmp.push_back(ecs::Actions::MOVE_RIGHT);
-    if (map.isValidCell(pos.x, pos.y - 1) && map.getCellAt(pos.x, pos.y - 1) == VOID)
+    if (map.isValidCell(pos.x, pos.y - 1) && map.isWalkableCell(pos.x, pos.y - 1) && map.getCellAt(pos.x, pos.y - 1) != DANGEROUS)
         tmp.push_back(ecs::Actions::MOVE_UP);
-    if (map.isValidCell(pos.x, pos.y + 1) && map.getCellAt(pos.x, pos.y + 1) == VOID)
+    if (map.isValidCell(pos.x, pos.y + 1) && map.isWalkableCell(pos.x, pos.y + 1) && map.getCellAt(pos.x, pos.y + 1) != DANGEROUS)
         tmp.push_back(ecs::Actions::MOVE_DOWN);
-    std::cout << tmp.size() << std::endl;
     return (tmp);
 }
 

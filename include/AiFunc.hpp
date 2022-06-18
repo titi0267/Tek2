@@ -19,6 +19,7 @@ namespace ai {
     } BombStruct;
 
     typedef struct Player {
+        ecs::PlayerId id;
         ecs::GridPosition pos;
     } PlayerStruct;
 
@@ -45,10 +46,10 @@ namespace ai {
         static void defineBomb(int x, int y, map::Map &map, int bomb_length);
         static void defineWater(map::Map &map, std::deque<WaterStruct> water);
 
-        static ecs::Actions goSafe(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
-        static ecs::Actions goItem(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
-        static ecs::Actions goKill(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
-        static ecs::Actions goReach(map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
+        static ecs::Actions goSafe(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
+        static ecs::Actions goItem(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
+        static ecs::Actions goKill(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
+        static ecs::Actions goReach(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
 
         static ecs::Actions PathFinding(map::Map &map, ecs::GridPosition in, ecs::GridPosition out);
         static void propagateDistField(std::deque<ecs::GridPosition> &actual, std::deque<ecs::GridPosition> &next, map::Map &map, std::vector<int> &distField, int distance);
