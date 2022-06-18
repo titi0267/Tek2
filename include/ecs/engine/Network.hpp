@@ -23,7 +23,7 @@
 namespace ecs {
     using ConnId = network::ConnId;
 
-    const std::size_t NB_MIRROR_COMPONENTS = 14;
+    const std::size_t NB_MIRROR_COMPONENTS = 15;
     extern const ComponentHash MIRROR_COMPONENTS[NB_MIRROR_COMPONENTS];
 
     enum class NetworkCommand : uint8_t {
@@ -37,10 +37,9 @@ namespace ecs {
     };
 
     struct MirrorEntity {
-        char prevData[1024 * 4];
+        char prevData[1024 * 4] = {0};
         std::uint32_t size = 0;
 
-        MirrorEntity() { prevData[0] = 0; };
         std::string_view getView() { return std::string_view(prevData, size); };
     };
 

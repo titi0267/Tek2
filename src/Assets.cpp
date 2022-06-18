@@ -85,7 +85,7 @@ void bomberman::loadShaders(ecs::World &world)
 {
     raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
 
-    // shaderMan.loadShader("button", "./assets/shaders/button.vs", "./assets/shaders/button.fs");
+    shaderMan.loadShader("light", "./assets/shaders/lighting.vs", "./assets/shaders/lighting.fs");
 }
 
 void bomberman::loadSounds(ecs::World &world)
@@ -99,6 +99,7 @@ void bomberman::applyAssetsToModels(ecs::World &world)
 {
     raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
+    raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
 
     modelMan.getModel("logo").getMaterialView(0)
     .setTexture(textureMan.getTexture("logo"));
@@ -113,36 +114,45 @@ void bomberman::applyAssetsToModels(ecs::World &world)
     .setTexture(textureMan.getTexture("button"));
 
     modelMan.getModel("amphi").getMaterialView(0)
-    .setTexture(textureMan.getTexture("amphi"));
+    .setTexture(textureMan.getTexture("amphi"))
+    .setShader(shaderMan.getShader("light"));
 
     modelMan.getModel("bottle").getMaterialView(0)
-    .setTexture(textureMan.getTexture("bottle"));
+    .setTexture(textureMan.getTexture("bottle"))
+    .setShader(shaderMan.getShader("light"));
 
     modelMan.getModel("table").getMaterialView(0)
-    .setTexture(textureMan.getTexture("table"));
+    .setTexture(textureMan.getTexture("table"))
+    .setShader(shaderMan.getShader("light"));
 
     modelMan.getModel("chair").getMaterialView(0)
-    .setTexture(textureMan.getTexture("chair"));
+    .setTexture(textureMan.getTexture("chair"))
+    .setShader(shaderMan.getShader("light"));
 
     modelMan.getModel("bag").getMaterialView(0)
-    .setTexture(textureMan.getTexture("bag"));
+    .setTexture(textureMan.getTexture("bag"))
+    .setShader(shaderMan.getShader("light"));
 
     modelMan.getModel("water").getMaterialView(0)
     .setTexture(textureMan.getTexture("water"));
 
     modelMan.getModel("player").getMaterialView(0)
-    .setTexture(textureMan.getTexture("timothe"));
+    .setTexture(textureMan.getTexture("timothe"))
+    .setShader(shaderMan.getShader("light"));
 
     modelMan.getModel("bonus_bomb").getMaterialView(0).
-    setTexture(textureMan.getTexture("bonus_bomb"));
+    setTexture(textureMan.getTexture("bonus_bomb"))
+    .setShader(shaderMan.getShader("light"));
 
     modelMan.getModel("bonus_boots").getMaterialView(0).
-    setTexture(textureMan.getTexture("bonus_boots"));
+    setTexture(textureMan.getTexture("bonus_boots"))
+    .setShader(shaderMan.getShader("light"));
 
     modelMan.getModel("bonus_range").getMaterialView(0).
-    setTexture(textureMan.getTexture("bonus_range"));
+    setTexture(textureMan.getTexture("bonus_range"))
+    .setShader(shaderMan.getShader("light"));
 
     modelMan.getModel("bonus_tig").getMaterialView(0).
-    setTexture(textureMan.getTexture("bonus_tig"));
-
+    setTexture(textureMan.getTexture("bonus_tig"))
+    .setShader(shaderMan.getShader("light"));
 }

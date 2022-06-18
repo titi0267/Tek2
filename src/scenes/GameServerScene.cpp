@@ -30,6 +30,7 @@
 #include "ecs/components/SpawnBonus.hpp"
 #include "ecs/components/Grid.hpp"
 #include "ecs/components/ItemRotation.hpp"
+#include "ecs/components/Light.hpp"
 
 #include <iostream>
 #include <filesystem>
@@ -127,7 +128,7 @@ void bomberman::GameServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, 
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
     ecs::Entity entity = world.spawn().insert(ecs::Bomb {player.id, player.bombRange}, transform, gPos,
-    ecs::ModelRef {"bottle"}, ecs::Timer{}, ecs::MirrorEntity {}).getEntity();
+    ecs::ModelRef {"bottle"}, ecs::Timer{}, ecs::Light{{0.0f, 0.2f, 0.8f, 1.0f}, {0, 0.2, 0}}, ecs::MirrorEntity {}).getEntity();
 
     std::cout << "Spawn bomb " << (int) entity <<std::endl;
     _bombs.insert(entity);
@@ -160,7 +161,7 @@ void bomberman::GameServerScene::spawnBonus(Vector3 pos, ecs::GridPosition gPos,
     };
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
     ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef{BONUS_TO_STR.at(bonus)},
-    ecs::SpawnBonus {bonus}, ecs::ItemRotation{0.5, 0.25}, ecs::Timer {}, ecs::MirrorEntity {}).getEntity();
+    ecs::SpawnBonus {bonus}, ecs::ItemRotation{0.5, 0.25}, ecs::Timer {}, ecs::Light{{0.6f, 0.6f, 0.0f, 1.0f}, {0, 0.2, 0}}, ecs::MirrorEntity {}).getEntity();
 
     std::cout << "ADD " << BONUS_TO_STR.at(bonus) << std::endl;
     _bonus.insert(entity);
@@ -205,6 +206,8 @@ void bomberman::GameServerScene::startNewGame(ecs::World &world)
             }
         }
     }
+    world.spawn().insert(Transform{{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}},
+    ecs::Light{Vector3{-1, -1, -1}, Vector4{0.7, 0.7, 0.7, 1.0}}, ecs::MirrorEntity{});
 }
 
 void bomberman::GameServerScene::loadSavedGame(ecs::World &world)

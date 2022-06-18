@@ -34,6 +34,7 @@
 #include "ecs/components/Grid.hpp"
 #include "ecs/components/CameraFollow.hpp"
 #include "ecs/components/ItemRotation.hpp"
+#include "ecs/components/Light.hpp"
 
 // Those components are mirrored between clients and server
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
@@ -41,7 +42,7 @@ void bomberman::registerCriticalComponents(ecs::World &world)
 {
     world.registerComponents<Transform, ecs::Movement, ecs::Hitbox, ecs::PlayerAction,
     ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint, ecs::DrawableCube, ecs::Text3D,
-    ecs::PlayAnimation, ecs::Skin, ecs::Grid, ecs::ItemRotation>();
+    ecs::PlayAnimation, ecs::Skin, ecs::Grid, ecs::ItemRotation, ecs::Light>();
 }
 
 void bomberman::registerBothSide(ecs::World &world)
@@ -65,7 +66,9 @@ void bomberman::registerRender(ecs::World &world)
     world.registerComponent<ecs::BackgroundRotation>();
     world.registerSystem<ecs::BackgroundRotationUpdateSystem>();
 
-    world.registerComponent<ecs::CameraFollow>();
+    world.registerComponents<ecs::CameraFollow>();
+
+    world.registerSystem<ecs::LightUpdateSystem>();
 }
 
 void bomberman::registerInputs(ecs::World &world)
