@@ -38,7 +38,7 @@ void ecs::PlayerUpdateSystem::update(ecs::World &world)
         if (player.speedDuration > 0) {
             player.speedDuration -= clock.getDeltaSec();
             if (player.speedDuration <= 0)
-                player.speed -= SPEED_BOOST;
+                player.speed = BASE_SPEED;
             if (player.speedDuration < 0)
                 player.speedDuration = 0;
         }

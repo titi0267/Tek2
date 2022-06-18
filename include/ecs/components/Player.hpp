@@ -11,7 +11,8 @@
 #include "ecs/engine/System.hpp"
 
 namespace ecs {
-    const float SPEED_BOOST = 2.0f;
+    const float BASE_SPEED = 2.0f;
+    const float SPEED_BOOST = 4.0f;
 
     const float SPEED_DURATION = 2.0f;
     const float TIG_DURATION = 2.0f;
@@ -20,7 +21,7 @@ namespace ecs {
         PlayerId id;
         bool alive = true;
 
-        float speed = 2;
+        float speed = BASE_SPEED;
         int bombRange = 4;
         int maxBombs = 1;
 
