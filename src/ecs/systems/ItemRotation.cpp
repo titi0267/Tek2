@@ -23,7 +23,6 @@ void ecs::ItemRotationUpdateSystem::update(ecs::World &world)
         Timer &timer = world.getComponent<Timer>(entity);
         float advance = rot.speed * timer.timeElapsed;
 
-        std::cout << advance << std::endl;
         if (advance >= 1) {
             timer.timeElapsed = std::fmod(timer.timeElapsed, 1.0 / rot.speed);
             advance = std::fmod(advance, 1.0f);

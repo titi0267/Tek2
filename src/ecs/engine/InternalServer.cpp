@@ -43,7 +43,7 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<raylib::AnimationManager>();
     _serverWorld->insertRessource<ecs::Clock>();
 
-    _serverWorld->registerComponents<ecs::Player, ecs::GridPosition, ecs::BombId, ecs::Water, ecs::DestructibleTile, ecs::SpawnBonus>();
+    _serverWorld->registerComponents<ecs::Player, ecs::GridPosition, ecs::Bomb, ecs::Water, ecs::DestructibleTile, ecs::SpawnBonus>();
     _serverWorld->registerSystems<ecs::AnimationUpdateSystem>();
 
 // ------

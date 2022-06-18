@@ -39,8 +39,9 @@ void ecs::WaterUpdateSystem::update(ecs::World &world)
 
             water.expanded = true;
 
-            if (water.distance >= 4 + scene.getExplodeBonus() || !newGPos.isValidPos(map))
+            if (water.distance == water.maxDistance || !newGPos.isValidPos(map) || (water.dir.x == 0 && water.dir.z == 0))
                 continue;
+
             int cell = map.getCellAt(newGPos.x, newGPos.y);
 
             if (cell == VOID || cell == SPAWN) {
@@ -48,6 +49,7 @@ void ecs::WaterUpdateSystem::update(ecs::World &world)
             } else if (cell == DESTRUCTIBLE) {
                 map.setCellAt(newGPos.x, newGPos.y, VOID);
                 scene.deleteDestructible(newGPos, world);
+                scene.trySpawnBonus(pos, newGPos, world);
             }
         }
 
@@ -69,10 +71,10 @@ void ecs::WaterCollisionUpdateSystem::update(ecs::World &world)
 {
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
-    const std::set<Entity> &players = scene.getPlayers();
+    const std::unordered_map<PlayerId, Entity> &players = scene.getPlayers();
     std::vector<std::tuple<Entity, Player&, GridPosition&>> playersAlive;
 
-    for (Entity pEntity : players) {
+    for (auto [id, pEntity] : players) {
         Player &player = world.getComponent<Player>(pEntity);
 
         if (player.alive) {
@@ -80,6 +82,7 @@ void ecs::WaterCollisionUpdateSystem::update(ecs::World &world)
             playersAlive.push_back({pEntity, player, gPos});
         }
     }
+
     for (Entity entity : _entities) {
         GridPosition &pos = world.getComponent<GridPosition>(entity);
 

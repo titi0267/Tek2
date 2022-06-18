@@ -37,10 +37,10 @@ void bomberman::loadTextures(ecs::World &world)
     textureMan.loadTexture("jeffrey", "./assets/textures/jeffrey.png");
     textureMan.loadTexture("tom", "./assets/textures/tom.png");
 
-    textureMan.loadTexture("bombBonus", "./assets/textures/bombBonus.png");
-    textureMan.loadTexture("boots", "./assets/textures/boots.png");
-    textureMan.loadTexture("explode", "./assets/textures/explode.png");
-    textureMan.loadTexture("tig", "./assets/textures/tig.png");
+    textureMan.loadTexture("bonus_bomb", "./assets/textures/bombBonus.png");
+    textureMan.loadTexture("bonus_boots", "./assets/textures/boots.png");
+    textureMan.loadTexture("bonus_range", "./assets/textures/explode.png");
+    textureMan.loadTexture("bonus_tig", "./assets/textures/tig.png");
 }
 
 void bomberman::loadModels(ecs::World &world)
@@ -61,10 +61,10 @@ void bomberman::loadModels(ecs::World &world)
 
     modelMan.loadModel("player", "./assets/models/player.iqm");
 
-    modelMan.loadModel("bombBonus", "./assets/models/bombBonus.iqm");
-    modelMan.loadModel("boots", "./assets/models/boots.iqm");
-    modelMan.loadModel("explode", "./assets/models/explode.iqm");
-    modelMan.loadModel("tig", "./assets/models/tig.iqm");
+    modelMan.loadModel("bonus_bomb", "./assets/models/bombBonus.iqm");
+    modelMan.loadModel("bonus_boots", "./assets/models/boots.iqm");
+    modelMan.loadModel("bonus_range", "./assets/models/explode.iqm");
+    modelMan.loadModel("bonus_tig", "./assets/models/tig.iqm");
 }
 
 void bomberman::loadAnimations(ecs::World &world)
@@ -133,16 +133,16 @@ void bomberman::applyAssetsToModels(ecs::World &world)
     modelMan.getModel("player").getMaterialView(0)
     .setTexture(textureMan.getTexture("timothe"));
 
-    modelMan.getModel("bombBonus").getMaterialView(0).
-    setTexture(textureMan.getTexture("bombBonus"));
+    modelMan.getModel("bonus_bomb").getMaterialView(0).
+    setTexture(textureMan.getTexture("bonus_bomb"));
 
-    modelMan.getModel("boots").getMaterialView(0).
-    setTexture(textureMan.getTexture("boots"));
+    modelMan.getModel("bonus_boots").getMaterialView(0).
+    setTexture(textureMan.getTexture("bonus_boots"));
 
-    modelMan.getModel("explode").getMaterialView(0).
-    setTexture(textureMan.getTexture("explode"));
+    modelMan.getModel("bonus_range").getMaterialView(0).
+    setTexture(textureMan.getTexture("bonus_range"));
 
-    modelMan.getModel("tig").getMaterialView(0).
-    setTexture(textureMan.getTexture("tig"));
+    modelMan.getModel("bonus_tig").getMaterialView(0).
+    setTexture(textureMan.getTexture("bonus_tig"));
 
 }

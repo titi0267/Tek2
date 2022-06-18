@@ -12,9 +12,11 @@ namespace ecs {
     struct Water {
         Vector3 dir;
         int distance;
+        int maxDistance;
         bool expanded = false;
 
-        Water(Vector3 dir = {0}, int distance = 0) : dir(dir), distance(distance) {};
+        Water(Vector3 dir = {0}, int distance = 0, int maxDistance = 0)
+            : dir(dir), distance(distance), maxDistance(maxDistance) {};
     };
 
     class WaterUpdateSystem : public ASystem {

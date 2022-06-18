@@ -22,6 +22,8 @@
 #include "Map.hpp"
 
 namespace bomberman {
+    const int BONUS_SPAWN_INV_CHANCE = 1;
+
     struct GameServerSceneArgs {
         bool reloadGame;
 
@@ -37,19 +39,10 @@ namespace bomberman {
         map::Map _map;
         std::unordered_map<ecs::GridPosition, ecs::Entity> _destructibles;
 
-        std::set<ecs::Entity> _players;
+        std::unordered_map<ecs::PlayerId, ecs::Entity> _players;
         std::set<ecs::Entity> _bombs;
         std::set<ecs::Entity> _water;
         std::set<ecs::Entity> _bonus;
-
-        std::vector<uint32_t> _bombNbrs = {0, 0, 0, 0};
-
-        int _playerNewExplosion = 0;
-        int _playerNewSpeed = 0;
-        int _playerStun = 0;
-        int _playerBombs = 0;
-
-        int _bonusChances = 3;
 
         Vector3 mapCoordsToWorldCoords(int x, int y);
 
@@ -69,13 +62,15 @@ namespace bomberman {
         void entityKilled(ecs::Entity entity,ecs::World &world);
 
         void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
-        void spawnBonus(Vector3 pos, ecs::GridPosition gPos, const std::string &bonus, ecs::Bonus bonusType, ecs::World &world);
+        void spawnBonus(Vector3 pos, ecs::GridPosition gPos, ecs::Bonus bonus, ecs::World &world);
         void deleteBonus(ecs::Entity bonus);
-        void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::PlayerId id, ecs::World &world);
+        void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::Player &player, ecs::World &world);
         void deleteBomb(ecs::Entity bomb);
         void spawnWater(Vector3 pos, ecs::GridPosition gPos, Vector3 dir, int distance, ecs::World &world);
         void deleteWater(ecs::Entity water);
         void deleteDestructible(ecs::GridPosition &pos, ecs::World &world);
+
+        void trySpawnBonus(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
 
         void setPlayerAction(ecs::PlayerId id, ecs::Actions action);
         ecs::Actions getPlayerAction(ecs::PlayerId id) const;
@@ -88,26 +83,10 @@ namespace bomberman {
 
         map::Map &getMap();
 
-        const std::set<ecs::Entity> &getPlayers() { return _players; };
+        const std::unordered_map<ecs::PlayerId, ecs::Entity> &getPlayers() { return _players; };
         const std::set<ecs::Entity> &getBombs() { return _bombs; };
         const std::set<ecs::Entity> &getWater() { return _water; };
         const std::set<ecs::Entity> &getBonus() { return _bonus; };
-
-        int getBonusChances() { return _bonusChances; };
-        void setBonusChances(int bonusChances) { _bonusChances = bonusChances; };
-
-        void addBombToPlayer(ecs::PlayerId id) { _bombNbrs[id] += 1;};
-        void removeBombToPlayer(ecs::PlayerId id) { _bombNbrs[id] -= 1; };
-        int getBombNbrs(ecs::PlayerId id) { return _bombNbrs[id]; };
-
-        void setExplodeBonus(int playerNewExplosion) { _playerNewExplosion = playerNewExplosion; };
-        int getExplodeBonus() const { return _playerNewExplosion; };
-        void setSpeedBonus(int playerNewSpeed) { _playerNewSpeed = playerNewSpeed; };
-        int getSpeedBonus() const { return _playerNewSpeed; };
-        void setStunBonus(int playerStun) { _playerStun = playerStun; };
-        int getStunBonus() const { return _playerStun; };
-        void setBombBonus(int playerBombs) { _playerBombs = playerBombs; };
-        int getBombBonus() const { return _playerBombs; };
     };
 
     class GameExecuteActionUpdateSystem : public ecs::ASystem {

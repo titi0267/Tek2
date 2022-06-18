@@ -9,6 +9,14 @@
 #include "scenes/GameServerScene.hpp"
 #include "ecs/components/Player.hpp"
 
+const std::unordered_map<ecs::Bonus, ecs::BonusApplyEffectFct> ecs::BONUS_FCT =
+{
+    {ecs::BONUS_BOMB, [](ecs::Player &player){player.maxBombs++; }},
+    {ecs::BONUS_BOOTS, [](ecs::Player &player){player.speed += SPEED_BOOST; player.speedDuration = SPEED_DURATION; }},
+    {ecs::BONUS_RANGE, [](ecs::Player &player){player.bombRange++; }},
+    {ecs::BONUS_TIG, [](ecs::Player &player){player.tigs++; }},
+};
+
 void ecs::SpawnBonusUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
     _signature = component.generateSignature<GridPosition, SpawnBonus>();
@@ -20,11 +28,11 @@ void ecs::SpawnBonusUpdateSystem::update(ecs::World &world)
     bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
     map::Map &map = scene.getMap();
 
-    const std::set<Entity> &players = scene.getPlayers();
+    const std::unordered_map<PlayerId, Entity> &players = scene.getPlayers();
     std::vector<std::tuple<Entity, Player&, GridPosition&>> playersAlive;
     std::vector<ecs::Entity> toDelete;
 
-    for (Entity pEntity : players) {
+    for (auto &[id, pEntity] : players) {
         Player &player = world.getComponent<Player>(pEntity);
 
         if (player.alive) {
@@ -32,6 +40,7 @@ void ecs::SpawnBonusUpdateSystem::update(ecs::World &world)
             playersAlive.push_back({pEntity, player, gPos});
         }
     }
+
     for (ecs::Entity entity : _entities) {
         Transform &transform = world.getComponent<Transform>(entity);
         ecs::GridPosition &pos = world.getComponent<ecs::GridPosition>(entity);
@@ -39,25 +48,13 @@ void ecs::SpawnBonusUpdateSystem::update(ecs::World &world)
 
         for (auto [pEntity, player, gPos] : playersAlive) {
             if (pos == gPos) {
-                std::cout << "GET ENTITY" << std::endl;
-                switch (spawnBonus.bonus) {
-                    case ecs::Bonus::BOMBBONUS:
-                        player.bombBonus = true;
-                        break;
-                    case ecs::Bonus::BOOTS:
-                        player.bootsBonus = true;
-                        break;
-                    case ecs::Bonus::EXPLODE:
-                        player.explodeBonus = true;
-                        break;
-                    case ecs::Bonus::TIG:
-                        player.tigBonus = true;
-                        break;
-                }
+                BONUS_FCT.at(spawnBonus.bonus)(player);
                 toDelete.push_back(entity);
+                break;
             }
         }
     }
+
     for (ecs::Entity entity : toDelete) {
         world.getEntityCommands(entity).despawn();
         scene.deleteBonus(entity);

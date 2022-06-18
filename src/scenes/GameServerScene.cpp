@@ -120,17 +120,18 @@ void bomberman::GameServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs:
     ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{skinMan.getPlayerSkin(id)},
     ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
 
-    _players.insert(entity);
+    _players.insert({id, entity});
 }
 
-void bomberman::GameServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::PlayerId id, ecs::World &world)
+void bomberman::GameServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::Player &player, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
-    ecs::Entity entity = world.spawn().insert(ecs::BombId {id}, transform, gPos,
+    ecs::Entity entity = world.spawn().insert(ecs::Bomb {player.id, player.bombRange}, transform, gPos,
     ecs::ModelRef {"bottle"}, ecs::Timer{}, ecs::MirrorEntity {}).getEntity();
 
     std::cout << "Spawn bomb " << (int) entity <<std::endl;
     _bombs.insert(entity);
+    player.placedBombs++;
 }
 
 void bomberman::GameServerScene::deleteBomb(ecs::Entity bomb)
@@ -152,13 +153,16 @@ void bomberman::GameServerScene::deleteWater(ecs::Entity water)
     _water.erase(water);
 }
 
-void bomberman::GameServerScene::spawnBonus(Vector3 pos, ecs::GridPosition gPos, const std::string &bonus, ecs::Bonus bonusType, ecs::World &world)
+void bomberman::GameServerScene::spawnBonus(Vector3 pos, ecs::GridPosition gPos, ecs::Bonus bonus, ecs::World &world)
 {
+    const std::unordered_map<ecs::Bonus, std::string> BONUS_TO_STR = {
+        {ecs::BONUS_BOMB, "bonus_bomb"}, {ecs::BONUS_BOOTS, "bonus_boots"}, {ecs::BONUS_RANGE, "bonus_range"}, {ecs::BONUS_TIG, "bonus_tig"},
+    };
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
-    ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef{bonus},
-    ecs::SpawnBonus {bonusType}, ecs::ItemRotation{0.5, 0.25}, ecs::Timer {}, ecs::MirrorEntity {}).getEntity();
+    ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef{BONUS_TO_STR.at(bonus)},
+    ecs::SpawnBonus {bonus}, ecs::ItemRotation{0.5, 0.25}, ecs::Timer {}, ecs::MirrorEntity {}).getEntity();
 
-    std::cout << "ADD " << bonus << std::endl;
+    std::cout << "ADD " << BONUS_TO_STR.at(bonus) << std::endl;
     _bonus.insert(entity);
 }
 
@@ -173,6 +177,16 @@ void bomberman::GameServerScene::deleteDestructible(ecs::GridPosition &pos, ecs:
 
     _destructibles.erase(pos);
     world.getEntityCommands(entity).despawn();
+}
+
+void bomberman::GameServerScene::trySpawnBonus(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
+{
+    ecs::Bonus bonus;
+
+    if (std::rand() % BONUS_SPAWN_INV_CHANCE == 0) {
+        bonus = (ecs::Bonus) (std::rand() % ecs::BONUS_COUNT);
+        spawnBonus(pos, gPos, bonus, world);
+    }
 }
 
 void bomberman::GameServerScene::startNewGame(ecs::World &world)
@@ -207,8 +221,8 @@ void bomberman::GameServerScene::loadSavedGame(ecs::World &world)
             if (!skinMan.hasSkinAssigned(id))
                 skinMan.assignRandomSkin(id);
             world.getComponent<ecs::Skin>(entity) = ecs::Skin(skinMan.getPlayerSkin(id));
-            _players.insert(entity);
-        } else if (world.hasComponent<ecs::BombId>(entity))
+            _players.insert({id, entity});
+        } else if (world.hasComponent<ecs::Bomb>(entity))
             _bombs.insert(entity);
         else if (world.hasComponent<ecs::Water>(entity))
             _water.insert(entity);

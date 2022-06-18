@@ -11,17 +11,24 @@
 #include "ecs/engine/System.hpp"
 
 namespace ecs {
+    const float SPEED_BOOST = 2.0f;
+
+    const float SPEED_DURATION = 2.0f;
+    const float TIG_DURATION = 2.0f;
+
     struct Player {
         PlayerId id;
         bool alive = true;
-        bool bombBonus = false;
-        bool bootsBonus = false;
-        bool tigBonus = false;
-        bool explodeBonus = false;
-        bool isStun = false;
-        bool explodePlaced = false;
-        int maxBomb = 0;
-        std::vector<int> bombNbrs = {0, 0, 0, 0};
+
+        float speed = 2;
+        int bombRange = 4;
+        int maxBombs = 1;
+
+        int placedBombs = 0;
+        int tigs = 0;
+
+        float tigDuration = 0;
+        float speedDuration = 0;
 
         Player(PlayerId id = -1) : id(id) {};
     };
