@@ -33,7 +33,7 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
     std::srand(std::time(nullptr));
 
     map.setCellAt(gPos.x, gPos.y, VOID);
-    for (int i = 0; i < 5 + scene.getExplodeBonus(); i++) {
+    for (int i = 0; i < 5; i++) {
         Vector3 waterPos = transform.translation + DIRECTIONS[i];
         ecs::GridPosition waterGPos = gPos + ecs::GridPosition {(int) DIRECTIONS[i].x, (int) DIRECTIONS[i].z};
 

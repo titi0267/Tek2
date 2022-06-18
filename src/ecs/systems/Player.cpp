@@ -42,12 +42,16 @@ void ecs::PlayerUpdateSystem::update(ecs::World &world)
             }
         }
         if (player.explodeBonus == true) {
-            timeElapsedExplode += clock.getDeltaSec();
-            scene.setExplodeBonus(1);
-            if (timeElapsedExplode > 4) {
-                timeElapsedExplode = 0;
-                player.explodeBonus = false;
-                scene.setExplodeBonus(0);
+            scene.setExplodeBonus(2);
+            if (player.explodePlaced == true) {
+                timeElapsedExplode += clock.getDeltaSec();
+                if (timeElapsedExplode > 5) {
+                    player.explodePlaced = false;
+                    player.explodeBonus = false;
+                    scene.setExplodeBonus(0);
+                    std::cout << "RESET EXPLODE SIZE" << std::endl;
+                    timeElapsedExplode = 0;
+                }
             }
         }
         if (player.bombBonus == true) {
@@ -55,7 +59,7 @@ void ecs::PlayerUpdateSystem::update(ecs::World &world)
         }
         if (player.isStun == true) {
             timeElapsedStun += clock.getDeltaSec();
-            if (timeElapsedStun > 10)
+            if (timeElapsedStun > 2)
                 player.isStun = false;
         }
     }

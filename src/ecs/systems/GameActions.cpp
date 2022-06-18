@@ -80,6 +80,10 @@ void bomberman::GameExecuteActionUpdateSystem::update(ecs::World &world)
         if (action == ecs::DO_NOTHING || move.isMoving || !player.alive)
             continue;
         if (action == ecs::PLACE_BOMB) {
+            if (player.explodeBonus == true) {
+                player.explodePlaced = true;
+                std::cout << "BONUS PLACED" << std::endl;
+            }
             placeBomb(entity, world, scene);
         } else {
             movePlayer(entity, world, action, map);

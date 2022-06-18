@@ -39,9 +39,8 @@ void ecs::WaterUpdateSystem::update(ecs::World &world)
 
             water.expanded = true;
 
-            if (water.distance >= 4 || !newGPos.isValidPos(map))
+            if (water.distance >= 4 + scene.getExplodeBonus() || !newGPos.isValidPos(map))
                 continue;
-
             int cell = map.getCellAt(newGPos.x, newGPos.y);
 
             if (cell == VOID || cell == SPAWN) {
