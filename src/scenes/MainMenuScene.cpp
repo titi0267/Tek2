@@ -451,7 +451,7 @@ void bomberman::MainMenuScene::spawnStaticButton(const Transform &transform, con
 
     world.spawn().insert(transform,
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
-    ecs::ModelRef {"button"}, ecs::SceneMoveElement {0.7});
+    ecs::ModelRef {"button"}, ecs::SceneMoveElement {MOVE_SPEED});
 }
 
 void bomberman::MainMenuScene::spawnTitleButton(const Transform &transform, const std::string &text, ecs::World &world)
