@@ -20,7 +20,8 @@ namespace ecs {
         bool explodeBonus = false;
         bool isStun = false;
         bool explodePlaced = false;
-        bool placeBomb = false;
+        int maxBomb = 0;
+        std::vector<int> bombNbrs = {0, 0, 0, 0};
 
         Player(PlayerId id = -1) : id(id) {};
     };

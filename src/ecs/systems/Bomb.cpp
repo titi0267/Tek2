@@ -27,6 +27,7 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
 
     Transform &transform = world.getComponent<Transform>(entity);
     ecs::GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
+    BombId &bombId = world.getComponent<ecs::BombId>(entity);
     ecs::Bonus randomBonus = NOTHING;
 
     map::Map &map = scene.getMap();
@@ -52,7 +53,7 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
                 randomBonus = static_cast<ecs::Bonus>(std::rand() % 4);
                 switch (randomBonus) {
                     case ecs::Bonus::BOMBBONUS:
-                        scene.spawnBonus(waterPos, waterGPos, "bombBonus", ecs::Bonus::BOOTS, world);
+                        scene.spawnBonus(waterPos, waterGPos, "bombBonus", ecs::Bonus::BOMBBONUS, world);
                     break;
                     case ecs::Bonus::BOOTS:
                         scene.spawnBonus(waterPos, waterGPos, "boots", ecs::Bonus::BOOTS, world);
@@ -79,10 +80,13 @@ void ecs::BombUpdateSystem::update(ecs::World &world)
 
     for (ecs::Entity entity : _entities) {
         Timer &timer = world.getComponent<Timer>(entity);
+        BombId &bombId = world.getComponent<BombId>(entity);
 
         if (timer.timeElapsed >= 2) {
             placeWater(entity, world, scene);
             toDelete.push_back(entity);
+            scene.removeBombToPlayer(bombId.id);
+            std::cout << "REMOVE BOMB FROM " << bombId.id << std::endl;
         }
     }
     for (Entity entity : toDelete) {

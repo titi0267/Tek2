@@ -35,7 +35,7 @@ void ecs::PlayerUpdateSystem::update(ecs::World &world)
 
         if (player.bootsBonus == true) {
            timeElapsedBoots += clock.getDeltaSec();
-           scene.setSpeedBonus(2);
+           scene.setSpeedBonus(1);
             if (timeElapsedBoots > 4) {
                 player.bootsBonus = false;
                 timeElapsedBoots = 0;
@@ -56,19 +56,12 @@ void ecs::PlayerUpdateSystem::update(ecs::World &world)
             }
         }
         if (player.bombBonus == true) {
-
+            player.maxBomb += 1;
         }
         if (player.isStun == true) {
             timeElapsedStun += clock.getDeltaSec();
             if (timeElapsedStun > 2)
                 player.isStun = false;
-        }
-        if (player.placeBomb == true) {
-            timeElapsedPlaceBomb += clock.getDeltaSec();
-            if (timeElapsedPlaceBomb > 4) {
-                player.placeBomb = false;
-                timeElapsedPlaceBomb = 0;
-            }
         }
     }
 }

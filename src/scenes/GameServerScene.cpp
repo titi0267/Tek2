@@ -131,10 +131,10 @@ void bomberman::GameServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs:
     _players.insert(entity);
 }
 
-void bomberman::GameServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
+void bomberman::GameServerScene::spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::PlayerId id, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
-    ecs::Entity entity = world.spawn().insert(ecs::BombId {}, transform, gPos,
+    ecs::Entity entity = world.spawn().insert(ecs::BombId {id}, transform, gPos,
     ecs::ModelRef {"bottle"}, ecs::Timer{}, ecs::MirrorEntity {}).getEntity();
 
     std::cout << "Spawn bomb " << (int) entity <<std::endl;
@@ -154,7 +154,6 @@ void bomberman::GameServerScene::spawnWater(Vector3 pos, ecs::GridPosition gPos,
 
     _water.insert(entity);
 }
-
 
 void bomberman::GameServerScene::deleteWater(ecs::Entity water)
 {

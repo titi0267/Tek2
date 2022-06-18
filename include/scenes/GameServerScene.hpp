@@ -41,6 +41,8 @@ namespace bomberman {
         std::set<ecs::Entity> _water;
         std::unordered_map<ecs::Entity, ecs::Bonus> _bonus;
 
+        std::vector<uint32_t> _bombNbrs = {0, 0, 0, 0};
+
         int _playerNewExplosion = 0;
         int _playerNewSpeed = 0;
         int _playerStun = 0;
@@ -65,7 +67,7 @@ namespace bomberman {
         void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
         void spawnBonus(Vector3 pos, ecs::GridPosition gPos, const std::string &bonus, ecs::Bonus bonusType, ecs::World &world);
         void deleteBonus(ecs::Entity bonus);
-        void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::World &world);
+        void spawnBomb(Vector3 pos, ecs::GridPosition gPos, ecs::PlayerId id, ecs::World &world);
         void deleteBomb(ecs::Entity bomb);
         void spawnWater(Vector3 pos, ecs::GridPosition gPos, Vector3 dir, int distance, ecs::World &world);
         void deleteWater(ecs::Entity water);
@@ -87,6 +89,10 @@ namespace bomberman {
         int getBonusChances() { return _bonusChances; };
         void setBonusChances(int bonusChances) { _bonusChances = bonusChances; };
 
+        void addBombToPlayer(ecs::PlayerId id) { _bombNbrs[id] += 1;};
+        void removeBombToPlayer(ecs::PlayerId id) { _bombNbrs[id] -= 1; };
+        int getBombNbrs(ecs::PlayerId id) { return _bombNbrs[id]; };
+
         void setExplodeBonus(int playerNewExplosion) { _playerNewExplosion = playerNewExplosion; };
         int getExplodeBonus() const { return _playerNewExplosion; };
         void setSpeedBonus(int playerNewSpeed) { _playerNewSpeed = playerNewSpeed; };
@@ -95,6 +101,7 @@ namespace bomberman {
         int getStunBonus() const { return _playerStun; };
         void setBombBonus(int playerBombs) { _playerBombs = playerBombs; };
         int getBombBonus() const { return _playerBombs; };
+
     };
 
     class GameExecuteActionUpdateSystem : public ecs::ASystem {
