@@ -68,6 +68,8 @@ std::deque<ai::PlayerStruct> ai::AiFunc::setPlayer(const std::unordered_map<ecs:
     std::deque<PlayerStruct> player;
 
     for (auto &[id, entity] : list) {
+        if (!world.getComponent<ecs::Player>(entity).alive)
+            continue;
         tmp.id = id;
         tmp.pos = world.getComponent<ecs::GridPosition>(entity);
         player.push_back(tmp);
@@ -129,7 +131,7 @@ ecs::Actions ai::AiFunc::goKill(ecs::PlayerId aiId, map::Map &map, std::deque<Bo
             smallestDist = dist;
         }
     }
-    if (smallestDist <= 1)
+    if (smallestDist <= 2)
         return ecs::Actions::PLACE_BOMB;
     return (action);
 }
@@ -147,7 +149,8 @@ ecs::Actions ai::AiFunc::goReach(ecs::PlayerId aiId, map::Map &map, std::deque<B
     && (!randoum.empty()))
         return (ecs::Actions::PLACE_BOMB);
     randoum.push_back(ecs::Actions::DO_NOTHING);
-    return (randoum[std::rand() % randoum.size()]);
+    action = getClosestDestructible(map, pos);
+    return action != ecs::Actions::DO_NOTHING ? action : randoum[std::rand() % randoum.size()];
 }
 
 std::deque<ecs::Actions> ai::AiFunc::isAroundSafe(map::Map &map, ecs::GridPosition pos)
@@ -234,6 +237,59 @@ ecs::Actions ai::AiFunc::getClosestSafe(map::Map &map, ecs::GridPosition in)
         distance++;
         for (ecs::GridPosition testPos : next) {
             if (map.isWalkableCell(testPos.x, testPos.y) && map.getCellAt(testPos.x, testPos.y) != DANGEROUS) {
+                pos = testPos;
+                found = true;
+                break;
+            }
+        }
+    } while (next.size() > 0 && !found);
+
+    if (!found)
+        return ecs::Actions::DO_NOTHING;
+
+    do {
+        prevPos = pos;
+        pos = getPreviousCell(prevPos, distField, map);
+        distance--;
+        if (pos == in) {
+            if (in.x < prevPos.x)
+                return ecs::MOVE_RIGHT;
+            if (in.x > prevPos.x)
+                return ecs::MOVE_LEFT;
+            if (in.y < prevPos.y)
+                return ecs::MOVE_DOWN;
+            if (in.y > prevPos.y)
+                return ecs::MOVE_UP;
+            return ecs::DO_NOTHING;
+        }
+    } while(distance >= 0);
+    return ecs::DO_NOTHING;
+}
+
+ecs::Actions ai::AiFunc::getClosestDestructible(map::Map &map, ecs::GridPosition in)
+{
+    std::deque<ecs::GridPosition> actual;
+    std::deque<ecs::GridPosition> next;
+    std::vector<int> distField;
+    ecs::GridPosition pos;
+    ecs::GridPosition prevPos;
+    int distance = 1;
+    bool found = false;
+    int index;
+
+    distField.resize(map.getWidth() * map.getHeight(), -1);
+    next.push_back(in);
+    distField.at(in.toArrayIndex(map.getWidth())) = 0;
+    do {
+        actual = next;
+        next.clear();
+        propagateDistField(actual, next, map, distField, distance);
+        distance++;
+        for (ecs::GridPosition testPos : next) {
+            if ((map.isValidCell(testPos.x - 1, testPos.y) && map.getCellAt(testPos.x - 1, testPos.y) == DESTRUCTIBLE)
+            || (map.isValidCell(testPos.x + 1, testPos.y) && map.getCellAt(testPos.x + 1, testPos.y) == DESTRUCTIBLE)
+            || (map.isValidCell(testPos.x, testPos.y - 1) && map.getCellAt(testPos.x, testPos.y - 1) == DESTRUCTIBLE)
+            || (map.isValidCell(testPos.x, testPos.y + 1) && map.getCellAt(testPos.x, testPos.y + 1) == DESTRUCTIBLE)) {
                 pos = testPos;
                 found = true;
                 break;

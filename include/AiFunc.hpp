@@ -53,6 +53,7 @@ namespace ai {
 
         static std::tuple<ecs::Actions, int> PathFinding(map::Map &map, ecs::GridPosition in, ecs::GridPosition out);
         static ecs::Actions getClosestSafe(map::Map &map, ecs::GridPosition in);
+        static ecs::Actions getClosestDestructible(map::Map &map, ecs::GridPosition in);
 
         static void propagateDistField(std::deque<ecs::GridPosition> &actual, std::deque<ecs::GridPosition> &next, map::Map &map, std::vector<int> &distField, int distance);
         static ecs::GridPosition getPreviousCell(ecs::GridPosition pos, std::vector<int> &distField, map::Map &map);
