@@ -16,6 +16,7 @@
 #include "ecs/components/Skin.hpp"
 #include "ecs/components/Player.hpp"
 #include "ecs/components/SpawnBonus.hpp"
+#include "ecs/components/Light.hpp"
 
 void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, const std::string &skin, Vector3 pos, ecs::World &world)
 {
@@ -33,6 +34,7 @@ void bomberman::LobbyServerScene::loadScene(ecs::World &world)
         _actions.insert({i, ecs::DO_NOTHING});
         _updatedThisFrame.insert({i, false});
     }
+    world.spawn().insert(Transform{{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::Light{Vector3{-1, -1, -1}, Vector4{0.8, 0.8, 0.8, 1.0}}, ecs::MirrorEntity{});
 }
 
 void bomberman::LobbyServerScene::unloadScene(ecs::World &world)
