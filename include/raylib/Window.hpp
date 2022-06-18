@@ -199,5 +199,9 @@ namespace raylib {
             }
             return (GetGamepadButtonPressed());
         }
+        void setLogo(const std::string &path)
+        {
+            SetWindowIcon(LoadImage(path.c_str()));
+        }
     };
 }

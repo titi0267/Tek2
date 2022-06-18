@@ -93,3 +93,8 @@ bool InputFile::getGamepad()
 {
     return (_gamepad);
 }
+
+std::string InputFile::getName()
+{
+    return (_name);
+}

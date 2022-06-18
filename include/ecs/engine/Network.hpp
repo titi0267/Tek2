@@ -19,6 +19,7 @@
 #include "network/CPSocket.hpp"
 #include "ecs/engine/World.hpp"
 #include "ecs/engine/PlayerId.hpp"
+#include "input/InputFile.hpp"
 #include "raylib/Vectors.hpp"
 
 namespace ecs {
@@ -76,7 +77,7 @@ namespace ecs {
         ServerManager() : _server(network::CPSocket::createServer()) {};
         ~ServerManager() = default;
 
-        void startServer(const std::string &port) { _server->createServer("127.0.0.1", port); };
+        void startServer(const std::string &port) { _server->createServer("", port); };
         void closeServer() { _server->closeServer(); };
 
         std::vector<network::ConnId> acceptNewConns(World &world);
@@ -169,7 +170,9 @@ namespace ecs {
         public:
         virtual int getNbPlayersOnClient() = 0;
         virtual void onDisconnect(World &world) = 0;
-        virtual void playerIdAssigned(PlayerId id, World &world) = 0;
+        virtual void playerIdAssigned(PlayerId id, World &world, InputFile file) = 0;
+        virtual bool getHost() = 0;
+
     };
 
     class ServerNetworkSceneModule {

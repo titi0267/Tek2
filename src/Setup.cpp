@@ -43,6 +43,8 @@
 #include "ecs/components/DestructibleTile.hpp"
 #include "ecs/components/SpawnBonus.hpp"
 #include "ecs/components/Ai.hpp"
+#include "ecs/components/Disappear.hpp"
+#include "ecs/components/LaunchButton.hpp"
 
 // Those components are mirrored between clients and server
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
@@ -98,10 +100,10 @@ void bomberman::registerInputs(ecs::World &world)
     world.registerSystems<ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem>();
 
     world.registerComponents<ecs::ResolutionButton, ecs::FullscreenButton, ecs::FPSButton,
-    ecs::ToggleButton, ecs::SingleKeyRecorder, ecs::TextInput, ecs::TextInputSettings>();
+    ecs::ToggleButton, ecs::SingleKeyRecorder, ecs::TextInput, ecs::TextInputSettings, ecs::Disappear, ecs::LaunchButton>();
     world.registerSystems<ecs::ResolutionButtonSystem, ecs::FullscreenButtonSystem, ecs::FPSButtonSystem,
     ecs::ShowFPSButtonSystem, ecs::ToggleMusicButtonSystem, ecs::ToggleSoundButtonSystem,
-    ecs::KeyRecorderSystem, ecs::TextInputSystem, ecs::TextInputSettingsSystem>();
+    ecs::KeyRecorderSystem, ecs::TextInputSystem, ecs::TextInputSettingsSystem, ecs::DisappearSystem, ecs::LaunchButtonSystem>();
 }
 
 void bomberman::registerNetwork(ecs::World &world, bool client)

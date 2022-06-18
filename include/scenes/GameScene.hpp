@@ -13,6 +13,7 @@
 #include "ecs/engine/System.hpp"
 #include "ecs/engine/World.hpp"
 #include "ecs/components/SceneMoveElement.hpp"
+#include "input/InputFile.hpp"
 
 namespace bomberman {
     void disconnectFunction(ecs::World &world, ecs::Entity entity);
@@ -49,11 +50,12 @@ namespace bomberman {
 
         int getNbPlayersOnClient() { return _nbPlayers; };
         void onDisconnect(ecs::World &world);
-        void playerIdAssigned(ecs::PlayerId id, ecs::World &world);
+        void playerIdAssigned(ecs::PlayerId id, ecs::World &world, InputFile file);
 
         bool &getMovementRequest() { return _moveRequest; };
         Vector3 &getMoveDest() { return _move; };
         bool &getQuitButtonToggle() { return _buttonToggle; };
+        bool getHost() { return _startLocalServer; };
     };
 
     class GameToggleQuitButtonSystem : public ecs::ASystem {
@@ -62,5 +64,6 @@ namespace bomberman {
 
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
+        void playerIdAssigned(ecs::PlayerId id, ecs::World &world, InputFile file);
     };
 }
