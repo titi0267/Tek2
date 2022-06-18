@@ -31,6 +31,7 @@
 #include "ecs/components/ResolutionButton.hpp"
 #include "ecs/components/TextInput.hpp"
 #include "ecs/components/ToggleButton.hpp"
+#include "ecs/components/ShaderValueSetter.hpp"
 
 // Those components are mirrored between clients and server
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
@@ -61,6 +62,8 @@ void bomberman::registerRender(ecs::World &world)
 
     world.registerComponent<ecs::BackgroundRotation>();
     world.registerSystem<ecs::BackgroundRotationUpdateSystem>();
+
+    world.registerComponent<ecs::ShaderValueSetter>();
 }
 
 void bomberman::registerInputs(ecs::World &world)

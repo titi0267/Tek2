@@ -9,6 +9,7 @@
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/PlayAnimation.hpp"
 #include "ecs/components/Skin.hpp"
+#include "ecs/components/ShaderValueSetter.hpp"
 
 #include "raylib/Camera.hpp"
 #include "raylib/Matrix.hpp"
@@ -45,6 +46,9 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
             Skin &skin = world.getComponent<Skin>(entity);
             model.getMaterialView(skin.matId).setTexture(textMan.getTexture(skin.texture));
         }
+
+        if (world.hasComponent<ShaderValueSetter>(entity))
+            world.getComponent<ShaderValueSetter>(entity).fct(world, entity);
 
         raylib::RlMatrixPush push;
         raylib::rlMultMatrix(mat);

@@ -43,6 +43,7 @@ void bomberman::loadModels(ecs::World &world)
     modelMan.loadModel("button", "./assets/models/button.iqm");
     modelMan.loadModel("large_button", "./assets/models/large_button.iqm");
     modelMan.loadModel("square_button", "./assets/models/square_button.iqm");
+    modelMan.loadModel("progress_button", "./assets/models/button.iqm");
     modelMan.loadModel("logo", "./assets/models/logo.iqm");
 
     modelMan.loadModel("bottle", "./assets/models/bottle.iqm");
@@ -72,7 +73,7 @@ void bomberman::loadShaders(ecs::World &world)
 {
     raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
 
-    // shaderMan.loadShader("button", "./assets/shaders/button.vs", "./assets/shaders/button.fs");
+    shaderMan.loadShader("progress_button", "./assets/shaders/progress_button.vs", "./assets/shaders/progress_button.fs");
 }
 
 void bomberman::loadSounds(ecs::World &world)
@@ -86,6 +87,7 @@ void bomberman::applyAssetsToModels(ecs::World &world)
 {
     raylib::TextureManager &textureMan = world.getRessource<raylib::TextureManager>();
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
+    raylib::ShaderManager &shaderMan = world.getRessource<raylib::ShaderManager>();
 
     modelMan.getModel("logo").getMaterialView(0)
     .setTexture(textureMan.getTexture("logo"));
@@ -98,6 +100,11 @@ void bomberman::applyAssetsToModels(ecs::World &world)
 
     modelMan.getModel("button").getMaterialView(0)
     .setTexture(textureMan.getTexture("button"));
+
+    modelMan.getModel("progress_button").getMaterialView(0)
+    .setTexture(textureMan.getTexture("button"))
+    .setShader(shaderMan.getShader("progress_button"));
+
 
     modelMan.getModel("bottle").getMaterialView(0)
     .setTexture(textureMan.getTexture("bottle"));

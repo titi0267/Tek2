@@ -24,6 +24,7 @@
 #include "raylib/ModelManager.hpp"
 #include "raylib/AnimationManager.hpp"
 #include "raylib/FontManager.hpp"
+#include "raylib/ShaderManager.hpp"
 
 #include "ecs/components/DrawableCube.hpp"
 #include "ecs/components/DrawableModel.hpp"
@@ -38,6 +39,7 @@
 #include "ecs/components/TextInput.hpp"
 #include "ecs/components/BackgroundRotation.hpp"
 #include "ecs/components/Timer.hpp"
+#include "ecs/components/ShaderValueSetter.hpp"
 
 void toggleLoadKeyboard(ecs::World &world, ecs::Entity entity)
 {
@@ -206,6 +208,23 @@ void leftFunction(ecs::World &world, ecs::Entity entity)
     } catch (std::bad_cast) {};
 }
 
+void setProgressShaderValue(ecs::World &world, ecs::Entity entity)
+{
+    raylib::ShaderManager &man = world.getRessource<raylib::ShaderManager>();
+    raylib::Shader &shader = man.getShader("progress_button");
+    static int progressLoc = -1;
+    static int colorLoc = -1;
+    float percentage = 0.5f;
+    Vector4 color = {1.0, 1.0, 0.0, 1.0};
+
+    if (progressLoc == -1) {
+        progressLoc = shader.getShaderLocation("progress");
+        colorLoc = shader.getShaderLocation("progressColor");
+    }
+    shader.setShaderValue(progressLoc, &percentage, SHADER_UNIFORM_FLOAT);
+    shader.setShaderValue(colorLoc, &color, SHADER_UNIFORM_VEC4);
+}
+
 void bomberman::MainMenuScene::loadScene(ecs::World &world)
 {
     raylib::Camera &cam = world.getRessource<raylib::Camera>();
@@ -255,8 +274,8 @@ void bomberman::MainMenuScene::generateAudioSettingsMenu(ecs::World &world)
     spawnToggleButton({{-30, y - 1, -2}, rot, {1, 1, 1}}, "Music is on!", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::MUSIC);
     spawnToggleButton({{-30, y - 2, -2}, rot, {1, 1, 1}}, "Sound is on!", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
     // CHANGE WITH NUANCER
-    spawnToggleButton({{-30, y - 3, -2}, rot, {1, 1, 1}}, ("Music: 100" ), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
-    spawnToggleButton({{-30, y - 4, -2}, rot, {1, 1, 1}}, ("Sound: 100"), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
+    spawnProgressButton({{-30, y - 3, -2}, rot, {1, 1, 1}}, ("Music: 100" ), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
+    spawnProgressButton({{-30, y - 4, -2}, rot, {1, 1, 1}}, ("Sound: 100"), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
     // CHANGE WITH NUANCER
     spawnButton({{-30, y - 5, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
 }
@@ -430,6 +449,20 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
     ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Timer {}, ecs::Clickable {doOnClick},
     ecs::SceneMoveElement {MOVE_SPEED}, ecs::ToggleButton {usage});
+}
+
+void bomberman::MainMenuScene::spawnProgressButton(const Transform &transform, const std::string &text,
+const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, ecs::ToggleButton::Usage usage)
+{
+    const float BUTTON_SIZE = 3;
+
+    world.spawn().insert(transform,
+    ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
+    ecs::ModelRef {"progress_button"}, hoverTint.base,
+    ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Timer {}, ecs::Clickable {doOnClick},
+    ecs::SceneMoveElement {MOVE_SPEED}, ecs::ToggleButton {usage},
+    ecs::ShaderValueSetter{setProgressShaderValue});
 }
 
 void bomberman::MainMenuScene::spawnTextInputButton(const Transform &transform, const std::string &text,
