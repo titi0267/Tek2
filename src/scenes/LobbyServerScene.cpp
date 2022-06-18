@@ -9,6 +9,7 @@
 
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/PlayersManager.hpp"
+#include "ecs/engine/SkinManager.hpp"
 #include "ecs/engine/EntityCommands.hpp"
 
 #include "ecs/components/DrawableModel.hpp"
@@ -16,36 +17,22 @@
 #include "ecs/components/Player.hpp"
 #include "ecs/components/SpawnBonus.hpp"
 
-void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::World &world)
+void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, const std::string &skin, Vector3 pos, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
-    ecs::Entity entity;
-    switch (id) {
-        case 0:
-            entity = world.spawn().insert(ecs::Player{id}, transform,
-            ecs::ModelRef("player"), ecs::Skin{"mathieu"}, ecs::MirrorEntity {}).getEntity();
-        break;
-        case 1:
-            entity = world.spawn().insert(ecs::Player{id}, transform,
-            ecs::ModelRef("player"), ecs::Skin{"ludovic"}, ecs::MirrorEntity {}).getEntity();
-        break;
-        case 2:
-            entity = world.spawn().insert(ecs::Player{id}, transform,
-            ecs::ModelRef("player"), ecs::Skin{"timothe"}, ecs::MirrorEntity {}).getEntity();
-        break;
-        case 3:
-            entity = world.spawn().insert(ecs::Player{id}, transform,
-            ecs::ModelRef("player"), ecs::Skin{"jeffrey"}, ecs::MirrorEntity {}).getEntity();
-        break;
-    }
+    ecs::Entity entity = world.spawn().insert(ecs::Player{id}, transform,
+    ecs::ModelRef("player"), ecs::Skin{skin}, ecs::MirrorEntity {}).getEntity();
+
     _players.insert({id, entity});
 }
 
 void bomberman::LobbyServerScene::loadScene(ecs::World &world)
 {
     world.registerSystems<LobbyExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem>();
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++) {
         _actions.insert({i, ecs::DO_NOTHING});
+        _updatedThisFrame.insert({i, false});
+    }
 }
 
 void bomberman::LobbyServerScene::unloadScene(ecs::World &world)
@@ -71,9 +58,11 @@ void bomberman::LobbyServerScene::onDisconnect(ConnId conn, ecs::World &world)
 {
     ecs::PlayersManager &man = world.getRessource<ecs::PlayersManager>();
     std::vector<ecs::PlayerId> ids = man.getPlayersOfConn(conn);
+    ecs::SkinManager &skinMan = world.getRessource<ecs::SkinManager>();
 
     for (ecs::PlayerId id : ids) {
         ecs::Entity entity = _players[id];
+        skinMan.unassignedSkin(id, false);
         world.getEntityCommands(entity).despawn();
         _ready.erase(id);
     }
@@ -82,9 +71,11 @@ void bomberman::LobbyServerScene::onDisconnect(ConnId conn, ecs::World &world)
 
 void bomberman::LobbyServerScene::onPlayerIdAttributed(ecs::PlayerId id, ecs::World &world)
 {
+    ecs::SkinManager &skinMan = world.getRessource<ecs::SkinManager>();
     Vector3 pos = {id * 2.0f - 3.0f, 0, -5};
+    const std::string &skin = skinMan.assignRandomSkin(id);
 
-    spawnPlayer(id, pos, world);
+    spawnPlayer(id, skin, pos, world);
     _ready.insert({id, false});
 }
 

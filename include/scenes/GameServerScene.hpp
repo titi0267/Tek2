@@ -32,8 +32,9 @@ namespace bomberman {
         using ConnId = network::ConnId;
 
         std::unordered_map<ecs::PlayerId, ecs::Actions> _actions;
-        map::Map _map;
+        std::unordered_map<ecs::PlayerId, bool> _updatedThisFrame;
 
+        map::Map _map;
         std::unordered_map<ecs::GridPosition, ecs::Entity> _destructibles;
 
         std::set<ecs::Entity> _players;
@@ -55,6 +56,9 @@ namespace bomberman {
         void spawnFloor(Vector2 mapSize, ecs::World &world);
         void generateMapProps(ecs::World &world);
 
+        void startNewGame(ecs::World &world);
+        void loadSavedGame(ecs::World &world);
+
         public:
         GameServerScene(const void *data) : _map(15, 15, 4, 4) {};
 
@@ -73,6 +77,8 @@ namespace bomberman {
 
         void setPlayerAction(ecs::PlayerId id, ecs::Actions action);
         ecs::Actions getPlayerAction(ecs::PlayerId id) const;
+        bool isActionUpdatedThisFrame(ecs::PlayerId id) const { return _updatedThisFrame.at(id); };
+        void setActionUpdatedThisFrame(ecs::PlayerId id, bool updated) { _updatedThisFrame.at(id) = updated; };
 
         void onConnect(ConnId conn, ecs::World &world) {};
         void onDisconnect(ConnId conn, ecs::World &world) {};

@@ -12,6 +12,7 @@
 
 #include "ecs/engine/EntityCommands.hpp"
 #include "ecs/engine/PlayersManager.hpp"
+#include "ecs/engine/SkinManager.hpp"
 
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/DrawableCube.hpp"
@@ -30,6 +31,7 @@
 #include "ecs/components/Grid.hpp"
 
 #include <iostream>
+#include <filesystem>
 #include "raylib/Matrix.hpp"
 
 const float ROTATIONS[4] = {
@@ -108,26 +110,15 @@ void bomberman::GameServerScene::generateMapProps(ecs::World &world)
 
 void bomberman::GameServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::GridPosition gPos, ecs::World &world)
 {
+    ecs::SkinManager &skinMan = world.getRessource<ecs::SkinManager>();
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
-    ecs::Entity entity;
-    switch (id) {
-        case 0:
-            entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
-            ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"mathieu"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
-        break;
-        case 1:
-            entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
-            ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"ludovic"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
-        break;
-        case 2:
-            entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
-            ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"timothe"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
-        break;
-        case 3:
-            entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
-            ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{"jeffrey"}, ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
-        break;
-    }
+
+    if (!skinMan.hasSkinAssigned(id))
+        skinMan.assignRandomSkin(id);
+    ecs::Entity entity = world.spawn().insert(ecs::Player{id}, transform, gPos,
+    ecs::Movement{}, ecs::ModelRef("player"), ecs::Skin{skinMan.getPlayerSkin(id)},
+    ecs::PlayAnimation{}, ecs::MirrorEntity {}).getEntity();
+
     _players.insert(entity);
 }
 
@@ -183,53 +174,72 @@ void bomberman::GameServerScene::deleteDestructible(ecs::GridPosition &pos, ecs:
     world.getEntityCommands(entity).despawn();
 }
 
-void bomberman::GameServerScene::loadScene(ecs::World &world)
+void bomberman::GameServerScene::startNewGame(ecs::World &world)
 {
-    int playerId = 0;
     int width = _map.getWidth();
     int height = _map.getHeight();
-    std::ifstream file("bombitek.dat", std::ios_base::in | std::ios_base::binary);
+    int playerId = 0;
     Vector3 pos;
 
+    generateMapProps(world);
+    for (int y = 0; y < height; y++) {
+        for (int x = 0; x < width; x++) {
+            if (_map.getCellAt(x, y) == SPAWN) {
+                pos = mapCoordsToWorldCoords(x, y);
+                spawnPlayer(playerId++, pos, {x, y}, world);
+            }
+        }
+    }
+}
+
+void bomberman::GameServerScene::loadSavedGame(ecs::World &world)
+{
+    ecs::SkinManager &skinMan = world.getRessource<ecs::SkinManager>();
+    std::ifstream file("bombitek.dat", std::ios_base::in | std::ios_base::binary);
+    ecs::PlayerId id;
+
+    world.decodeEntities(file);
+    for (ecs::Entity entity : world.getLivingEntities()) {
+        if (world.hasComponent<ecs::Player>(entity)) {
+            id = world.getComponent<ecs::Player>(entity).id;
+
+            if (!skinMan.hasSkinAssigned(id))
+                skinMan.assignRandomSkin(id);
+            world.getComponent<ecs::Skin>(entity) = ecs::Skin(skinMan.getPlayerSkin(id));
+            _players.insert(entity);
+        } else if (world.hasComponent<ecs::BombId>(entity))
+            _bombs.insert(entity);
+        else if (world.hasComponent<ecs::Water>(entity))
+            _water.insert(entity);
+        else if (world.hasComponent<ecs::DestructibleTile>(entity))
+            _destructibles.insert({world.getComponent<ecs::GridPosition>(entity), entity});
+
+        if (world.hasComponent<ecs::MirrorEntity>(entity))
+            world.getComponent<ecs::MirrorEntity>(entity).size = 0;
+    }
+    _map.load("bombitek.map");
+}
+
+void bomberman::GameServerScene::loadScene(ecs::World &world)
+{
     world.registerSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
     ecs::BombUpdateSystem, ecs::MovementUpdateSystem,
     GameCheckWinSystem, ecs::SpawnBonusUpdateSystem, ecs::PlayerUpdateSystem,
     ecs::PlayerCollisionUpdateSystem>();
 
-    for (int i = 0; i < 4; i++)
+    for (int i = 0; i < 4; i++) {
         _actions.insert({i, ecs::DO_NOTHING});
-
-    if (!file.is_open()) {
-        generateMapProps(world);
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (_map.getCellAt(x, y) == SPAWN) {
-                    pos = mapCoordsToWorldCoords(x, y);
-                    spawnPlayer(playerId++, pos, {x, y}, world);
-                }
-            }
-        }
-    } else {
-        world.decodeEntities(file);
-        for (ecs::Entity entity : world.getLivingEntities()) {
-            if (world.hasComponent<ecs::Player>(entity))
-                _players.insert(entity);
-            else if (world.hasComponent<ecs::BombId>(entity))
-                _bombs.insert(entity);
-            else if (world.hasComponent<ecs::Water>(entity))
-                _water.insert(entity);
-            else if (world.hasComponent<ecs::DestructibleTile>(entity))
-                _destructibles.insert({world.getComponent<ecs::GridPosition>(entity), entity});
-
-            if (world.hasComponent<ecs::MirrorEntity>(entity))
-                world.getComponent<ecs::MirrorEntity>(entity).size = 0;
-        }
-        _map.load("bombitek.map");
+        _updatedThisFrame.insert({i, false});
     }
 
+    if (std::filesystem::exists("bombitek.dat") && std::filesystem::exists("bombitek.map"))
+        loadSavedGame(world);
+    else
+        startNewGame(world);
+
     world.getRessource<ecs::PlayersManager>().stopAcceptingPlayers();
-    world.getRessource<ecs::ServerManager>().moveCameras({0, 16, 3}, {0, 0, 0});
+    world.getRessource<ecs::ServerManager>().moveCameras({0, 13, 3}, {0, 0, 0.5});
 }
 
 void bomberman::GameServerScene::unloadScene(ecs::World &world)

@@ -23,6 +23,7 @@ add_executable(bomberman
     "src/ecs/engine/ServerManager.cpp"
     "src/ecs/engine/SceneManager.cpp"
     "src/ecs/engine/PlayersManager.cpp"
+    "src/ecs/engine/SkinManager.cpp"
     "src/ecs/engine/InternalServer.cpp"
 
     "src/input/GamepadBind.cpp"

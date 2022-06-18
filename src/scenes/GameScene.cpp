@@ -78,9 +78,12 @@ void bomberman::GameScene::unloadScene(ecs::World &world)
 
 void bomberman::GameScene::entityKilled(ecs::Entity entity, ecs::World &world)
 {
-    if (world.getRessource<ecs::ClientManager>().isConnected()
-    && world.hasComponent<ecs::MirrorEntity>(entity))
-        world.getRessource<ecs::ClientManager>().killLocalEntity(entity, world);
+    ecs::ClientManager &man = world.getRessource<ecs::ClientManager>();
+
+    if (man.isConnected() && world.hasComponent<ecs::MirrorEntity>(entity))
+        man.killLocalEntity(entity, world);
+    else if (world.hasComponent<ecs::MirroredEntity>(entity))
+        man.deleteServerEntity(entity, world);
 }
 
 void bomberman::GameScene::onDisconnect(ecs::World &world)

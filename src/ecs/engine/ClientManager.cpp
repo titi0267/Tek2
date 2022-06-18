@@ -257,6 +257,13 @@ void ecs::ClientManager::handleMoveCamera(ecs::World &world)
     cam.setTarget(target);
 }
 
+void ecs::ClientManager::deleteServerEntity(Entity entity, World &world)
+{
+    MirroredEntity &mirrored = world.getComponent<MirroredEntity>(entity);
+
+    _serverToClient.erase(mirrored.foreignEntity);
+}
+
 void ecs::ClientUpdateSystem::setSignature(ComponentManager &component)
 {
     _signature = component.generateSignature<MirrorEntity>();

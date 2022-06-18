@@ -81,5 +81,7 @@ namespace ecs {
         public:
         virtual void setPlayerAction(ecs::PlayerId id, ecs::Actions action) = 0;
         virtual ecs::Actions getPlayerAction(ecs::PlayerId id) const = 0;
+        virtual bool isActionUpdatedThisFrame(ecs::PlayerId id) const = 0;
+        virtual void setActionUpdatedThisFrame(ecs::PlayerId id, bool updated) = 0;
     };
 }
