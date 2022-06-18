@@ -14,6 +14,7 @@
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/InternalServer.hpp"
 #include "ecs/engine/Clock.hpp"
+#include "ecs/engine/LaunchManager.hpp"
 
 #include "input/BindsManager.hpp"
 
@@ -66,6 +67,7 @@ int main(int ac, char **av)
 
     world.insertRessource<ecs::ClientManager>();
     world.insertRessource<ecs::InternalServer>();
+    world.insertRessource<ecs::LaunchManager>();
 
 // ----- [INIT RESSOURCES] -----
 
@@ -85,6 +87,7 @@ int main(int ac, char **av)
     raylib::Window &window = world.getRessource<raylib::Window>();
     ecs::Clock &clock = world.getRessource<ecs::Clock>();
 
+    window.setLogo("./assets/bombitek.png");
     window.setTargetFPS(60);
     window.resize({1280, 720});
     while (!window.shouldClose()) {

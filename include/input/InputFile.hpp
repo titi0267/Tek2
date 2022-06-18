@@ -35,6 +35,7 @@ class InputFile {
         int getKey(IBind::Binding bind);
         std::string getKeyText(IBind::Binding bind);
         bool getGamepad(void);
+        std::string getName();
 
     protected:
         std::string _name;

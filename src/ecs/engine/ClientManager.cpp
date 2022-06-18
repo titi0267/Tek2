@@ -13,6 +13,7 @@
 #include "ecs/engine/Clock.hpp"
 #include "network/SocketError.hpp"
 #include "raylib/Camera.hpp"
+#include "ecs/engine/LaunchManager.hpp"
 
 bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
 {
@@ -231,16 +232,18 @@ void ecs::ClientManager::killLocalEntity(Entity entity, World &world)
 
 void ecs::ClientManager::handlePlayersCreated(World &world)
 {
+    ecs::LaunchManager &lman = world.getRessource<ecs::LaunchManager>();
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     ClientNetworkSceneModule &scene = dynamic_cast<ClientNetworkSceneModule&>(man.getScene());
     int nbPlayers = scene.getNbPlayersOnClient();
+    bool host = scene.getHost();
     PlayerId id;
 
     std::cout << "[CLIENT] Players created" << std::endl;
     for (int i = 0; i < nbPlayers; i++) {
         if (tryRead(&id, sizeof(PlayerId)))
             return;
-        scene.playerIdAssigned(id, world);
+        scene.playerIdAssigned(id, world, std::move(lman.getAt(host, i)));
     }
 }
 

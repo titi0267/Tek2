@@ -10,6 +10,7 @@
 #include "ecs/engine/SceneManager.hpp"
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/PlayersManager.hpp"
+#include "input/InputFile.hpp"
 
 namespace bomberman {
     void successConn(ecs::World &world, void *obj);
@@ -41,6 +42,7 @@ namespace bomberman {
 
         int getNbPlayersOnClient() { return _nbPlayers; };
         void onDisconnect(ecs::World &world);
-        void playerIdAssigned(ecs::PlayerId id, ecs::World &world);
+        void playerIdAssigned(ecs::PlayerId id, ecs::World &world, InputFile file);
+        bool getHost() { return _startLocalServer; };
     };
 }

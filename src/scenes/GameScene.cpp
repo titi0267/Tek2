@@ -67,9 +67,8 @@ void bomberman::GameScene::onDisconnect(ecs::World &world)
     world.getRessource<ecs::SceneManager>().changeScene(ecs::MAIN_MENU_SCENE, nullptr);
 }
 
-void bomberman::GameScene::playerIdAssigned(ecs::PlayerId id, ecs::World &world)
+void bomberman::GameScene::playerIdAssigned(ecs::PlayerId id, ecs::World &world, InputFile file)
 {
     std::cout << "player id : " << id << std::endl;
-    InputFile a(false);
-    world.spawn().insert(ecs::PlayerInputs{ a }, ecs::PlayerAction{ id }, ecs::MirrorEntity{});
+    world.spawn().insert(ecs::PlayerInputs{ file }, ecs::PlayerAction{ id }, ecs::MirrorEntity{});
 }

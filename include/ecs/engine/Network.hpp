@@ -18,6 +18,7 @@
 #include "network/CPSocket.hpp"
 #include "ecs/engine/World.hpp"
 #include "ecs/engine/PlayerId.hpp"
+#include "input/InputFile.hpp"
 #include "raylib/Vectors.hpp"
 
 namespace ecs {
@@ -160,7 +161,9 @@ namespace ecs {
         public:
         virtual int getNbPlayersOnClient() = 0;
         virtual void onDisconnect(World &world) = 0;
-        virtual void playerIdAssigned(PlayerId id, World &world) = 0;
+        virtual void playerIdAssigned(PlayerId id, World &world, InputFile file) = 0;
+        virtual bool getHost() = 0;
+
     };
 
     class ServerNetworkSceneModule {
