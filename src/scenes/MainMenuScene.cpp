@@ -228,11 +228,10 @@ void connectFunction(ecs::World &world, ecs::Entity entity)
     std::smatch match;
     Color &col = world.getComponent<Color>(entity);
 
-    if (!std::regex_search(man.getIpPort(), match, std::regex("((?:[0-9]{1,3}.){3}[0-9]{1,3})((?:[0-9]{0,5}))?"))) {
+    if (!std::regex_search(man.getIpPort(), match, std::regex("((?:[0-9]{1,3}.){3}[0-9]{1,3}) ((?:[0-9]{0,5}))?"))) {
         col = RED;
         return;
     }
-    std::cout << match[1].str() << " " << match[2].str() << std::endl;
     world.getRessource<ecs::SceneManager>().changeScene(ecs::GAME_SCENE,
     std::make_shared<bomberman::GameSceneArgs>(match[1].str(), match[2].str(), false, man.getNbPlayers(false)));
 }

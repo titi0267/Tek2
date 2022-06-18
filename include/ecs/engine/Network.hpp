@@ -76,7 +76,7 @@ namespace ecs {
         ServerManager() : _server(network::CPSocket::createServer()) {};
         ~ServerManager() = default;
 
-        void startServer(const std::string &port) { _server->createServer("0.0.0.0", port); };
+        void startServer(const std::string &port) { _server->createServer("", port); };
         void closeServer() { _server->closeServer(); };
 
         std::vector<network::ConnId> acceptNewConns(World &world);
@@ -136,7 +136,7 @@ namespace ecs {
         void updateLocalEntity(Entity entity, World &world);
         void killLocalEntity(Entity entity, World &world);
 
-        void connectTo(const std::string &ip = "127.0.0.1", const std::string &port = "4243") { _client->connectTo(ip, port); };
+        void connectTo(const std::string &ip = "127.0.0.1", const std::string &port = "4242") { _client->connectTo(ip, port); };
         void disconnect() { _client->disconnect(); };
         bool isConnected() { return _client->isConnected(); };
     };
