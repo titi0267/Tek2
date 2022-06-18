@@ -41,6 +41,11 @@ namespace bomberman {
         std::set<ecs::Entity> _water;
         std::unordered_map<ecs::Entity, ecs::Bonus> _bonus;
 
+        int _playerNewExplosion = 0;
+        int _playerNewSpeed = 0;
+        int _playerStun = 0;
+        int _playerBombs = 0;
+
         int _bonusChances = 3;
 
         Vector3 mapCoordsToWorldCoords(int x, int y);
@@ -81,6 +86,15 @@ namespace bomberman {
         const ecs::Bonus &getBonus(ecs::Entity &entity) { return _bonus.at(entity); };
         int getBonusChances() { return _bonusChances; };
         void setBonusChances(int bonusChances) { _bonusChances = bonusChances; };
+
+        void setExplodeBonus(int playerNewExplosion) { _playerNewExplosion = playerNewExplosion; };
+        int getExplodeBonus() const { return _playerNewExplosion; };
+        void setSpeedBonus(int playerNewSpeed) { _playerNewSpeed = playerNewSpeed; };
+        int getSpeedBonus() const { return _playerNewSpeed; };
+        void setStunBonus(int playerStun) { _playerStun = playerStun; };
+        int getStunBonus() const { return _playerStun; };
+        void setBombBonus(int playerBombs) { _playerBombs = playerBombs; };
+        int getBombBonus() const { return _playerBombs; };
     };
 
     class GameExecuteActionUpdateSystem : public ecs::ASystem {

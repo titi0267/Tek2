@@ -42,6 +42,9 @@ void bomberman::GameExecuteActionUpdateSystem::movePlayer(ecs::Entity entity, ec
         {ecs::MOVE_RIGHT, PI / 2.0},
     };
 
+    ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
+    bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
+
     Transform &transform = world.getComponent<Transform>(entity);
     ecs::GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
     ecs::Movement &move = world.getComponent<ecs::Movement>(entity);
@@ -53,10 +56,10 @@ void bomberman::GameExecuteActionUpdateSystem::movePlayer(ecs::Entity entity, ec
     if (gDest.x < 0 || gDest.y < 0 || gDest.x > map.getWidth() - 1 || gDest.y > map.getHeight() - 1)
         return;
 
-    if (map.getCellAt(gDest.x, gDest.y) == VOID || map.getCellAt(gDest.x, gDest.y) == SPAWN) {
-        std::cout << "[MOVE] TO " << gDest.x << ", " << gDest.y << " [SPEED] " << player.playerNewSpeed << std::endl;
+    if ((map.getCellAt(gDest.x, gDest.y) == VOID || map.getCellAt(gDest.x, gDest.y) == SPAWN) && player.isStun == false) {
+        std::cout << "[MOVE] TO " << gDest.x << ", " << gDest.y << " [SPEED] " << 2 + scene.getSpeedBonus() << std::endl;
         gPos = gDest;
-        move.move(transform.translation + moveVec, 2 + player.playerNewSpeed);
+        move.move(transform.translation + moveVec, 2 + scene.getSpeedBonus());
         transform.rotation = QuaternionFromEuler(0, ROTATIONS.at(action), 0);
         world.getComponent<ecs::PlayAnimation>(entity).play("playerAnims", 0, 0.5, false);
     } else

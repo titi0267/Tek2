@@ -184,7 +184,8 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
     world.registerSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
     ecs::BombUpdateSystem, ecs::MovementUpdateSystem,
-    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem, ecs::PlayerUpdateSystem>();
+    GameCheckWinSystem, ecs::SpawnBonusUpdateSystem, ecs::PlayerUpdateSystem,
+    ecs::PlayerCollisionUpdateSystem>();
 
     for (int i = 0; i < 4; i++)
         _actions.insert({i, ecs::DO_NOTHING});

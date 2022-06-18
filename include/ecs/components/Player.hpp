@@ -18,7 +18,7 @@ namespace ecs {
         bool bootsBonus = false;
         bool tigBonus = false;
         bool explodeBonus = false;
-        int playerNewSpeed = 0;
+        bool isStun = false;
 
         Player(PlayerId id = -1) : id(id) {};
     };
@@ -29,7 +29,11 @@ namespace ecs {
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
     };
-    class BonusCollisionUpdateSystem {
+    class PlayerCollisionUpdateSystem : public ecs::ASystem {
+        public:
+        PlayerCollisionUpdateSystem() { _stage = ecs::Stages::UPDATE; };
 
+        void setSignature(ecs::ComponentManager &component);
+        void update(ecs::World &world);
     };
 }

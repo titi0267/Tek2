@@ -8,6 +8,7 @@
 #include "ecs/components/Bomb.hpp"
 #include "ecs/components/Water.hpp"
 #include "scenes/GameServerScene.hpp"
+#include "ecs/components/Player.hpp"
 
 void ecs::BombUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
@@ -32,7 +33,7 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
     std::srand(std::time(nullptr));
 
     map.setCellAt(gPos.x, gPos.y, VOID);
-    for (int i = 0; i < 5; i++) {
+    for (int i = 0; i < 5 + scene.getExplodeBonus(); i++) {
         Vector3 waterPos = transform.translation + DIRECTIONS[i];
         ecs::GridPosition waterGPos = gPos + ecs::GridPosition {(int) DIRECTIONS[i].x, (int) DIRECTIONS[i].z};
 
@@ -57,10 +58,10 @@ void ecs::BombUpdateSystem::placeWater(ecs::Entity entity, ecs::World &world, bo
                         scene.spawnBonus(waterPos, waterGPos, "boots", ecs::Bonus::BOOTS, world);
                     break;
                     case ecs::Bonus::EXPLODE:
-                        scene.spawnBonus(waterPos, waterGPos, "explode", ecs::Bonus::BOOTS, world);
+                        scene.spawnBonus(waterPos, waterGPos, "explode", ecs::Bonus::EXPLODE, world);
                     break;
                     default:
-                        scene.spawnBonus(waterPos, waterGPos, "tig", ecs::Bonus::BOOTS, world);
+                        scene.spawnBonus(waterPos, waterGPos, "tig", ecs::Bonus::TIG, world);
                     break;
                 }
             } else {

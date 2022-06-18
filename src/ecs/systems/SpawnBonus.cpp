@@ -56,7 +56,6 @@ void ecs::SpawnBonusUpdateSystem::update(ecs::World &world)
                     default:
                     break;
                 }
-                std::cout << "GOT ENTITY" << std::endl;
                 toDelete.push_back(entity);
             }
         }
