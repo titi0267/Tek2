@@ -256,7 +256,7 @@ void bomberman::GameServerScene::loadScene(ecs::World &world)
         startNewGame(world);
 
     world.getRessource<ecs::PlayersManager>().stopAcceptingPlayers();
-    world.getRessource<ecs::ServerManager>().moveCameras({0, 13, 3}, {0, 0, 0.5});
+    world.getRessource<ecs::ServerManager>().moveCameras({0, 14, 4}, {0, 0, 0});
 }
 
 void bomberman::GameServerScene::unloadScene(ecs::World &world)
