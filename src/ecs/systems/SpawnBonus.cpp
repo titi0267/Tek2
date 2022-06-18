@@ -40,21 +40,19 @@ void ecs::SpawnBonusUpdateSystem::update(ecs::World &world)
         for (auto [pEntity, player, gPos] : playersAlive) {
             if (pos == gPos) {
                 std::cout << "GET ENTITY" << std::endl;
-                switch (scene.getBonus(entity)) {
+                switch (spawnBonus.bonus) {
                     case ecs::Bonus::BOMBBONUS:
                         player.bombBonus = true;
-                    break;
+                        break;
                     case ecs::Bonus::BOOTS:
                         player.bootsBonus = true;
-                    break;
+                        break;
                     case ecs::Bonus::EXPLODE:
                         player.explodeBonus = true;
-                    break;
+                        break;
                     case ecs::Bonus::TIG:
                         player.tigBonus = true;
-                    break;
-                    default:
-                    break;
+                        break;
                 }
                 toDelete.push_back(entity);
             }

@@ -55,6 +55,7 @@ add_executable(bomberman
     "src/ecs/systems/Player.cpp"
     "src/ecs/systems/DrawGrid.cpp"
     "src/ecs/systems/GameToggleQuit.cpp"
+    "src/ecs/systems/ItemRotation.cpp"
 
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"

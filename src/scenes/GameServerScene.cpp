@@ -29,6 +29,7 @@
 #include "ecs/components/DestructibleTile.hpp"
 #include "ecs/components/SpawnBonus.hpp"
 #include "ecs/components/Grid.hpp"
+#include "ecs/components/ItemRotation.hpp"
 
 #include <iostream>
 #include <filesystem>
@@ -154,10 +155,11 @@ void bomberman::GameServerScene::deleteWater(ecs::Entity water)
 void bomberman::GameServerScene::spawnBonus(Vector3 pos, ecs::GridPosition gPos, const std::string &bonus, ecs::Bonus bonusType, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
-    ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef{bonus}, ecs::SpawnBonus {}, ecs::MirrorEntity {}).getEntity();
+    ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef{bonus},
+    ecs::SpawnBonus {bonusType}, ecs::ItemRotation{0.5, 0.25}, ecs::Timer {}, ecs::MirrorEntity {}).getEntity();
 
     std::cout << "ADD " << bonus << std::endl;
-    _bonus.insert({entity, bonusType});
+    _bonus.insert(entity);
 }
 
 void bomberman::GameServerScene::deleteBonus(ecs::Entity bonus)
@@ -212,6 +214,8 @@ void bomberman::GameServerScene::loadSavedGame(ecs::World &world)
             _water.insert(entity);
         else if (world.hasComponent<ecs::DestructibleTile>(entity))
             _destructibles.insert({world.getComponent<ecs::GridPosition>(entity), entity});
+        else if (world.hasComponent<ecs::SpawnBonus>(entity))
+            _bonus.insert(entity);
 
         if (world.hasComponent<ecs::MirrorEntity>(entity))
             world.getComponent<ecs::MirrorEntity>(entity).size = 0;

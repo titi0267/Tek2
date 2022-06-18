@@ -25,6 +25,7 @@ namespace ecs {
 
         Player(PlayerId id = -1) : id(id) {};
     };
+
     class PlayerUpdateSystem : public ecs::ASystem {
         public:
         PlayerUpdateSystem() { _stage = ecs::Stages::UPDATE; };
@@ -32,6 +33,7 @@ namespace ecs {
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
     };
+
     class PlayerCollisionUpdateSystem : public ecs::ASystem {
         public:
         PlayerCollisionUpdateSystem() { _stage = ecs::Stages::UPDATE; };

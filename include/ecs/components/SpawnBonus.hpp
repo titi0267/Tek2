@@ -18,11 +18,11 @@ namespace ecs {
         NOTHING
     };
     struct SpawnBonus {
-        Bonus _bonusType = NOTHING;
+        Bonus bonus = NOTHING;
 
-        SpawnBonus() {};
-        Bonus getBonus() const { return _bonusType; };
+        SpawnBonus(Bonus bonus = NOTHING) : bonus(bonus) {};
     };
+
     class SpawnBonusUpdateSystem : public ecs::ASystem {
         public:
         SpawnBonusUpdateSystem() { _stage = ecs::Stages::UPDATE; };

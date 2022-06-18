@@ -40,7 +40,7 @@ namespace bomberman {
         std::set<ecs::Entity> _players;
         std::set<ecs::Entity> _bombs;
         std::set<ecs::Entity> _water;
-        std::unordered_map<ecs::Entity, ecs::Bonus> _bonus;
+        std::set<ecs::Entity> _bonus;
 
         std::vector<uint32_t> _bombNbrs = {0, 0, 0, 0};
 
@@ -91,7 +91,8 @@ namespace bomberman {
         const std::set<ecs::Entity> &getPlayers() { return _players; };
         const std::set<ecs::Entity> &getBombs() { return _bombs; };
         const std::set<ecs::Entity> &getWater() { return _water; };
-        const ecs::Bonus &getBonus(ecs::Entity &entity) { return _bonus.at(entity); };
+        const std::set<ecs::Entity> &getBonus() { return _bonus; };
+
         int getBonusChances() { return _bonusChances; };
         void setBonusChances(int bonusChances) { _bonusChances = bonusChances; };
 
@@ -107,7 +108,6 @@ namespace bomberman {
         int getStunBonus() const { return _playerStun; };
         void setBombBonus(int playerBombs) { _playerBombs = playerBombs; };
         int getBombBonus() const { return _playerBombs; };
-
     };
 
     class GameExecuteActionUpdateSystem : public ecs::ASystem {
