@@ -20,6 +20,7 @@ namespace ecs {
         bool explodeBonus = false;
         bool isStun = false;
         bool explodePlaced = false;
+        bool placeBomb = false;
 
         Player(PlayerId id = -1) : id(id) {};
     };

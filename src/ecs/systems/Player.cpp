@@ -27,6 +27,7 @@ void ecs::PlayerUpdateSystem::update(ecs::World &world)
     static float timeElapsedBoots = 0;
     static float timeElapsedExplode = 0;
     static float timeElapsedStun = 0;
+    static float timeElapsedPlaceBomb = 0;
 
     for (ecs::Entity entity : _entities) {
         Player &player = world.getComponent<Player>(entity);
@@ -61,6 +62,13 @@ void ecs::PlayerUpdateSystem::update(ecs::World &world)
             timeElapsedStun += clock.getDeltaSec();
             if (timeElapsedStun > 2)
                 player.isStun = false;
+        }
+        if (player.placeBomb == true) {
+            timeElapsedPlaceBomb += clock.getDeltaSec();
+            if (timeElapsedPlaceBomb > 4) {
+                player.placeBomb = false;
+                timeElapsedPlaceBomb = 0;
+            }
         }
     }
 }

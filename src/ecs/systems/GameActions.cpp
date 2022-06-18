@@ -9,6 +9,7 @@
 #include "ecs/components/Player.hpp"
 #include "ecs/components/Movement.hpp"
 #include "ecs/components/PlayAnimation.hpp"
+#include "ecs/engine/Clock.hpp"
 
 void bomberman::GameExecuteActionUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
@@ -71,6 +72,7 @@ void bomberman::GameExecuteActionUpdateSystem::update(ecs::World &world)
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
     map::Map &map = scene.getMap();
+    ecs::Clock &clock = world.getRessource<ecs::Clock>();
 
     for (ecs::Entity entity : _entities) {
         ecs::Player &player = world.getComponent<ecs::Player>(entity);
@@ -80,10 +82,13 @@ void bomberman::GameExecuteActionUpdateSystem::update(ecs::World &world)
         if (action == ecs::DO_NOTHING || move.isMoving || !player.alive)
             continue;
         if (action == ecs::PLACE_BOMB) {
+            if (player.placeBomb == true)
+                continue;
             if (player.explodeBonus == true) {
                 player.explodePlaced = true;
                 std::cout << "BONUS PLACED" << std::endl;
             }
+            player.placeBomb = true;
             placeBomb(entity, world, scene);
         } else {
             movePlayer(entity, world, action, map);
