@@ -18,6 +18,7 @@ namespace ecs {
         int _nbPlayers;
         std::deque<InputFile> _inputHost;
         std::deque<InputFile> _input;
+        std::string _ipPort;
 
         public:
             LaunchManager()
@@ -108,12 +109,30 @@ namespace ecs {
                     _inputHost.push_back(std::move(a));
                     _inputHost.insert(_inputHost.begin() + nbPlayer, std::move(b));
                 }
+                else {
+                    if (_input.size() <= nbPlayer)
+                        return;
+                    InputFile a = std::move(_input[nbPlayer]);
+                    InputFile b = std::move(_input[_nbPlayers]);
+                    _input.erase(_input.begin() + nbPlayer);
+                    _input.erase(_input.begin() + _nbPlayers - 1);
+                    _input.push_back(std::move(a));
+                    _input.insert(_input.begin() + nbPlayer, std::move(b));
+                }
             }
             bool getGamepad(bool host, int nbPlayer)
             {
                 if (host)
                     return (_inputHost[nbPlayer].getGamepad());
                 return (_input[nbPlayer].getGamepad());
+            }
+            void setIpPort(const std::string &ipPort)
+            {
+                _ipPort = ipPort;
+            }
+            const std::string &getIpPort()
+            {
+                return (_ipPort);
             }
     };
 }

@@ -11,6 +11,8 @@
 #include "ecs/components/HoverTint.hpp"
 #include "ecs/components/ColorTexture.hpp"
 
+#include "ecs/engine/LaunchManager.hpp"
+
 #include "input/BindsManager.hpp"
 
 #include "raylib/Window.hpp"
@@ -25,6 +27,7 @@ void ecs::TextInputSystem::update(ecs::World &world)
 {
     ecs::BindManager &bind = world.getRessource<ecs::BindManager>();
     raylib::Window &win = world.getRessource<raylib::Window>();
+    ecs::LaunchManager &man = world.getRessource<ecs::LaunchManager>();
 
     for (auto entity : _entities) {
         Text3D &text = world.getComponent<Text3D>(entity);
@@ -38,9 +41,10 @@ void ecs::TextInputSystem::update(ecs::World &world)
             if (ch == KEY_BACKSPACE)
                 if (input.input.size())
                     input.input.resize(input.input.size() - 1);
-            if (ch == 58 || (ch >= KEY_A && ch <= KEY_Z) || (ch >= KEY_ZERO && ch <= KEY_NINE))
+            if (input.input.size() <= 18 && (ch == '.' || ch == KEY_SPACE || (ch >= KEY_ZERO && ch <= KEY_NINE)))
                 input.input.push_back((char)ch);
             text.text = input.input;
+            man.setIpPort(text.text);
         }
     }
 }
