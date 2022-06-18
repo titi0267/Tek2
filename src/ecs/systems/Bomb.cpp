@@ -65,7 +65,7 @@ void ecs::BombUpdateSystem::update(ecs::World &world)
         Timer &timer = world.getComponent<Timer>(entity);
         Bomb &bomb = world.getComponent<Bomb>(entity);
 
-        if (timer.timeElapsed >= 2) {
+        if (timer.timeElapsed >= 3) {
             placeWater(entity, world, scene);
             world.getComponent<Player>(scene.getPlayers().at(bomb.playerId)).placedBombs--;
             toDelete.push_back(entity);

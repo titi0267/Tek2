@@ -99,24 +99,39 @@ ecs::Actions ai::AiFunc::goSafe(ecs::PlayerId aiId, map::Map &map, std::deque<Bo
 
 ecs::Actions ai::AiFunc::goItem(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
 {
-    ecs::Actions action;
+    ecs::Actions action = ecs::Actions::DO_NOTHING;
+    int smallestDist = std::numeric_limits<int>::max();
 
     for (auto &actual : item) {
-        if ((action = PathFinding(map, pos, actual.pos)) != ecs::DO_NOTHING)
-            return action;
+        auto [act, dist] = PathFinding(map, pos, actual.pos);
+
+        if (dist > 0 && dist < smallestDist) {
+            action = act;
+            smallestDist = dist;
+        }
     }
-    return (ecs::Actions::DO_NOTHING);
+    return (action);
 }
 
 ecs::Actions ai::AiFunc::goKill(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
 {
-    ecs::Actions action;
+    ecs::Actions action = ecs::Actions::DO_NOTHING;
+    int smallestDist = std::numeric_limits<int>::max();
 
     for (auto &actual : player) {
-        if (actual.id != aiId && (action = PathFinding(map, pos, actual.pos)) != ecs::DO_NOTHING)
-            return action;
+        if (actual.id == aiId)
+            continue;
+
+        auto [act, dist] = PathFinding(map, pos, actual.pos);
+
+        if (dist < smallestDist) {
+            action = act;
+            smallestDist = dist;
+        }
     }
-    return (ecs::Actions::DO_NOTHING);
+    if (smallestDist <= 1)
+        return ecs::Actions::PLACE_BOMB;
+    return (action);
 }
 
 ecs::Actions ai::AiFunc::goReach(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos)
@@ -149,7 +164,7 @@ std::deque<ecs::Actions> ai::AiFunc::isAroundSafe(map::Map &map, ecs::GridPositi
     return (tmp);
 }
 
-ecs::Actions ai::AiFunc::PathFinding(map::Map &map, ecs::GridPosition in, ecs::GridPosition out)
+std::tuple<ecs::Actions, int> ai::AiFunc::PathFinding(map::Map &map, ecs::GridPosition in, ecs::GridPosition out)
 {
     std::deque<ecs::GridPosition> actual;
     std::deque<ecs::GridPosition> next;
@@ -159,6 +174,9 @@ ecs::Actions ai::AiFunc::PathFinding(map::Map &map, ecs::GridPosition in, ecs::G
     int distance = 1;
     bool found = false;
     int index;
+
+    if (in == out)
+        return {ecs::Actions::DO_NOTHING, 0};
 
     distField.resize(map.getWidth() * map.getHeight(), -1);
     next.push_back(in);
@@ -171,26 +189,28 @@ ecs::Actions ai::AiFunc::PathFinding(map::Map &map, ecs::GridPosition in, ecs::G
     } while (next.size() > 0 && !(found = (std::find(next.begin(), next.end(), out) != next.end())));
 
     if (!found)
-        return ecs::Actions::DO_NOTHING;
+        return {ecs::Actions::DO_NOTHING, std::numeric_limits<int>::max()};
+
+    int loops = 0;
 
     pos = out;
     do {
+        loops++;
         prevPos = pos;
         pos = getPreviousCell(prevPos, distField, map);
-        distance--;
         if (pos == in) {
             if (in.x < prevPos.x)
-                return ecs::MOVE_RIGHT;
+                return {ecs::MOVE_RIGHT, distance};
             if (in.x > prevPos.x)
-                return ecs::MOVE_LEFT;
+                return {ecs::MOVE_LEFT, distance};
             if (in.y < prevPos.y)
-                return ecs::MOVE_DOWN;
+                return {ecs::MOVE_DOWN, distance};
             if (in.y > prevPos.y)
-                return ecs::MOVE_UP;
-            return ecs::DO_NOTHING;
+                return {ecs::MOVE_UP, distance};
+            return {ecs::DO_NOTHING, distance};
         }
-    } while(distance >= 0);
-    return ecs::DO_NOTHING;
+    } while(loops < 50);
+    return {ecs::DO_NOTHING, std::numeric_limits<int>::max()};
 }
 
 ecs::Actions ai::AiFunc::getClosestSafe(map::Map &map, ecs::GridPosition in)
@@ -248,15 +268,17 @@ void ai::AiFunc::propagateDistField(std::deque<ecs::GridPosition> &actual, std::
     const ecs::GridPosition DIRECTIONS[4] = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
     ecs::GridPosition posNext;
     int width = map.getWidth();
+    int actualCell;
     int index;
 
     for (ecs::GridPosition &pos : actual) {
+        actualCell = map.getCellAt(pos.x, pos.y);
         for (int i = 0; i < 4; i++) {
             posNext = pos + DIRECTIONS[i];
             index = posNext.toArrayIndex(map.getWidth());
             if (!map.isValidCell(posNext.x, posNext.y) || distField.at(index) != -1)
                 continue;
-            if (map.isWalkableCell(posNext.x, posNext.y)) {
+            if (map.isWalkableCell(posNext.x, posNext.y) && !(actualCell != DANGEROUS && map.getCellAt(posNext.x, posNext.y))) {
                 distField.at(index) = distance;
                 next.push_back(posNext);
             }

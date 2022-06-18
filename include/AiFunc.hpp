@@ -51,7 +51,7 @@ namespace ai {
         static ecs::Actions goKill(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
         static ecs::Actions goReach(ecs::PlayerId aiId, map::Map &map, std::deque<BombStruct> &bomb, std::deque<PlayerStruct> &player, std::deque<ItemStruct> &item, ecs::GridPosition pos);
 
-        static ecs::Actions PathFinding(map::Map &map, ecs::GridPosition in, ecs::GridPosition out);
+        static std::tuple<ecs::Actions, int> PathFinding(map::Map &map, ecs::GridPosition in, ecs::GridPosition out);
         static ecs::Actions getClosestSafe(map::Map &map, ecs::GridPosition in);
 
         static void propagateDistField(std::deque<ecs::GridPosition> &actual, std::deque<ecs::GridPosition> &next, map::Map &map, std::vector<int> &distField, int distance);
