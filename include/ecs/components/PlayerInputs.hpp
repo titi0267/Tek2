@@ -11,6 +11,7 @@
 #include "ecs/engine/System.hpp"
 #include "ecs/engine/World.hpp"
 #include "ecs/engine/PlayerId.hpp"
+#include "input/InputFile.hpp"
 
 namespace ecs {
     using Key = ::KeyboardKey;
@@ -32,15 +33,32 @@ namespace ecs {
     };
 
     struct PlayerInputs {
-        Key upKey;
-        Key downKey;
-        Key leftKey;
-        Key rightKey;
-        Key bombKey;
+        int upKey;
+        int downKey;
+        int leftKey;
+        int rightKey;
+        int bombKey;
+        bool gamepad;
 
         public:
-        PlayerInputs(Key up = KEY_W, Key down = KEY_S, Key left = KEY_A, Key right = KEY_D, Key bomb = KEY_Q)
-            : upKey(up), downKey(down), leftKey(left), rightKey(right), bombKey(bomb) {};
+        PlayerInputs()
+        {
+            gamepad = false;
+            upKey = KEY_W;
+            downKey = KEY_S;
+            leftKey = KEY_Q;
+            rightKey = KEY_D;
+            bombKey = KEY_SPACE;
+        }
+        PlayerInputs(InputFile &file)
+        {
+            gamepad = file.getGamepad();
+            upKey = file.getKey(IBind::UP);
+            downKey = file.getKey(IBind::DOWN);
+            leftKey = file.getKey(IBind::LEFT);
+            rightKey = file.getKey(IBind::RIGHT);
+            bombKey = file.getKey(IBind::PLACE);
+        }
     };
 
     class PlayerInputsUpdateSystem : public ecs::ASystem {
