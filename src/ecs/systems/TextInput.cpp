@@ -106,7 +106,7 @@ void ecs::TextInputPortSystem::update(ecs::World &world)
                     input.input.resize(input.input.size() - 1);
             if (input.input.size() <= 4 && ((ch >= KEY_ZERO && ch <= KEY_NINE)))
                 input.input.push_back((char)ch);
-            text.text = input.input;
+            text.setText(input.input);
             man.setPort(text.text);
         }
     }
