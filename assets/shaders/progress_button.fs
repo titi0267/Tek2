@@ -21,8 +21,7 @@ void main()
     vec4 texelColor = texture(texture0, fragTexCoord);
 
     // NOTE: Implement here your fragment shader code
-
-    if (fragPercent <= progress)
+    if (progress == 1.0f || (progress > 0 && fragPercent <= progress))
     {
         finalColor = texelColor * progressColor;
     }
