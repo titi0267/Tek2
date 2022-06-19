@@ -23,6 +23,11 @@ void ecs::PlayersManager::stopAcceptingPlayers()
     _acceptNewPlayers = false;
 }
 
+void ecs::PlayersManager::acceptNewPlayers()
+{
+    _acceptNewPlayers = true;
+}
+
 ecs::PlayerId ecs::PlayersManager::reservePlayerId(ConnId conn)
 {
     PlayerId id;

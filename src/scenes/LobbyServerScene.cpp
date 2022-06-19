@@ -78,6 +78,8 @@ void bomberman::LobbyServerScene::loadScene(ecs::World &world)
 
     for (ecs::PlayerId id : playersMan.getAssignedIds())
         spawnPlayer(id, world);
+
+    world.getRessource<ecs::PlayersManager>().acceptNewPlayers();
 }
 
 void bomberman::LobbyServerScene::unloadScene(ecs::World &world)
