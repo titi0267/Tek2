@@ -113,6 +113,7 @@ void bomberman::LobbyServerScene::onDisconnect(ConnId conn, ecs::World &world)
         skinMan.unassignedSkin(id, false);
         world.getEntityCommands(entity).despawn();
         _ready.erase(id);
+        _players.erase(id);
     }
     checkReady(world);
 }

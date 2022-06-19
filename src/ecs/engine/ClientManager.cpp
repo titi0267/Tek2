@@ -65,12 +65,13 @@ void ecs::ClientManager::tryConnection(ecs::World &world)
     if (_lastTryDelta < 0.5)
         return;
     try {
+        std::cout << "[CLIENT] Attempt connection to " << _ip << ":" << _port << std::endl;
         connectTo(_ip, _port);
         std::cout << "[CLIENT] Successfully connected to " << _ip << ":" << _port << std::endl;
         _connAttempted = false;
         _success(world, _data);
     } catch(network::SocketError) {
-        if (_tryConnCount == 5) {
+        if (_tryConnCount == 3) {
             std::cout << "[CLIENT] Failed all connection attempts" << std::endl;
             _connAttempted = false;
             _failed(world, _data);
@@ -78,7 +79,7 @@ void ecs::ClientManager::tryConnection(ecs::World &world)
         }
         _lastTryDelta = 0;
         _tryConnCount++;
-        std::cout << "[CLIENT] Failed connection attempt (" << _tryConnCount << " / 5)" << std::endl;
+        std::cout << "[CLIENT] Failed connection attempt (" << _tryConnCount << " / 3)" << std::endl;
     }
 }
 
