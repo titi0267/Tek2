@@ -18,6 +18,8 @@
 
 #include "input/BindsManager.hpp"
 
+#include "network/SocketError.hpp"
+
 #include "raylib/Camera.hpp"
 #include "raylib/Window.hpp"
 #include "raylib/TextureManager.hpp"
@@ -31,7 +33,7 @@
 #include "Assets.hpp"
 #include "Map.hpp"
 
-int main(int ac, char **av)
+int startGame(void)
 {
     #ifdef _WIN32
     if (bomberman::WSA())
@@ -97,4 +99,22 @@ int main(int ac, char **av)
 
     world.getRessource<ecs::ClientManager>().disconnect();
     world.getRessource<ecs::InternalServer>().joinAndDestroy();
+
+    return 0;
+}
+
+int main(int ac, char **av)
+{
+    try {
+        return startGame();
+    } catch (network::SocketError) {
+        std::cerr << "Critical error related to network occured" << std::endl;
+        return 84;
+    } catch(std::exception &e) {
+        std::cerr << "Critical error occur:\n" << e.what() << std::endl;
+        return 84;
+    } catch(...) {
+        std::cerr << "Critical error occur !" << std::endl;
+        return 84;
+    }
 }
