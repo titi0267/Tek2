@@ -22,7 +22,7 @@ namespace bomberman {
         std::unordered_map<ecs::PlayerId, ecs::Entity> _players;
         std::unordered_map<ecs::PlayerId, bool> _ready;
 
-        void spawnPlayer(ecs::PlayerId id, const std::string &skin, const Transform &transform, ecs::World &world);
+        void spawnPlayer(ecs::PlayerId id, ecs::World &world);
 
         public:
         LobbyServerScene() {};

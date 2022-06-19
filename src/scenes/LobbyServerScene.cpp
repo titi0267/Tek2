@@ -20,12 +20,28 @@
 #include "ecs/components/Text3D.hpp"
 #include "ecs/components/CameraFollow.hpp"
 
-void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, const std::string &skin, const Transform &transform, ecs::World &world)
+void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, ecs::World &world)
 {
-    ecs::Entity entity = world.spawn().insert(ecs::Player{id}, transform,
+    ecs::SkinManager &skinMan = world.getRessource<ecs::SkinManager>();
+    std::string skin;
+    const Vector3 CAM_POS = {-5, 0, 3};
+
+    float posAngle = PI - PI / 12.0 + PI / 20.0 + id * PI / 5.0f;
+    Vector3 pos = CAM_POS + Vector3 {std::cos(posAngle) * 6, 0, std::sin(posAngle) * 6};
+
+    float rotAngle = std::atan2(CAM_POS.x - pos.x, CAM_POS.z - pos.z);
+    Quaternion rot = QuaternionFromEuler(0, rotAngle, 0);
+
+    if (skinMan.hasSkinAssigned(id))
+        skin = skinMan.getPlayerSkin(id);
+    else
+        skin = skinMan.assignRandomSkin(id);
+
+    ecs::Entity entity = world.spawn().insert(ecs::Player{id}, Transform {pos, rot, {1, 1, 1}},
     ecs::ModelRef("player"), ecs::Skin{skin}, ecs::Light{Vector4 {1.0, 0.0, 0.0, 1.0}, Vector3 {0, 2, 0}}, ecs::MirrorEntity {}).getEntity();
 
     _players.insert({id, entity});
+    _ready.insert({id, false});
 }
 
 void bomberman::LobbyServerScene::loadScene(ecs::World &world)
@@ -49,6 +65,10 @@ void bomberman::LobbyServerScene::loadScene(ecs::World &world)
     ecs::Text3D{"</> : Skins", BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
     world.spawn().insert(Transform{{0, -1, -2}, QuaternionIdentity(), {0.3, 0.3, 0.3}}, ecs::ModelRef{"button"}, ecs::FontRef{"emulogic"},
     ecs::Text3D{" ^ : Ready", BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
+    world.getRessource<ecs::ServerManager>().moveCameras({-5, 4.5, 3}, {-10, -2, -2});
+
+    for (ecs::PlayerId id : man.getAssignedIds())
+        spawnPlayer(id, world);
 }
 
 void bomberman::LobbyServerScene::unloadScene(ecs::World &world)
@@ -87,18 +107,7 @@ void bomberman::LobbyServerScene::onDisconnect(ConnId conn, ecs::World &world)
 
 void bomberman::LobbyServerScene::onPlayerIdAttributed(ecs::PlayerId id, ecs::World &world)
 {
-    ecs::SkinManager &skinMan = world.getRessource<ecs::SkinManager>();
-    const std::string &skin = skinMan.assignRandomSkin(id);
-    const Vector3 CAM_POS = {-5, 0, 3};
-
-    float posAngle = PI - PI / 12.0 + PI / 20.0 + id * PI / 5.0f;
-    Vector3 pos = CAM_POS + Vector3 {std::cos(posAngle) * 6, 0, std::sin(posAngle) * 6};
-
-    float rotAngle = std::atan2(CAM_POS.x - pos.x, CAM_POS.z - pos.z);
-    Quaternion rot = QuaternionFromEuler(0, rotAngle, 0);
-
-    spawnPlayer(id, skin, Transform {pos, rot, {1, 1, 1}}, world);
-    _ready.insert({id, false});
+    spawnPlayer(id, world);
 }
 
 void bomberman::LobbyServerScene::setPlayerReady(ecs::PlayerId id, ecs::World &world)
