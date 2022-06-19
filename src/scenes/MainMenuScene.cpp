@@ -383,7 +383,7 @@ void bomberman::MainMenuScene::generateConnectMenu(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
 
-    spawnTitleButton({{15, 2.75, -2}, rot, {1, 1, 1}}, "Start menu", world);
+    spawnTitleButton({{15, 2.75, -2}, rot, {1, 1, 1}}, "Connect menu", world);
     spawnButton({{15, 2.00, -2}, rot, {1, 1, 1}}, "Solo", {WHITE, GRAY}, incNbPlayerConnectFunction, world);
     spawnStaticButton({{12, 1.25, -2}, rot, {1, 1, 1}}, "IP/PORT:", world);
     spawnTextInput({{12, 0.50, -2}, rot, {1, 1, 1}}, "0.0.0.0 0", {WHITE, BLUE}, world, checkIp);
