@@ -25,7 +25,7 @@
 namespace ecs {
     using ConnId = network::ConnId;
 
-    const std::size_t NB_MIRROR_COMPONENTS = 16;
+    const std::size_t NB_MIRROR_COMPONENTS = 17;
     extern const ComponentHash MIRROR_COMPONENTS[NB_MIRROR_COMPONENTS];
 
     enum class NetworkCommand : uint8_t {

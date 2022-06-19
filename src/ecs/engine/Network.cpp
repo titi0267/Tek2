@@ -19,6 +19,7 @@
 #include "ecs/components/ItemRotation.hpp"
 #include "ecs/components/Light.hpp"
 #include "ecs/components/CameraFollow.hpp"
+#include "ecs/components/Player.hpp"
 
 // MirrorEntity should NEVER be registered !
 const ecs::ComponentHash ecs::MIRROR_COMPONENTS[ecs::NB_MIRROR_COMPONENTS] = {
@@ -38,6 +39,7 @@ const ecs::ComponentHash ecs::MIRROR_COMPONENTS[ecs::NB_MIRROR_COMPONENTS] = {
     typeid(ecs::ItemRotation).hash_code(),
     typeid(ecs::Light).hash_code(),
     typeid(ecs::CameraFollow).hash_code(),
+    typeid(ecs::Player).hash_code(),
 };
 
 void ecs::createUpdateLocalEntityBuffer(Entity entity, World &world, std::stringbuf &buffer)

@@ -60,7 +60,7 @@ void bomberman::GameExecuteActionUpdateSystem::movePlayer(ecs::Entity entity, ec
     Vector3 moveVec = MOVEMENTS.at(action);
     ecs::GridPosition gDest = gPos + ecs::GridPosition {(int) moveVec.x, (int) moveVec.z};
 
-    if (!map.isValidCell(gDest.x, gDest.y) || player.tigDuration > 0)
+    if (!map.isValidCell(gDest.x, gDest.y))
         return;
 
     if (map.isWalkableCell(gDest.x, gDest.y)) {
@@ -82,9 +82,17 @@ void bomberman::GameExecuteActionUpdateSystem::update(ecs::World &world)
         ecs::Player &player = world.getComponent<ecs::Player>(entity);
         ecs::Actions action = scene.getPlayerAction(player.id);
         ecs::Movement &move = world.getComponent<ecs::Movement>(entity);
+        ecs::PlayAnimation &anim = world.getComponent<ecs::PlayAnimation>(entity);
 
-        if (action == ecs::DO_NOTHING || move.isMoving || !player.alive)
+        if (move.isMoving || !player.alive  || player.tigDuration > 0)
             continue;
+
+        if (anim.isPlaying())
+            anim.stop();
+
+        if (action == ecs::DO_NOTHING)
+            continue;
+
         if (action == ecs::PLACE_BOMB) {
             placeBomb(entity, world, scene);
         } else {

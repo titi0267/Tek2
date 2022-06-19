@@ -32,8 +32,10 @@ void ecs::PlayerUpdateSystem::update(ecs::World &world)
 
         if (player.tigDuration > 0) {
             player.tigDuration -= clock.getDeltaSec();
-            if (player.tigDuration < 0)
+            if (player.tigDuration < 0) {
                 player.tigDuration = 0;
+                world.getComponent<ecs::PlayAnimation>(entity).play("playerAnims", 0, 1 / player.speed, false, 4);
+            }
         }
 
         if (player.speedDuration > 0) {
@@ -71,16 +73,16 @@ void ecs::PlayerCollisionUpdateSystem::update(ecs::World &world)
     }
 
     for (ecs::Entity entity : _entities) {
-        Player &player = world.getComponent<Player>(entity);
+        Player &thisPlayer = world.getComponent<Player>(entity);
         ecs::GridPosition &pos = world.getComponent<ecs::GridPosition>(entity);
 
-        if (player.alive && player.tigs > 0) {
+        if (thisPlayer.alive && thisPlayer.tigs > 0) {
             for (auto &[pEntity, player, pPos] : playersAlive) {
                 if (pEntity != entity && pos == pPos && player.tigDuration <= 0) {
-                    player.tigDuration == TIG_DURATION;
-                    player.tigs--;
+                    player.tigDuration = TIG_DURATION;
+                    thisPlayer.tigs--;
                     world.getComponent<ecs::PlayAnimation>(pEntity).play("playerAnims", 1, 1 / TIG_DURATION, false, 4);
-                    if (player.tigs <= 0)
+                    if (thisPlayer.tigs <= 0)
                         break;
                 }
             }

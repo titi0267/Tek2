@@ -7,6 +7,7 @@
 
 #include "ecs/engine/Clock.hpp"
 #include "ecs/components/Movement.hpp"
+#include "ecs/components/Player.hpp"
 #include "ecs/engine/SceneManager.hpp"
 #include "raylib/Vectors.hpp"
 
@@ -26,6 +27,12 @@ void ecs::MovementUpdateSystem::update(ecs::World &world)
 
         if (!move.isMoving)
             continue;
+
+        if (world.hasComponent<ecs::Player>(entity)) {
+            ecs::Player &player = world.getComponent<ecs::Player>(entity);
+            if (player.alive && player.tigDuration > 0)
+                continue;
+        }
 
         Vector3 moveVec = normalize(move.dest - pos);
         float actualDistance = distance(pos, move.dest);
