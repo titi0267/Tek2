@@ -228,7 +228,7 @@ void startFunction(ecs::World &world, ecs::Entity entity)
 {
     ecs::LaunchManager &launch = world.getRessource<ecs::LaunchManager>();
     world.getRessource<ecs::SceneManager>().changeScene(ecs::GAME_SCENE,
-    std::make_shared<bomberman::GameSceneArgs>("127.0.0.1", "4242", true, launch.getNbPlayers(true)));
+    std::make_shared<bomberman::GameSceneArgs>("127.0.0.1", launch.getPort(), true, launch.getNbPlayers(true)));
 }
 
 void connectFunction(ecs::World &world, ecs::Entity entity)
@@ -349,6 +349,7 @@ void bomberman::MainMenuScene::generateStartMenu(ecs::World &world)
     Quaternion rot = QuaternionIdentity();
 
     spawnTitleButton({{0, 17.75, -2}, rot, {1, 1, 1}}, "Start menu", world);
+    spawnTextInputPort({{-4, 17.00, -2}, rot, {1, 1, 1}}, "Custom Port", {WHITE, BLUE}, world);
     spawnButton({{0, 17.00, -2}, rot, {1, 1, 1}}, "Solo", {WHITE, GRAY}, incNbPlayerHostFunction, world);
     spawnLaunchButton({{-3, 16.25, -2}, rot, {1, 1, 1}}, "", world, {true, 0}, swapProfile);
     spawnLittleSquareButton({{-5.00, 15.50, -2}, rot, {1, 1, 1}}, "", world, {true, 0, IBind::UP});
@@ -625,6 +626,17 @@ const ecs::HoverTint &hoverTint, ecs::World &world, ClickCallbackFct doOnClick)
     ecs::SceneMoveElement {MOVE_SPEED}, ecs::TextInput {}, ecs::Clickable {doOnClick});
 }
 
+void bomberman::MainMenuScene::spawnTextInputPort(const Transform &transform, const std::string &text, const ecs::HoverTint &hoverTint, ecs::World &world)
+{
+    const float BUTTON_SIZE = 5;
+
+    world.spawn().insert(transform,
+    ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
+    ecs::ModelRef {"button"}, hoverTint.base,
+    ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
+    ecs::Hoverable {}, hoverTint,
+    ecs::SceneMoveElement {MOVE_SPEED}, ecs::TextInputPort {});
+}
 
 void bomberman::MainMenuScene::spawnStaticButton(const Transform &transform, const std::string &text, ecs::World &world)
 {

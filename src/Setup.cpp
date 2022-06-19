@@ -101,10 +101,10 @@ void bomberman::registerInputs(ecs::World &world)
     world.registerSystems<ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem>();
 
     world.registerComponents<ecs::ResolutionButton, ecs::FullscreenButton, ecs::FPSButton,
-    ecs::ToggleButton, ecs::SingleKeyRecorder, ecs::TextInput, ecs::TextInputSettings, ecs::Disappear, ecs::LaunchButton>();
+    ecs::ToggleButton, ecs::SingleKeyRecorder, ecs::TextInput, ecs::TextInputSettings, ecs::Disappear, ecs::LaunchButton, ecs::TextInputPort>();
     world.registerSystems<ecs::ResolutionButtonSystem, ecs::FullscreenButtonSystem, ecs::FPSButtonSystem,
     ecs::ShowFPSButtonSystem, ecs::ToggleMusicButtonSystem, ecs::ToggleSoundButtonSystem,
-    ecs::KeyRecorderSystem, ecs::TextInputSystem, ecs::TextInputSettingsSystem, ecs::DisappearSystem, ecs::LaunchButtonSystem>();
+    ecs::KeyRecorderSystem, ecs::TextInputSystem, ecs::TextInputSettingsSystem, ecs::DisappearSystem, ecs::LaunchButtonSystem, ecs::TextInputPortSystem>();
 }
 
 void bomberman::registerNetwork(ecs::World &world, bool client)

@@ -81,3 +81,33 @@ void ecs::TextInputSettingsSystem::update(ecs::World &world)
         }
     }
 }
+
+void ecs::TextInputPortSystem::setSignature(ecs::ComponentManager &component)
+{
+    _signature = component.generateSignature<Text3D, TextInputPort, Hoverable>();
+}
+
+void ecs::TextInputPortSystem::update(ecs::World &world)
+{
+    ecs::LaunchManager &man = world.getRessource<ecs::LaunchManager>();
+    raylib::Window &win = world.getRessource<raylib::Window>();
+
+    for (auto entity : _entities) {
+        Text3D &text = world.getComponent<Text3D>(entity);
+        Hoverable &hover = world.getComponent<Hoverable>(entity);
+        TextInputPort &input = world.getComponent<TextInputPort>(entity);
+        if (hover.isHover) {
+            int ch = win.getKeyPressed();
+            while (win.getKeyPressed() != 0);
+            if (!ch)
+                continue;
+            if (ch == KEY_BACKSPACE)
+                if (input.input.size())
+                    input.input.resize(input.input.size() - 1);
+            if (input.input.size() <= 4 && ((ch >= KEY_ZERO && ch <= KEY_NINE)))
+                input.input.push_back((char)ch);
+            text.text = input.input;
+            man.setPort(text.text);
+        }
+    }
+}

@@ -19,6 +19,7 @@ namespace ecs {
         std::deque<InputFile> _inputHost;
         std::deque<InputFile> _input;
         std::string _ipPort;
+        std::string _port;
 
         public:
             LaunchManager()
@@ -133,6 +134,14 @@ namespace ecs {
             const std::string &getIpPort()
             {
                 return (_ipPort);
+            }
+            void setPort(const std::string &port)
+            {
+                _port = port;
+            }
+            const std::string &getPort()
+            {
+                return (_port);
             }
     };
 }
