@@ -12,6 +12,7 @@
 #include "ecs/components/GridPosition.hpp"
 #include "ecs/components/Player.hpp"
 #include "ecs/components/Movement.hpp"
+#include "ecs/components/PlayAnimation.hpp"
 #include "raylib/Vectors.hpp"
 #include <iostream>
 
@@ -92,7 +93,8 @@ void ecs::WaterCollisionUpdateSystem::update(ecs::World &world)
                 Vector3 deathPos = transform.translation + Vector3{0, 100, 0};
 
                 player.alive = false;
-                world.getComponent<Movement>(pEntity).move(deathPos, 25);
+                world.getComponent<Movement>(pEntity).move(deathPos, 6);
+                world.getComponent<ecs::PlayAnimation>(pEntity).play("playerAnims", 2, 0.5, true, 4);
             }
         }
     }

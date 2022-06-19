@@ -14,7 +14,8 @@
 namespace raylib {
     class Window {
         bool _close = false;
-        int _fps;
+        int _fps = 60;
+        bool _showFPS = false;
 
         public:
         Window(int width = 640, int height = 480, const std::string &name = "Indie Studio")
@@ -42,6 +43,16 @@ namespace raylib {
         void drawFPS(int x, int y)
         {
             DrawFPS(x, y);
+        }
+
+        bool shouldShowFPS()
+        {
+            return _showFPS;
+        }
+
+        void setShowFPS(bool show)
+        {
+            _showFPS = show;
         }
 
         void resize(Vector2 size)

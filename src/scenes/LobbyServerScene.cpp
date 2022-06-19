@@ -17,6 +17,8 @@
 #include "ecs/components/Player.hpp"
 #include "ecs/components/SpawnBonus.hpp"
 #include "ecs/components/Light.hpp"
+#include "ecs/components/Text3D.hpp"
+#include "ecs/components/CameraFollow.hpp"
 
 void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, ecs::World &world)
 {
@@ -44,19 +46,30 @@ void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, ecs::World &worl
 
 void bomberman::LobbyServerScene::loadScene(ecs::World &world)
 {
-    ecs::PlayersManager &man = world.getRessource<ecs::PlayersManager>();
+    ecs::PlayersManager &playersMan = world.getRessource<ecs::PlayersManager>();
+    ecs::ServerManager &man = world.getRessource<ecs::ServerManager>();
+    char buf[255];
 
     world.registerSystems<LobbyExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem>();
     for (int i = 0; i < 4; i++) {
         _actions.insert({i, ecs::DO_NOTHING});
         _updatedThisFrame.insert({i, false});
     }
+    std::snprintf(buf, 255, "%s %hu", man.getIp().c_str(), man.getPort());
     world.spawn().insert(Transform{{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::ModelRef{"amphi"}, ecs::MirrorEntity{});
     world.spawn().insert(Transform{{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::Light{Vector3{-1, -1, -1}, Vector4{0.8, 0.8, 0.8, 1.0}}, ecs::MirrorEntity{});
 
     world.getRessource<ecs::ServerManager>().moveCameras({-5, 4.5, 3}, {-10, -2, -2});
 
-    for (ecs::PlayerId id : man.getAssignedIds())
+    world.spawn().insert(Transform{{0, 3.5, -5}, QuaternionIdentity(), {1, 1, 1}}, ecs::ModelRef{"large_button"}, ecs::FontRef{"emulogic"},
+    ecs::Text3D{buf, BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
+
+    world.spawn().insert(Transform{{0, -0.8, -2}, QuaternionIdentity(), {0.3, 0.3, 0.3}}, ecs::ModelRef{"button"}, ecs::FontRef{"emulogic"},
+    ecs::Text3D{"</> : Skins", BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
+    world.spawn().insert(Transform{{0, -1, -2}, QuaternionIdentity(), {0.3, 0.3, 0.3}}, ecs::ModelRef{"button"}, ecs::FontRef{"emulogic"},
+    ecs::Text3D{" ^ : Ready", BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
+
+    for (ecs::PlayerId id : playersMan.getAssignedIds())
         spawnPlayer(id, world);
 }
 

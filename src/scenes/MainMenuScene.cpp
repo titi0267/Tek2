@@ -8,6 +8,8 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <regex>
+#include <filesystem>
 
 #include "scenes/MainMenuScene.hpp"
 #include "scenes/GameScene.hpp"
@@ -40,7 +42,6 @@
 #include "ecs/components/BackgroundRotation.hpp"
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/Disappear.hpp"
-#include <regex>
 
 void checkIp(ecs::World &world, ecs::Entity entity)
 {
@@ -116,6 +117,14 @@ void incNbPlayerConnectFunction(ecs::World &world, ecs::Entity entity)
             text.setText("Full!");
             text.color = RED;
             break;
+    }
+}
+
+void deleteGameSave(ecs::World &world, ecs::Entity entity)
+{
+    if (std::filesystem::exists("bombitek.dat") && std::filesystem::exists("bombitek.map")) {
+        std::remove("bombitek.dat");
+        std::remove("bombitek.map");
     }
 }
 
@@ -368,13 +377,14 @@ void bomberman::MainMenuScene::generateStartMenu(ecs::World &world)
     spawnLittleSquareButton({{1.00, 14.00, -2}, rot, {1, 1, 1}}, "", world, {true, 3, IBind::UP});
     spawnButton({{0, 13.25, -2}, rot, {1, 1, 1}}, "Lets go!", {GREEN, BLUE}, startFunction, world);
     spawnButton({{0, 12.50, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, downFunction, world);
+    spawnButton({{4, 12.675, -2}, rot, {1, 1, 1}}, "Suppr. save", {ORANGE, RED}, deleteGameSave, world);
 }
 
 void bomberman::MainMenuScene::generateConnectMenu(ecs::World &world)
 {
     Quaternion rot = QuaternionIdentity();
 
-    spawnTitleButton({{15, 2.75, -2}, rot, {1, 1, 1}}, "Start menu", world);
+    spawnTitleButton({{15, 2.75, -2}, rot, {1, 1, 1}}, "Connect menu", world);
     spawnButton({{15, 2.00, -2}, rot, {1, 1, 1}}, "Solo", {WHITE, GRAY}, incNbPlayerConnectFunction, world);
     spawnStaticButton({{12, 1.25, -2}, rot, {1, 1, 1}}, "IP/PORT:", world);
     spawnTextInput({{12, 0.50, -2}, rot, {1, 1, 1}}, "0.0.0.0 0", {WHITE, BLUE}, world, checkIp);

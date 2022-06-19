@@ -18,11 +18,18 @@ void ecs::ServerManager::sendCmd(ConnId conn, NetworkCommand cmd)
 
 bool ecs::ServerManager::tryRead(ConnId conn, void *buf, std::size_t size)
 {
+    std::size_t dataRead = 0;
+    std::size_t tmp;
+
     if (!_server->doesConnExists(conn))
         return true;
-    if(_server->read(conn, buf, size) != size) {
-        _server->disconnectConn(conn);
-        return true;
+    while (dataRead < size) {
+        tmp = _server->read(conn, (char*) buf + dataRead, size - dataRead);
+        if (tmp == 0) {
+            _server->disconnectConn(conn);
+            return true;
+        }
+        dataRead += tmp;
     }
     return false;
 }

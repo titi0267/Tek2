@@ -67,7 +67,7 @@ void bomberman::GameExecuteActionUpdateSystem::movePlayer(ecs::Entity entity, ec
         gPos = gDest;
         move.move(transform.translation + moveVec, player.speed);
         transform.rotation = QuaternionFromEuler(0, ROTATIONS.at(action), 0);
-        world.getComponent<ecs::PlayAnimation>(entity).play("playerAnims", 0, 1 / player.speed, false);
+        world.getComponent<ecs::PlayAnimation>(entity).play("playerAnims", 0, 1 / player.speed, false, 4);
     }
 }
 

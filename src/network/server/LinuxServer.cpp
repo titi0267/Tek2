@@ -159,9 +159,10 @@ std::string network::LinuxServer::findIp()
     std::ifstream ifs;
     std::string line;
 
-    system("hostname -i | awk '{print $1}' > ip" );
+    system("hostname -I | awk '{print $1}' > ip" );
     ifs.open("ip", std::ifstream::in);
     std::getline(ifs, line);
+    std::remove("ip");
     return (line);
 }
 

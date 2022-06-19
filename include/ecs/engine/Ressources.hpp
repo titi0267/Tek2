@@ -8,7 +8,7 @@
 #pragma once
 
 #include <memory>
-#include <unordered_map>
+#include <map>
 
 namespace ecs {
     class RessourceAlreadyExists {};
@@ -17,9 +17,11 @@ namespace ecs {
     class RessourcesManager {
         using RessourceHash = std::size_t;
 
-        std::unordered_map<RessourceHash, std::shared_ptr<void>> _ressources;
+        std::map<RessourceHash, std::shared_ptr<void>> _ressources;
 
         public:
+        ~RessourcesManager();
+
         template<typename T, typename ...Args>
         void insertRessource(Args ...args)
         {

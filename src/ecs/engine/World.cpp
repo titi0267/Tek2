@@ -24,9 +24,10 @@ void ecs::World::updateClient()
     _systems.updateStage(*this, RENDER_UPDATE);
     window.beginDrawing();
     window.clear(BLACK);
-    DrawFPS(10, 10);
     _systems.updateStage(*this, DRAW_WORLD);
     _systems.updateStage(*this, DRAW_HUD);
+    if (window.shouldShowFPS())
+        window.drawFPS(10, 10);
     window.endDrawing();
 }
 

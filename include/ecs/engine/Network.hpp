@@ -25,11 +25,11 @@
 namespace ecs {
     using ConnId = network::ConnId;
 
-    const std::size_t NB_MIRROR_COMPONENTS = 15;
+    const std::size_t NB_MIRROR_COMPONENTS = 16;
     extern const ComponentHash MIRROR_COMPONENTS[NB_MIRROR_COMPONENTS];
 
     enum class NetworkCommand : uint8_t {
-        UPDATE_ENTITY,
+        UPDATE_ENTITY = 1,
         KILL_ENTITY,
         INIT_PLAYERS,
         PLAYERS_CREATED,
@@ -92,6 +92,9 @@ namespace ecs {
         void moveCamera(ConnId conn, Vector3 pos, Vector3 target);
 
         void deleteClientEntity(Entity entity, World &world);
+
+        const std::string &getIp() { return _server->getServerIp(); };
+        unsigned short getPort() { return _server->getServerPort(); };
     };
 
     using ConnectionSuccessFct = void (*)(ecs::World &world, void *obj);

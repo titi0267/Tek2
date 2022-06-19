@@ -149,7 +149,7 @@ void ecs::ShowFPSButtonSystem::update(ecs::World &world)
                 tint = BLUE;
             hTint.base = BLUE;
             hTint.onHover = GREEN;
-            win.drawFPS(0, 0);
+            win.setShowFPS(true);
             but.precedent = true;
         }
         else {
@@ -157,6 +157,7 @@ void ecs::ShowFPSButtonSystem::update(ecs::World &world)
                 tint = RED;
             hTint.base = RED;
             hTint.onHover = GREEN;
+            win.setShowFPS(false);
             but.precedent = false;
         }
     }

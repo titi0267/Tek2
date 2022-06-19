@@ -94,6 +94,8 @@ void ecs::HoverRotateUpdateSystem::setSignature(ecs::ComponentManager &component
 
 void ecs::HoverRotateUpdateSystem::update(ecs::World &world)
 {
+    const float ROT_SPEED = 1.25f;
+
     for (ecs::Entity entity : _entities) {
         Hoverable &hover = world.getComponent<Hoverable>(entity);
         Transform &transform = world.getComponent<Transform>(entity);
@@ -102,8 +104,10 @@ void ecs::HoverRotateUpdateSystem::update(ecs::World &world)
         Vector3 rot = QuaternionToEuler(transform.rotation);
 
         if (rotate.inRotation) {
-            rot.x = timer.timeElapsed * 2 * PI;
-            if (!hover.isHover && fmod(rot.x, PI * 2) < 0.1) {
+            rot.x = ROT_SPEED * timer.timeElapsed * PI;
+            if (timer.timeElapsed >= (0.5 / ROT_SPEED))
+                rot.x += PI;
+            if (timer.timeElapsed >= (1.0 / ROT_SPEED)) {
                 rot.x = 0;
                 rotate.inRotation = false;
             }
