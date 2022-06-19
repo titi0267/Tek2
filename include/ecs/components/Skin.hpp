@@ -11,8 +11,8 @@
 
 namespace ecs {
     struct Skin {
-        int matId;
-        char texture[255];
+        int matId = 0;
+        char texture[255] = {0};
 
         Skin(const std::string &text = "", int matId = 0) : matId(matId)
         {

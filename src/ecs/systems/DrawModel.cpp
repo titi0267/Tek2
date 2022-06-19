@@ -62,7 +62,8 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
             }
 
             raylib::Animation &anim = animMan.getAnimation(playAnim.animation, playAnim.animIndex);
-            model.drawAnimation(anim, playAnim.actualFrame, tint);
+            raylib::Animation &resetAnim = animMan.getAnimation(playAnim.animation, playAnim.resetIndex);
+            model.drawAnimation(anim, resetAnim, playAnim.actualFrame, tint);
         } else
             model.draw(tint);
     }
