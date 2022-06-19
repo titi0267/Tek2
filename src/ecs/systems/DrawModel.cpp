@@ -49,7 +49,6 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
 
         if (world.hasComponent<ShaderValueSetter>(entity))
             world.getComponent<ShaderValueSetter>(entity).fct(world, entity);
-
         raylib::RlMatrixPush push;
         raylib::rlMultMatrix(mat);
 

@@ -40,6 +40,7 @@
 #include "ecs/components/BackgroundRotation.hpp"
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/ShaderValueSetter.hpp"
+#include "ecs/components/IsMusic.hpp"
 
 void toggleLoadKeyboard(ecs::World &world, ecs::Entity entity)
 {
@@ -117,6 +118,14 @@ void toggleFunction(ecs::World &world, ecs::Entity entity)
     but.show = !but.show;
 }
 
+void getPercentage(ecs::World &world, ecs::Entity entity)
+{
+    ecs::ToggleButton &but = world.getComponent<ecs::ToggleButton>(entity);
+    raylib::Window &win = world.getRessource<raylib::Window>();
+
+    but.show = !but.show;
+}
+
 void setFPSFunction(ecs::World &world, ecs::Entity entity)
 {
     ecs::FPSButton &but = world.getComponent<ecs::FPSButton>(entity);
@@ -154,6 +163,40 @@ void quitFunction(ecs::World &world, ecs::Entity entity)
 {
     world.getComponent<ecs::Tint>(entity) = RED;
     world.getRessource<raylib::Window>().toggleClose();
+}
+
+void soundUp(ecs::World &world, ecs::Entity entity)
+{
+    raylib::SoundManager &man = world.getRessource<raylib::SoundManager>();
+    float vol = man.getSoundVolume() + 0.1;
+    man.setSoundVolume(vol > 1 ? 1 : vol);
+    man.applySoundVolume();
+}
+
+void soundDown(ecs::World &world, ecs::Entity entity)
+{
+    raylib::SoundManager &man = world.getRessource<raylib::SoundManager>();
+    float vol = man.getSoundVolume() - 0.1;
+    man.setSoundVolume(vol < 0 ? 0 : vol);
+    man.applySoundVolume();
+}
+
+void musicUp(ecs::World &world, ecs::Entity entity)
+{
+    raylib::SoundManager &man = world.getRessource<raylib::SoundManager>();
+    float vol = man.getMusicVolume() + 0.1;
+
+    man.setMusicVolume(vol > 1 ? 1 : vol);
+    man.applyMusicVolume();
+}
+
+void musicDown(ecs::World &world, ecs::Entity entity)
+{
+    raylib::SoundManager &man = world.getRessource<raylib::SoundManager>();
+    float vol = man.getMusicVolume() - 0.1;
+
+    man.setMusicVolume(vol < 0 ? 0 : vol);
+    man.applyMusicVolume();
 }
 
 void downFunction(ecs::World &world, ecs::Entity entity)
@@ -212,9 +255,11 @@ void setProgressShaderValue(ecs::World &world, ecs::Entity entity)
 {
     raylib::ShaderManager &man = world.getRessource<raylib::ShaderManager>();
     raylib::Shader &shader = man.getShader("progress_button");
+    raylib::SoundManager &sMan = world.getRessource<raylib::SoundManager>();
+    ecs::IsMusic &music = world.getComponent<ecs::IsMusic>(entity);
     static int progressLoc = -1;
     static int colorLoc = -1;
-    float percentage = 0.5f;
+    float percentage = music.volume ? sMan.getMusicVolume() : sMan.getSoundVolume();
     Vector4 color = {1.0, 1.0, 0.0, 1.0};
 
     if (progressLoc == -1) {
@@ -271,12 +316,14 @@ void bomberman::MainMenuScene::generateAudioSettingsMenu(ecs::World &world)
     float y = 2.75;
 
     spawnTitleButton({{-30, y, -2}, rot, {1, 1, 1}}, "Settings Menu", world);
-    spawnToggleButton({{-30, y - 1, -2}, rot, {1, 1, 1}}, "Music is on!", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::MUSIC);
-    spawnToggleButton({{-30, y - 2, -2}, rot, {1, 1, 1}}, "Sound is on!", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
-    // CHANGE WITH NUANCER
-    spawnProgressButton({{-30, y - 3, -2}, rot, {1, 1, 1}}, ("Music: 100" ), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
-    spawnProgressButton({{-30, y - 4, -2}, rot, {1, 1, 1}}, ("Sound: 100"), {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
-    // CHANGE WITH NUANCER
+    spawnToggleButton({{-30, y - 1, -2}, rot, {1, 1, 1}}, "Music is on", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::MUSIC);
+    spawnToggleButton({{-30, y - 2, -2}, rot, {1, 1, 1}}, "Sound is on", {BLUE, BLUE}, toggleFunction, world, ecs::ToggleButton::SOUND);
+    spawnSquareButton({{-32.5, y - 3, -2}, rot, {1, 1, 1}}, "-", {WHITE, GRAY}, musicDown, world);
+    spawnProgressButton({{-30, y - 3, -2}, rot, {1, 1, 1}}, ("Music Vol" ), {BLUE, BLUE}, world, true);
+    spawnSquareButton({{-27.5, y - 3, -2}, rot, {1, 1, 1}}, "+", {WHITE, GRAY}, musicUp, world);
+    spawnSquareButton({{-32.5, y - 4, -2}, rot, {1, 1, 1}}, "-", {WHITE, GRAY}, soundDown, world);
+    spawnProgressButton({{-30, y - 4, -2}, rot, {1, 1, 1}}, ("Sound Vol"), {BLUE, BLUE}, world, false);
+    spawnSquareButton({{-27.5, y - 4, -2}, rot, {1, 1, 1}}, "+", {WHITE, GRAY}, soundUp, world);
     spawnButton({{-30, y - 5, -2}, rot, {1, 1, 1}}, "Back", {WHITE, GRAY}, leftFunction, world);
 }
 
@@ -452,7 +499,7 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
 }
 
 void bomberman::MainMenuScene::spawnProgressButton(const Transform &transform, const std::string &text,
-const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, ecs::ToggleButton::Usage usage)
+const ecs::HoverTint &hoverTint, ecs::World &world, bool isMusic)
 {
     const float BUTTON_SIZE = 3;
 
@@ -460,9 +507,9 @@ const ecs::HoverTint &hoverTint, ClickCallbackFct doOnClick, ecs::World &world, 
     ecs::Text3D {text, BLACK, {0, 0, 0.06}, 12}, ecs::FontRef {"emulogic"},
     ecs::ModelRef {"progress_button"}, hoverTint.base,
     ecs::Hitbox{{-BUTTON_SIZE / 2, -0.4, -0.05}, {BUTTON_SIZE / 2, 0.4, 0.05}},
-    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Timer {}, ecs::Clickable {doOnClick},
-    ecs::SceneMoveElement {MOVE_SPEED}, ecs::ToggleButton {usage},
-    ecs::ShaderValueSetter{setProgressShaderValue});
+    ecs::Hoverable {}, hoverTint, ecs::HoverRotate {}, ecs::Timer {},
+    ecs::SceneMoveElement {MOVE_SPEED},
+    ecs::ShaderValueSetter{setProgressShaderValue}, ecs::IsMusic {isMusic});
 }
 
 void bomberman::MainMenuScene::spawnTextInputButton(const Transform &transform, const std::string &text,

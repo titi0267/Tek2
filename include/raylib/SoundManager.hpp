@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <stdexcept>
 #include "Sound.hpp"
+#include <iostream>
 
 namespace raylib {
     class SoundManager {
@@ -19,7 +20,7 @@ namespace raylib {
         float _musicVolume;
         float _soundVolume;
         public:
-        SoundManager() : _music(true), _sound(true), _musicVolume(1), _soundVolume(1)
+        SoundManager() : _music(true), _sound(true), _musicVolume(0.5), _soundVolume(0.5)
         {
             InitAudioDevice();
         }
@@ -40,7 +41,23 @@ namespace raylib {
                 throw std::runtime_error("Sound " + id + " does not exist");
             return (_sounds.at(id));
         }
-        void setMusicVolume()
+        float getMusicVolume()
+        {
+            return (_musicVolume);
+        }
+        float getSoundVolume()
+        {
+            return (_soundVolume);
+        }
+        void setMusicVolume(float musicVolume)
+        {
+            _musicVolume = musicVolume;
+        }
+        void setSoundVolume(float soundVolume)
+        {
+            _soundVolume = soundVolume;
+        }
+        void applyMusicVolume()
         {
             for (auto it = _sounds.begin(); it != _sounds.end(); it++) {
                 raylib::Sound &sound = it->second;
@@ -52,7 +69,7 @@ namespace raylib {
                     sound.setSoundVolume(_musicVolume);
             }
         }
-        void setSoundVolume()
+        void applySoundVolume()
         {
             for (auto it = _sounds.begin(); it != _sounds.end(); it++) {
                 raylib::Sound &sound = it->second;

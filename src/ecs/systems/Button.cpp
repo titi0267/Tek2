@@ -182,7 +182,7 @@ void ecs::ToggleMusicButtonSystem::update(ecs::World &world)
                 tint = RED;
                 text.text = "Music is off!";
                 man.toggleMusic();
-                man.setMusicVolume();
+                man.applyMusicVolume();
             }
             hTint.base = RED;
             hTint.onHover = GREEN;
@@ -193,7 +193,7 @@ void ecs::ToggleMusicButtonSystem::update(ecs::World &world)
                 tint = BLUE;
                 text.text = "Music is on!";
                 man.toggleMusic();
-                man.setMusicVolume();
+                man.applyMusicVolume();
             }
             hTint.base = BLUE;
             hTint.onHover = GREEN;
@@ -222,7 +222,7 @@ void ecs::ToggleSoundButtonSystem::update(ecs::World &world)
                 text.text = "Sound is off!";
                 tint = RED;
                 man.toggleSound();
-                man.setSoundVolume();
+                man.applySoundVolume();
             }
             hTint.base = RED;
             hTint.onHover = GREEN;
@@ -233,7 +233,7 @@ void ecs::ToggleSoundButtonSystem::update(ecs::World &world)
                 tint = BLUE;
                 text.text = "Sound is on!";
                 man.toggleSound();
-                man.setSoundVolume();
+                man.applySoundVolume();
             }
             hTint.base = BLUE;
             hTint.onHover = GREEN;
