@@ -43,6 +43,8 @@ namespace ecs {
         };
 
         bool isIdAvailaible();
-        PlayerId getNextPlayerId();
+        PlayerId reserveNextPlayerId();
+        void unreservePlayerId(PlayerId id);
+        bool isIdUnassigned(PlayerId id);
     };
 }

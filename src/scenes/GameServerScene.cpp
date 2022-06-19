@@ -208,7 +208,7 @@ void bomberman::GameServerScene::startNewGame(ecs::World &world)
 
     ecs::PlayersManager &playerMan = world.getRessource<ecs::PlayersManager>();
     while (playerMan.isIdAvailaible())
-        createAi(playerMan.getNextPlayerId(), world);
+        createAi(playerMan.reserveNextPlayerId(), world);
 
     generateMapProps(world);
     for (int y = 0; y < height; y++) {
@@ -307,6 +307,8 @@ void bomberman::GameServerScene::entityKilled(ecs::Entity entity,ecs::World &wor
         world.getRessource<ecs::ServerManager>().killLocalEntity(entity, world);
     else if (world.hasComponent<ecs::MirroredEntity>(entity))
         world.getRessource<ecs::ServerManager>().deleteClientEntity(entity, world);
+    if (world.hasComponent<ecs::Ai>(entity))
+        world.getRessource<ecs::PlayersManager>().unreservePlayerId(world.getComponent<ecs::PlayerAction>(entity).id);
 }
 
 map::Map &bomberman::GameServerScene::getMap()

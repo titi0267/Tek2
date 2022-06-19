@@ -47,8 +47,8 @@ void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, ecs::World &worl
 void bomberman::LobbyServerScene::loadScene(ecs::World &world)
 {
     ecs::PlayersManager &playersMan = world.getRessource<ecs::PlayersManager>();
+    ecs::SkinManager &skinMan = world.getRessource<ecs::SkinManager>();
     ecs::ServerManager &man = world.getRessource<ecs::ServerManager>();
-    ecs::PlayersManager &pMan = world.getRessource<ecs::PlayersManager>();
     char buf[255];
 
     world.registerSystems<LobbyExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem>();
@@ -56,6 +56,12 @@ void bomberman::LobbyServerScene::loadScene(ecs::World &world)
         _actions.insert({i, ecs::DO_NOTHING});
         _updatedThisFrame.insert({i, false});
     }
+
+    for (int i = 0; i < 4; i++) {
+        if (playersMan.isIdUnassigned(i) && skinMan.hasSkinAssigned(i))
+            skinMan.unassignedSkin(i, false);
+    }
+
     std::snprintf(buf, 255, "%s %hu", man.getIp().c_str(), man.getPort());
     world.spawn().insert(Transform{{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::ModelRef{"amphi"}, ecs::MirrorEntity{});
     world.spawn().insert(Transform{{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::Light{Vector3{-1, -1, -1}, Vector4{0.8, 0.8, 0.8, 1.0}}, ecs::MirrorEntity{});
