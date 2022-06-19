@@ -56,5 +56,15 @@ namespace ecs {
         {
             return _signatures[(size_t) entity];
         }
+
+        void reset()
+        {
+            _availableEntities.clear();
+            _availableEntities.resize(MAX_ENTITIES);
+            for (std::size_t i = 0; i < MAX_ENTITIES; i++) {
+                _availableEntities[i] = ((Entity) i);
+                _signatures[i] = {};
+            }
+        }
     };
 }

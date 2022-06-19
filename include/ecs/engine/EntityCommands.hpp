@@ -68,8 +68,6 @@ namespace ecs {
             Signature &sign = _world.getEntityManager().getSignature(_entity);
             std::deque<Entity> &living = _world.getLivingEntities();
 
-            if (std::find(living.begin(), living.end(), _entity) == living.end())
-                return;
             _world.getRessource<ecs::SceneManager>().getScene().entityKilled(_entity, _world);
             for (ComponentType i = 0; i < MAX_COMPONENTS; i++) {
                 if (sign.test(i))

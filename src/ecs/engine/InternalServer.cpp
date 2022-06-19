@@ -33,7 +33,11 @@ void ecs::InternalServer::serverMain()
     _serverWorld->insertRessource<raylib::AnimationManager>();
     _serverWorld->insertRessource<ecs::Clock>();
 
-    _serverWorld->getRessource<ServerManager>().startServer(_port);
+    try {
+        _serverWorld->getRessource<ServerManager>().startServer(_port);
+    } catch(network::SocketError) {
+        return;
+    }
     _serverWorld->getRessource<SceneManager>().loadServerScene(*_serverWorld);
 
     bomberman::loadAnimations(*_serverWorld);
