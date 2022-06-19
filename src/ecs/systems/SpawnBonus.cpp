@@ -48,6 +48,7 @@ void ecs::SpawnBonusUpdateSystem::update(ecs::World &world)
 
         for (auto [pEntity, player, gPos] : playersAlive) {
             if (pos == gPos) {
+                world.getRessource<ecs::ServerManager>().playSound("bonus_sound");
                 BONUS_FCT.at(spawnBonus.bonus)(player);
                 toDelete.push_back(entity);
                 break;

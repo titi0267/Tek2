@@ -20,6 +20,6 @@ void ecs::WinUpdateSystem::update(ecs::World &world)
 {
     _time += world.getRessource<Clock>().getDeltaSec();
 
-    if (_time >= 5)
+    if (_time >= 10)
         world.getRessource<ecs::SceneManager>().changeScene(SERVER_LOBBY_SCENE, nullptr);
 }

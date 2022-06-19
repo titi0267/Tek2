@@ -336,6 +336,10 @@ void bomberman::MainMenuScene::loadScene(ecs::World &world)
 
 void bomberman::MainMenuScene::unloadScene(ecs::World &world)
 {
+    auto &man = world.getRessource<raylib::SoundManager>();
+    auto &music = man.getSound("main_menu_music");
+
+    music.stopSound();
     world.killAllEntities();
 }
 

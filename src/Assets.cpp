@@ -101,6 +101,9 @@ void bomberman::loadSounds(ecs::World &world)
     soundMan.loadSound("main_menu_music", "./assets/sounds/main_menu.mp3", true);
     soundMan.loadSound("omar_voice", "./assets/sounds/omar.wav", false);
     soundMan.loadSound("water_sound", "./assets/sounds/water.wav", false);
+    soundMan.loadSound("bonus_sound", "./assets/sounds/bonus.wav", false);
+    soundMan.loadSound("click_sound", "./assets/sounds/click.mp3", false);
+    soundMan.loadSound("game_music", "./assets/sounds/game.wav", true);
 }
 
 void bomberman::applyAssetsToModels(ecs::World &world)

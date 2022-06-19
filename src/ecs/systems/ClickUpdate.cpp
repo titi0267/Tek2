@@ -7,6 +7,9 @@
 
 #include "ecs/components/Clickable.hpp"
 #include "ecs/components/CameraFollow.hpp"
+#include "ecs/engine/Network.hpp"
+#include "raylib/SoundManager.hpp"
+#include "raylib/Sound.hpp"
 
 #include "raylib/Window.hpp"
 #include "raylib/Camera.hpp"
@@ -46,9 +49,13 @@ void ecs::ClickUpdateSystem::update(ecs::World &world)
         RayCollision collision = ray.getCollisionBox(box);
 
         if (collision.hit && collision.distance < hitDist) {
-            if (world.hasComponent<Clickable>(entity))
+            if (world.hasComponent<Clickable>(entity)) {
+                auto &man = world.getRessource<raylib::SoundManager>();
+                auto &music = man.getSound("click_sound");
+
+                music.playSound();
                 hitClick = &world.getComponent<Clickable>(entity);
-            else
+            } else
                 hitClick  = nullptr;
             hitDist = collision.distance;
             hitEntity = entity;
