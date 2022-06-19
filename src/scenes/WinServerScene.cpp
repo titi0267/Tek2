@@ -10,38 +10,37 @@
 #include "ecs/components/Skin.hpp"
 #include "ecs/engine/Network.hpp"
 #include "raylib/Camera.hpp"
+#include "ecs/engine/SkinManager.hpp"
+#include "ecs/components/Light.hpp"
 
 void bomberman::WinServerScene::spawnBackground(ecs::World &world)
 {
     ;
 }
 
-void bomberman::WinServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::World &world)
+void bomberman::WinServerScene::spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::SkinManager &skinMan, ecs::World &world)
 {
     Transform transform = {pos, QuaternionIdentity(), {1, 1, 1}};
-    ecs::Entity entity;
-    switch (id) {
-        case 0:
-            entity = world.spawn().insert(ecs::Player{id}, transform,
-            ecs::ModelRef("player"), ecs::Skin{"mathieu"}, ecs::MirrorEntity {}).getEntity();
-        break;
-        case 1:
-            entity = world.spawn().insert(ecs::Player{id}, transform,
-            ecs::ModelRef("player"), ecs::Skin{"ludovic"}, ecs::MirrorEntity {}).getEntity();
-        break;
-        case 2:
-            entity = world.spawn().insert(ecs::Player{id}, transform,
-            ecs::ModelRef("player"), ecs::Skin{"timothe"}, ecs::MirrorEntity {}).getEntity();
-        break;
-        case 3:
-            entity = world.spawn().insert(ecs::Player{id}, transform,
-            ecs::ModelRef("player"), ecs::Skin{"jeffrey"}, ecs::MirrorEntity {}).getEntity();
-        break;
-    }
+    ecs::GridPosition gPos = {0, 0};
+
+
+    ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef("player"), ecs::Player {id}, ecs::Skin {skinMan.getPlayerSkin(id)}, ecs::MirrorEntity {}).getEntity();
+    std::cout << "SPAWNED PLAYER"<<std::endl;
+
+    _players.insert({id, entity});
 }
 
 void bomberman::WinServerScene::loadScene(ecs::World &world)
 {
+    ecs::SkinManager &skinMan = world.getRessource<ecs::SkinManager>();
+    world.getRessource<ecs::ServerManager>().moveCameras({0, 7, 3}, {0, 0, 0});
+
+    spawnPlayer(0, {-5, 0, -4}, skinMan, world);
+    spawnPlayer(1, {-2, 0, -4}, skinMan, world);
+    spawnPlayer(2, {1, 0, -4}, skinMan, world);
+    spawnPlayer(3, {4, 0, -4}, skinMan, world);
+    world.spawn().insert(Transform{{0, 0, 0}, QuaternionIdentity(), {0.7, 0.7, 0.7}}, ecs::ModelRef{"amphi"}, ecs::MirrorEntity{});
+    world.spawn().insert(Transform{{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::Light{Vector3{-1, -1, -1}, Vector4{0.8, 0.8, 0.8, 1.0}}, ecs::MirrorEntity{});
     std::remove("bombitek.dat");
     std::remove("bombitek.map");
 }
