@@ -28,7 +28,7 @@ void ecs::KeyRecorderSystem::update(ecs::World &world)
         HoverTint &hTint = world.getComponent<HoverTint>(entity);
         Tint &tint = world.getComponent<Tint>(entity);
 
-        text.text = bind.getKeyText(key.gamepad, key.bind);
+        text.setText(bind.getKeyText(key.gamepad, key.bind));
         if (!key.recording)
             continue;
         if (!bind.getRecording(key.gamepad)) {
@@ -55,7 +55,7 @@ void ecs::KeyRecorderSystem::update(ecs::World &world)
                 continue;
             try {
                 bind.setKey(false, key.bind, ch);
-                text.text = bind.getKeyText(key.gamepad, key.bind);
+                text.setText(bind.getKeyText(key.gamepad, key.bind));
             }
             catch (std::invalid_argument) {
                 continue;
@@ -71,7 +71,7 @@ void ecs::KeyRecorderSystem::update(ecs::World &world)
                 continue;
             try {
                 bind.setKey(true, key.bind, ch);
-                text.text = bind.getKeyText(key.gamepad, key.bind);
+                text.setText(bind.getKeyText(key.gamepad, key.bind));
             }
             catch (std::invalid_argument) {
                 continue;

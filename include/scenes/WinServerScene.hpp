@@ -11,6 +11,7 @@
 #include "ecs/engine/Network.hpp"
 #include "ecs/components/Player.hpp"
 #include "ecs/components/GridPosition.hpp"
+#include "ecs/engine/SkinManager.hpp"
 #include "raylib/Vectors.hpp"
 
 namespace bomberman {
@@ -25,9 +26,10 @@ namespace bomberman {
         using ConnId = network::ConnId;
 
         ecs::PlayerId _winner;
+        std::unordered_map<ecs::PlayerId, ecs::Entity> _players;
 
         void spawnBackground(ecs::World &world);
-        void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::World &world);
+        void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::SkinManager &skinMan, ecs::World &world);
 
         public:
         WinServerScene(const void *data) {};

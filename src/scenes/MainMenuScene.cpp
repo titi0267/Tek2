@@ -48,8 +48,9 @@ void checkIp(ecs::World &world, ecs::Entity entity)
     std::smatch match;
     ecs::Text3D &but = world.getComponent<ecs::Text3D>(entity);
     Color &col = world.getComponent<Color>(entity);
+    std::string text = but.getText();
 
-    if (!std::regex_search(but.text, match, std::regex("((?:[0-9]{1,3}.){3}[0-9]{1,3})((?:[0-9]{0,5}))?")))
+    if (!std::regex_search(text, match, std::regex("((?:[0-9]{1,3}.){3}[0-9]{1,3})((?:[0-9]{0,5}))?")))
         col = RED;
     else
         col = GREEN;
@@ -75,19 +76,19 @@ void incNbPlayerHostFunction(ecs::World &world, ecs::Entity entity)
     switch (man.getNbPlayers(true))
     {
         case 1:
-            text.text = "Solo";
+            text.setText("Solo");
             text.color = BLACK;
             break;
         case 2:
-            text.text = "Duo";
+            text.setText("Duo");
             text.color = YELLOW;
             break;
         case 3:
-            text.text = "Trio";
+            text.setText("Trio");
             text.color = ORANGE;
             break;
         default:
-            text.text = "Full!";
+            text.setText("Full!");
             text.color = RED;
             break;
     }
@@ -105,15 +106,15 @@ void incNbPlayerConnectFunction(ecs::World &world, ecs::Entity entity)
     switch (man.getNbPlayers(false))
     {
         case 1:
-            text.text = "Solo";
+            text.setText("Solo");
             text.color = BLACK;
             break;
         case 2:
-            text.text = "Duo";
+            text.setText("Duo");
             text.color = ORANGE;
             break;
         default:
-            text.text = "Full!";
+            text.setText("Full!");
             text.color = RED;
             break;
     }
