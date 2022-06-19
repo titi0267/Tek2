@@ -49,6 +49,7 @@
 #include "ecs/components/LaunchButton.hpp"
 #include "ecs/components/Light.hpp"
 #include "ecs/components/Win.hpp"
+#include "ecs/components/PlayMusic.hpp"
 
 // Those components are mirrored between clients and server
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
@@ -110,7 +111,7 @@ void bomberman::registerInputs(ecs::World &world)
 
     world.registerSystems<ecs::ResolutionButtonSystem, ecs::FullscreenButtonSystem, ecs::FPSButtonSystem,
     ecs::ShowFPSButtonSystem, ecs::ToggleMusicButtonSystem, ecs::ToggleSoundButtonSystem,
-    ecs::KeyRecorderSystem, ecs::TextInputSystem, ecs::TextInputSettingsSystem, ecs::DisappearSystem, ecs::LaunchButtonSystem, ecs::TextInputPortSystem>();
+    ecs::KeyRecorderSystem, ecs::TextInputSystem, ecs::TextInputSettingsSystem, ecs::DisappearSystem, ecs::LaunchButtonSystem, ecs::TextInputPortSystem, ecs::PlayMusicSystem>();
 }
 
 void bomberman::registerNetwork(ecs::World &world, bool client)

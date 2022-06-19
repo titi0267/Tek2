@@ -62,6 +62,7 @@ add_executable(bomberman
     "src/ecs/systems/ItemRotation.cpp"
     "src/ecs/systems/Light.cpp"
     "src/ecs/systems/Win.cpp"
+    "src/ecs/systems/PlayMusic.cpp"
 
     "src/scenes/SceneList.cpp"
     "src/scenes/MainMenuScene.cpp"

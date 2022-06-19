@@ -181,7 +181,7 @@ void ecs::ToggleMusicButtonSystem::update(ecs::World &world)
         if (but.show) {
             if (!but.precedent) {
                 tint = RED;
-                text.setText("Music is off!");
+                text.setText("Music off");
                 man.toggleMusic();
                 man.applyMusicVolume();
             }
@@ -192,7 +192,7 @@ void ecs::ToggleMusicButtonSystem::update(ecs::World &world)
         else {
             if (but.precedent) {
                 tint = BLUE;
-                text.setText("Music is on!");
+                text.setText("Music on");
                 man.toggleMusic();
                 man.applyMusicVolume();
             }
