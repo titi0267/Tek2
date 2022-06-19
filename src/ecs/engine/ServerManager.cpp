@@ -10,6 +10,7 @@
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/EntityCommands.hpp"
 #include "ecs/engine/PlayersManager.hpp"
+#include "raylib/Sound.hpp"
 
 void ecs::ServerManager::sendCmd(ConnId conn, NetworkCommand cmd)
 {
@@ -18,11 +19,18 @@ void ecs::ServerManager::sendCmd(ConnId conn, NetworkCommand cmd)
 
 bool ecs::ServerManager::tryRead(ConnId conn, void *buf, std::size_t size)
 {
+    std::size_t dataRead = 0;
+    std::size_t tmp;
+
     if (!_server->doesConnExists(conn))
         return true;
-    if(_server->read(conn, buf, size) != size) {
-        _server->disconnectConn(conn);
-        return true;
+    while (dataRead < size) {
+        tmp = _server->read(conn, (char*) buf + dataRead, size - dataRead);
+        if (tmp == 0) {
+            _server->disconnectConn(conn);
+            return true;
+        }
+        dataRead += tmp;
     }
     return false;
 }
@@ -120,7 +128,7 @@ void ecs::ServerManager::spawnOrUpdateClientEntity(ConnId conn, World &world)
 {
     auto &clientToServer = _clientToServer[conn];
     Entity serverEntity;
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
 
     if (tryRead(conn, &serverEntity, sizeof(Entity)))
         return;
@@ -187,7 +195,7 @@ void ecs::ServerManager::killClientEntity(ConnId conn, World &world)
 {
     Entity clientEntity;
     Entity localEntity;
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
     std::string data;
 
     // std::cout << "[SERVER] Killing entity from client" << std::endl;
@@ -206,7 +214,7 @@ void ecs::ServerManager::killClientEntity(ConnId conn, World &world)
 
 void ecs::ServerManager::updateLocalEntity(Entity entity, World &world)
 {
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
     createUpdateLocalEntityBuffer(entity, world, buffer);
     std::string data = buffer.str();
     MirrorEntity &mirror = world.getComponent<MirrorEntity>(entity);
@@ -223,7 +231,7 @@ void ecs::ServerManager::updateLocalEntity(Entity entity, World &world)
 
 void ecs::ServerManager::killLocalEntity(Entity entity, World &world)
 {
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
     createKillLocalEntityBuffer(entity, buffer);
     std::string data = buffer.str();
 
@@ -277,6 +285,16 @@ void ecs::ServerManager::moveCamera(ConnId conn, Vector3 pos, Vector3 target)
     sendCmd(conn, NetworkCommand::MOVE_CAMERA);
     _server->write(conn, &pos, sizeof(Vector3));
     _server->write(conn, &target, sizeof(Vector3));
+}
+
+void ecs::ServerManager::playSound(const std::string &sound)
+{
+    raylib::SoundRef ref{sound};
+
+    for (ConnId conn : _activeConns) {
+        sendCmd(conn, NetworkCommand::PLAY_SOUND);
+        _server->write(conn, &ref, sizeof(raylib::SoundRef));
+    }
 }
 
 void ecs::ServerManager::deleteClientEntity(Entity entity, World &world)

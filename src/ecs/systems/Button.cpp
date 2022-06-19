@@ -149,7 +149,7 @@ void ecs::ShowFPSButtonSystem::update(ecs::World &world)
                 tint = BLUE;
             hTint.base = BLUE;
             hTint.onHover = GREEN;
-            win.drawFPS(0, 0);
+            win.setShowFPS(true);
             but.precedent = true;
         }
         else {
@@ -157,6 +157,7 @@ void ecs::ShowFPSButtonSystem::update(ecs::World &world)
                 tint = RED;
             hTint.base = RED;
             hTint.onHover = GREEN;
+            win.setShowFPS(false);
             but.precedent = false;
         }
     }
@@ -180,7 +181,7 @@ void ecs::ToggleMusicButtonSystem::update(ecs::World &world)
         if (but.show) {
             if (!but.precedent) {
                 tint = RED;
-                text.text = "Music is off!";
+                text.setText("Music is off!");
                 man.toggleMusic();
                 man.applyMusicVolume();
             }
@@ -191,7 +192,7 @@ void ecs::ToggleMusicButtonSystem::update(ecs::World &world)
         else {
             if (but.precedent) {
                 tint = BLUE;
-                text.text = "Music is on!";
+                text.setText("Music is on!");
                 man.toggleMusic();
                 man.applyMusicVolume();
             }
@@ -219,7 +220,7 @@ void ecs::ToggleSoundButtonSystem::update(ecs::World &world)
         raylib::SoundManager &man = world.getRessource<raylib::SoundManager>();
         if (but.show) {
             if (!but.precedent) {
-                text.text = "Sound is off!";
+                text.setText("Sound is off!");
                 tint = RED;
                 man.toggleSound();
                 man.applySoundVolume();
@@ -231,7 +232,7 @@ void ecs::ToggleSoundButtonSystem::update(ecs::World &world)
         else {
             if (but.precedent) {
                 tint = BLUE;
-                text.text = "Sound is on!";
+                text.setText("Sound is on!");
                 man.toggleSound();
                 man.applySoundVolume();
             }

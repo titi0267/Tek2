@@ -12,6 +12,7 @@
 #include "ecs/components/GridPosition.hpp"
 #include "ecs/components/Player.hpp"
 #include "ecs/components/Movement.hpp"
+#include "ecs/components/PlayAnimation.hpp"
 #include "raylib/Vectors.hpp"
 #include <iostream>
 
@@ -33,24 +34,25 @@ void ecs::WaterUpdateSystem::update(ecs::World &world)
         Timer &timer = world.getComponent<Timer>(entity);
         Water &water = world.getComponent<Water>(entity);
 
-        if (!water.expanded && timer.timeElapsed >= 0.2) {
-            Vector3 pos = transform.translation + water.dir;
-            ecs::GridPosition newGPos = gPos + ecs::GridPosition{(int) water.dir.x, (int) water.dir.z};
+        // if (!water.expanded && timer.timeElapsed >= 0.2) {
+        //     Vector3 pos = transform.translation + water.dir;
+        //     ecs::GridPosition newGPos = gPos + ecs::GridPosition{(int) water.dir.x, (int) water.dir.z};
 
-            water.expanded = true;
+        //     water.expanded = true;
 
-            if (water.distance >= 4 || !newGPos.isValidPos(map))
-                continue;
+        //     if (water.distance == water.maxDistance || !newGPos.isValidPos(map) || (water.dir.x == 0 && water.dir.z == 0))
+        //         continue;
 
-            int cell = map.getCellAt(newGPos.x, newGPos.y);
+        //     int cell = map.getCellAt(newGPos.x, newGPos.y);
 
-            if (cell == VOID || cell == SPAWN) {
-                scene.spawnWater(pos, newGPos, water.dir, water.distance + 1, world);
-            } else if (cell == DESTRUCTIBLE) {
-                map.setCellAt(newGPos.x, newGPos.y, VOID);
-                scene.deleteDestructible(newGPos, world);
-            }
-        }
+        //     if (map.isWalkableCell(newGPos.x, newGPos.y)) {
+        //         scene.spawnWater(pos, newGPos, water.dir, water.distance + 1, world);
+        //     } else if (cell == DESTRUCTIBLE) {
+        //         map.setCellAt(newGPos.x, newGPos.y, VOID);
+        //         scene.deleteDestructible(newGPos, world);
+        //         scene.trySpawnBonus(pos, newGPos, world);
+        //     }
+        // }
 
         if (timer.timeElapsed >= 1)
             toDelete.push_back(entity);
@@ -70,10 +72,10 @@ void ecs::WaterCollisionUpdateSystem::update(ecs::World &world)
 {
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
-    const std::set<Entity> &players = scene.getPlayers();
+    const std::unordered_map<PlayerId, Entity> &players = scene.getPlayers();
     std::vector<std::tuple<Entity, Player&, GridPosition&>> playersAlive;
 
-    for (Entity pEntity : players) {
+    for (auto &[id, pEntity] : players) {
         Player &player = world.getComponent<Player>(pEntity);
 
         if (player.alive) {
@@ -81,16 +83,18 @@ void ecs::WaterCollisionUpdateSystem::update(ecs::World &world)
             playersAlive.push_back({pEntity, player, gPos});
         }
     }
+
     for (Entity entity : _entities) {
         GridPosition &pos = world.getComponent<GridPosition>(entity);
 
-        for (auto [pEntity, player, gPos] : playersAlive) {
+        for (auto &[pEntity, player, gPos] : playersAlive) {
             if (pos == gPos) {
                 Transform &transform = world.getComponent<Transform>(pEntity);
                 Vector3 deathPos = transform.translation + Vector3{0, 100, 0};
 
                 player.alive = false;
-                world.getComponent<Movement>(pEntity).move(deathPos, 25);
+                world.getComponent<Movement>(pEntity).move(deathPos, 6);
+                world.getComponent<ecs::PlayAnimation>(pEntity).play("playerAnims", 2, 0.5, true, 4);
             }
         }
     }

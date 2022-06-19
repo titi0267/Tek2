@@ -13,31 +13,34 @@
 #include <chrono>
 #include <map>
 #include <unordered_map>
+#include <string_view>
 #include "network/IClient.hpp"
 #include "network/IServer.hpp"
 #include "network/CPSocket.hpp"
 #include "ecs/engine/World.hpp"
 #include "ecs/engine/PlayerId.hpp"
+#include "input/InputFile.hpp"
 #include "raylib/Vectors.hpp"
 
 namespace ecs {
     using ConnId = network::ConnId;
 
-    const std::size_t NB_MIRROR_COMPONENTS = 12;
+    const std::size_t NB_MIRROR_COMPONENTS = 16;
     extern const ComponentHash MIRROR_COMPONENTS[NB_MIRROR_COMPONENTS];
 
     enum class NetworkCommand : uint8_t {
-        UPDATE_ENTITY,
+        UPDATE_ENTITY = 1,
         KILL_ENTITY,
         INIT_PLAYERS,
         PLAYERS_CREATED,
         PLAYERS_REJECTED,
         DISCONNECT_CLIENT,
         MOVE_CAMERA,
+        PLAY_SOUND,
     };
 
     struct MirrorEntity {
-        char prevData[1024 * 4];
+        char prevData[1024 * 4] = {0};
         std::uint32_t size = 0;
 
         std::string_view getView() { return std::string_view(prevData, size); };
@@ -75,7 +78,7 @@ namespace ecs {
         ServerManager() : _server(network::CPSocket::createServer()) {};
         ~ServerManager() = default;
 
-        void startServer(const std::string &port) { _server->createServer("127.0.0.1", port); };
+        void startServer(const std::string &port) { _server->createServer("", port); };
         void closeServer() { _server->closeServer(); };
 
         std::vector<network::ConnId> acceptNewConns(World &world);
@@ -89,7 +92,12 @@ namespace ecs {
         void moveCameras(Vector3 pos, Vector3 target);
         void moveCamera(ConnId conn, Vector3 pos, Vector3 target);
 
+        void playSound(const std::string &sound);
+
         void deleteClientEntity(Entity entity, World &world);
+
+        const std::string &getIp() { return _server->getServerIp(); };
+        unsigned short getPort() { return _server->getServerPort(); };
     };
 
     using ConnectionSuccessFct = void (*)(ecs::World &world, void *obj);
@@ -120,6 +128,8 @@ namespace ecs {
         void handlePlayersCreated(World &world);
         void handleMoveCamera(World &world);
 
+        void handlePlaySound(World &world);
+
         public:
         ClientManager() : _client(network::CPSocket::createClient()) {};
         ~ClientManager() = default;
@@ -135,8 +145,16 @@ namespace ecs {
         void updateLocalEntity(Entity entity, World &world);
         void killLocalEntity(Entity entity, World &world);
 
-        void connectTo(const std::string &ip = "127.0.0.1", const std::string &port = "4243") { _client->connectTo(ip, port); };
-        void disconnect() { _client->disconnect(); };
+        void deleteServerEntity(Entity entity, World &world);
+
+        void connectTo(const std::string &ip = "127.0.0.1", const std::string &port = "4242") { _client->connectTo(ip, port); };
+        void disconnect()
+        {
+            if (_connAttempted)
+                _connAttempted = false;
+            else
+                _client->disconnect();
+        };
         bool isConnected() { return _client->isConnected(); };
     };
 
@@ -160,7 +178,9 @@ namespace ecs {
         public:
         virtual int getNbPlayersOnClient() = 0;
         virtual void onDisconnect(World &world) = 0;
-        virtual void playerIdAssigned(PlayerId id, World &world) = 0;
+        virtual void playerIdAssigned(PlayerId id, World &world, InputFile file) = 0;
+        virtual bool getHost() = 0;
+
     };
 
     class ServerNetworkSceneModule {

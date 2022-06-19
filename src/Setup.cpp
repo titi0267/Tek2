@@ -33,20 +33,43 @@
 #include "ecs/components/ToggleButton.hpp"
 #include "ecs/components/ShaderValueSetter.hpp"
 #include "ecs/components/IsMusic.hpp"
+#include "ecs/components/Grid.hpp"
+#include "ecs/components/CameraFollow.hpp"
+#include "ecs/components/Intro.hpp"
+#include "ecs/components/ItemRotation.hpp"
+#include "ecs/components/Player.hpp"
+#include "ecs/components/GridPosition.hpp"
+#include "ecs/components/Bomb.hpp"
+#include "ecs/components/Player.hpp"
+#include "ecs/components/Water.hpp"
+#include "ecs/components/DestructibleTile.hpp"
+#include "ecs/components/SpawnBonus.hpp"
+#include "ecs/components/Ai.hpp"
+#include "ecs/components/Disappear.hpp"
+#include "ecs/components/LaunchButton.hpp"
+#include "ecs/components/Light.hpp"
+#include "ecs/components/Win.hpp"
 
 // Those components are mirrored between clients and server
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
 void bomberman::registerCriticalComponents(ecs::World &world)
 {
     world.registerComponents<Transform, ecs::Movement, ecs::Hitbox, ecs::PlayerAction,
-    ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint,
-    ecs::DrawableCube, ecs::Text3D, ecs::PlayAnimation, ecs::Skin>();
+    ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint, ecs::DrawableCube, ecs::Text3D,
+    ecs::PlayAnimation, ecs::Skin, ecs::Grid, ecs::ItemRotation, ecs::Light, ecs::CameraFollow>();
 }
 
 void bomberman::registerBothSide(ecs::World &world)
 {
     world.registerComponent<ecs::Timer>();
-    world.registerSystem<ecs::TimerUpdateSystem>();
+    world.registerSystems<ecs::TimerUpdateSystem, ecs::ItemRotationUpdateSystem>();
+}
+
+void bomberman::registerServerSide(ecs::World &world)
+{
+    world.registerComponents<ecs::Player, ecs::GridPosition, ecs::Bomb,
+    ecs::Water, ecs::DestructibleTile, ecs::SpawnBonus, ecs::Ai>();
+    world.registerSystems<ecs::AnimationUpdateSystem>();
 }
 
 void bomberman::registerPhysics(ecs::World &world)
@@ -59,12 +82,15 @@ void bomberman::registerRender(ecs::World &world)
     world.registerSystem<ecs::AnimationUpdateSystem>();
 
     world.registerSystems<ecs::DrawTextureCubeSystem,
-    ecs::DrawableModelSystem, ecs::Draw3DTextSystem>();
+    ecs::DrawableModelSystem, ecs::Draw3DTextSystem, ecs::DrawGridSystem>();
 
     world.registerComponent<ecs::BackgroundRotation>();
     world.registerSystem<ecs::BackgroundRotationUpdateSystem>();
 
     world.registerComponent<ecs::ShaderValueSetter>();
+    world.registerComponent<ecs::Intro>();
+
+    world.registerSystem<ecs::LightUpdateSystem>();
 }
 
 void bomberman::registerInputs(ecs::World &world)
@@ -79,10 +105,12 @@ void bomberman::registerInputs(ecs::World &world)
     world.registerSystems<ecs::HoverTintUpdateSystem, ecs::HoverRotateUpdateSystem, ecs::SceneMoveElementSystem>();
 
     world.registerComponents<ecs::ResolutionButton, ecs::FullscreenButton, ecs::FPSButton,
-    ecs::ToggleButton, ecs::SingleKeyRecorder, ecs::TextInput, ecs::TextInputSettings, ecs::IsMusic>();
+    ecs::ToggleButton, ecs::SingleKeyRecorder, ecs::TextInput, ecs::TextInputSettings,
+    ecs::IsMusic, ecs::Disappear, ecs::LaunchButton, ecs::TextInputPort>();
+
     world.registerSystems<ecs::ResolutionButtonSystem, ecs::FullscreenButtonSystem, ecs::FPSButtonSystem,
     ecs::ShowFPSButtonSystem, ecs::ToggleMusicButtonSystem, ecs::ToggleSoundButtonSystem,
-    ecs::KeyRecorderSystem, ecs::TextInputSystem, ecs::TextInputSettingsSystem>();
+    ecs::KeyRecorderSystem, ecs::TextInputSystem, ecs::TextInputSettingsSystem, ecs::DisappearSystem, ecs::LaunchButtonSystem, ecs::TextInputPortSystem>();
 }
 
 void bomberman::registerNetwork(ecs::World &world, bool client)

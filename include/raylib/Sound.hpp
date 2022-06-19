@@ -13,6 +13,21 @@
 namespace raylib {
     using RaylibSound = ::Sound;
 
+    struct SoundRef {
+        char sound[255];
+        int size;
+
+        SoundRef(const std::string &sound = "")
+        {
+            this->sound[(size = sound.copy(this->sound, 255))] = 0;
+        }
+
+        std::string toStr()
+        {
+            return std::string(sound, size);
+        }
+    };
+
     class Sound {
         bool _created;
         bool _music;
@@ -34,7 +49,5 @@ namespace raylib {
         void pauseSound() { PauseSound(_sound); };
         void resumeSound() { ResumeSound(_sound); };
         bool isSoundPlaying() { return (IsSoundPlaying(_sound)); };
-        protected:
-        private:
     };
 }

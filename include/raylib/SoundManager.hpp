@@ -24,10 +24,12 @@ namespace raylib {
         {
             InitAudioDevice();
         }
+
         ~SoundManager()
         {
             CloseAudioDevice();
         }
+
         Sound &loadSound(const std::string &id, const std::string &path, bool music)
         {
             if (_sounds.find(id) != _sounds.end())

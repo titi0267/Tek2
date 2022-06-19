@@ -9,6 +9,7 @@
 #include "ecs/engine/World.hpp"
 #include "ecs/engine/Component.hpp"
 #include "raylib/Vectors.hpp"
+#include "ecs/engine/PlayerId.hpp"
 #include <iostream>
 
 namespace bomberman {
@@ -16,20 +17,13 @@ namespace bomberman {
 }
 
 namespace ecs {
-    struct BombId {
-        std::uint64_t uniqueBombId = 0;
+    const float BOMB_EXPLODING_TIME = 3.0f;
 
-        BombId()
-        {
-            static std::uint64_t uniqueId = 0;
+    struct Bomb {
+        ecs::PlayerId playerId = -1;
+        int bombDistance = 0;
 
-            uniqueBombId = uniqueId++;
-        };
-
-        bool operator==(const BombId &bomb) const
-        {
-            return uniqueBombId == bomb.uniqueBombId;
-        }
+        Bomb(ecs::PlayerId id = -1, int bombDistance = 0) : playerId(id), bombDistance(bombDistance) {};
     };
 
     class BombUpdateSystem : public ASystem {
@@ -40,16 +34,5 @@ namespace ecs {
 
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
-    };
-}
-
-namespace std {
-    template<>
-    struct hash<ecs::BombId>
-    {
-        std::size_t operator()(const ecs::BombId &bomb) const
-        {
-            return (hash<std::uint64_t>()(bomb.uniqueBombId));
-        }
     };
 }

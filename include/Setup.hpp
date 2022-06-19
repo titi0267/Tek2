@@ -14,6 +14,7 @@ namespace bomberman {
 
     void registerCriticalComponents(ecs::World &world);
     void registerBothSide(ecs::World &world);
+    void registerServerSide(ecs::World &world);
     void registerRender(ecs::World &world);
     void registerInputs(ecs::World &world);
     void registerNetwork(ecs::World &world, bool client);

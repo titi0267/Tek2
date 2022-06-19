@@ -11,16 +11,25 @@
 #include "ecs/engine/EntityCommands.hpp"
 #include "ecs/engine/SceneManager.hpp"
 #include "ecs/engine/Clock.hpp"
+#include "ecs/engine/LaunchManager.hpp"
 #include "network/SocketError.hpp"
 #include "raylib/Camera.hpp"
+#include "raylib/SoundManager.hpp"
 
 bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
 {
+    std::size_t dataRead = 0;
+    std::size_t tmp;
+
     if (!_client->isConnected())
         return true;
-    if( _client->read(buf, size) != size) {
-        _client->disconnect();
-        return true;
+    while (dataRead < size) {
+        tmp = _client->read((char*) buf + dataRead, size - dataRead);
+        if (tmp == 0) {
+            _client->disconnect();
+            return true;
+        }
+        dataRead += tmp;
     }
     return false;
 }
@@ -88,10 +97,8 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
     while (_client->isConnected() && _client->canRead()) {
         if (!_client->canWrite())
             break;
-        // std::cout << "[CLIENT] Read from server" << std::endl;
         if (tryRead(&cmd, sizeof(NetworkCommand)))
             break;
-        // std::cout << "[CLIENT] CMD " << (int) cmd << " from server" << std::endl;
         switch (cmd) {
             case NetworkCommand::UPDATE_ENTITY:
             spawnOrUpdateServerEntity(world);
@@ -104,6 +111,9 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
             break;
             case NetworkCommand::MOVE_CAMERA:
             handleMoveCamera(world);
+            break;
+            case NetworkCommand::PLAY_SOUND:
+            handlePlaySound(world);
             break;
             case NetworkCommand::DISCONNECT_CLIENT:
             case NetworkCommand::PLAYERS_REJECTED:
@@ -132,7 +142,7 @@ bool ecs::ClientManager::readServerEntityUpdate(std::stringbuf &buffer)
         std::string tmp;
         tmp.reserve(componentSize);
 
-        if (tryRead(tmp.data(), componentSize))
+        if (tryRead((char*) tmp.data(), componentSize))
             return true;
         buffer.sputn((char*) &componentType, sizeof(ComponentType));
         buffer.sputn((char*) &componentSize, sizeof(std::uint32_t));
@@ -144,7 +154,7 @@ bool ecs::ClientManager::readServerEntityUpdate(std::stringbuf &buffer)
 void ecs::ClientManager::spawnOrUpdateServerEntity(World &world)
 {
     Entity serverEntity;
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
 
     if (tryRead(&serverEntity, sizeof(Entity))
     || readServerEntityUpdate(buffer))
@@ -206,7 +216,7 @@ void ecs::ClientManager::killServerEntity(World &world)
 
 void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
 {
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
     createUpdateLocalEntityBuffer(entity, world, buffer);
     std::string data = buffer.str();
     MirrorEntity &mirror = world.getComponent<MirrorEntity>(entity);
@@ -222,7 +232,7 @@ void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
 
 void ecs::ClientManager::killLocalEntity(Entity entity, World &world)
 {
-    std::stringbuf buffer;
+    std::stringbuf buffer{""};
     createKillLocalEntityBuffer(entity, buffer);
     std::string data = buffer.str();
 
@@ -231,16 +241,18 @@ void ecs::ClientManager::killLocalEntity(Entity entity, World &world)
 
 void ecs::ClientManager::handlePlayersCreated(World &world)
 {
+    ecs::LaunchManager &lman = world.getRessource<ecs::LaunchManager>();
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     ClientNetworkSceneModule &scene = dynamic_cast<ClientNetworkSceneModule&>(man.getScene());
     int nbPlayers = scene.getNbPlayersOnClient();
+    bool host = scene.getHost();
     PlayerId id;
 
     std::cout << "[CLIENT] Players created" << std::endl;
     for (int i = 0; i < nbPlayers; i++) {
         if (tryRead(&id, sizeof(PlayerId)))
             return;
-        scene.playerIdAssigned(id, world);
+        scene.playerIdAssigned(id, world, std::move(lman.getAt(host, i)));
     }
 }
 
@@ -255,6 +267,23 @@ void ecs::ClientManager::handleMoveCamera(ecs::World &world)
     _client->read(&target, sizeof(Vector3));
     cam.setPosition(pos);
     cam.setTarget(target);
+}
+
+void ecs::ClientManager::handlePlaySound(World &world)
+{
+    raylib::SoundManager &man = world.getRessource<raylib::SoundManager>();
+    raylib::SoundRef ref;
+
+    if (tryRead(&ref, sizeof(raylib::SoundRef)))
+        return;
+    man.getSound(ref.toStr()).playSound();
+}
+
+void ecs::ClientManager::deleteServerEntity(Entity entity, World &world)
+{
+    MirroredEntity &mirrored = world.getComponent<MirroredEntity>(entity);
+
+    _serverToClient.erase(mirrored.foreignEntity);
 }
 
 void ecs::ClientUpdateSystem::setSignature(ComponentManager &component)

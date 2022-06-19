@@ -62,6 +62,7 @@ void ecs::PlayerActionUpdateSystem::update(ecs::World &world)
     for (ecs::Entity entity : _entities) {
         PlayerAction &action = world.getComponent<PlayerAction>(entity);
 
+        scene.setActionUpdatedThisFrame(action.id, scene.getPlayerAction(action.id) != action.action);
         scene.setPlayerAction(action.id, action.action);
     }
 }

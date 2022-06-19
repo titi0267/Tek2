@@ -9,6 +9,8 @@
 #include "ecs/components/Player.hpp"
 #include "ecs/components/Movement.hpp"
 #include "ecs/components/PlayAnimation.hpp"
+#include "ecs/engine/Clock.hpp"
+#include <vector>
 
 void bomberman::GameExecuteActionUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
@@ -20,10 +22,15 @@ void bomberman::GameExecuteActionUpdateSystem::placeBomb(ecs::Entity entity, ecs
     Transform &transform = world.getComponent<Transform>(entity);
     ecs::GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
     map::Map &map = scene.getMap();
+    ecs::Player &player = world.getComponent<ecs::Player>(entity);
 
-    if (map.getCellAt(gPos.x, gPos.y) != VOID && map.getCellAt(gPos.x, gPos.y) != SPAWN)
+    if (!map.isValidCell(gPos.x, gPos.y) || !map.isWalkableCell(gPos.x, gPos.y))
         return;
-    scene.spawnBomb(transform.translation, gPos, world);
+
+    if (player.placedBombs == player.maxBombs)
+        return;
+
+    scene.spawnBomb(transform.translation, gPos, player, world);
     map.setCellAt(gPos.x, gPos.y, BOMB);
 }
 
@@ -42,24 +49,26 @@ void bomberman::GameExecuteActionUpdateSystem::movePlayer(ecs::Entity entity, ec
         {ecs::MOVE_RIGHT, PI / 2.0},
     };
 
+    ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
+    bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
+
     Transform &transform = world.getComponent<Transform>(entity);
     ecs::GridPosition &gPos = world.getComponent<ecs::GridPosition>(entity);
     ecs::Movement &move = world.getComponent<ecs::Movement>(entity);
+    ecs::Player &player = world.getComponent<ecs::Player>(entity);
 
-    Vector3 moveVec =  MOVEMENTS.at(action);
+    Vector3 moveVec = MOVEMENTS.at(action);
     ecs::GridPosition gDest = gPos + ecs::GridPosition {(int) moveVec.x, (int) moveVec.z};
 
-    if (gDest.x < 0 || gDest.y < 0 || gDest.x > map.getWidth() - 1 || gDest.y > map.getHeight() - 1)
+    if (!map.isValidCell(gDest.x, gDest.y) || player.tigDuration > 0)
         return;
 
-    if (map.getCellAt(gDest.x, gDest.y) == VOID || map.getCellAt(gDest.x, gDest.y) == SPAWN) {
-        std::cout << "[MOVE] TO " << gDest.x << ", " << gDest.y << std::endl;
+    if (map.isWalkableCell(gDest.x, gDest.y)) {
         gPos = gDest;
-        move.move(transform.translation + moveVec, 2);
+        move.move(transform.translation + moveVec, player.speed);
         transform.rotation = QuaternionFromEuler(0, ROTATIONS.at(action), 0);
-        world.getComponent<ecs::PlayAnimation>(entity).play("playerAnims", 0, 0.5, false);
-    } else
-        std::cout << "Can't go this way :" << map.getCellAt(gDest.x, gDest.y) << std::endl;
+        world.getComponent<ecs::PlayAnimation>(entity).play("playerAnims", 0, 1 / player.speed, false, 4);
+    }
 }
 
 void bomberman::GameExecuteActionUpdateSystem::update(ecs::World &world)
@@ -67,6 +76,7 @@ void bomberman::GameExecuteActionUpdateSystem::update(ecs::World &world)
     ecs::SceneManager &man = world.getRessource<ecs::SceneManager>();
     bomberman::GameServerScene &scene = dynamic_cast<bomberman::GameServerScene&>(man.getScene());
     map::Map &map = scene.getMap();
+    ecs::Clock &clock = world.getRessource<ecs::Clock>();
 
     for (ecs::Entity entity : _entities) {
         ecs::Player &player = world.getComponent<ecs::Player>(entity);

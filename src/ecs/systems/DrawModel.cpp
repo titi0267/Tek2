@@ -10,6 +10,7 @@
 #include "ecs/components/PlayAnimation.hpp"
 #include "ecs/components/Skin.hpp"
 #include "ecs/components/ShaderValueSetter.hpp"
+#include "ecs/components/CameraFollow.hpp"
 
 #include "raylib/Camera.hpp"
 #include "raylib/Matrix.hpp"
@@ -29,6 +30,7 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
     raylib::ModelManager &modelMan = world.getRessource<raylib::ModelManager>();
     raylib::TextureManager &textMan = world.getRessource<raylib::TextureManager>();
     raylib::AnimationManager &animMan = world.getRessource<raylib::AnimationManager>();
+    raylib::Matrix invViewMat = camera.getViewMatrix().inverse();
 
     camera.begin3DMode();
     for (auto entity : _entities) {
@@ -38,6 +40,9 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
 
         raylib::Matrix mat = raylib::Matrix::fromTransform(transform);
         Tint tint = WHITE;
+
+        if (world.hasComponent<CameraFollow>(entity))
+            mat = mat * invViewMat;
 
         if (world.hasComponent<Tint>(entity))
             tint = world.getComponent<Tint>(entity);
@@ -49,6 +54,7 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
 
         if (world.hasComponent<ShaderValueSetter>(entity))
             world.getComponent<ShaderValueSetter>(entity).fct(world, entity);
+
         raylib::RlMatrixPush push;
         raylib::rlMultMatrix(mat);
 
@@ -60,7 +66,8 @@ void ecs::DrawableModelSystem::update(ecs::World &world)
             }
 
             raylib::Animation &anim = animMan.getAnimation(playAnim.animation, playAnim.animIndex);
-            model.drawAnimation(anim, playAnim.actualFrame, tint);
+            raylib::Animation &resetAnim = animMan.getAnimation(playAnim.animation, playAnim.resetIndex);
+            model.drawAnimation(anim, resetAnim, playAnim.actualFrame, tint);
         } else
             model.draw(tint);
     }

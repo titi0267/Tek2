@@ -17,10 +17,12 @@ namespace bomberman {
         using ConnId = network::ConnId;
 
         std::unordered_map<ecs::PlayerId, ecs::Actions> _actions;
+        std::unordered_map<ecs::PlayerId, bool> _updatedThisFrame;
+
         std::unordered_map<ecs::PlayerId, ecs::Entity> _players;
         std::unordered_map<ecs::PlayerId, bool> _ready;
 
-        void spawnPlayer(ecs::PlayerId id, Vector3 pos, ecs::World &world);
+        void spawnPlayer(ecs::PlayerId id, ecs::World &world);
 
         public:
         LobbyServerScene() {};
@@ -32,12 +34,14 @@ namespace bomberman {
 
         void setPlayerAction(ecs::PlayerId id, ecs::Actions action);
         ecs::Actions getPlayerAction(ecs::PlayerId id) const;
+        bool isActionUpdatedThisFrame(ecs::PlayerId id) const { return _updatedThisFrame.at(id); };
+        void setActionUpdatedThisFrame(ecs::PlayerId id, bool updated) { _updatedThisFrame.at(id) = updated; };
 
         void onConnect(ConnId conn, ecs::World &world);
         void onDisconnect(ConnId conn, ecs::World &world);
         void onPlayerIdAttributed(ecs::PlayerId id, ecs::World &world);
 
-        void setPlayerReady(ecs::PlayerId id) { _ready[id] = true; };
+        void setPlayerReady(ecs::PlayerId id, ecs::World &world);
         void checkReady(ecs::World &world);
     };
 

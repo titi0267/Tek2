@@ -10,9 +10,11 @@
 #include "ecs/components/HoverRotate.hpp"
 #include "ecs/components/ColorTexture.hpp"
 #include "ecs/components/Timer.hpp"
+#include "ecs/components/CameraFollow.hpp"
 
 #include "raylib/Window.hpp"
 #include "raylib/Camera.hpp"
+#include <limits>
 
 #include <iostream>
 #include <limits>
@@ -27,6 +29,7 @@ void ecs::HoverUpdateSystem::update(ecs::World &world)
     raylib::Window &window = world.getRessource<raylib::Window>();
     raylib::Camera &cam = world.getRessource<raylib::Camera>();
     raylib::Ray ray = cam.getMouseRay(window.getMousePos());
+    raylib::Matrix invViewMat = cam.getViewMatrix().inverse();
 
     Hoverable *hitHover = nullptr;
     float hitDist = std::numeric_limits<float>::max();
@@ -35,8 +38,12 @@ void ecs::HoverUpdateSystem::update(ecs::World &world)
     for (ecs::Entity entity : _entities) {
         Transform &transform = world.getComponent<Transform>(entity);
         Hitbox &hitbox = world.getComponent<Hitbox>(entity);
+        raylib::Matrix mat = raylib::Matrix::fromTransform(transform);
 
-        BoundingBox box = hitbox.getBoundingBox(transform);
+        if (world.hasComponent<CameraFollow>(entity))
+            mat = mat * invViewMat;
+
+        BoundingBox box = hitbox.getBoundingBox(mat);
         RayCollision collision = ray.getCollisionBox(box);
 
         if (world.hasComponent<Hoverable>(entity)) {
@@ -87,6 +94,8 @@ void ecs::HoverRotateUpdateSystem::setSignature(ecs::ComponentManager &component
 
 void ecs::HoverRotateUpdateSystem::update(ecs::World &world)
 {
+    const float ROT_SPEED = 1.25f;
+
     for (ecs::Entity entity : _entities) {
         Hoverable &hover = world.getComponent<Hoverable>(entity);
         Transform &transform = world.getComponent<Transform>(entity);
@@ -95,8 +104,10 @@ void ecs::HoverRotateUpdateSystem::update(ecs::World &world)
         Vector3 rot = QuaternionToEuler(transform.rotation);
 
         if (rotate.inRotation) {
-            rot.x = timer.timeElapsed * 2 * PI;
-            if (!hover.isHover && fmod(rot.x, PI * 2) < 0.1) {
+            rot.x = ROT_SPEED * timer.timeElapsed * PI;
+            if (timer.timeElapsed >= (0.5 / ROT_SPEED))
+                rot.x += PI;
+            if (timer.timeElapsed >= (1.0 / ROT_SPEED)) {
                 rot.x = 0;
                 rotate.inRotation = false;
             }

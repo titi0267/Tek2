@@ -80,11 +80,13 @@ void network::WinServer::updateRWStates()
     FD_SET(socket, &_readSet);
     if (socket > fdMax)
         fdMax = socket;
-    for (unsigned int i = 0; i < _clients.size(); i++) {
-        FD_SET(_clients[i], &_readSet);
-        FD_SET(_clients[i], &_writeSet);
-        if (_clients[i] > fdMax)
-            fdMax = _clients[i];
+    for (auto& [conn, socket] : _clients) {
+        if (socket == 0)
+            continue;
+        FD_SET(socket, &_readSet);
+        FD_SET(socket, &_writeSet);
+        if (socket > fdMax)
+            fdMax = socket;
     }
     if (select(fdMax + 1, &_readSet, &_writeSet, NULL, &timeout) < 0)
         throw (SocketError("WinServer", "select() call failed"));
@@ -162,9 +164,11 @@ std::string network::WinServer::findIp()
     for (std::string line; std::getline(ifs, line); ) {
         if (line.find("IPv4") != std::string::npos) {
             line.erase(0, line.find_last_of(":") + 2);
+            std::remove("ip");
             return (line);
         }
     }
+    std::remove("ip");
     return (std::string("0.0.0.0"));
 }
 

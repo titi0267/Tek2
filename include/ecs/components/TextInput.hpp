@@ -38,4 +38,16 @@ namespace ecs {
         void setSignature(ecs::ComponentManager &component);
         void update(ecs::World &world);
     };
+    struct TextInputPort {
+        std::string input;
+        bool toggle;
+        TextInputPort() : input(""), toggle(false) {};
+    };
+    class TextInputPortSystem : public ecs::ASystem {
+        public:
+        TextInputPortSystem() { _stage = ecs::Stages::INPUT_UPDATE; };
+
+        void setSignature(ecs::ComponentManager &component);
+        void update(ecs::World &world);
+    };
 }
