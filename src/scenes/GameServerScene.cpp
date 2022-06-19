@@ -338,10 +338,6 @@ void bomberman::GameServerScene::onDisconnect(ConnId conn, ecs::World &world)
     std::vector<ecs::PlayerId> ids = man.getPlayersOfConn(conn);
 
     world.getRessource<ecs::PlayersManager>().clientDisconnect(conn);
-    for (ecs::PlayerId id : ids) {
-        createAi(id, world);
-        man.reserveNextPlayerId();
-    }
 }
 
 map::Map &bomberman::GameServerScene::getMap()

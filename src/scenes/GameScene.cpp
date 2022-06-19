@@ -39,13 +39,13 @@ void bomberman::successConn(ecs::World &world, void *data)
 {
     bomberman::GameScene *scene = (bomberman::GameScene*) data;
 
-    std::cout << "Connection succeed" << std::endl;
+    std::cout << "[CLIENT] Connection succeed" << std::endl;
     world.getRessource<ecs::ClientManager>().initPlayers(scene->getNbPlayersOnClient());
 }
 
 void bomberman::failedConn(ecs::World &world, void *data)
 {
-    std::cout << "Connection falied" << std::endl;
+    std::cout << "[CLIENT] Connection falied" << std::endl;
     world.getRessource<ecs::SceneManager>().changeScene(ecs::MAIN_MENU_SCENE, nullptr);
 }
 
@@ -96,12 +96,12 @@ void bomberman::GameScene::entityKilled(ecs::Entity entity, ecs::World &world)
 
 void bomberman::GameScene::onDisconnect(ecs::World &world)
 {
-    std::cout << "disconnect" << std::endl;
+    std::cout << "[CLIENT] Disconnect client" << std::endl;
     world.getRessource<ecs::SceneManager>().changeScene(ecs::MAIN_MENU_SCENE, nullptr);
 }
 
 void bomberman::GameScene::playerIdAssigned(ecs::PlayerId id, ecs::World &world, InputFile file)
 {
-    std::cout << "player id : " << id << std::endl;
+    std::cout << "[CLIENT] Player ID assigned : " << id << std::endl;
     world.spawn().insert(ecs::PlayerInputs{ file }, ecs::PlayerAction{ id }, ecs::MirrorEntity{});
 }
