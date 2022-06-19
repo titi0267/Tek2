@@ -5,6 +5,7 @@
 ** InternalServer
 */
 
+#include <iostream>
 #include "ecs/engine/Network.hpp"
 #include "ecs/engine/Clock.hpp"
 
@@ -36,6 +37,7 @@ void ecs::InternalServer::serverMain()
     try {
         _serverWorld->getRessource<ServerManager>().startServer(_port);
     } catch(network::SocketError) {
+        std::cout << "[SERVER] Could not start server" << std::endl;
         return;
     }
     _serverWorld->getRessource<SceneManager>().loadServerScene(*_serverWorld);

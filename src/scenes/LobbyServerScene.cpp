@@ -83,6 +83,7 @@ void bomberman::LobbyServerScene::loadScene(ecs::World &world)
 void bomberman::LobbyServerScene::unloadScene(ecs::World &world)
 {
     world.killAllEntities();
+    world.getRessource<ecs::ServerManager>().reloadClientsGame();
     world.unregisterSystems<LobbyExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem>();
 }
 

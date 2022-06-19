@@ -37,6 +37,7 @@ namespace ecs {
         DISCONNECT_CLIENT,
         MOVE_CAMERA,
         PLAY_SOUND,
+        RELOAD_GAME,
     };
 
     struct MirrorEntity {
@@ -94,6 +95,8 @@ namespace ecs {
 
         void playSound(const std::string &sound);
 
+        void reloadClientsGame();
+
         void deleteClientEntity(Entity entity, World &world);
 
         const std::string &getIp() { return _server->getServerIp(); };
@@ -129,6 +132,7 @@ namespace ecs {
         void handleMoveCamera(World &world);
 
         void handlePlaySound(World &world);
+        void handleGameReload(World &world);
 
         public:
         ClientManager() : _client(network::CPSocket::createClient()) {};

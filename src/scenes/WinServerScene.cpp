@@ -70,6 +70,7 @@ void bomberman::WinServerScene::unloadScene(ecs::World &world)
 {
     world.unregisterSystem<ecs::WinUpdateSystem>();
     world.killAllEntities();
+    world.getRessource<ecs::ServerManager>().reloadClientsGame();
 }
 
 void bomberman::WinServerScene::entityKilled(ecs::Entity entity, ecs::World &world)

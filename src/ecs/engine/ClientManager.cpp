@@ -15,6 +15,7 @@
 #include "network/SocketError.hpp"
 #include "raylib/Camera.hpp"
 #include "raylib/SoundManager.hpp"
+#include "Assets.hpp"
 
 bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
 {
@@ -115,6 +116,9 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
             case NetworkCommand::PLAY_SOUND:
             handlePlaySound(world);
             break;
+            case NetworkCommand::RELOAD_GAME:
+            handleGameReload(world);
+            break;
             case NetworkCommand::DISCONNECT_CLIENT:
             case NetworkCommand::PLAYERS_REJECTED:
             _client->disconnect();
@@ -211,7 +215,7 @@ void ecs::ClientManager::killServerEntity(World &world)
     // std::cout << "[CLIENT] Entity killed from server" << std::endl;
     localEntity = _serverToClient[serverEntity];
     world.getEntityCommands(localEntity).despawn();
-    _serverToClient.erase(serverEntity);
+    // _serverToClient.erase(serverEntity);
 }
 
 void ecs::ClientManager::updateLocalEntity(Entity entity, World &world)
@@ -277,6 +281,12 @@ void ecs::ClientManager::handlePlaySound(World &world)
     if (tryRead(&ref, sizeof(raylib::SoundRef)))
         return;
     man.getSound(ref.toStr()).playSound();
+}
+
+void ecs::ClientManager::handleGameReload(World &world)
+{
+    std::cout << "[CLIENT] Reload assets" << std::endl;
+    bomberman::applyAssetsToModels(world);
 }
 
 void ecs::ClientManager::deleteServerEntity(Entity entity, World &world)

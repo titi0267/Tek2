@@ -68,7 +68,6 @@ void ecs::BombUpdateSystem::update(ecs::World &world)
 
         if (timer.timeElapsed >= BOMB_EXPLODING_TIME) {
             world.getRessource<ecs::ServerManager>().playSound("water_sound");
-            std::cout << "EXPLODE"<<std::endl;
             placeWater(entity, world, scene);
             world.getComponent<Player>(scene.getPlayers().at(bomb.playerId)).placedBombs--;
             toDelete.push_back(entity);

@@ -154,7 +154,6 @@ void bomberman::GameServerScene::spawnWater(Vector3 pos, ecs::GridPosition gPos,
     ecs::Entity entity = world.spawn().insert(transform, gPos,
     ecs::ModelRef {"water"}, ecs::Timer {}, ecs::Water {dir, distance}, ecs::MirrorEntity {}).getEntity();
 
-    std::cout << "Spawn water !" << std::endl;
     _water.insert(entity);
 }
 
@@ -172,7 +171,6 @@ void bomberman::GameServerScene::spawnBonus(Vector3 pos, ecs::GridPosition gPos,
     ecs::Entity entity = world.spawn().insert(transform, gPos, ecs::ModelRef{BONUS_TO_STR.at(bonus)},
     ecs::SpawnBonus {bonus}, ecs::ItemRotation{0.5, 0.25}, ecs::Timer {}, ecs::Light{{0.6f, 0.6f, 0.0f, 1.0f}, {0, 0.2, 0}}, ecs::MirrorEntity {}).getEntity();
 
-    std::cout << "ADD " << BONUS_TO_STR.at(bonus) << std::endl;
     _bonus.insert(entity);
 }
 
@@ -294,6 +292,8 @@ void bomberman::GameServerScene::unloadScene(ecs::World &world)
     file.write(data.c_str(), data.size());
 
     world.killAllEntities();
+    world.getRessource<ecs::ServerManager>().reloadClientsGame();
+
     world.unregisterSystems<GameExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem,
     ecs::WaterUpdateSystem, ecs::WaterCollisionUpdateSystem,
     ecs::BombUpdateSystem, ecs::MovementUpdateSystem,

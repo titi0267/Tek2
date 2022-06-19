@@ -297,6 +297,12 @@ void ecs::ServerManager::playSound(const std::string &sound)
     }
 }
 
+void ecs::ServerManager::reloadClientsGame()
+{
+    for (ConnId conn : _activeConns)
+        sendCmd(conn, NetworkCommand::RELOAD_GAME);
+}
+
 void ecs::ServerManager::deleteClientEntity(Entity entity, World &world)
 {
     MirroredEntity &mirrored = world.getComponent<MirroredEntity>(entity);
