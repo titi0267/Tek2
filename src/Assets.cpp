@@ -36,9 +36,12 @@ void bomberman::loadTextures(ecs::World &world)
     textureMan.loadTexture("mathieu", "./assets/textures/mathieu.png");
     textureMan.loadTexture("jeffrey", "./assets/textures/jeffrey.png");
     textureMan.loadTexture("tom", "./assets/textures/tom.png");
+    textureMan.loadTexture("kevin", "./assets/textures/kevin.png");
+    textureMan.loadTexture("simon", "./assets/textures/simon.png");
+    textureMan.loadTexture("leo", "./assets/textures/leo.png");
     textureMan.loadTexture("omar", "./assets/textures/omar.png");
 
-    textureMan.loadTexture("bonus_bomb", "./assets/textures/bombBonus.png");
+    textureMan.loadTexture("bonus_bomb", "./assets/textures/bomb_up.png");
     textureMan.loadTexture("bonus_boots", "./assets/textures/boots.png");
     textureMan.loadTexture("bonus_range", "./assets/textures/explode.png");
     textureMan.loadTexture("bonus_tig", "./assets/textures/tig.png");
@@ -63,7 +66,7 @@ void bomberman::loadModels(ecs::World &world)
     modelMan.loadModel("player", "./assets/models/player.iqm");
     modelMan.loadModel("omar", "./assets/models/omar.iqm");
 
-    modelMan.loadModel("bonus_bomb", "./assets/models/bombBonus.iqm");
+    modelMan.loadModel("bonus_bomb", "./assets/models/bomb_up.iqm");
     modelMan.loadModel("bonus_boots", "./assets/models/boots.iqm");
     modelMan.loadModel("bonus_range", "./assets/models/explode.iqm");
     modelMan.loadModel("bonus_tig", "./assets/models/tig.iqm");
