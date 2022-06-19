@@ -22,14 +22,33 @@ namespace ecs {
     };
 
     struct Text3D {
-        std::string text;
+        char text[255];
+        int textSize;
         Color color;
         Vector3 offset;
         float fontSize;
         float fontSpacing;
 
         Text3D(const std::string &text = "", Color color = BLACK, Vector3 offset = {0}, float fontSize = 8, float fontSpacing = 0.5)
-            : text(text), color(color), offset(offset), fontSize(fontSize), fontSpacing(fontSpacing) {};
+            : color(color), offset(offset), fontSize(fontSize), fontSpacing(fontSpacing)
+        {
+            this->text[(textSize = text.copy(this->text, 255))] = 0;
+        };
+
+        void setText(const std::string &text)
+        {
+            this->text[(textSize = text.copy(this->text, 255))] = 0;
+        }
+
+        std::string getText()
+        {
+            return std::string(text, textSize);
+        }
+
+        std::string_view getTextView()
+        {
+            return std::string_view(text, textSize);
+        }
     };
 
     class Draw3DTextSystem : public ecs::ASystem {

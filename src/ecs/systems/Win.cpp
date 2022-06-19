@@ -25,8 +25,7 @@ void ecs::WinUpdateSystem::update(ecs::World &world)
         Timer &timer = world.getComponent<Timer>(entity);
 
         timer.timeElapsed += clock.getDeltaSec();
-        if (timer.timeElapsed >= 15) {
-            //world.getRessource<ecs::ServerManager>().closeServer();
-        }
+        if (timer.timeElapsed >= 5)
+            world.getRessource<ecs::SceneManager>().changeScene(SERVER_LOBBY_SCENE, nullptr);
     }
 }

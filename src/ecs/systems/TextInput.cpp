@@ -43,7 +43,7 @@ void ecs::TextInputSystem::update(ecs::World &world)
                     input.input.resize(input.input.size() - 1);
             if (input.input.size() <= 18 && (ch == '.' || ch == KEY_SPACE || (ch >= KEY_ZERO && ch <= KEY_NINE)))
                 input.input.push_back((char)ch);
-            text.text = input.input;
+            text.setText(input.input);
             man.setIpPort(text.text);
         }
     }
@@ -73,7 +73,7 @@ void ecs::TextInputSettingsSystem::update(ecs::World &world)
                     input.input.resize(input.input.size() - 1);
             if (input.input.size() <= 7 && (ch == 58 || (ch >= KEY_A && ch <= KEY_Z) || (ch >= KEY_ZERO && ch <= KEY_NINE)))
                 input.input.push_back((char)ch);
-            text.text = input.input;
+            text.setText(input.input);
             if (input.save)
                 bind.setName(input.gamepad, text.text);
             else

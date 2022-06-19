@@ -180,7 +180,7 @@ void ecs::ToggleMusicButtonSystem::update(ecs::World &world)
         if (but.show) {
             if (!but.precedent) {
                 tint = RED;
-                text.text = "Music is off!";
+                text.setText("Music is off!");
                 man.toggleMusic();
                 man.setMusicVolume();
             }
@@ -191,7 +191,7 @@ void ecs::ToggleMusicButtonSystem::update(ecs::World &world)
         else {
             if (but.precedent) {
                 tint = BLUE;
-                text.text = "Music is on!";
+                text.setText("Music is on!");
                 man.toggleMusic();
                 man.setMusicVolume();
             }
@@ -219,7 +219,7 @@ void ecs::ToggleSoundButtonSystem::update(ecs::World &world)
         raylib::SoundManager &man = world.getRessource<raylib::SoundManager>();
         if (but.show) {
             if (!but.precedent) {
-                text.text = "Sound is off!";
+                text.setText("Sound is off!");
                 tint = RED;
                 man.toggleSound();
                 man.setSoundVolume();
@@ -231,7 +231,7 @@ void ecs::ToggleSoundButtonSystem::update(ecs::World &world)
         else {
             if (but.precedent) {
                 tint = BLUE;
-                text.text = "Sound is on!";
+                text.setText("Sound is on!");
                 man.toggleSound();
                 man.setSoundVolume();
             }

@@ -24,7 +24,7 @@ void ecs::LaunchButtonSystem::update(ecs::World &world)
         Text3D &text = world.getComponent<Text3D>(entity);
 
         if (but.title) {
-            text.text = launch.getName(but.host, but.butNum);
+            text.setText(launch.getName(but.host, but.butNum));
             if (launch.getGamepad(but.host, but.butNum)) {
                 Color a = BLUE;
                 a.a = text.color.a;
@@ -37,7 +37,7 @@ void ecs::LaunchButtonSystem::update(ecs::World &world)
             }
         }
         else
-            text.text = launch.getKeyText(but.host, but.butNum, but.bind);
+            text.setText(launch.getKeyText(but.host, but.butNum, but.bind));
         if (launch.getNbPlayers(but.host) > but.butNum)
             disap.disap = true;
         else
