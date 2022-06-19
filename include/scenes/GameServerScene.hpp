@@ -22,7 +22,7 @@
 #include "Map.hpp"
 
 namespace bomberman {
-    const int BONUS_SPAWN_INV_CHANCE = 4;
+    const int BONUS_SPAWN_INV_CHANCE = 5;
 
     struct GameServerSceneArgs {
         bool reloadGame;
