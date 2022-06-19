@@ -47,6 +47,7 @@ void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, ecs::World &worl
 void bomberman::LobbyServerScene::loadScene(ecs::World &world)
 {
     ecs::ServerManager &man = world.getRessource<ecs::ServerManager>();
+    ecs::PlayersManager &pMan = world.getRessource<ecs::PlayersManager>();
     char buf[255];
 
     world.registerSystems<LobbyExecuteActionUpdateSystem, ecs::PlayerActionUpdateSystem>();
@@ -67,7 +68,7 @@ void bomberman::LobbyServerScene::loadScene(ecs::World &world)
     ecs::Text3D{" ^ : Ready", BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
     world.getRessource<ecs::ServerManager>().moveCameras({-5, 4.5, 3}, {-10, -2, -2});
 
-    for (ecs::PlayerId id : man.getAssignedIds())
+    for (ecs::PlayerId id : pMan.getAssignedIds())
         spawnPlayer(id, world);
 }
 
