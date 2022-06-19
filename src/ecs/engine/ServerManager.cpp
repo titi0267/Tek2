@@ -44,7 +44,7 @@ std::vector<network::ConnId> ecs::ServerManager::acceptNewConns(ecs::World &worl
 
     while (_server->canAcceptConn()) {
         conn = _server->acceptClient();
-        std::cout << "Accept new conn : " << conn << std::endl;
+        std::cout << "[SERVER] Accept new conn : " << conn << std::endl;
         _activeConns.push_back(conn);
         _clientToServer.insert({conn, {}});
         newConns.push_back(conn);
@@ -244,7 +244,6 @@ void ecs::ServerManager::sendEntityToNewConns(std::vector<network::ConnId> &newC
 {
     MirrorEntity &mirror = world.getComponent<MirrorEntity>(entity);
 
-    std::cout << "Send data to new clients" << std::endl;
     for (network::ConnId conn : newConns)
         _server->write(conn, (void*) mirror.prevData, mirror.size);
 }

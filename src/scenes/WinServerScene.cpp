@@ -6,9 +6,10 @@
 */
 
 #include "scenes/WinServerScene.hpp"
+#include "ecs/engine/Network.hpp"
+#include "ecs/engine/PlayersManager.hpp"
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/Skin.hpp"
-#include "ecs/engine/Network.hpp"
 #include "raylib/Camera.hpp"
 #include "ecs/engine/SkinManager.hpp"
 #include "ecs/components/Light.hpp"
