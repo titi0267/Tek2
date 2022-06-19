@@ -80,11 +80,13 @@ void network::WinServer::updateRWStates()
     FD_SET(socket, &_readSet);
     if (socket > fdMax)
         fdMax = socket;
-    for (unsigned int i = 0; i < _clients.size(); i++) {
-        FD_SET(_clients[i], &_readSet);
-        FD_SET(_clients[i], &_writeSet);
-        if (_clients[i] > fdMax)
-            fdMax = _clients[i];
+    for (auto& [conn, socket] : _clients) {
+        if (socket == 0)
+            continue;
+        FD_SET(socket, &_readSet);
+        FD_SET(socket, &_writeSet);
+        if (socket > fdMax)
+            fdMax = socket;
     }
     if (select(fdMax + 1, &_readSet, &_writeSet, NULL, &timeout) < 0)
         throw (SocketError("WinServer", "select() call failed"));
