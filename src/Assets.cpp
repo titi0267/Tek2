@@ -98,7 +98,8 @@ void bomberman::loadSounds(ecs::World &world)
     raylib::SoundManager &soundMan = world.getRessource<raylib::SoundManager>();
 
     soundMan.loadSound("main_menu_music", "./assets/sounds/main_menu.mp3", true);
-    soundMan.loadSound("omar_voice", "./assets/sounds/omar.wav", true);
+    soundMan.loadSound("omar_voice", "./assets/sounds/omar.wav", false);
+    soundMan.loadSound("water_sound", "./assets/sounds/water.wav", false);
 }
 
 void bomberman::applyAssetsToModels(ecs::World &world)
