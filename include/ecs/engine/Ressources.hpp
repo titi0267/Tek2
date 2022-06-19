@@ -9,6 +9,7 @@
 
 #include <memory>
 #include <map>
+#include "raylib/Window.hpp"
 
 namespace ecs {
     class RessourceAlreadyExists {};
@@ -20,6 +21,18 @@ namespace ecs {
         std::map<RessourceHash, std::shared_ptr<void>> _ressources;
 
         public:
+        ~RessourcesManager()
+        {
+            RessourceHash windowHash = typeid(raylib::Window).hash_code();
+
+            for (auto it = _ressources.rbegin(); it != _ressources.rend(); it++) {
+                if (it->first != windowHash)
+                    _ressources.erase(it->first);
+            }
+            if (_ressources.find(windowHash) != _ressources.end())
+                _ressources.erase(windowHash);
+        }
+
         template<typename T, typename ...Args>
         void insertRessource(Args ...args)
         {
