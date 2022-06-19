@@ -492,8 +492,7 @@ void bomberman::MainMenuScene::generateMainMenu(ecs::World &world)
 
     spawnButton({{0,  1.25, -2}, rot, {1, 1, 1}}, "Start", {WHITE, GREEN}, startMenu, world);
     spawnButton({{0,  0.50, -2}, rot, {1, 1, 1}}, "Connect", {WHITE, GREEN}, connectMenu, world);
-    spawnButton({{0, -0.50, -2}, rot, {1, 1, 1}}, "Tutorial", {WHITE, GRAY}, quitFunction, world);
-    spawnButton({{0, -1.25, -2}, rot, {1, 1, 1}}, "Settings", {WHITE, GRAY}, rightFunction, world);
+    spawnButton({{0, -1.00, -2}, rot, {1, 1, 1}}, "Settings", {WHITE, GRAY}, rightFunction, world);
     spawnButton({{0, -2.50, -2}, rot, {1, 1, 1}}, "Quit", {WHITE, RED}, quitFunction, world);
 }
 
