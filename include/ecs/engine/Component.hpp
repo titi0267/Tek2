@@ -36,6 +36,7 @@ namespace ecs {
         virtual void *getComponentPtr(Entity entity) = 0;
         virtual bool isEntityRegistered(Entity entity) = 0;
         virtual std::size_t getComponentSize() = 0;
+        virtual void reset() = 0;
     };
 
     template<typename T>
@@ -112,6 +113,15 @@ namespace ecs {
         std::size_t getComponentSize()
         {
             return sizeof(T);
+        }
+
+        void reset()
+        {
+            for (int i = 0; i < MAX_ENTITIES; i++)
+                _components[i] = {};
+            _entityToIndex.clear();
+            _indexToEntity.clear();
+            _nextIndex = 0;
         }
     };
 
@@ -241,6 +251,12 @@ namespace ecs {
         IComponentArray *getIComponentArray(ComponentType type)
         {
             return _componentsArrays[type].get();
+        }
+
+        void reset()
+        {
+            for (auto &[type, comp] : _componentsArrays)
+                comp->reset();
         }
     };
 }

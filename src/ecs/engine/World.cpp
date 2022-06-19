@@ -47,6 +47,9 @@ void ecs::World::killAllEntities()
 
      for (Entity entity : cpy)
         EntityCommands(entity, *this).despawn();
+    _entities.reset();
+    _components.reset();
+    _livingEntities.clear();
 }
 
 void ecs::World::decodeEntities(std::ifstream &file)
@@ -62,7 +65,6 @@ void ecs::World::decodeEntities(std::ifstream &file)
         Entity entity = entityCmds.getEntity();
 
         file.read((char*) &nbComponents, sizeof(std::uint32_t));
-        std::cout << "Decode " << (int) entity << " with " << nbComponents << " components" << std::endl;
         for (int i = 0; i < nbComponents; i++) {
             file.read((char*) &type, sizeof(ComponentType));
             file.read((char*) &componentSize, sizeof(std::uint32_t));
@@ -91,7 +93,6 @@ void ecs::World::encodeEntity(Entity entity, std::stringbuf &buffer)
     }
     data = localBuf.str();
     buffer.sputn((char*) &nbComponents, sizeof(std::uint32_t));
-    std::cout << "Encode " << (int) entity << " with " << nbComponents << " components" << std::endl;
     buffer.sputn(data.c_str(), data.size());
 }
 
