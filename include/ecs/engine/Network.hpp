@@ -29,7 +29,7 @@ namespace ecs {
     extern const ComponentHash MIRROR_COMPONENTS[NB_MIRROR_COMPONENTS];
 
     enum class NetworkCommand : uint8_t {
-        UPDATE_ENTITY,
+        UPDATE_ENTITY = 1,
         KILL_ENTITY,
         INIT_PLAYERS,
         PLAYERS_CREATED,

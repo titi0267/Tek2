@@ -17,11 +17,18 @@
 
 bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
 {
+    std::size_t dataRead = 0;
+    std::size_t tmp;
+
     if (!_client->isConnected())
         return true;
-    if( _client->read(buf, size) != size) {
-        _client->disconnect();
-        return true;
+    while (dataRead < size) {
+        tmp = _client->read((char*) buf + dataRead, size - dataRead);
+        if (tmp == 0) {
+            _client->disconnect();
+            return true;
+        }
+        dataRead += tmp;
     }
     return false;
 }
@@ -89,10 +96,10 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
     while (_client->isConnected() && _client->canRead()) {
         if (!_client->canWrite())
             break;
-        // std::cout << "[CLIENT] Read from server" << std::endl;
+        std::cout << "[CLIENT] Read from server" << std::endl;
         if (tryRead(&cmd, sizeof(NetworkCommand)))
             break;
-        // std::cout << "[CLIENT] CMD " << (int) cmd << " from server" << std::endl;
+        std::cout << "[CLIENT] CMD " << (int) cmd << " from server" << std::endl;
         switch (cmd) {
             case NetworkCommand::UPDATE_ENTITY:
             spawnOrUpdateServerEntity(world);
