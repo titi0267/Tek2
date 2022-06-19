@@ -31,6 +31,16 @@ namespace ecs {
         PlayerId reservePlayerId(ConnId conn);
         void clientDisconnect(ConnId conn);
         std::vector<PlayerId> getPlayersOfConn(ConnId conn);
+        std::vector<PlayerId> getAssignedIds()
+        {
+            std::vector<PlayerId> ids;
+
+            for (auto &[conn, assigned] : _connToPlayers) {
+                for (PlayerId id : assigned)
+                    ids.push_back(id);
+            }
+            return ids;
+        };
 
         bool isIdAvailaible();
         PlayerId getNextPlayerId();
