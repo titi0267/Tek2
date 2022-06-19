@@ -6,9 +6,10 @@
 */
 
 #include "scenes/WinServerScene.hpp"
+#include "ecs/engine/Network.hpp"
+#include "ecs/engine/PlayersManager.hpp"
 #include "ecs/components/DrawableModel.hpp"
 #include "ecs/components/Skin.hpp"
-#include "ecs/engine/Network.hpp"
 #include "raylib/Camera.hpp"
 #include "ecs/engine/SkinManager.hpp"
 #include "ecs/components/Light.hpp"
@@ -79,9 +80,4 @@ void bomberman::WinServerScene::entityKilled(ecs::Entity entity, ecs::World &wor
         world.getRessource<ecs::ServerManager>().deleteClientEntity(entity, world);
     else if (world.hasComponent<ecs::MirrorEntity>(entity))
         world.getRessource<ecs::ServerManager>().killLocalEntity(entity, world);
-}
-
-void bomberman::WinServerScene::onDisconnect(ConnId conn, ecs::World &world)
-{
-    world.getRessource<ecs::SceneManager>().changeScene(ecs::MAIN_MENU_SCENE, nullptr);
 }

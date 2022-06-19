@@ -204,6 +204,7 @@ void bomberman::GameServerScene::startNewGame(ecs::World &world)
     int playerId = 0;
     Vector3 pos;
 
+    std::cout << "[SERVER] Create new game" <<  std::endl;
     ecs::PlayersManager &playerMan = world.getRessource<ecs::PlayersManager>();
     while (playerMan.isIdAvailaible())
         createAi(playerMan.reserveNextPlayerId(), world);
@@ -225,8 +226,10 @@ void bomberman::GameServerScene::loadSavedGame(ecs::World &world)
 {
     ecs::SkinManager &skinMan = world.getRessource<ecs::SkinManager>();
     std::ifstream file("bombitek.dat", std::ios_base::in | std::ios_base::binary);
+    std::vector<ecs::Entity> ais;
     ecs::PlayerId id;
 
+    std::cout << "[SERVER] Load saved game" <<  std::endl;
     world.decodeEntities(file);
     for (ecs::Entity entity : world.getLivingEntities()) {
         if (world.hasComponent<ecs::Player>(entity)) {
@@ -244,10 +247,22 @@ void bomberman::GameServerScene::loadSavedGame(ecs::World &world)
             _destructibles.insert({world.getComponent<ecs::GridPosition>(entity), entity});
         else if (world.hasComponent<ecs::SpawnBonus>(entity))
             _bonus.insert(entity);
+        else if (world.hasComponent<ecs::Ai>(entity))
+            ais.push_back(entity);
 
         if (world.hasComponent<ecs::MirrorEntity>(entity))
             world.getComponent<ecs::MirrorEntity>(entity).size = 0;
     }
+
+    for (ecs::Entity entity : ais) {
+        world.getComponent<ecs::PlayerAction>(entity).id = -1;
+        world.getEntityCommands(entity).despawn();
+    }
+
+    ecs::PlayersManager &playerMan = world.getRessource<ecs::PlayersManager>();
+    while (playerMan.isIdAvailaible())
+        createAi(playerMan.reserveNextPlayerId(), world);
+
     _map.load("bombitek.map");
 }
 
@@ -303,17 +318,29 @@ void bomberman::GameServerScene::unloadScene(ecs::World &world)
 
 void bomberman::GameServerScene::entityKilled(ecs::Entity entity,ecs::World &world)
 {
+    ecs::PlayerId id;
+
     if (world.hasComponent<ecs::MirrorEntity>(entity))
         world.getRessource<ecs::ServerManager>().killLocalEntity(entity, world);
     else if (world.hasComponent<ecs::MirroredEntity>(entity))
         world.getRessource<ecs::ServerManager>().deleteClientEntity(entity, world);
-    if (world.hasComponent<ecs::Ai>(entity))
-        world.getRessource<ecs::PlayersManager>().unreservePlayerId(world.getComponent<ecs::PlayerAction>(entity).id);
+    if (world.hasComponent<ecs::Ai>(entity)) {
+        id = world.getComponent<ecs::PlayerAction>(entity).id;
+        if (id == -1)
+            return;
+        world.getRessource<ecs::PlayersManager>().unreservePlayerId(id);
+    }
 }
 
 void bomberman::GameServerScene::onDisconnect(ConnId conn, ecs::World &world)
 {
-    world.getRessource<ecs::SceneManager>().changeScene(ecs::MAIN_MENU_SCENE, nullptr);
+    ecs::PlayersManager &man = world.getRessource<ecs::PlayersManager>();
+    std::vector<ecs::PlayerId> ids = man.getPlayersOfConn(conn);
+
+    for (ecs::PlayerId id : ids) {
+        createAi(id, world);
+        man.reserveNextPlayerId();
+    }
 }
 
 map::Map &bomberman::GameServerScene::getMap()
