@@ -80,3 +80,8 @@ void bomberman::WinServerScene::entityKilled(ecs::Entity entity, ecs::World &wor
     else if (world.hasComponent<ecs::MirrorEntity>(entity))
         world.getRessource<ecs::ServerManager>().killLocalEntity(entity, world);
 }
+
+void bomberman::WinServerScene::onDisconnect(ConnId conn, ecs::World &world)
+{
+    world.getRessource<ecs::SceneManager>().changeScene(ecs::MAIN_MENU_SCENE, nullptr);
+}

@@ -79,7 +79,7 @@ namespace bomberman {
         void setActionUpdatedThisFrame(ecs::PlayerId id, bool updated) { _updatedThisFrame.at(id) = updated; };
 
         void onConnect(ConnId conn, ecs::World &world) {};
-        void onDisconnect(ConnId conn, ecs::World &world) {};
+        void onDisconnect(ConnId conn, ecs::World &world);
         void onPlayerIdAttributed(ecs::PlayerId id, ecs::World &world) {};
 
         map::Map &getMap();

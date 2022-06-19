@@ -115,6 +115,7 @@ void bomberman::LobbyServerScene::onDisconnect(ConnId conn, ecs::World &world)
         _ready.erase(id);
     }
     checkReady(world);
+    world.getRessource<ecs::SceneManager>().changeScene(ecs::MAIN_MENU_SCENE, nullptr);
 }
 
 void bomberman::LobbyServerScene::onPlayerIdAttributed(ecs::PlayerId id, ecs::World &world)

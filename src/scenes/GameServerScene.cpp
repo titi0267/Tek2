@@ -311,6 +311,11 @@ void bomberman::GameServerScene::entityKilled(ecs::Entity entity,ecs::World &wor
         world.getRessource<ecs::PlayersManager>().unreservePlayerId(world.getComponent<ecs::PlayerAction>(entity).id);
 }
 
+void bomberman::GameServerScene::onDisconnect(ConnId conn, ecs::World &world)
+{
+    world.getRessource<ecs::SceneManager>().changeScene(ecs::MAIN_MENU_SCENE, nullptr);
+}
+
 map::Map &bomberman::GameServerScene::getMap()
 {
     return _map;
