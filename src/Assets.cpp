@@ -39,6 +39,7 @@ void bomberman::loadTextures(ecs::World &world)
     textureMan.loadTexture("kevin", "./assets/textures/kevin.png");
     textureMan.loadTexture("simon", "./assets/textures/simon.png");
     textureMan.loadTexture("leo", "./assets/textures/leo.png");
+    textureMan.loadTexture("kaben", "./assets/textures/kaben.png");
     textureMan.loadTexture("omar", "./assets/textures/omar.png");
 
     textureMan.loadTexture("bonus_bomb", "./assets/textures/bomb_up.png");

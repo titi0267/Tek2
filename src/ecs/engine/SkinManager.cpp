@@ -11,7 +11,7 @@
 #include "ecs/engine/SkinManager.hpp"
 
 ecs::SkinManager::SkinManager() :
-    _availaibleSkins({"ludovic", "mathieu", "jeffrey", "tom", "timothe", "kevin", "simon", "leo"})
+    _availaibleSkins({"ludovic", "mathieu", "jeffrey", "tom", "timothe", "kevin", "simon", "leo", "kaben"})
 {
 }
 
