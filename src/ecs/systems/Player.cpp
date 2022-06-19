@@ -80,6 +80,8 @@ void ecs::PlayerCollisionUpdateSystem::update(ecs::World &world)
                     player.tigDuration == TIG_DURATION;
                     player.tigs--;
                     world.getComponent<ecs::PlayAnimation>(pEntity).play("playerAnims", 1, 1 / TIG_DURATION, false, 4);
+                    if (player.tigs <= 0)
+                        break;
                 }
             }
         }
