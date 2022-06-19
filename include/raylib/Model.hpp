@@ -34,11 +34,11 @@ namespace raylib {
             DrawModelWires(_model, {0}, {1}, tint);
         }
 
-        void drawAnimation(Animation &anim, int frame, Color tint = {255, 255, 255, 255})
+        void drawAnimation(Animation &anim, Animation &resetAnim, int frame, Color tint = {255, 255, 255, 255})
         {
             UpdateModelAnimation(_model, anim.getAnimation(), frame);
             draw(tint);
-            UpdateModelAnimation(_model, anim.getAnimation(), 0);
+            UpdateModelAnimation(_model, resetAnim.getAnimation(), 0);
         }
 
         unsigned int getBonesCount() { return _model.boneCount; };

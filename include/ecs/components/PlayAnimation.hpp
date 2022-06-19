@@ -20,10 +20,11 @@ namespace ecs {
         float timeElapsed = 0;
         int actualFrame = 0;
         bool loop = false;
+        int resetIndex = 0;
 
         PlayAnimation() { animation[0] = 0; };
 
-        void play(const std::string &animation, int animIndex, float duration, bool loop)
+        void play(const std::string &animation, int animIndex, float duration, bool loop, int resetIndex)
         {
             if (this->animation == animation && this->animIndex == animIndex)
                 return;
@@ -35,6 +36,7 @@ namespace ecs {
             timeElapsed = 0;
             actualFrame = 0;
             this->loop = loop;
+            this->resetIndex = resetIndex;
         }
 
         void stop()
@@ -46,6 +48,7 @@ namespace ecs {
             timeElapsed = 0;
             actualFrame = 0;
             loop = false;
+            resetIndex = 0;
         }
 
         bool isPlaying()

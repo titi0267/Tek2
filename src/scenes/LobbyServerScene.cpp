@@ -46,6 +46,7 @@ void bomberman::LobbyServerScene::spawnPlayer(ecs::PlayerId id, ecs::World &worl
 
 void bomberman::LobbyServerScene::loadScene(ecs::World &world)
 {
+    ecs::PlayersManager &playersMan = world.getRessource<ecs::PlayersManager>();
     ecs::ServerManager &man = world.getRessource<ecs::ServerManager>();
     ecs::PlayersManager &pMan = world.getRessource<ecs::PlayersManager>();
     char buf[255];
@@ -59,6 +60,8 @@ void bomberman::LobbyServerScene::loadScene(ecs::World &world)
     world.spawn().insert(Transform{{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::ModelRef{"amphi"}, ecs::MirrorEntity{});
     world.spawn().insert(Transform{{0, 0, 0}, QuaternionIdentity(), {1, 1, 1}}, ecs::Light{Vector3{-1, -1, -1}, Vector4{0.8, 0.8, 0.8, 1.0}}, ecs::MirrorEntity{});
 
+    world.getRessource<ecs::ServerManager>().moveCameras({-5, 4.5, 3}, {-10, -2, -2});
+
     world.spawn().insert(Transform{{0, 3.5, -5}, QuaternionIdentity(), {1, 1, 1}}, ecs::ModelRef{"large_button"}, ecs::FontRef{"emulogic"},
     ecs::Text3D{buf, BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
 
@@ -66,9 +69,8 @@ void bomberman::LobbyServerScene::loadScene(ecs::World &world)
     ecs::Text3D{"</> : Skins", BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
     world.spawn().insert(Transform{{0, -1, -2}, QuaternionIdentity(), {0.3, 0.3, 0.3}}, ecs::ModelRef{"button"}, ecs::FontRef{"emulogic"},
     ecs::Text3D{" ^ : Ready", BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
-    world.getRessource<ecs::ServerManager>().moveCameras({-5, 4.5, 3}, {-10, -2, -2});
 
-    for (ecs::PlayerId id : pMan.getAssignedIds())
+    for (ecs::PlayerId id : playersMan.getAssignedIds())
         spawnPlayer(id, world);
 }
 

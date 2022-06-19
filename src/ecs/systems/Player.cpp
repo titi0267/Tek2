@@ -11,6 +11,7 @@
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/SpawnBonus.hpp"
 #include "scenes/GameServerScene.hpp"
+#include "ecs/components/PlayAnimation.hpp"
 #include "ecs/components/Movement.hpp"
 #include "ecs/engine/Clock.hpp"
 
@@ -75,9 +76,10 @@ void ecs::PlayerCollisionUpdateSystem::update(ecs::World &world)
 
         if (player.alive && player.tigs > 0) {
             for (auto &[pEntity, player, pPos] : playersAlive) {
-                if (pEntity != entity && pos == pPos) {
-                    player.tigDuration += TIG_DURATION;
+                if (pEntity != entity && pos == pPos && player.tigDuration <= 0) {
+                    player.tigDuration == TIG_DURATION;
                     player.tigs--;
+                    world.getComponent<ecs::PlayAnimation>(pEntity).play("playerAnims", 1, 1 / TIG_DURATION, false, 4);
                 }
             }
         }
