@@ -162,6 +162,8 @@ std::string network::LinuxServer::findIp()
     system("hostname -I | awk '{print $1}' > ip" );
     ifs.open("ip", std::ifstream::in);
     std::getline(ifs, line);
+    if (line.empty())
+        line = "???";
     std::remove("ip");
     return (line);
 }
