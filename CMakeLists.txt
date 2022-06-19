@@ -18,6 +18,7 @@ add_executable(bomberman
     "src/WSA.cpp"
 
     "src/ecs/engine/World.cpp"
+    "src/ecs/engine/Ressources.cpp"
     "src/ecs/engine/Network.cpp"
     "src/ecs/engine/ClientManager.cpp"
     "src/ecs/engine/ServerManager.cpp"
