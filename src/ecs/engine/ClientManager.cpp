@@ -11,9 +11,10 @@
 #include "ecs/engine/EntityCommands.hpp"
 #include "ecs/engine/SceneManager.hpp"
 #include "ecs/engine/Clock.hpp"
+#include "ecs/engine/LaunchManager.hpp"
 #include "network/SocketError.hpp"
 #include "raylib/Camera.hpp"
-#include "ecs/engine/LaunchManager.hpp"
+#include "raylib/SoundManager.hpp"
 
 bool ecs::ClientManager::tryRead(void *buf, std::size_t size)
 {
@@ -110,6 +111,9 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
             break;
             case NetworkCommand::MOVE_CAMERA:
             handleMoveCamera(world);
+            break;
+            case NetworkCommand::PLAY_SOUND:
+            handlePlaySound(world);
             break;
             case NetworkCommand::DISCONNECT_CLIENT:
             case NetworkCommand::PLAYERS_REJECTED:
@@ -263,6 +267,16 @@ void ecs::ClientManager::handleMoveCamera(ecs::World &world)
     _client->read(&target, sizeof(Vector3));
     cam.setPosition(pos);
     cam.setTarget(target);
+}
+
+void ecs::ClientManager::handlePlaySound(World &world)
+{
+    raylib::SoundManager &man = world.getRessource<raylib::SoundManager>();
+    raylib::SoundRef ref;
+
+    if (tryRead(&ref, sizeof(raylib::SoundRef)))
+        return;
+    man.getSound(ref.toStr()).playSound();
 }
 
 void ecs::ClientManager::deleteServerEntity(Entity entity, World &world)
