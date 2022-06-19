@@ -25,6 +25,7 @@
 #include "ecs/components/Timer.hpp"
 
 #include "raylib/Camera.hpp"
+#include "raylib/SoundManager.hpp"
 
 #include "Setup.hpp"
 
@@ -52,7 +53,10 @@ void bomberman::GameScene::loadScene(ecs::World &world)
 {
     ecs::ConnectionSuccessFct success = &bomberman::successConn;
     ecs::ConnectionFailedFct failed = &bomberman::failedConn;
+    auto &man = world.getRessource<raylib::SoundManager>();
+    auto &music = man.getSound("game_music");
 
+    music.playSound();
     if (_startLocalServer)
         world.getRessource<ecs::InternalServer>().startServer(_port);
     world.getRessource<ecs::ClientManager>().attemptConnection(_ip, _port, this, success, failed);
@@ -70,6 +74,10 @@ void bomberman::GameScene::loadScene(ecs::World &world)
 
 void bomberman::GameScene::unloadScene(ecs::World &world)
 {
+    auto &man = world.getRessource<raylib::SoundManager>();
+    auto &music = man.getSound("game_music");
+
+    music.stopSound();
     if (_startLocalServer)
         world.getRessource<ecs::InternalServer>().joinAndDestroy();
     world.killAllEntities();
