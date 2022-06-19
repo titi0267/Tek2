@@ -53,7 +53,7 @@ void bomberman::registerCriticalComponents(ecs::World &world)
 {
     world.registerComponents<Transform, ecs::Movement, ecs::Hitbox, ecs::PlayerAction,
     ecs::TextureRef, ecs::ModelRef, ecs::FontRef, ecs::Tint, ecs::DrawableCube, ecs::Text3D,
-    ecs::PlayAnimation, ecs::Skin, ecs::Grid, ecs::ItemRotation, ecs::Light>();
+    ecs::PlayAnimation, ecs::Skin, ecs::Grid, ecs::ItemRotation, ecs::Light, ecs::CameraFollow>();
 }
 
 void bomberman::registerBothSide(ecs::World &world)
@@ -85,7 +85,6 @@ void bomberman::registerRender(ecs::World &world)
     world.registerSystem<ecs::BackgroundRotationUpdateSystem>();
 
     world.registerComponent<ecs::Intro>();
-    world.registerComponent<ecs::CameraFollow>();
 
     world.registerSystem<ecs::LightUpdateSystem>();
 }

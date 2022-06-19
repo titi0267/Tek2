@@ -162,9 +162,11 @@ std::string network::WinServer::findIp()
     for (std::string line; std::getline(ifs, line); ) {
         if (line.find("IPv4") != std::string::npos) {
             line.erase(0, line.find_last_of(":") + 2);
+            std::remove("ip");
             return (line);
         }
     }
+    std::remove("ip");
     return (std::string("0.0.0.0"));
 }
 
