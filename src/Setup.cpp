@@ -46,6 +46,7 @@
 #include "ecs/components/Disappear.hpp"
 #include "ecs/components/LaunchButton.hpp"
 #include "ecs/components/Light.hpp"
+#include "ecs/components/Win.hpp"
 
 // Those components are mirrored between clients and server
 // THOSE COMPONENTS SHOULD ALWAYS BE REGISTERED FIRST !!
@@ -65,7 +66,7 @@ void bomberman::registerBothSide(ecs::World &world)
 void bomberman::registerServerSide(ecs::World &world)
 {
     world.registerComponents<ecs::Player, ecs::GridPosition, ecs::Bomb,
-    ecs::Water, ecs::DestructibleTile, ecs::SpawnBonus, ecs::Ai>();
+    ecs::Water, ecs::DestructibleTile, ecs::SpawnBonus, ecs::Ai, ecs::Win>();
     world.registerSystems<ecs::AnimationUpdateSystem>();
 }
 
