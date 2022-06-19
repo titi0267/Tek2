@@ -36,8 +36,8 @@ void bomberman::LobbyExecuteActionUpdateSystem::update(ecs::World &world)
             world.getComponent<ecs::Skin>(entity) = ecs::Skin(skinMan.getPlayerSkin(player.id));
         }
 
-        if (action == ecs::MOVE_UP) {
-            scene.setPlayerReady(player.id);
+        if (action == ecs::MOVE_UP && scene.isActionUpdatedThisFrame(player.id)) {
+            scene.setPlayerReady(player.id, world);
             change = true;
         }
     }
