@@ -11,10 +11,9 @@
 #include "ecs/engine/System.hpp"
 
 namespace ecs {
-    struct Win {
-        Win() {};
-    };
     class WinUpdateSystem : public ASystem {
+        float _time = 0;
+
         public:
         WinUpdateSystem() { _stage = ecs::Stages::UPDATE; };
 

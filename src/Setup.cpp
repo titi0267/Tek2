@@ -66,7 +66,7 @@ void bomberman::registerBothSide(ecs::World &world)
 void bomberman::registerServerSide(ecs::World &world)
 {
     world.registerComponents<ecs::Player, ecs::GridPosition, ecs::Bomb,
-    ecs::Water, ecs::DestructibleTile, ecs::SpawnBonus, ecs::Ai, ecs::Win>();
+    ecs::Water, ecs::DestructibleTile, ecs::SpawnBonus, ecs::Ai>();
     world.registerSystems<ecs::AnimationUpdateSystem>();
 }
 

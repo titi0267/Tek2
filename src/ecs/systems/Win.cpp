@@ -13,19 +13,13 @@
 
 void ecs::WinUpdateSystem::setSignature(ecs::ComponentManager &component)
 {
-    _signature = component.generateSignature<Win, Timer>();
+    _signature.set();
 }
 
 void ecs::WinUpdateSystem::update(ecs::World &world)
 {
-    Clock &clock = world.getRessource<Clock>();
+    _time += world.getRessource<Clock>().getDeltaSec();
 
-    for (ecs::Entity entity : _entities) {
-        Win &win = world.getComponent<Win>(entity);
-        Timer &timer = world.getComponent<Timer>(entity);
-
-        timer.timeElapsed += clock.getDeltaSec();
-        if (timer.timeElapsed >= 5)
-            world.getRessource<ecs::SceneManager>().changeScene(SERVER_LOBBY_SCENE, nullptr);
-    }
+    if (_time >= 5)
+        world.getRessource<ecs::SceneManager>().changeScene(SERVER_LOBBY_SCENE, nullptr);
 }
