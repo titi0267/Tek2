@@ -14,5 +14,5 @@
 
 namespace ecs {
     enum class Entity : std::uint64_t {};
-    const std::size_t MAX_ENTITIES = 1000;
+    const std::size_t MAX_ENTITIES = 10000;
 }
