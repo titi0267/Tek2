@@ -62,7 +62,6 @@ void ecs::ServerManager::handleClientDisconnection(ConnId conn, World &world)
     scene.onDisconnect(conn, world);
     while (entitites.size() > 0)
         world.getEntityCommands(entitites.rbegin()->second).despawn();
-    world.getRessource<PlayersManager>().clientDisconnect(conn);
     _clientToServer.erase(conn);
     _activeConns.erase(std::find(_activeConns.begin(), _activeConns.end(), conn));
 }

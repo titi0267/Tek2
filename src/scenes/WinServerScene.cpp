@@ -16,6 +16,7 @@
 #include "ecs/components/Win.hpp"
 #include "ecs/components/Timer.hpp"
 #include "ecs/components/PlayAnimation.hpp"
+#include "ecs/engine/PlayersManager.hpp"
 
 void bomberman::WinServerScene::spawnBackground(ecs::World &world)
 {
@@ -47,10 +48,10 @@ void bomberman::WinServerScene::loadScene(ecs::World &world)
     world.registerSystem<ecs::WinUpdateSystem>();
 
     if (this->_noWinner) {
-        spawnPlayer(0, {-4.5, -0.5, -2}, skinMan, world, false);
-        spawnPlayer(1, {-1.5, -0.5, -2}, skinMan, world, false);
-        spawnPlayer(2, { 1.5, -0.5, -2}, skinMan, world, false);
-        spawnPlayer(3, { 4.5, -0.5, -2}, skinMan, world, false);
+        spawnPlayer(0, {-4.5, 0, -2}, skinMan, world, false);
+        spawnPlayer(1, {-1.5, 0, -2}, skinMan, world, false);
+        spawnPlayer(2, { 1.5, 0, -2}, skinMan, world, false);
+        spawnPlayer(3, { 4.5, 0, -2}, skinMan, world, false);
     } else {
         spawnPlayer(_winner, {0, 1.5, -3.5}, skinMan, world, true);
         for (int i = 0; i < 4; i++) {
@@ -80,4 +81,9 @@ void bomberman::WinServerScene::entityKilled(ecs::Entity entity, ecs::World &wor
         world.getRessource<ecs::ServerManager>().deleteClientEntity(entity, world);
     else if (world.hasComponent<ecs::MirrorEntity>(entity))
         world.getRessource<ecs::ServerManager>().killLocalEntity(entity, world);
+}
+
+void bomberman::WinServerScene::onDisconnect(ConnId conn, ecs::World &world)
+{
+    world.getRessource<ecs::PlayersManager>().clientDisconnect(conn);
 }

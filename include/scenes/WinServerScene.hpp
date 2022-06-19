@@ -46,7 +46,7 @@ namespace bomberman {
         void entityKilled(ecs::Entity entity, ecs::World &world);
 
         void onConnect(ConnId conn, ecs::World &world) {};
-        void onDisconnect(ConnId conn, ecs::World &world) {};
+        void onDisconnect(ConnId conn, ecs::World &world);
         void onPlayerIdAttributed(ecs::PlayerId id, ecs::World &world) {};
     };
 }

@@ -108,6 +108,7 @@ void bomberman::LobbyServerScene::onDisconnect(ConnId conn, ecs::World &world)
     std::vector<ecs::PlayerId> ids = man.getPlayersOfConn(conn);
     ecs::SkinManager &skinMan = world.getRessource<ecs::SkinManager>();
 
+    man.clientDisconnect(conn);
     for (ecs::PlayerId id : ids) {
         ecs::Entity entity = _players[id];
         skinMan.unassignedSkin(id, false);
