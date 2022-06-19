@@ -96,10 +96,8 @@ void ecs::ClientManager::handleNetworkCommands(World &world)
     while (_client->isConnected() && _client->canRead()) {
         if (!_client->canWrite())
             break;
-        std::cout << "[CLIENT] Read from server" << std::endl;
         if (tryRead(&cmd, sizeof(NetworkCommand)))
             break;
-        std::cout << "[CLIENT] CMD " << (int) cmd << " from server" << std::endl;
         switch (cmd) {
             case NetworkCommand::UPDATE_ENTITY:
             spawnOrUpdateServerEntity(world);
