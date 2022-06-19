@@ -74,7 +74,7 @@ void bomberman::LobbyServerScene::loadScene(ecs::World &world)
     world.spawn().insert(Transform{{0, -0.8, -2}, QuaternionIdentity(), {0.3, 0.3, 0.3}}, ecs::ModelRef{"button"}, ecs::FontRef{"emulogic"},
     ecs::Text3D{"</> : Skins", BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
     world.spawn().insert(Transform{{0, -1, -2}, QuaternionIdentity(), {0.3, 0.3, 0.3}}, ecs::ModelRef{"button"}, ecs::FontRef{"emulogic"},
-    ecs::Text3D{" ^ : Ready", BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
+    ecs::Text3D{" UP : Ready", BLACK, {0, 0, 0.1}, 12}, ecs::CameraFollow{}, ecs::MirrorEntity{});
 
     for (ecs::PlayerId id : playersMan.getAssignedIds())
         spawnPlayer(id, world);
