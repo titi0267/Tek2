@@ -1,0 +1,6 @@
+.stack-work/
+.vscode/
+imageCompressor
+dist-newstyle/
+*.cabal
+*~

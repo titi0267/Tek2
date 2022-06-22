@@ -1,0 +1,77 @@
+<<<<<<< HEAD
+name:                wolfram
+version:             0.1.0.0
+github:              "githubuser/wolfram"
+=======
+name:                imageCompressor
+version:             0.1.0.0
+github:              "githubuser/imageCompressor"
+>>>>>>> ImgCompressor
+license:             BSD3
+author:              "Author name here"
+maintainer:          "example@example.com"
+copyright:           "2022 Author name here"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+# Metadata used when publishing your package
+# synopsis:            Short description of your package
+# category:            Web
+
+# To avoid duplicated efforts in documentation and dealing with the
+# complications of embedding Haddock markup inside cabal files, it is
+# common to point users to the README.md file.
+<<<<<<< HEAD
+description:         Please see the README on GitHub at <https://github.com/githubuser/wolfram#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+=======
+description:         Please see the README on GitHub at <https://github.com/githubuser/imageCompressor#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+- random
+>>>>>>> ImgCompressor
+
+library:
+  source-dirs: src
+
+executables:
+<<<<<<< HEAD
+  wolfram-exe:
+=======
+  imageCompressor-exe:
+>>>>>>> ImgCompressor
+    main:                Main.hs
+    source-dirs:         app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+<<<<<<< HEAD
+    - wolfram
+
+tests:
+  wolfram-test:
+=======
+    - imageCompressor
+
+tests:
+  imageCompressor-test:
+>>>>>>> ImgCompressor
+    main:                Spec.hs
+    source-dirs:         test
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+<<<<<<< HEAD
+    - wolfram
+=======
+    - imageCompressor
+>>>>>>> ImgCompressor
