@@ -1,0 +1,14 @@
+[redis-server]
+redis ansible_host='192.168.1.37' ansible_user='user' ansible_sudo_pass="{{ssh_password}}" ansible_password="{{ssh_password}}"
+
+[postgresql-install]
+postgresql ansible_host='192.168.1.31' ansible_user='user' ansible_sudo_pass="{{ssh_password}}" ansible_password="{{ssh_password}}"
+
+[poll-copy]
+poll ansible_host='192.168.1.48' ansible_user='user' ansible_sudo_pass="{{ssh_password}}" ansible_password="{{ssh_password}}"
+
+[worker-copy]
+worker ansible_host='192.168.1.38' ansible_user='user' ansible_sudo_pass="{{ssh_password}}" ansible_password="{{ssh_password}}"
+
+[result-copy]
+result ansible_host='192.168.1.39' ansible_user='user' ansible_sudo_pass="{{ssh_password}}" ansible_password="{{ssh_password}}"

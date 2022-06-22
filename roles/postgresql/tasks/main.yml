@@ -1,0 +1,6 @@
+- name: Install postgresql
+  become: yes
+  apt:
+    name: postgresql
+    state: build-dep
+
