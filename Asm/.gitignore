@@ -1,0 +1,9 @@
+lib/*.o
+*.o
+*.so
+test.c
+main.c
+main.txt
+a.out
+*.sh
+.vscode
