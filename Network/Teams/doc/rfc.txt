@@ -1,0 +1,40 @@
+RFC Teams Documentation
+
+Protocol:
+
+1. The Client Send struct message_t to the server
+with command equal to the number of this command in command_id enum
+
+enum command_id {
+    HELP,
+    LOGIN,
+    LOGOUT,
+    USERS,
+    USER,
+    SEND,
+    MESSAGES,
+    SUBSCRIBE,
+    SUBSCRIBED,
+    UNSUBSCRIBE,
+    USE,
+    CREATE,
+    LIST,
+    INFO
+};
+
+2. The Client send then the payload that correspond to the command
+Exemple:
+ 
+command = USERS
+
+typedef struct cli_users_s {
+    char user_uuid[MAX_NAME_LENGTH];
+} cli_users_t;
+
+3. The Server read the command id and then the corresponding payload
+
+4. The Server compute the action corresponding to the command id
+
+5. The server send back a command id and the corresponding server payload.
+In case of error their is also a enum and so the client can identify the type of error.
+
