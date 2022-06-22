@@ -1,0 +1,8 @@
+.vscode
+strace
+*.o
+vgcore*
+42sh_stuff.c
+a.out
+test.c
+signal_error.h

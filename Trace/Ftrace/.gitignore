@@ -1,0 +1,5 @@
+*.o
+ftrace
+a.out
+file.txt
+vgcore*
