@@ -1,0 +1,7 @@
+build/*
+.vscode
+clear.sh
+libmy_malloc.so
+vgcore*
+lib/
+arcade
