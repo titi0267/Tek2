@@ -1,0 +1,7 @@
+*.o
+subject_sample/
+nts_single/
+nts_advanced/
+documentation/
+.vscode/
+nanotekspice
