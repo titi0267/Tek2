@@ -1,0 +1,47 @@
+- name: Install python
+  become: yes
+  apt:
+    name:
+      - python3
+      - python3-pip
+
+- name: Untar poll.tar
+  become: yes
+  ansible.builtin.unarchive:
+    src: poll.tar
+    dest: /home/user
+
+- name: Install requirements
+  become: yes
+  pip:
+    name: pip
+    extra_args: -r /home/user/poll/requirements.txt
+    executable: pip3
+  ignore_errors: yes
+
+- name: copy poll.service
+  become: yes
+  ansible.builtin.copy:
+    src: roles/poll/files/poll.service
+    dest: /etc/systemd/system/
+    owner: user
+    group: user
+    mode: '0755'
+
+- name: Reload daemon
+  become: yes
+  ansible.builtin.command: systemctl daemon-reload
+
+- name: start new poll service
+  become: yes
+  service:
+    name: poll
+    state: started
+    enabled: yes
+
+- name: Ensure we have our own comment added to /etc/services
+  become: yes
+  ansible.builtin.lineinfile:
+    path: /etc/systemd/system/poll.service
+    regexp: '(\w*Environment\w*)'
+    line: Environment = 'REDIS_HOST=192.168.1.48'

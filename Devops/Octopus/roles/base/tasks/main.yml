@@ -1,0 +1,25 @@
+- name: Upgrade all packages on servers
+  become: yes
+  apt:
+    upgrade: dist
+    force_apt_get: yes
+
+- name: Install git
+  become: yes
+  apt:
+    name: git
+    state: present
+
+- name: Install required packages
+  become: yes
+  apt:
+    name:
+      - gnupg
+      - vim
+    state: latest
+
+- name: Install tar command
+  become: yes
+  apt:
+    name: tar
+    state: latest
