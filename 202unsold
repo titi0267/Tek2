@@ -1,0 +1,104 @@
+#!/usr/bin/env python3
+
+import sys
+import math
+
+def usage():
+    print("USAGE")
+    print("    ./202unsold a b\n")
+    print("DESCRIPTION")
+    print("    a    constant computed from past results")
+    print("    b    constant computed from past results")
+
+def checkArgs():
+    try:
+        a = int(sys.argv[1])
+        b = int(sys.argv[2])
+        if (a <= 50 or b <= 50):
+            exit (84)
+    except(ValueError):
+        exit(84)
+
+def errorHandling():
+    if (len(sys.argv) == 2):
+        if (sys.argv[1] == '-h'):
+            usage()
+        exit(84)
+    if (len(sys.argv) != 3):
+        exit(84)
+    checkArgs()
+
+def calcJoinLaw(x: int, y:int, a:int, b:int):
+    top = (a - x) * (b - y)
+    bottom = ((5 * a) - 150) * ((5 * b) - 150)
+    res = top / bottom
+    return res
+
+
+def getSumCol(a: int, b:int, x:int):
+    totalCol = calcJoinLaw(x, 10, a, b) + calcJoinLaw(x, 20, a, b) + calcJoinLaw(x, 30, a, b) + calcJoinLaw(x, 40, a, b) + calcJoinLaw(x, 50, a, b)
+    return totalCol
+
+def getSumLine(a:int, b:int, y:int):
+    totalLine = calcJoinLaw(10, y, a, b) + calcJoinLaw(20, y, a, b) +calcJoinLaw(30, y, a, b) + calcJoinLaw(40, y, a, b) + calcJoinLaw(50, y, a, b)
+    return totalLine
+
+def printFirstPartLine(a: int, b:int, y:int):
+    print("Y=" + str(y) + "    " + format(calcJoinLaw(10, y, a, b), ".3f") + "   " + format(calcJoinLaw(20, y, a, b), ".3f") + "   " + format(calcJoinLaw(30, y, a, b), ".3f") + "   " + format(calcJoinLaw(40, y, a, b), ".3f") + "   " + format(calcJoinLaw(50, y, a, b), ".3f") + "   " + format(getSumLine(a, b, y), ".3f"))
+
+def computeFirstPart(a: int, b:int):
+    print("        X=10    X=20    X=30    X=40    X=50    Y law")
+    printFirstPartLine(a, b, 10)
+    printFirstPartLine(a, b, 20)
+    printFirstPartLine(a, b, 30)
+    printFirstPartLine(a, b, 40)
+    printFirstPartLine(a, b, 50)
+    print("X law   " + format(getSumCol(a, b, 10), ".3f") + "   " + format(getSumCol(a, b, 20), ".3f") + "   " + format(getSumCol(a, b, 30), ".3f") + "   " + format(getSumCol(a, b, 40), ".3f") + "   " + format(getSumCol(a, b, 50), ".3f") + "   1.000")
+
+def computeSecondPart(a: int, b:int):
+    print("z       20      30      40      50      60      70      80      90      100")
+    print("p(Z=z)  ", end="")
+    for z in range(20, 110, 10):
+        total = 0
+        for y in range (10, 60, 10):
+            for x in range(10, 60, 10):
+                res = calcJoinLaw(x, y, a, b)
+                if ((x + y) == z):
+                    total += float(res)
+        if (z == 20):
+            print(format(total, ".3f"), end="")
+        else:
+            print("   " + format(total, ".3f"), end="")
+    print("")
+
+def computeThirdPart(a: int, b:int):
+    varX = 0
+    varY = 0
+    totalX = getSumCol(a, b, 10) * 10 + getSumCol(a, b, 20) * 20 + getSumCol(a, b, 30) * 30 + getSumCol(a, b, 40) * 40 + getSumCol(a, b, 50) * 50
+    totalY = getSumLine(a, b, 10) * 10 + getSumLine(a, b, 20) * 20 + getSumLine(a, b, 30) * 30 + getSumLine(a, b, 40) * 40 + getSumLine(a, b, 50) * 50
+    for i in range(10, 60, 10):
+        varX += pow((i - totalX), 2) * getSumCol(a, b, i)
+        varY += pow((i - totalY), 2) * getSumLine(a, b, i)
+    print("expected value of X:    " + format(totalX, ".1f"))
+    print("variance of X:          " + format(varX, ".1f"))
+    print("expected value of Y:    " + format(totalY, ".1f"))
+    print("variance of Y:          " + format(varY, ".1f"))
+    print("expected value of Z:    " + format(totalY + totalX, ".1f"))
+    print("variance of Z:          " + format(varY + varX, ".1f"))
+
+
+def main():
+    errorHandling()
+    print("--------------------------------------------------------------------------------")
+    a = int(sys.argv[1])
+    b = int(sys.argv[2])
+    computeFirstPart(a, b)
+    print("--------------------------------------------------------------------------------")
+    computeSecondPart(a, b)
+    print("--------------------------------------------------------------------------------")
+    computeThirdPart(a, b)
+    print("--------------------------------------------------------------------------------")
+
+
+if __name__ == "__main__":
+    main()
