@@ -1,0 +1,83 @@
+#!/usr/bin/env perl
+
+use warnings;
+use strict;
+use Math::Trig;
+
+sub usage {
+    print "USAGE\n";
+    print "    ./205IQ u s [IQ1] [IQ2]\n\n";
+    print "DESCRIPTION\n";
+    print "    u    mean\n";
+    print "    s    standard deviation\n";
+    print "    IQ1  minimum IQ\n";
+    print "    IQ2  maximum IQ\n";
+}
+
+sub iq {
+    my ($first, $second, $third, $fourth) = @ARGV;
+    my $summary = 0;
+    if (defined $fourth) {
+        for (my $i = $third; $i < $fourth; $i += 0.001) {
+            $summary += (1/($second * sqrt(2 * pi()))) * exp(-1 * (($i - $first) ** 2)/(2 * ($second ** 2)));
+        }
+        printf("%.1f%% of people have an IQ between %i and %i\n", $summary/10, $third, $fourth);
+    }
+    else {
+        for (my $i = 0; $i < $third; $i += 0.001) {
+            $summary += (1/($second * sqrt(2 * pi()))) * exp(-1 * (($i - $first) ** 2)/(2 * ($second ** 2)));
+        }
+        printf("%.1f%% of people have an IQ inferior to %i\n", $summary/10, $third);
+    }
+}
+
+sub calcFirst {
+    my ($first, $second) = @ARGV;
+    for (my $i = 0; $i < 201; $i++) {
+        print "$i ";
+        printf("%.5f", (1/($second * sqrt(2 * pi()))) * exp(-1 * (($i - $first) ** 2)/(2 * ($second ** 2))));
+        print "\n";
+    }
+}
+
+sub error {
+    my ($first, $second, $third, $fourth) = @ARGV;
+    my $length = @ARGV;
+    if ($length > 4) {
+        exit (84);
+    }
+    if (not defined $second) {
+        if (defined $first and $first eq "-h") {
+            usage;
+        }
+        else {
+            print STDERR "205: Need a least two Args\n";
+            exit (84);
+        }
+    }
+    if (not defined $first) {
+        print STDERR "205: Need a least two Args\n";
+        exit (84);
+    }
+    if (not $first =~ m|^\d+| or not $second =~ m|^\d+| or $first > 200 or $second == 0) {
+        exit (84);
+    }
+    if (defined $third and (not $third =~ m|^\d+| or $third > 200)) {
+        exit (84);
+    }
+    if (defined $fourth and (not $fourth =~ m|^\d+| or $third > $fourth or $fourth > 200)) {
+        exit (84);
+    }
+}
+
+
+sub main {
+    error;
+    if (not defined $ARGV[2]) {
+        calcFirst;
+    } else {
+        iq;
+    }
+}
+
+main;

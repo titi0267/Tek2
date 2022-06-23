@@ -1,0 +1,264 @@
+#!/usr/bin/env lua
+
+local function mysplit(inputstr, sep)
+    if sep == nil then
+        sep = "%s"
+    end
+    local t = {}
+    for str in string.gmatch(inputstr, "([^" .. sep .. "]+)") do
+        table.insert(t, str)
+    end
+    return t
+end
+
+local function Tablelength(T)
+    local count = 0
+    for _ in pairs(T) do count = count + 1 end
+    return count
+end
+
+local function GetCountryTab(global)
+    local country = {}
+    local tmp_next = {}
+    if (#arg < 1)then
+        os.exit(84)
+    end
+    for name = 1, #arg do
+        for total = 1, 265, 1 do
+            if (arg[name] == global[total][2]) then
+                tmp_next = global[total]
+                table.insert(country, tmp_next)
+                tmp_next = {}
+            end
+        end
+    end
+    return (country)
+end
+
+local function PopuTable(country)
+    local popuDiff = {}
+    local totalPopu = {}
+    local wtf = 0
+    for value = 1, 58, 1 do
+        table.insert(popuDiff, 0)
+    end
+    for value = 3, 60, 1 do
+        wtf = 0
+        for i = 1, Tablelength(country), 1 do
+            table.insert(popuDiff, value - 2, wtf + country[i][value])
+            wtf = popuDiff[value - 2]
+        end
+    end
+    return popuDiff
+end
+
+local function SumPopu(country)
+    local tablePopu = PopuTable(country)
+    local sumPopu = 0
+    for value = 1, 58, 1 do
+        sumPopu = sumPopu + tablePopu[value]
+    end
+    return sumPopu
+end
+
+local function GetDate()
+    local date = {}
+    local date_val = 1960
+    for value = 1, 58, 1 do
+        table.insert(date, date_val + value - 1)
+    end
+    return date
+end
+
+local function SumPow(country, sumTable, fit1)
+    local sumPow = 0.0;
+    local tot = 0
+    local date = fit1
+    for value = 1, 58, 1 do
+        sumPow = sumPow + (date[value] ^ 2)
+    end
+    tot = (58 * sumPow) - (sumTable ^ 2)
+    return tot
+end
+
+local function Prod(country)
+    local sumVillager = 0
+    local prodDatePop = 0
+    local product = 0
+    local date = GetDate()
+    sumVillager = 115333 * SumPopu(country)
+    for i = 1, Tablelength(country), 1 do
+        for value = 3, 60, 1 do
+            prodDatePop = prodDatePop + (date[value - 2] * country[i][value])
+        end
+    end
+    product = prodDatePop * 58 - sumVillager
+    return product
+end
+
+local function CoeffaY(prod, powDate)
+    local bx = prod / powDate;
+    return bx
+end
+
+local function Correlation(country)
+    local meanPopu = SumPopu(country) / 58
+    local popu = PopuTable(country)
+    local meanDate = 1988.5
+    local date = GetDate()
+    local totalY = {}
+    local totalX = {}
+    local totalDeno = 0
+    local totalNomProd = 0
+    local totalNom = 0
+    local mainTotal = 0
+    for value = 1, 58, 1 do
+        table.insert(totalY, (popu[value] - meanPopu))
+    end
+    for value = 1, 58, 1 do
+        table.insert(totalX, (date[value] - meanDate))
+    end
+    for value = 1, 58, 1 do
+        totalDeno = totalDeno + (totalX[value] * totalY[value])
+    end
+    local sumPowX = 0.0;
+    local sumPowY = 0.0;
+    for value = 1, 58, 1 do
+        sumPowX = sumPowX + (totalX[value] ^ 2)
+    end
+    for value = 1, 58, 1 do
+        sumPowY = sumPowY + (totalY[value] ^ 2)
+    end
+    totalNomProd = sumPowX * sumPowY
+    totalNom = math.sqrt(totalNomProd)
+    mainTotal = totalDeno / totalNom
+    return mainTotal
+end
+
+local function CoeffbY(country, fit)
+    local Mx = 1988.5
+    local My = 0
+    local total = 0
+    local total_village = 0
+    for vill = 1, Tablelength(country), 1 do
+        for value = 1, 58, 1 do
+            My = My + country[vill][value + 2]
+        end
+    end
+    My = My / 58
+    total = My - (CoeffaY( Prod(country), SumPow(country, 115333, GetDate())) * Mx)
+    if (fit == 1)then
+        total = Mx - (CoeffaY( Prod(country), SumPow(country, SumPopu(country), PopuTable(country))) * My)
+    end
+    return total
+end
+
+local function RootMeanSquare(country, realValue, a, b, fit)
+    local total = 0
+    local sumPopu = PopuTable(country)
+    if (fit == 0)then
+        for value = 1, 58, 1 do
+            total = total + (((realValue[value] * a + b) - sumPopu[value]) ^ 2) / 58
+        end
+        total = math.sqrt(total)
+    else if (fit == 1)then
+        total = 0
+        for value = 1, 58, 1 do
+            total = total + ((((realValue[value] - b) / a) - sumPopu[value]) ^ 2) / 58
+        end
+        total = math.sqrt(total)
+    end
+    end
+    return total
+end
+
+local function PopuInXYears(a, b, fit)
+    local total = 0
+    if (fit == 0)then
+        total = ((2050 * a) + b)
+    else if (fit == 1)then
+        total = ((2050 - b) / a)
+    end
+    end
+    return total
+end
+
+local function PrintCountry(country)
+    io.write("Country: ")
+    local sorted = country
+    local tmpa = 0
+    local two_dig = 0
+    local tmpb = 0
+    local rmse = 0
+    local popu = 0
+        table.sort(sorted, function (left, right)
+                return (left[1] < right[1])
+        end)
+    for len = 1, Tablelength(country), 1 do
+        io.write(country[len][1])
+        if (len ~= Tablelength(country)) then
+            io.write(", ")
+        end
+    end
+    print("\nFit1")
+    tmpa = CoeffaY(Prod(country), SumPow(country, 115333, GetDate()))
+    two_dig = string.format("%.2f", (tmpa / 1000000))
+    io.write("    Y = " .. two_dig .. " X ")
+    tmpb = CoeffbY(country, 0)
+    rmse = RootMeanSquare(country, GetDate(), tmpa, tmpb, 0)
+    popu = PopuInXYears(tmpa, tmpb, 0)
+    if (tmpb < 0)then
+        io.write("- ")
+        tmpb = tmpb * -1
+    else
+        io.write("+ ")
+    end
+    two_dig = string.format("%.2f", (tmpb / 1000000))
+    print(two_dig)
+    two_dig = string.format("%.2f", rmse / 1000000)
+    print("    Root-mean-square deviation: " .. two_dig)
+    two_dig = string.format("%.2f", popu / 1000000)
+    print("    Population in 2050: " .. two_dig)
+    tmpa = CoeffaY(Prod(country), SumPow(country, SumPopu(country), PopuTable(country)))
+    two_dig = string.format("%.2f", tmpa * 1000000)
+    print("Fit2")
+    io.write("    X = " .. two_dig .. " Y ")
+    tmpb = CoeffbY(country, 1)
+    rmse = 0
+    rmse = RootMeanSquare(country, GetDate(), tmpa, tmpb, 1)
+    popu = PopuInXYears(tmpa, tmpb, 1)
+    if (tmpb < 0)then
+        io.write("- ")
+        tmpb = tmpb * -1
+    else
+        io.write("+ ")
+    end
+    two_dig = string.format("%.2f", tmpb)
+    print(two_dig)
+    two_dig = string.format("%.2f", rmse / 1000000)
+    print("    Root-mean-square deviation: " .. two_dig)
+    two_dig = string.format("%.2f", popu / 1000000)
+    print("    Population in 2050: " .. two_dig)
+    two_dig = string.format("%.4f", Correlation(country))
+    print("Correlation: " .. two_dig)
+    return (sorted)
+end
+
+local function main()
+    local global = {}
+    local country = {}
+    local tmp = {}
+    for line in io.lines("207demography_data.csv") do
+        local splitedLine = mysplit(line, ';')
+        for _, v in ipairs(splitedLine) do table.insert(tmp, v) end
+        table.insert(global, tmp)
+        tmp = {}
+    end
+    country = GetCountryTab(global)
+    if (Tablelength(country) ~= (Tablelength(arg) - 2)) then
+        os.exit(84)
+    end
+    country = PrintCountry(country)
+end
+
+main()

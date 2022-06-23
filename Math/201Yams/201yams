@@ -1,0 +1,113 @@
+#!/usr/bin/env python3
+import sys
+import math
+
+def usage():
+    print("USAGE")
+    print("    ./201yams d1 d2 d3 d4 d5 c\n")
+    print("DESCRIPTION")
+    print("    d1    value of the first die (0 if not thrown)")
+    print("    d2    value of the second die (0 if not thrown)")
+    print("    d3    value of the third die (0 if not thrown)")
+    print("    d4    value of the fourth die (0 if not thrown)")
+    print("    d5    value of the fifth die (0 if not thrown)")
+    print("    c     expected combination")
+    exit(0)
+
+def checkArgs():
+    for i in range (1, 6):
+        if (int(sys.argv[i]) < 0 or int(sys.argv[i]) > 6):
+            exit(84)
+    combineArray = ["pair", "three", "four", "straight", "yams"]
+    expected = sys.argv[6].split('_')
+    if (len(expected) == 2):
+        if (expected[1] == ""):
+            exit(84)
+        if (expected[0] not in combineArray):
+            exit(84)
+        if (int(expected[1]) < 1 or int(expected[1]) > 6):
+            exit(84)
+    if (len(expected) == 3):
+        if (expected[1] == "" or expected[2] == ""):
+            exit(84)
+        if (expected[0] != "full"):
+            exit(84)
+        if ((int(expected[1]) < 1 or int(expected[1]) > 6) or (int(expected[2]) < 1 or int(expected[2]) > 6)):
+            exit(84)
+    if (len(expected) < 2 or len(expected) > 3):
+        exit(84)
+
+def errorHandling():
+    if (len(sys.argv) == 2):
+        if (sys.argv[1] == '-h'):
+            usage()
+        exit(84)
+    if (len(sys.argv) != 7):
+        exit(84)
+    checkArgs()
+
+def formule(n: int, p: int):
+    return (math.factorial(n) / (math.factorial(p) * math.factorial(n - p))) * pow((1 / 6), p) * pow((5 / 6), (n - p))
+
+def calcProba(a : int, nbrArray: list, combine : int):
+    nbr = 0
+    if (nbrArray.count(combine) >= a):
+        return 1
+    else:
+        for i in range(a - nbrArray.count(combine), 5 - nbrArray.count(combine)+1):
+            nbr += formule(5 - nbrArray.count(combine), i)
+    return nbr
+
+def pair(nbrArray: list, combine: list):
+    print("Chances to get a " + str(combine[1]) + " pair: " + format(calcProba(2, nbrArray, int(combine[1]))*100, ".2f") + "%")
+
+def three(nbrArray: list, combine: list):
+    print("Chances to get a " + str(combine[1]) + " three-of-a-kind: " + format(calcProba(3, nbrArray, int(combine[1]))*100, ".2f") +"%")
+
+def four(nbrArray: list, combine: list):
+    print("Chances to get a " + str(combine[1]) + " four-of-a-kind: " + format(calcProba(4, nbrArray, int(combine[1]))*100, ".2f") + "%")
+
+def straight(nbrArray: list, combine: list):
+    possibility = 6
+    nbrSet = set(nbrArray)
+    if (nbrSet.issuperset([int(combine[1])])):
+        possibility  = 5
+    result = math.factorial(possibility - len(nbrSet)) / pow(6, possibility - len(nbrSet))
+    print("Chances to get a " + str(combine[1]) + " straight: " + format(result * 100, ".2f") + "%")
+
+def full(nbrArray: list, combine: list):
+    res = 1
+    if (calcProba(3, nbrArray, int(combine[1])) == 1 and calcProba(2, nbrArray, int(combine[2])) == 1):
+        print("Chances to get a " + str(combine[1]) + " full of " + str(combine[2]) + ": 100.00%")
+    else:
+        for i in range(5 - nbrArray.count(int(combine[1])) - nbrArray.count(int(combine[2])), 6 - nbrArray.count(int(combine[1])) - nbrArray.count(int(combine[2]))):
+            res *= formule(5 - nbrArray.count(int(combine[1])) - nbrArray.count(int(combine[2])), i)
+        print("Chances to get a " + str(combine[1]) + " full of " + str(combine[2]) + ": " + format(res*1000, ".2f") + "%")
+
+def yams(nbrArray: list, combine: list):
+    print("Chances to get a " + str(combine[1]) + " yams: " + format(calcProba(5, nbrArray, combine)*100, ".2f") + "%")
+
+def compute(nbrArray: list, combine: list):
+    if (combine[0] == "pair"):
+        pair(nbrArray, combine)
+    if (combine[0] == "three"):
+        three(nbrArray, combine)
+    if (combine[0] == "four"):
+        four(nbrArray, combine)
+    if (combine[0] == "full"):
+        full(nbrArray, combine)
+    if (combine[0] == "yams"):
+        yams(nbrArray, combine)
+    if (combine[0] == "straight"):
+        straight(nbrArray, combine)
+
+def main():
+    errorHandling()
+    nbrArray = []
+    for i in range (1, 6):
+        nbrArray.append(int(sys.argv[i]))
+    combine = sys.argv[6].split('_')
+    compute(nbrArray, combine)
+
+if __name__ == "__main__":
+    main()
