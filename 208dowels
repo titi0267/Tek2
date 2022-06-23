@@ -1,0 +1,231 @@
+#!/usr/bin/env node
+
+const distribTab = [
+  [99, 90, 80, 70, 60, 50, 40, 30, 20, 10, 5, 2, 1],
+  [0.0, 0.02, 0.06, 0.15, 0.27, 0.45, 0.71, 1.07, 1.64, 2.71, 3.84, 5.41, 6.63],
+  [
+    0.02, 0.21, 0.45, 0.71, 1.02, 1.39, 1.83, 2.41, 3.22, 4.61, 5.99, 7.82,
+    9.21,
+  ],
+  [
+    0.11, 0.58, 1.01, 1.42, 1.87, 2.37, 2.95, 3.66, 4.64, 6.25, 7.81, 9.84,
+    11.34,
+  ],
+  [
+    0.3, 1.06, 1.65, 2.19, 2.75, 3.36, 4.04, 4.88, 5.99, 7.78, 9.49, 11.67,
+    13.28,
+  ],
+  [
+    0.55, 1.61, 2.34, 3.0, 3.66, 4.35, 5.13, 6.06, 7.29, 9.24, 11.07, 13.39,
+    15.09,
+  ],
+  [
+    0.87, 2.2, 3.07, 3.83, 4.57, 5.35, 6.21, 7.23, 8.56, 10.64, 12.59, 15.03,
+    16.81,
+  ],
+  [
+    1.24, 2.83, 3.82, 4.67, 5.49, 6.35, 7.28, 8.38, 9.8, 12.02, 14.07, 16.62,
+    18.48,
+  ],
+  [
+    1.65, 3.49, 4.59, 5.53, 6.42, 7.34, 8.35, 9.52, 11.03, 13.36, 15.51, 18.17,
+    20.09,
+  ],
+  [
+    2.09, 4.17, 5.38, 6.39, 7.36, 8.34, 9.41, 10.66, 12.24, 14.68, 16.92, 19.68,
+    21.67,
+  ],
+];
+
+const getArgs = () => {
+  const arg = process.argv;
+  arg.shift();
+  arg.shift();
+  return arg;
+};
+
+const factorial = (n) => {
+  if (n == 0 || n == 1) return 1;
+  else return n * factorial(n - 1);
+};
+
+const printFirstLine = (line) => {
+  process.stdout.write("   x    ");
+  for (let index in line) {
+    if (index == line.length - 1)
+      process.stdout.write("| " + String(line[index]) + "+    ");
+    else if (line[index] == line[Number(index) + 1] - 1)
+      process.stdout.write("| " + align6Print(line[index]));
+    else
+      process.stdout.write(
+        "| " +
+          String(line[index]) +
+          "-" +
+          String(line[Number(index) + 1] - 1) +
+          "   "
+      );
+  }
+  console.log("| Total");
+};
+
+const printSecondLines = (argAsInt) => {
+  process.stdout.write("  Ox    ");
+  for (let index in argAsInt) {
+    process.stdout.write("| " + align6Print(argAsInt[index]));
+  }
+  console.log("| 100");
+};
+
+const printThirdLine = (theorical) => {
+  process.stdout.write("  Tx    ");
+  for (let item of theorical)
+    process.stdout.write("| " + align6Print(item.toFixed(1)));
+  console.log("| 100");
+};
+
+const usage = () => {
+  console.log("USAGE\n    ./208dowels O0 O1 O2 O3 O4 O5 O6 O7 O8\n");
+  console.log("DESCRIPTION\n    Oi size of the observed class");
+  process.exit(0);
+};
+
+const align6Print = (nbr) => {
+  let str = String(nbr);
+  while (str.length != 6) str += " ";
+  return str;
+};
+
+const calcShiSquared = (tab, theorical) => {
+  let x = 0;
+
+  for (let i = 0; tab[i] !== undefined; i += 1)
+    x += Math.pow(tab[i] - theorical[i], 2) / theorical[i];
+  return x;
+};
+
+const getParsedTheorical = (line, theorical) => {
+  const finalArray = [];
+  let tmp = 0;
+
+  for (let index in line) {
+    let j = line[index];
+    if (Number(index) === line.length - 1) {
+      for (let i = j; theorical[i] !== undefined; i += 1) tmp += theorical[i];
+      finalArray.push(tmp);
+      tmp = 0;
+    } else if (line[index] === line[Number(index) + 1] - 1)
+      finalArray.push(theorical[line[index]]);
+    else {
+      for (let i = line[index]; i !== line[Number(index) + 1]; i++)
+        tmp += theorical[i];
+      finalArray.push(tmp);
+      tmp = 0;
+    }
+  }
+  return finalArray;
+};
+
+const getTheoricalSize = (p, line) => {
+  const result = [];
+  let total = 0;
+  for (let i = 0; i <= 7; i += 1) {
+    let facto = factorial(100) / (factorial(i) * factorial(100 - i));
+    result.push(Math.pow(p, i) * Math.pow(1 - p, 100 - i) * 100 * facto);
+  }
+  result.forEach((res) => (total += res));
+  result.push(100 - total);
+  return getParsedTheorical(line, result);
+};
+
+const getProbability = (argAsInt) => {
+  let i = 0;
+  let sum = 0;
+
+  for (let item of argAsInt) {
+    sum += i * item;
+    i += 1;
+  }
+  return sum / 10000;
+};
+
+const checkValidArgs = (arg) => {
+  const itemTab = [];
+  let sum = 0;
+  for (let item of arg) {
+    let value = Number(item);
+    if (item === "" || !Number.isInteger(value) || value < 0) process.exit(84);
+    itemTab.push(value);
+  }
+  itemTab.forEach((item) => (sum += item));
+  if (sum != 100) process.exit(84);
+  return itemTab;
+};
+
+const getClusterValues = (argAsInt) => {
+  let tmp = 0;
+  let index = argAsInt.length - 1;
+  const array = [];
+  const posTab = [];
+
+  for (; index != -1; index -= 1) {
+    tmp += argAsInt[index];
+    if (tmp >= 10) {
+      array.push(tmp);
+      posTab.push(index);
+      tmp = 0;
+    }
+  }
+  if (tmp != 0) {
+    array[array.length - 1] += tmp;
+    posTab[array.length - 1] = 0;
+  }
+  array.reverse();
+  posTab.reverse();
+  return [array, posTab];
+};
+
+const calcFit = (freedom, chi) => {
+  if (distribTab[freedom][0] >= chi)
+    console.log("Fit validity:           P > 99%");
+  else {
+    for (let i = 1; distribTab[freedom][i]; i += 1) {
+      if (distribTab[freedom][i] > chi && distribTab[freedom][i - 1] < chi) {
+        console.log(
+          "Fit validity:           " +
+            distribTab[0][i] +
+            "% < P < " +
+            distribTab[0][i - 1] +
+            "%"
+        );
+        return;
+      }
+    }
+    console.log("Fit validity:           P < 1%");
+  }
+};
+
+const compute = (argAsInt) => {
+  const [array, posTab] = getClusterValues(argAsInt);
+  printFirstLine(posTab);
+  printSecondLines(array);
+  const p = getProbability(argAsInt);
+  const theorical = getTheoricalSize(p, posTab);
+  printThirdLine(theorical);
+  console.log("Distribution:           B(100, " + String(p.toFixed(4)) + ")");
+  const shiSquared = calcShiSquared(array, theorical);
+  console.log("Chi-squared:            " + String(shiSquared.toFixed(3)));
+  console.log("Degrees of freedom:     " + String(array.length - 2));
+  calcFit(array.length - 2, shiSquared);
+};
+
+const main = () => {
+  const arg = getArgs();
+  if (arg[0] === undefined) process.exit(84);
+  if (arg[0] === "-h") usage();
+  if (arg.length != 9) process.exit(84);
+  const argTab = checkValidArgs(arg);
+  compute(argTab);
+  process.exit(0);
+};
+
+main();
