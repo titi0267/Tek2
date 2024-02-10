@@ -9,6 +9,7 @@
 
 #include <deque>
 #include <iostream>
+#include <cstdint>
 
 class IPizza {
     public:

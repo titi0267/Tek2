@@ -7,6 +7,7 @@
 
 #pragma once
 #include <iostream>
+#include <cstdint>
 
 typedef struct SendPizza_s {
     uint32_t pizzaId;

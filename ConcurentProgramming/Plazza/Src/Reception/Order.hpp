@@ -9,6 +9,7 @@
 
 #include <list>
 #include <iostream>
+#include <cstdint>
 
 class Order {
     public:

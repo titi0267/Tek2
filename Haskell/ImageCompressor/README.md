@@ -1,5 +1,0 @@
-<<<<<<< HEAD
-# wolfram
-=======
-# imageCompressor
->>>>>>> ImgCompressor

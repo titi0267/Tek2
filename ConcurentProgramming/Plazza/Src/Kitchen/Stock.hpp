@@ -7,6 +7,7 @@
 
 #pragma once
 #include <iostream>
+#include <cstdint>
 #include <deque>
 
 class Stock {
