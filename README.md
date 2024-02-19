@@ -53,60 +53,60 @@ As I continuously strive to improve and refine my coding techniques, the methodo
 
 Low-level language for the development of a minimalistic C library.
 
-Go to [ASM](https://github.com/titi0267/Tek2/Asm#Asm) for project for details.
+- [ASM](https://github.com/titi0267/Tek2/tree/main/Asm#Asm): Reproduction of the C library.
 
 ## Concurrent Programming
 
 In this unit we will tackle the concept of concurrent accesses via the following principles:
 
-- [Panoramix](https://github.com/titi0267/Tek2/ConcurrentProramming#Panoramix): Thread and mutexs
-- [Plazza](https://github.com/titi0267/Tek2/ConcurrentProramming#Plazza): The IPC (semaphores, message queues etc.)
+- [Panoramix](https://github.com/titi0267/Tek2/tree/main/ConcurrentProramming#Panoramix): Thread and mutexs
+- [Plazza](https://github.com/titi0267/Tek2/tree/main/ConcurrentProramming#Plazza): The IPC (semaphores, message queues etc.)
 
 ## Devops
 
 In this module, you will be introduced to two notions and their associated technologies, with the following projects:
 
-- [Marvin](https://github.com/titi0267/Tek2/Devops#Marvin): Task automation with Jenkins
-- [Octopus](https://github.com/titi0267/Tek2/Devops#Octopus): Configuration management with Ansible
+- [Marvin](https://github.com/titi0267/Tek2/tree/main/Devops#Marvin): Task automation with Jenkins
+- [Octopus](https://github.com/titi0267/Tek2/tree/main/Devops#Octopus): Configuration management with Ansible
 
 ## Haskell
 
 Functional programming is a paradigm of programming that focuses on algorithms:
 
-- Go to [Wolfram](https://github.com/titi0267/Tek2/Devops#Wolfram) for project for details.
-- Go to [Image Compressor](https://github.com/titi0267/Tek2/Devops#Image-Compressor) for project for details.
+- [Wolfram](https://github.com/titi0267/Tek2/tree/main/Devops#Wolfram): Reproduction of the wolfram game.
+- [Image Compressor](https://github.com/titi0267/Tek2/tree/main/Devops#Image-Compressor): Image compressor in haskell.
 
 ## IndieStudio
 
-Go to [Bombitek](https://github.com/titi0267/Bombitek) for project for details.
+[Bombitek](https://github.com/titi0267/Bombitek): A bomberman game.
 
 ## Math
 
 These projects didn't forced us to use a specific language, which is why, to challenge ourself's we tried to change the programming language between each projects starting from the third one.
 
-Go to [Math](https://github.com/titi0267/Tek2/Math) for projects for details.
+- [Math](https://github.com/titi0267/Tek2/tree/main/Math): 9 different math concepts into 9 projects.
 
 ## Memory
 
 Fundamental elements of UNIX programming:
 
-- Go to [Malloc](https://github.com/titi0267/Tek2/Devops#Malloc) for project for details.
-- Go to [Nm ObjDump](https://github.com/titi0267/Tek2/Devops#Nm-Objdump) for project for details.
+- [Malloc](https://github.com/titi0267/Tek2/tree/main/Devops#Malloc): Reproduction of malloc function.
+- [Nm ObjDump](https://github.com/titi0267/Tek2/tree/main/Devops#Nm-Objdump): Reproduction of the nm and objdump commands.
 
 ## Network
 
 This unit is specifically designed to introduce you to Network communication, and Data packets:
 
-- Go to [FTP](https://github.com/titi0267/Tek2/Devops#FTP) for project for details.
-- Go to [Teams](https://github.com/titi0267/Tek2/Devops#Teams) for project for details.
+- [FTP](https://github.com/titi0267/Tek2/tree/main/Devops#FTP): File transfert protocol.
+- [Teams](https://github.com/titi0267/Tek2/tree/main/Devops#Teams): C messaging system.
 
 ## Object Oriented
 
 Introduction to the Object Oriented Programming paradigm.
 Modularization and problematic abstraction by using practical examples such as dynamic libraries:
 
-- Go to [NanoTekSpice](https://github.com/titi0267/Tek2/Devops#NanoTekSpice) project for details.
-- Go to [Arcade](https://github.com/titi0267/Tek2/Devops#Arcade) for project for details.
+- [NanoTekSpice](https://github.com/titi0267/Tek2/tree/main/Devops#NanoTekSpice): IT components logic.
+- [Arcade](https://github.com/titi0267/Tek2/tree/main/Devops#Arcade): Different games playable with different graphical libraries.
 
 ## Pool Days
 
@@ -114,16 +114,16 @@ This is the starting period of the year. It consists of 12 days of different exe
 
 In addition to this some small projects called Rushes are also included in this period of time.
 
-Go to [PoolDays](https://github.com/titi0267/Tek2/Devops#Overview) for project for details.
+- [PoolDays](https://github.com/titi0267/Tek2/tree/main/Devops#Overview): All pool days.
 
 ## Trace
 
-Next installment of the [Nm ObjDump](https://github.com/titi0267/Tek2/Devops#Nm-Objdump) and [ASM x86-64](https://github.com/titi0267/Tek2/Asm#Asm) projects.
+Next installment of the [Nm ObjDump](https://github.com/titi0267/Tek2/tree/main/Devops#Nm-Objdump) and [ASM x86-64](https://github.com/titi0267/Tek2/tree/main/Asm#Asm) projects.
 
 It's going to enable you to have a better understanding of ELF files and reverse engineering:
 
-- Go to [Strace](https://github.com/titi0267/Tek2/Devops#Strace) project for details.
-- Go to [Ftrace](https://github.com/titi0267/Tek2/Devops#Ftrace) project for details.
+- [Strace](https://github.com/titi0267/Tek2/tree/main/Devops#Strace): Default Trace command with -s flag.
+- [Ftrace](https://github.com/titi0267/Tek2/tree/main/Devops#Ftrace): Default Trace command with -f flag.
 
 ## Credits
 
