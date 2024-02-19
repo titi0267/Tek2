@@ -58,6 +58,7 @@ Low-level language for the development of a minimalistic C library.
 ## Concurrent Programming
 
 In this unit we will tackle the concept of concurrent accesses via the following principles:
+ConcurentProgramming
 
 - [Panoramix](https://github.com/titi0267/Tek2/tree/main/ConcurrentProgramming#Panoramix): Thread and mutexs
 - [Plazza](https://github.com/titi0267/Tek2/tree/main/ConcurrentProgramming#Plazza): The IPC (semaphores, message queues etc.)
@@ -84,7 +85,7 @@ Functional programming is a paradigm of programming that focuses on algorithms:
 
 These projects didn't forced us to use a specific language, which is why, to challenge ourself's we tried to change the programming language between each projects starting from the third one.
 
-- [Math](https://github.com/titi0267/Tek2/tree/main/Math): 9 different math concepts into 9 projects.
+- [Math](https://github.com/titi0267/Tek2/tree/main/Math#201Yams): 9 different math concepts into 9 projects.
 
 ## Memory
 
